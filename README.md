@@ -8,15 +8,13 @@ For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG consider
 
 ## Features
 
-- **Dynamic Rating System**: Overall scores influence components and vice versa, with weighted calculations and progress tracking
-- **Personalized Content**: Rate only what you've watched, exclude seasons, and see quality evolution
-- **Social Experience**: Follow friends, post reviews, leave comments, and build your review history
-- **Smart Lists**: Create custom lists, "Watch Later" that automatically updates when you rate, see what friends are watching
-- **Discovery Tools**: Genre filtering, name search, score sorting, top 10 aggregations across all users
-- **Flexible Organization**: Maintain separate or combined lists for movies, TV shows, and games
-- **Complete Media Library**: Movies, TV shows and games with comprehensive metadata
-- **Full-Stack TypeScript**: React frontend and Node.js backend with Bootstrap styling
-- **User Accounts**: Authentication, profiles, friend connections, and content interactions
+🎯 **Dynamic Ratings** - Score entire series and individual seasons/DLC with weighted calculations
+👤 **Users** - Accounts, friend following, and activity feeds
+📝 **Reviews & Comments** - Share detailed opinions and discuss with others
+🎬 **Media Library** - Comprehensive database of movies, TV shows, and games
+📋 **Lists** - Auto-updating watchlists and custom collections
+🔍 **Discovery** - Genre filters, search, and community-driven top charts
+🔄 **API Integration** - Real-time data from TMDB and IGDB
 
 ## Technical Implementation
 
