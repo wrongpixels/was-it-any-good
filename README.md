@@ -1,53 +1,32 @@
-## WIAG <i>("Was It Any Good?")</i>
-
-<div align="center">
-  <p><h2>"Score a good one"</h2>
-  Will eventually have a live demo at: <a href="https://wiag.io">wiag.io</a></p>
-</div>
+# WIAG <i>("Was It Any Good?")</i>
 
 ## About
 
-WIAG is a full-stack entertainment rating platform that helps users discover and review movies, TV shows, and games. It features a unique rating system to show how TV shows evolve across seasons and how games expand through DLC.
+WIAG is a full-stack rating platform to discover and review movies, TV shows and games. Unlike traditional systems, WIAG uses a dynamic scoring approach that combines overall impressions with individual components (seasons/DLC), calculating a final score that shows how quality varies over time.
 
-### Key Features (Coming Soon)
+For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG considers both for the final score, while ignoring unwatched seasons.
 
-#### Content
+## Features
 
-- 🎬 Movies and TV shows (powered by TMDB)
-- 🎮 Games and DLC content
-- 🔍 Advanced search and filtering
-- 📱 Responsive design
+- **Dynamic Rating System**: Overall scores influence components and vice versa, with weighted calculations and progress tracking
+- **Personalized Content**: Rate only what you've watched, exclude seasons, and see quality evolution
+- **Social Experience**: Follow friends, post reviews, leave comments, and build your review history
+- **Smart Lists**: Create custom lists, "Watch Later" that automatically updates when you rate, see what friends are watching
+- **Discovery Tools**: Genre filtering, name search, score sorting, top 10 aggregations across all users
+- **Flexible Organization**: Maintain separate or combined lists for movies, TV shows, and games
+- **Complete Media Library**: Movies, TV shows and games with comprehensive metadata
+- **Full-Stack TypeScript**: React frontend and Node.js backend with Bootstrap styling
+- **User Accounts**: Authentication, profiles, friend connections, and content interactions
 
-#### Smart Rating System
+## Technical Implementation
 
-- 📊 Overall ratings that cascade to seasons/DLC
-- 🎯 Individual season/DLC rating overrides
-- 📈 Rating progression visualization
-- ⭐ Detailed review system
-
-#### User Features
-
-- 👥 User authentication
-- 📝 Personalized review history
-- 👑 Admin dashboard
-
-### Tech Stack
-
-- **Frontend:** React, TanStack Query, Tailwind CSS
-- **Backend:** Node.js, Express
-- **Database:** PostgreSQL with Sequelize
-- **Authentication:** JWT with session management
-- **APIs:** TMDB, IGDB
-
-## Rating System
-
-WIAG features a unique approach to ratings:
-
-- TV Shows can be rated as a whole or season by season
-- Overall show ratings cascade to individual seasons
-- Users can override specific season ratings
-- Same system applies to games and their DLC
-- Weighted averages consider both overall and specific ratings
+- TypeScript
+- Frontend (React + TanStack Query) and Backend (Node.js/Express)
+- PostgreSQL databases with Sequelize ORM and migrations
+- JWT authentication and session management
+- Automated CI/CD pipeline via GitHub Actions
+- Bootstrap + Styled Components for design
+- TMDB and IGDB API integrations
 
 ## Development
 
