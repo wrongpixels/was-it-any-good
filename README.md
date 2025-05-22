@@ -2,7 +2,7 @@
 
 <div align="center">
   <p><h2>"Score a good one"</h2>
-  Live at: <a href="https://wiag.io">wiag.io</a></p>
+  Will eventually have a live demo at: <a href="https://wiag.io">wiag.io</a></p>
 </div>
 
 ## About
@@ -12,18 +12,21 @@ WIAG is a full-stack entertainment rating platform that helps users discover and
 ### Key Features (Coming Soon)
 
 #### Content
+
 - 🎬 Movies and TV shows (powered by TMDB)
 - 🎮 Games and DLC content
 - 🔍 Advanced search and filtering
 - 📱 Responsive design
 
 #### Smart Rating System
+
 - 📊 Overall ratings that cascade to seasons/DLC
 - 🎯 Individual season/DLC rating overrides
 - 📈 Rating progression visualization
 - ⭐ Detailed review system
 
 #### User Features
+
 - 👥 User authentication
 - 📝 Personalized review history
 - 👑 Admin dashboard
@@ -39,6 +42,7 @@ WIAG is a full-stack entertainment rating platform that helps users discover and
 ## Rating System
 
 WIAG features a unique approach to ratings:
+
 - TV Shows can be rated as a whole or season by season
 - Overall show ratings cascade to individual seasons
 - Users can override specific season ratings
@@ -64,5 +68,7 @@ npm run dev
 
 License
 MIT
-____
+
+---
+
 Currently under active development
