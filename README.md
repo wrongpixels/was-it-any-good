@@ -8,13 +8,13 @@ For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG consider
 
 ## Features
 
-🎯 **Dynamic Ratings** - Score entire series and individual seasons/DLC with weighted calculations
-👤 **Users** - Accounts, friend following, and activity feeds
-📝 **Reviews & Comments** - Share detailed opinions and discuss with others
-🎬 **Media Library** - Comprehensive database of movies, TV shows, and games
-📋 **Lists** - Auto-updating watchlists and custom collections
-🔍 **Discovery** - Genre filters, search, and community-driven top charts
-🔄 **API Integration** - Real-time data from TMDB and IGDB
+- 🎯 **Dynamic Ratings** - Score entire series and individual seasons/DLC with weighted calculations
+- 👤 **Users** - Accounts, friend following, and activity feeds
+- 📝 **Reviews & Comments** - Share detailed opinions and discuss with others
+- 🎬 **Media Library** - Comprehensive database of movies, TV shows, and games
+- 🔍 **Discovery** - Genre filters, search, and community-driven top charts
+- 📋 **Lists** - Auto-updating watchlists and custom collections
+- 🔄 **API Integration** - Real-time data from TMDB and IGDB
 
 ## Technical Implementation
 
