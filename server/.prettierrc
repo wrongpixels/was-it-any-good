@@ -17,6 +17,7 @@
     {
       "files": ["*.ts", "*.tsx"],
       "options": {
+        "semi": true,
         "parser": "typescript"
       }
     },
