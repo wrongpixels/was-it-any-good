@@ -1,12 +1,10 @@
 {
-  "include": [
-    "src/*"
-  ],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "./node_modules",
     "./node_modules/*",
-    "./node_modules/@types/node/index.d.ts",
+    "./node_modules/@types/node/index.d.ts"
   ],
   "compilerOptions": {
     "types": [],
@@ -117,7 +115,7 @@
     // "allowUnusedLabels": true,                        /* Disable error reporting for unused labels. */
     // "allowUnreachableCode": true,                     /* Disable error reporting for unreachable code. */
 
-    /* Completeness */     
+    /* Completeness */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   }
 }

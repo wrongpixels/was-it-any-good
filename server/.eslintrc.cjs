@@ -22,6 +22,16 @@ module.exports = {
         '@typescript-eslint/semi': ['error', 'always'],
         quotes: 'off',
         '@typescript-eslint/quotes': ['error', 'single', { avoidEscape: true }],
+        '@typescript-eslint/no-unused-vars': [
+          'error',
+          {
+            vars: 'all',
+            args: 'all',
+            argsIgnorePattern: '^_', // Optional: allows _ prefix for intentionally unused params
+            varsIgnorePattern: '^_',
+            caughtErrors: 'all',
+          },
+        ],
       },
     },
     {

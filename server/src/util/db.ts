@@ -14,4 +14,4 @@ const initializeDB = async () => {
   }
 };
 
-export default { initializeDB };
+export { initializeDB, sequelize };

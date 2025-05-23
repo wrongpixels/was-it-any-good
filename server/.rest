@@ -1,0 +1,14 @@
+POST http://localhost:6060/api/media
+Content-Type: application/json
+
+{
+  "name": "Porco Rosso",
+  "sortName": "PorcoRossoMiyazaki",
+  "year": 1992,
+  "image": "https://m.media-amazon.com/images/M/MV5BNmM4YTFmMmItMGE3Yy00MmRkLTlmZGEtMzZlOTQzYjk3MzA2XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg",
+  "writers": [1, 2],
+  "directors": [1],
+  "cast": [1, 2, 3],
+  "genres": [1, 2, 3],
+  "description": "In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig. Working as a freelance bounty hunter, he combats air pirates in the Adriatic Sea while attempting to reclaim his humanity."
+}

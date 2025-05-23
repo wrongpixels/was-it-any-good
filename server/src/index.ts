@@ -1,9 +1,14 @@
 import express from 'express';
 import { PORT } from './util/config';
-import db from './util/db';
+import { initializeDB } from './util/db';
+import { mediaRouter } from './controllers';
+
 const app = express();
 
+app.use(express.json());
+app.use('/api/media', mediaRouter);
+
 app.listen(PORT, async () => {
-  await db.initializeDB();
+  await initializeDB();
   console.log(`Server running on PORT ${PORT}`);
 });
