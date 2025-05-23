@@ -1,3 +1,4 @@
+//import type { Request, Response } from 'express';
 import express from 'express';
 import { Media } from '../models';
 import CustomError from '../util/customError';
