@@ -180,6 +180,7 @@ enum Country {
   UA = 'Ukraine',
   AE = 'United Arab Emirates',
   GB = 'United Kingdom',
+  UNKNOWN = 'Unknown',
   US = 'United States',
   UY = 'Uruguay',
   UZ = 'Uzbekistan',

@@ -1,5 +1,12 @@
-import Country from './countryTypes';
-import { FilmGenre, ShowGenre, GameGenre, GameplayGenre } from './genreTypes';
+import Country from '../countryTypes';
+import {
+  FilmGenre,
+  ShowGenre,
+  GameGenre,
+  GameplayGenre,
+} from '../genres/genreTypes';
+
+type Year = number | 'Unknown';
 
 enum MediaType {
   Film = 'Film',
@@ -14,10 +21,11 @@ enum SubMediaType {
   DLC = 'DLC',
 }
 
-enum AuthorType {
+export enum AuthorType {
   Director = 'Director',
   Writer = 'Writer',
   Actor = 'Actor',
+  Unknown = 'Unknown',
 }
 
 enum FilmParental {
@@ -57,19 +65,19 @@ interface Individual {
 }
 
 interface Creator extends Individual {
-  media: Media[];
+  media?: Media[];
 }
 
 interface Author extends Creator {
   type: AuthorType;
-  birthYear: number;
+  birthYear?: Year;
 }
 
-interface Director extends Author {
+export interface Director extends Author {
   type: AuthorType.Director;
 }
 
-interface Writer extends Author {
+export interface Writer extends Author {
   type: AuthorType.Writer;
 }
 interface Actor extends Author {
@@ -89,7 +97,7 @@ interface Media {
   parentalGuide: ParentalGuide;
   releaseDate: Date;
   image: string;
-  rating: number;
+  rating: unknown | number;
   type: MediaType;
   genres: GameGenre[] | FilmGenre[] | ShowGenre[];
   subMedia: SubMediaType;
@@ -142,6 +150,8 @@ interface Chapter extends SubMedia {
 }
 
 export {
+  Individual,
+  Creator,
   Media,
   Author,
   MediaType,

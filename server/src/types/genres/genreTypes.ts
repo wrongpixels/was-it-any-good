@@ -14,16 +14,26 @@ enum GenreBase {
   War = 'War',
   Western = 'Western',
   Family = 'Family',
+  Other = 'Other',
 }
 
 enum AudiovisualGenre {
   Animation = 'Animation',
+  TradAnimation = '2D Animation',
+  CGIAnimation = '3D Animation',
   Documentary = 'Documentary',
   Musical = 'Musical',
   Biography = 'Biography',
   Sport = 'Sport',
   FilmNoir = 'Film Noir',
   Experimental = 'Experimental',
+}
+
+enum FilmFormat {
+  ShortFilm = 'Short Film',
+  Videoclip = 'Videoclip',
+  Advert = 'Advert',
+  Trailer = 'Trailer',
 }
 
 enum ShowFormat {
@@ -99,7 +109,7 @@ enum GameTheme {
   Realistic = 'Realistic',
 }
 
-type FilmGenre = GenreBase | AudiovisualGenre;
+type FilmGenre = GenreBase | AudiovisualGenre | FilmFormat;
 type ShowGenre = GenreBase | AudiovisualGenre | ShowFormat;
 type GameGenre = GenreBase | GameTheme;
 
