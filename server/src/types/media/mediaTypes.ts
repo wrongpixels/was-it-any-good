@@ -8,6 +8,8 @@ import {
 
 type Year = number | 'Unknown';
 
+export type Image = string;
+
 enum MediaType {
   Film = 'Film',
   Show = 'Show',
@@ -62,6 +64,7 @@ interface Individual {
   id: number;
   name: string;
   country: Country;
+  image: Image;
 }
 
 interface Creator extends Individual {
@@ -84,9 +87,14 @@ interface Actor extends Author {
   type: AuthorType.Actor;
 }
 interface Character extends Individual {
-  actor: Author;
+  actor: Actor;
 }
 interface Studio extends Individual {}
+
+export type Direction = Director[] | 'Unknown direction';
+export type Cast = Character[] | 'Unknown cast';
+export type Writing = Writer[] | 'Unknown writers';
+export type Studios = Studio[] | 'Unknown studio';
 
 interface Media {
   id: number;
@@ -96,16 +104,16 @@ interface Media {
   description: string;
   parentalGuide: ParentalGuide;
   releaseDate: Date;
-  image: string;
+  image: Image;
   rating: unknown | number;
   type: MediaType;
   genres: GameGenre[] | FilmGenre[] | ShowGenre[];
   subMedia: SubMediaType;
-  studios: Studio[];
-  directors: Director[];
-  writers: Writer[];
+  studios: Studios;
+  direction: Direction;
+  writing: Writing;
   countries: Country[];
-  cast: Character[];
+  cast: Cast;
 }
 
 interface Film extends Media {
