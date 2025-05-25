@@ -102,6 +102,7 @@ interface Media {
   countries: Country[];
   cast: Cast;
 }
+export type CreateMedia = Omit<Media, 'id'>;
 
 interface Film extends Media {
   type: MediaType.Film;
@@ -109,12 +110,16 @@ interface Film extends Media {
   parentalGuide: FilmParental;
   genres: FilmGenre[];
 }
+export type CreateFilm = Omit<Film, 'id'>;
+
 interface Show extends Media {
   type: MediaType.Show;
   subMedia: SubMediaType.Season;
   seasons: Season[];
   genres: ShowGenre[];
 }
+export type CreateShow = Omit<Show, 'id'>;
+
 interface Game extends Media {
   type: MediaType.Game;
   subMedia: SubMediaType.Chapter | SubMediaType.DLC;
@@ -124,25 +129,31 @@ interface Game extends Media {
   genres: GameGenre[];
   gamePlayGenres: GameplayGenre[];
 }
+export type CreateGame = Omit<Game, 'id'>;
 
 interface SubMedia extends Media {
   subType: SubMediaType;
   parentId: number;
 }
+export type CreateSubMedia = Omit<SubMedia, 'id'>;
+
 interface Season extends SubMedia {
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }
+export type CreateSeason = Omit<Season, 'id'>;
 
 interface DLC extends SubMedia {
   type: MediaType.Game;
   subType: SubMediaType.DLC;
 }
+export type CreateDLC = Omit<DLC, 'id'>;
 
 interface Chapter extends SubMedia {
   type: MediaType.Game;
   subType: SubMediaType.Chapter;
 }
+export type CreateChapter = Omit<Chapter, 'id'>;
 
 export {
   Individual,

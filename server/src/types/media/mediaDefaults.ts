@@ -77,3 +77,5 @@ export const DEF_CHARACTER: Character = {
 export const DEF_CAST: Cast = [DEF_CHARACTER];
 export const DEF_DIRECTION: Direction = [DEF_DIRECTOR];
 export const DEF_STUDIOS: Studios = [DEF_STUDIO];
+
+export const DEF_MEDIA;
