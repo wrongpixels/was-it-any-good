@@ -1,4 +1,4 @@
-import Country from '../countryTypes';
+import Country from '../countries/countryTypes';
 import {
   Author,
   Creator,
