@@ -5,11 +5,28 @@ import {
   GameGenre,
   GameplayGenre,
 } from '../genres/genreTypes';
-
-type Year = number | 'Unknown';
+import {
+  FilmParental,
+  GameParental,
+  ParentalGuide,
+} from '../parental/parentalTypes';
 
 export type Image = string;
 
+export interface ReleaseDate {
+  date: Date | null;
+  isUnknown: boolean;
+}
+export interface BirthDate {
+  year: number;
+  isUnknown: boolean;
+}
+
+export interface Rating {
+  value: number;
+  isValid: boolean;
+  voteCount: number;
+}
 enum MediaType {
   Film = 'Film',
   Show = 'Show',
@@ -30,36 +47,6 @@ export enum AuthorType {
   Unknown = 'Unknown',
 }
 
-enum FilmParental {
-  G = 'General Audience',
-  PG = 'Parental Guidance Suggested',
-  PG13 = 'Parental Guidance for Children Under 13',
-  R = 'Restricted',
-  NC17 = 'Adults Only',
-}
-
-enum ShowParental {
-  TVY = 'All Children',
-  TVY7 = 'Directed to Older Children Age 7 and Above',
-  TVY7FV = 'Directed to Older Children - Fantasy Violence',
-  TVG = 'General Audience',
-  TVPG = 'Parental Guidance Suggested',
-  TV14 = 'Parents Strongly Cautioned',
-  TVMA = 'Mature Audience',
-}
-
-enum GameParental {
-  EC = 'Early Childhood',
-  E = 'Everyone',
-  E10 = 'Everyone 10+',
-  T = 'Teen',
-  M = 'Mature 17+',
-  AO = 'Adults Only 18+',
-  RP = 'Rating Pending',
-}
-
-type ParentalGuide = GameParental | FilmParental | ShowParental;
-
 interface Individual {
   id: number;
   name: string;
@@ -73,7 +60,7 @@ interface Creator extends Individual {
 
 interface Author extends Creator {
   type: AuthorType;
-  birthYear?: Year;
+  birthDate: BirthDate;
 }
 
 export interface Director extends Author {
@@ -86,15 +73,15 @@ export interface Writer extends Author {
 interface Actor extends Author {
   type: AuthorType.Actor;
 }
-interface Character extends Individual {
+export interface Character extends Individual {
   actor: Actor;
 }
 interface Studio extends Individual {}
 
-export type Direction = Director[] | 'Unknown direction';
-export type Cast = Character[] | 'Unknown cast';
-export type Writing = Writer[] | 'Unknown writers';
-export type Studios = Studio[] | 'Unknown studio';
+export type Direction = Director[];
+export type Cast = Character[];
+export type Writing = Writer[];
+export type Studios = Studio[];
 
 interface Media {
   id: number;
@@ -103,7 +90,7 @@ interface Media {
   sortname: string;
   description: string;
   parentalGuide: ParentalGuide;
-  releaseDate: Date;
+  releaseDate: ReleaseDate;
   image: Image;
   rating: unknown | number;
   type: MediaType;
