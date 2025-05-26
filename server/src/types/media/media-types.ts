@@ -113,7 +113,6 @@ export interface Studio extends Individual {}
 // Media
 export interface MediaData {
   id: number;
-  sourceId?: number;
   name: string;
   originalName: string;
   sortName: string;
@@ -122,6 +121,7 @@ export interface MediaData {
   releaseDate: ReleaseDate;
   image: Image;
   rating: MediaRating;
+  runtime: number;
   userReviews?: number[];
   criticReviews?: number[];
   type: MediaType;

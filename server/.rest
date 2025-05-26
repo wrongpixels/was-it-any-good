@@ -12,3 +12,7 @@ Content-Type: application/json
   "genres": [1, 2, 3],
   "description": "In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig. Working as a freelance bounty hunter, he combats air pirates in the Adriatic Sea while attempting to reclaim his humanity."
 }
+
+###GET FILM DATA
+GET http://localhost:6060/api/films/11621
+

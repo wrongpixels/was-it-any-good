@@ -1,3 +1,3 @@
-import mediaRouter from './films-controller';
+import filmsRouter from './films-controller';
 
-export { mediaRouter };
+export { filmsRouter };

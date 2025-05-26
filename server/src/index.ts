@@ -1,12 +1,12 @@
 import express from 'express';
 import { PORT } from './util/config';
 import { initializeDB } from './util/db';
-import { mediaRouter } from './controllers';
+import { filmsRouter } from './controllers';
 
 const app = express();
 
 app.use(express.json());
-app.use('/api/media', mediaRouter);
+app.use('/api/films', filmsRouter);
 
 app.listen(PORT, async () => {
   await initializeDB();
