@@ -28,6 +28,9 @@ import {
   SubMediaType,
   DefaultShow,
   DefaultGame,
+  DefaultSeason,
+  DefaultDLC,
+  DefaultChapter,
 } from './mediaTypes';
 
 export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
@@ -104,8 +107,8 @@ export const DEF_MEDIA: DefaultMedia = {
   image: DEF_IMAGE_MEDIA,
   rating: DEF_MEDIA_RATING,
   studios: DEF_STUDIOS,
-  direction: DEF_DIRECTION,
-  writing: DEF_WRITING,
+  directors: DEF_DIRECTION,
+  writers: DEF_WRITING,
   countries: DEF_COUNTRIES,
   cast: DEF_CAST,
 };
@@ -130,3 +133,33 @@ export const DEF_GAME: DefaultGame = {
   type: MediaType.Game,
   subMedia: SubMediaType.DLC,
 };
+
+export const DEF_SEASON = (parentId: number, index: number): DefaultSeason => ({
+  ...DEF_SHOW,
+  name: `Season ${index + 1}`,
+  sortName: `S${index + 1}`,
+  parentId,
+  subType: SubMediaType.Season,
+  index,
+});
+
+export const DEF_DLC = (parentId: number, index: number): DefaultDLC => ({
+  ...DEF_GAME,
+  name: `DLC ${index + 1}`,
+  sortName: `DLC${index + 1}`,
+  parentId,
+  subType: SubMediaType.DLC,
+  index,
+});
+
+export const DEF_CHAPTER = (
+  parentId: number,
+  index: number
+): DefaultChapter => ({
+  ...DEF_GAME,
+  name: `Chapter ${index + 1}`,
+  sortName: `CH${index + 1}`,
+  parentId,
+  subType: SubMediaType.Chapter,
+  index,
+});

@@ -101,19 +101,16 @@ export interface MediaData {
   releaseDate: ReleaseDate;
   image: Image;
   rating: MediaRating;
+  userReviews?: number[];
+  profReviews?: number[];
   type: MediaType;
   genres: GameGenre[] | FilmGenre[] | ShowGenre[];
   subMedia: SubMediaType;
-  studios: Studios;
-  direction: Direction;
-  writing: Writing;
+  studios: number[];
+  directors: number[];
+  writers: number[];
   countries: Country[];
   cast: Cast;
-}
-
-export interface SubMediaData extends MediaData {
-  subType: SubMediaType;
-  parentId: number;
 }
 
 // Media types
@@ -143,6 +140,12 @@ export interface GameData extends MediaData {
 }
 
 // Sub-media types
+export interface SubMediaData extends MediaData {
+  subType: SubMediaType;
+  parentId: number;
+  index: number;
+}
+
 export interface SeasonData extends SubMediaData {
   type: MediaType.Show;
   subType: SubMediaType.Season;
@@ -194,5 +197,17 @@ export type DefaultGame = Omit<
 >;
 export type CreateSubMedia = Omit<SubMediaData, 'id'>;
 export type CreateSeason = Omit<SeasonData, 'id'>;
+export type DefaultSeason = Omit<
+  CreateSeason,
+  'originalName' | 'description' | 'genres'
+>;
 export type CreateDLC = Omit<DLCData, 'id'>;
+export type DefaultDLC = Omit<
+  CreateDLC,
+  'originalName' | 'description' | 'genres'
+>;
 export type CreateChapter = Omit<ChapterData, 'id'>;
+export type DefaultChapter = Omit<
+  CreateChapter,
+  'originalName' | 'description' | 'genres'
+>;
