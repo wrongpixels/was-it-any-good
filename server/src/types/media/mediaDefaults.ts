@@ -1,5 +1,10 @@
 import Country from '../countries/countryTypes';
 import {
+  FilmParental,
+  GameParental,
+  ShowParental,
+} from '../parental/parentalTypes';
+import {
   Author,
   Creator,
   Director,
@@ -15,6 +20,14 @@ import {
   Studios,
   BirthDate,
   ReleaseDate,
+  DefaultMedia,
+  MediaRating,
+  Writing,
+  DefaultFilm,
+  MediaType,
+  SubMediaType,
+  DefaultShow,
+  DefaultGame,
 } from './mediaTypes';
 
 export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
@@ -24,9 +37,14 @@ export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
   isUnknown: true,
 };
-export const DEF_RELEASEDATE: ReleaseDate = {
+export const DEF_RELEASE_DATE: ReleaseDate = {
   date: null,
   isUnknown: true,
+};
+export const DEF_MEDIA_RATING: MediaRating = {
+  score: 0,
+  isValid: true,
+  voteCount: 0,
 };
 
 export const DEF_INDIVIDUAL: Individual = {
@@ -49,7 +67,7 @@ export const DEF_AUTHOR: Author = {
 export const DEF_DIRECTOR: Director = {
   ...DEF_AUTHOR,
   type: AuthorType.Director,
-  name: 'Unknown drector',
+  name: 'Unknown director',
 };
 
 export const DEF_WRITER: Writer = {
@@ -74,8 +92,41 @@ export const DEF_CHARACTER: Character = {
   actor: DEF_ACTOR,
 };
 
-export const DEF_CAST: Cast = [DEF_CHARACTER];
-export const DEF_DIRECTION: Direction = [DEF_DIRECTOR];
-export const DEF_STUDIOS: Studios = [DEF_STUDIO];
+export const DEF_CAST: Cast = [DEF_CHARACTER.id];
+export const DEF_DIRECTION: Direction = [DEF_DIRECTOR.id];
+export const DEF_STUDIOS: Studios = [DEF_STUDIO.id];
+export const DEF_WRITING: Writing = [DEF_WRITER.id];
+export const DEF_COUNTRIES: Country[] = [Country.UNKNOWN];
 
-export const DEF_MEDIA;
+export const DEF_MEDIA: DefaultMedia = {
+  parentalGuide: FilmParental.UNKNOWN,
+  releaseDate: DEF_RELEASE_DATE,
+  image: DEF_IMAGE_MEDIA,
+  rating: DEF_MEDIA_RATING,
+  studios: DEF_STUDIOS,
+  direction: DEF_DIRECTION,
+  writing: DEF_WRITING,
+  countries: DEF_COUNTRIES,
+  cast: DEF_CAST,
+};
+
+export const DEF_FILM: DefaultFilm = {
+  ...DEF_MEDIA,
+  parentalGuide: FilmParental.UNKNOWN,
+  type: MediaType.Film,
+  subMedia: SubMediaType.None,
+};
+
+export const DEF_SHOW: DefaultShow = {
+  ...DEF_MEDIA,
+  parentalGuide: ShowParental.UNKNOWN,
+  type: MediaType.Show,
+  subMedia: SubMediaType.Season,
+};
+
+export const DEF_GAME: DefaultGame = {
+  ...DEF_MEDIA,
+  parentalGuide: GameParental.UNKNOWN,
+  type: MediaType.Game,
+  subMedia: SubMediaType.DLC,
+};

@@ -4,6 +4,7 @@ export enum FilmParental {
   PG13 = 'Parental Guidance for Children Under 13',
   R = 'Restricted',
   NC17 = 'Adults Only',
+  UNKNOWN = 'Unknown',
 }
 
 export enum ShowParental {
@@ -14,6 +15,7 @@ export enum ShowParental {
   TVPG = 'Parental Guidance Suggested',
   TV14 = 'Parents Strongly Cautioned',
   TVMA = 'Mature Audience',
+  UNKNOWN = 'Unknown',
 }
 
 export enum GameParental {
@@ -24,6 +26,7 @@ export enum GameParental {
   M = 'Mature 17+',
   AO = 'Adults Only 18+',
   RP = 'Rating Pending',
+  UNKNOWN = 'Unknown',
 }
 
 export type ParentalGuide = GameParental | FilmParental | ShowParental;

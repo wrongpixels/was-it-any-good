@@ -9,31 +9,39 @@ import {
   FilmParental,
   GameParental,
   ParentalGuide,
+  ShowParental,
 } from '../parental/parentalTypes';
 
 export type Image = string;
+export type Direction = number[];
+export type Cast = number[];
+export type Writing = number[];
+export type Studios = number[];
 
 export interface ReleaseDate {
   date: Date | null;
   isUnknown: boolean;
 }
+
 export interface BirthDate {
   year: number;
   isUnknown: boolean;
 }
 
-export interface Rating {
-  value: number;
+export interface MediaRating {
+  score: number;
   isValid: boolean;
   voteCount: number;
 }
-enum MediaType {
+
+// Enums
+export enum MediaType {
   Film = 'Film',
   Show = 'Show',
   Game = 'Game',
 }
 
-enum SubMediaType {
+export enum SubMediaType {
   None = 'None',
   Season = 'Season',
   Chapter = 'Chapter',
@@ -47,18 +55,19 @@ export enum AuthorType {
   Unknown = 'Unknown',
 }
 
-interface Individual {
+// People
+export interface Individual {
   id: number;
   name: string;
   country: Country;
   image: Image;
 }
 
-interface Creator extends Individual {
-  media?: Media[];
+export interface Creator extends Individual {
+  mediaIds?: number[];
 }
 
-interface Author extends Creator {
+export interface Author extends Creator {
   type: AuthorType;
   birthDate: BirthDate;
 }
@@ -70,29 +79,28 @@ export interface Director extends Author {
 export interface Writer extends Author {
   type: AuthorType.Writer;
 }
-interface Actor extends Author {
+
+export interface Actor extends Author {
   type: AuthorType.Actor;
 }
+
 export interface Character extends Individual {
   actor: Actor;
 }
-interface Studio extends Individual {}
 
-export type Direction = Director[];
-export type Cast = Character[];
-export type Writing = Writer[];
-export type Studios = Studio[];
+export interface Studio extends Individual {}
 
-interface Media {
+// Media
+export interface MediaData {
   id: number;
   name: string;
   originalName: string;
-  sortname: string;
+  sortName: string;
   description: string;
   parentalGuide: ParentalGuide;
   releaseDate: ReleaseDate;
   image: Image;
-  rating: unknown | number;
+  rating: MediaRating;
   type: MediaType;
   genres: GameGenre[] | FilmGenre[] | ShowGenre[];
   subMedia: SubMediaType;
@@ -102,71 +110,89 @@ interface Media {
   countries: Country[];
   cast: Cast;
 }
-export type CreateMedia = Omit<Media, 'id'>;
 
-interface Film extends Media {
+export interface SubMediaData extends MediaData {
+  subType: SubMediaType;
+  parentId: number;
+}
+
+// Media types
+export interface FilmData extends MediaData {
   type: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
   genres: FilmGenre[];
 }
-export type CreateFilm = Omit<Film, 'id'>;
 
-interface Show extends Media {
+export interface ShowData extends MediaData {
   type: MediaType.Show;
   subMedia: SubMediaType.Season;
-  seasons: Season[];
+  parentalGuide: ShowParental;
+  seasonIds: number[];
   genres: ShowGenre[];
 }
-export type CreateShow = Omit<Show, 'id'>;
 
-interface Game extends Media {
+export interface GameData extends MediaData {
   type: MediaType.Game;
   subMedia: SubMediaType.Chapter | SubMediaType.DLC;
   parentalGuide: GameParental;
-  dlc: DLC[];
-  chapters: Chapter[];
+  dlcIds: number[];
+  chapterIds: number[];
   genres: GameGenre[];
   gamePlayGenres: GameplayGenre[];
 }
-export type CreateGame = Omit<Game, 'id'>;
 
-interface SubMedia extends Media {
-  subType: SubMediaType;
-  parentId: number;
-}
-export type CreateSubMedia = Omit<SubMedia, 'id'>;
-
-interface Season extends SubMedia {
+// Sub-media types
+export interface SeasonData extends SubMediaData {
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }
-export type CreateSeason = Omit<Season, 'id'>;
 
-interface DLC extends SubMedia {
+export interface DLCData extends SubMediaData {
   type: MediaType.Game;
   subType: SubMediaType.DLC;
 }
-export type CreateDLC = Omit<DLC, 'id'>;
 
-interface Chapter extends SubMedia {
+export interface ChapterData extends SubMediaData {
   type: MediaType.Game;
   subType: SubMediaType.Chapter;
 }
-export type CreateChapter = Omit<Chapter, 'id'>;
 
-export {
-  Individual,
-  Creator,
-  Media,
-  Author,
-  MediaType,
-  Film,
-  Actor,
-  Studio,
-  Show,
-  Season,
-  Game,
-  DLC,
-  Chapter,
-};
+// Creation
+export type CreateMedia = Omit<MediaData, 'id'>;
+export type DefaultMedia = Omit<
+  CreateMedia,
+  | 'name'
+  | 'sortName'
+  | 'originalName'
+  | 'description'
+  | 'type'
+  | 'genres'
+  | 'subMedia'
+>;
+export type CreateFilm = Omit<FilmData, 'id'>;
+export type DefaultFilm = Omit<
+  CreateFilm,
+  'name' | 'sortName' | 'originalName' | 'description' | 'genres'
+>;
+export type CreateShow = Omit<ShowData, 'id'>;
+export type DefaultShow = Omit<
+  CreateShow,
+  'name' | 'sortName' | 'originalName' | 'description' | 'genres' | 'seasonIds'
+>;
+export type CreateGame = Omit<GameData, 'id'>;
+export type DefaultGame = Omit<
+  CreateGame,
+  | 'name'
+  | 'sortName'
+  | 'originalName'
+  | 'description'
+  | 'genres'
+  | 'gamePlayGenres'
+  | 'chapterIds'
+  | 'dlcIds'
+>;
+export type CreateSubMedia = Omit<SubMediaData, 'id'>;
+export type CreateSeason = Omit<SeasonData, 'id'>;
+export type CreateDLC = Omit<DLCData, 'id'>;
+export type CreateChapter = Omit<ChapterData, 'id'>;
