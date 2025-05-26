@@ -2,13 +2,15 @@
 import express from 'express';
 import { Media } from '../models';
 import CustomError from '../util/customError';
+import { fetchFilm } from '../services/films-service';
 
 const router = express.Router();
 
-router.get('/', async (_req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   try {
-    const entries = await Media.findAll();
-    res.json(entries);
+    const id: string = req.params.id;
+    const data = await fetchFilm(id);
+    res.json(data);
   } catch (error) {
     next(error);
   }

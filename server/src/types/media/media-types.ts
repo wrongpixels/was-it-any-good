@@ -1,16 +1,16 @@
-import Country from '../countries/countryTypes';
+import Country from '../countries/country-types';
 import {
   FilmGenre,
   ShowGenre,
   GameGenre,
   GameplayGenre,
-} from '../genres/genreTypes';
+} from '../genres/genre-types';
 import {
   FilmParental,
   GameParental,
   ParentalGuide,
   ShowParental,
-} from '../parental/parentalTypes';
+} from '../parental/parentaly-types';
 
 export type Image = string;
 export type Direction = number[];
@@ -113,6 +113,7 @@ export interface Studio extends Individual {}
 // Media
 export interface MediaData {
   id: number;
+  sourceId?: number;
   name: string;
   originalName: string;
   sortName: string;

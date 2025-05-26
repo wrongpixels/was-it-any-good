@@ -1,9 +1,9 @@
-import Country from '../countries/countryTypes';
+import Country from '../countries/country-types';
 import {
   FilmParental,
   GameParental,
   ShowParental,
-} from '../parental/parentalTypes';
+} from '../parental/parentaly-types';
 import {
   Author,
   Creator,
@@ -32,7 +32,7 @@ import {
   DefaultChapter,
   CastRole,
   Cast,
-} from './mediaTypes';
+} from './media-types';
 
 export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
 export const DEF_IMAGE_MEDIA: Image = 'https://i.imgur.com/EYiJVoX.png';

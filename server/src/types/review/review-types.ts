@@ -1,4 +1,4 @@
-import { Individual } from '../media/mediaTypes';
+import { Individual } from '../media/media-types';
 
 type VoteType = 'User' | 'Critic';
 
