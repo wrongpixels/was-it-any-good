@@ -15,7 +15,6 @@ import {
   Actor,
   Image,
   Character,
-  Cast,
   Direction,
   Studios,
   BirthDate,
@@ -31,6 +30,8 @@ import {
   DefaultSeason,
   DefaultDLC,
   DefaultChapter,
+  CastRole,
+  Cast,
 } from './mediaTypes';
 
 export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
@@ -92,7 +93,9 @@ export const DEF_ACTOR: Actor = {
 
 export const DEF_CHARACTER: Character = {
   ...DEF_INDIVIDUAL,
-  actor: DEF_ACTOR,
+  actorId: DEF_ACTOR.id,
+  mediaId: -1,
+  role: CastRole.Unknown,
 };
 
 export const DEF_CAST: Cast = [DEF_CHARACTER.id];

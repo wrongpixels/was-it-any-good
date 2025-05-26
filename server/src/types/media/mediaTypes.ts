@@ -14,9 +14,9 @@ import {
 
 export type Image = string;
 export type Direction = number[];
-export type Cast = number[];
 export type Writing = number[];
 export type Studios = number[];
+export type Cast = number[];
 
 export interface ReleaseDate {
   date: Date | null;
@@ -55,6 +55,23 @@ export enum AuthorType {
   Unknown = 'Unknown',
 }
 
+export enum CastRole {
+  Main = 'Main',
+  Supporting = 'Supporting',
+  GuestStar = 'Guest star',
+  Cameo = 'Cameo',
+  Narration = 'Narration',
+  AdditionalVoices = 'Additional voices',
+  Unknown = 'Unknown',
+}
+
+export enum PerformanceType {
+  LiveAction = 'Live Action',
+  Voice = 'Voice',
+  MotionCapture = 'Motion Capture',
+  Other = 'Other',
+}
+
 // People
 export interface Individual {
   id: number;
@@ -85,7 +102,10 @@ export interface Actor extends Author {
 }
 
 export interface Character extends Individual {
-  actor: Actor;
+  mediaId: number;
+  actorId: number;
+  description?: string;
+  role: CastRole;
 }
 
 export interface Studio extends Individual {}
@@ -102,7 +122,7 @@ export interface MediaData {
   image: Image;
   rating: MediaRating;
   userReviews?: number[];
-  profReviews?: number[];
+  criticReviews?: number[];
   type: MediaType;
   genres: GameGenre[] | FilmGenre[] | ShowGenre[];
   subMedia: SubMediaType;
@@ -110,7 +130,7 @@ export interface MediaData {
   directors: number[];
   writers: number[];
   countries: Country[];
-  cast: Cast;
+  cast: number[];
 }
 
 // Media types
