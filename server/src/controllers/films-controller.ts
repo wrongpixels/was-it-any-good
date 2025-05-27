@@ -2,7 +2,7 @@
 import express from 'express';
 import { Media } from '../models';
 import CustomError from '../util/customError';
-import { fetchFilm } from '../services/films-service';
+import { fetchFilm } from '../services/film-service';
 
 const router = express.Router();
 

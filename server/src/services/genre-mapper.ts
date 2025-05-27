@@ -1,5 +1,5 @@
+import { TMDBGenreData } from '../schemas/film-schema';
 import { CreateGenreData } from '../types/genres/genre-types';
-import { TMDBGenreData } from '../types/media/tmdb-types';
 import { TVDBGenreData } from '../types/media/tvdb-types';
 
 export const mapTMDBGenres = (orGenres: TMDBGenreData[]): CreateGenreData[] => {

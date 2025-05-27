@@ -136,6 +136,7 @@ export interface MediaData {
 
 // Media types
 export interface FilmData extends MediaData {
+  tmdbId: number;
   type: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
@@ -143,6 +144,7 @@ export interface FilmData extends MediaData {
 }
 
 export interface ShowData extends MediaData {
+  tvdbId: number;
   type: MediaType.Show;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
@@ -168,6 +170,7 @@ export interface SubMediaData extends MediaData {
 }
 
 export interface SeasonData extends SubMediaData {
+  tvdbId: number;
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }
@@ -197,12 +200,18 @@ export type DefaultMedia = Omit<
 export type CreateFilm = Omit<FilmData, 'id'>;
 export type DefaultFilm = Omit<
   CreateFilm,
-  'name' | 'sortName' | 'originalName' | 'description' | 'genres'
+  'name' | 'sortName' | 'tmdbId' | 'originalName' | 'description' | 'genres'
 >;
 export type CreateShow = Omit<ShowData, 'id'>;
 export type DefaultShow = Omit<
   CreateShow,
-  'name' | 'sortName' | 'originalName' | 'description' | 'genres' | 'seasonIds'
+  | 'name'
+  | 'sortName'
+  | 'tvdbId'
+  | 'originalName'
+  | 'description'
+  | 'genres'
+  | 'seasonIds'
 >;
 export type CreateGame = Omit<GameData, 'id'>;
 export type DefaultGame = Omit<
@@ -220,7 +229,7 @@ export type CreateSubMedia = Omit<SubMediaData, 'id'>;
 export type CreateSeason = Omit<SeasonData, 'id'>;
 export type DefaultSeason = Omit<
   CreateSeason,
-  'originalName' | 'description' | 'genres'
+  'originalName' | 'tvdbId' | 'description' | 'genres'
 >;
 export type CreateDLC = Omit<DLCData, 'id'>;
 export type DefaultDLC = Omit<
