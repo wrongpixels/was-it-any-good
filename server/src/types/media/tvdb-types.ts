@@ -3,4 +3,4 @@ export interface TVDBEntry {
   name: string;
 }
 
-export interface TVDBGenre extends TVDBEntry {}
+export interface TVDBGenreData extends TVDBEntry {}

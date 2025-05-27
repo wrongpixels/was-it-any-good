@@ -1,6 +1,7 @@
 enum GenreBase {
   Action = 'Action',
   Adventure = 'Adventure',
+  Animation = 'Animation',
   Comedy = 'Comedy',
   Drama = 'Drama',
   Fantasy = 'Fantasy',
@@ -17,21 +18,15 @@ enum GenreBase {
   Other = 'Other',
 }
 
-interface GenreData {
+export interface GenreData {
   id: number;
   name: string;
+  tvdbId?: number;
+  tmdbId?: number;
+  gamedbId?: number;
 }
 
-export interface FilmGenreData extends GenreData {
-  tmdbId: number;
-}
-
-export interface ShowGenreData extends GenreData {
-  film: true;
-  show: false;
-  game: false;
-  tmdbId: number;
-}
+export type CreateGenreData = Omit<GenreData, 'id'>;
 
 enum AudiovisualGenre {
   Animation = 'Animation',

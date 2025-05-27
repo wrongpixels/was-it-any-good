@@ -6,6 +6,7 @@ import {
 } from '../types/media/tmdb-types';
 import { TMDB_TOKEN } from '../util/config';
 import axios from 'axios';
+import { mapTMDBGenres } from './genre-mapper';
 
 const TMDB_URL = 'https://api.themoviedb.org/3/movie/';
 
@@ -23,7 +24,7 @@ export const fetchFilm = async (id: string): Promise<TMDBFilmData> => {
 
   const filmData: TMDBFilmData = {
     id: basicData.data.id,
-    genres: basicData.data.genres,
+    genres: mapTMDBGenres(basicData.data.genres),
     imdb_id: basicData.data.imdb_id,
     origin_country: basicData.data.production_countries,
     title: basicData.data.title,

@@ -109,6 +109,7 @@ export const DEF_MEDIA: DefaultMedia = {
   releaseDate: DEF_RELEASE_DATE,
   image: DEF_IMAGE_MEDIA,
   rating: DEF_MEDIA_RATING,
+  runtime: 0,
   studios: DEF_STUDIOS,
   directors: DEF_DIRECTION,
   writers: DEF_WRITING,

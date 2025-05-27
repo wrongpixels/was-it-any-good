@@ -1,8 +1,9 @@
 import Country from '../countries/country-types';
+import { CreateGenreData } from '../genres/genre-types';
 
 export interface TMDBFilmData {
   id: number;
-  genres: TMDBGenreData[];
+  genres: CreateGenreData[];
   imdb_id: string;
   origin_country: Country[];
   title: string;
