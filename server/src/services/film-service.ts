@@ -1,3 +1,4 @@
+import { createFilm } from '../factories/MediaFactory';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
@@ -7,6 +8,7 @@ import {
   TMDBFilmData,
   TMDBFilmInfoSchema,
 } from '../schemas/film-schema';
+import { FilmData } from '../types/media/media-types';
 import { TMDB_TOKEN } from '../util/config';
 import axios from 'axios';
 //import { mapTMDBGenres } from './genre-mapper';
@@ -29,7 +31,8 @@ export const fetchFilm = async (id: string): Promise<TMDBFilmData> => {
     TMDBCreditsSchema.parse(creditsRes.data)
   );
   const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
-  console.log(filmData);
+  const actualFilmData: FilmData = createFilm(filmData);
+  console.log(actualFilmData);
   return filmData;
 };
 

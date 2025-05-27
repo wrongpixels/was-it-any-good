@@ -1,4 +1,4 @@
-import { Individual } from '../media/media-types';
+import { IndividualData } from '../media/media-types';
 
 type VoteType = 'User' | 'Critic';
 
@@ -51,7 +51,7 @@ export interface CriticReviewSourceData {
   url?: string;
 }
 
-export interface CriticReviewerData extends Individual {
+export interface CriticReviewerData extends IndividualData {
   reviewIds: number[];
 }
 

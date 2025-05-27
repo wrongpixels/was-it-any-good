@@ -12,26 +12,27 @@ const TMDBStudioSchema = TMDBEntrySchema.extend({
 
 const TMDBGenreSchema = TMDBEntrySchema.extend({});
 
-const TMDBRoleSchema = TMDBEntrySchema.extend({
+const TMDBCreditRoleSchema = TMDBEntrySchema.extend({
   adult: z.boolean(),
   gender: z.number(),
   credit_id: z.string(),
   known_for_department: z.string(),
+  profile_path: z.string().nullable(),
 });
 
-const TMDBCastSchema = TMDBRoleSchema.extend({
+const TMDBCastRoleSchema = TMDBCreditRoleSchema.extend({
   order: z.number(),
   character: z.string(),
 });
 
-const TMDBCrewSchema = TMDBRoleSchema.extend({
+const TMDBCrewSchema = TMDBCreditRoleSchema.extend({
   job: z.string(),
   department: z.string(),
 });
 
 export const TMDBCreditsSchema = z.object({
   id: z.number(),
-  cast: z.array(TMDBCastSchema),
+  cast: z.array(TMDBCastRoleSchema),
   crew: z.array(TMDBCrewSchema),
 });
 
@@ -60,12 +61,14 @@ export type TMDBFilmData = z.infer<typeof TMDBFilmSchema>;
 export type TMDBCreditsData = z.infer<typeof TMDBCreditsSchema>;
 export type TMDBGenreData = z.infer<typeof TMDBGenreSchema>;
 export type TMDBCrewData = z.infer<typeof TMDBCrewSchema>;
+export type TMDBRoleData = z.infer<typeof TMDBCastRoleSchema>;
 
-export type TMDBAcceptedDepartments =
-  | 'Writing'
-  | 'Directing'
-  | 'Acting'
-  | 'Sound';
+export enum TMDBAcceptedDepartments {
+  Writing = 'Writing',
+  Directing = 'Directing',
+  Acting = 'Acting',
+  Sound = 'Sound',
+}
 
 export enum TMDBAcceptedJobs {
   Screenplay = 'Screenplay',

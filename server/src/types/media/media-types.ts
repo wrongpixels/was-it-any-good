@@ -1,10 +1,5 @@
 import Country from '../countries/country-types';
-import {
-  FilmGenre,
-  ShowGenre,
-  GameGenre,
-  GameplayGenre,
-} from '../genres/genre-types';
+import { CreateGenreData, GameplayGenre } from '../genres/genre-types';
 import {
   FilmParental,
   GameParental,
@@ -13,13 +8,9 @@ import {
 } from '../parental/parentaly-types';
 
 export type Image = string;
-export type Direction = number[];
-export type Writing = number[];
-export type Studios = number[];
-export type Cast = number[];
 
 export interface ReleaseDate {
-  date: Date | null;
+  date: string | null;
   isUnknown: boolean;
 }
 
@@ -55,7 +46,7 @@ export enum AuthorType {
   Unknown = 'Unknown',
 }
 
-export enum CastRole {
+export enum RoleType {
   Main = 'Main',
   Supporting = 'Supporting',
   GuestStar = 'Guest star',
@@ -73,47 +64,47 @@ export enum PerformanceType {
 }
 
 // People
-export interface Individual {
-  id: number;
+export interface IndividualData {
   name: string;
-  country: Country;
+  country?: Country;
   image: Image;
+  tmdbId?: number;
+  tvdbId?: number;
 }
 
-export interface Creator extends Individual {
+export interface CreatorData extends IndividualData {
   mediaIds?: number[];
 }
 
-export interface Author extends Creator {
+export interface AuthorData extends CreatorData {
   type: AuthorType;
-  birthDate: BirthDate;
+  birthDate?: BirthDate;
 }
 
-export interface Director extends Author {
+export interface DirectorData extends AuthorData {
   type: AuthorType.Director;
 }
 
-export interface Writer extends Author {
+export interface WriterData extends AuthorData {
   type: AuthorType.Writer;
 }
 
-export interface Actor extends Author {
+export interface ActorData extends AuthorData {
   type: AuthorType.Actor;
 }
 
-export interface Character extends Individual {
-  mediaId: number;
-  actorId: number;
+export interface RoleData extends IndividualData {
+  character: string;
   description?: string;
-  role: CastRole;
+  roleType: RoleType;
 }
 
-export interface Studio extends Individual {}
+export interface StudioData extends IndividualData {}
 
 // Media
 export interface MediaData {
-  id: number;
   name: string;
+  status: string;
   originalName: string;
   sortName: string;
   description: string;
@@ -125,13 +116,13 @@ export interface MediaData {
   userReviews?: number[];
   criticReviews?: number[];
   type: MediaType;
-  genres: GameGenre[] | FilmGenre[] | ShowGenre[];
+  genres: CreateGenreData[];
   subMedia: SubMediaType;
-  studios: number[];
-  directors: number[];
-  writers: number[];
+  studios: StudioData[];
+  directors: DirectorData[];
+  writers: WriterData[];
   countries: Country[];
-  cast: number[];
+  cast: RoleData[];
 }
 
 // Media types
@@ -140,7 +131,6 @@ export interface FilmData extends MediaData {
   type: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
-  genres: FilmGenre[];
 }
 
 export interface ShowData extends MediaData {
@@ -149,7 +139,6 @@ export interface ShowData extends MediaData {
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
   seasonIds: number[];
-  genres: ShowGenre[];
 }
 
 export interface GameData extends MediaData {
@@ -158,7 +147,6 @@ export interface GameData extends MediaData {
   parentalGuide: GameParental;
   dlcIds: number[];
   chapterIds: number[];
-  genres: GameGenre[];
   gamePlayGenres: GameplayGenre[];
 }
 
@@ -197,14 +185,14 @@ export type DefaultMedia = Omit<
   | 'genres'
   | 'subMedia'
 >;
-export type CreateFilm = Omit<FilmData, 'id'>;
+export type CreateFilmData = Omit<FilmData, 'id'>;
 export type DefaultFilm = Omit<
-  CreateFilm,
+  CreateFilmData,
   'name' | 'sortName' | 'tmdbId' | 'originalName' | 'description' | 'genres'
 >;
-export type CreateShow = Omit<ShowData, 'id'>;
+export type CreateShowData = Omit<ShowData, 'id'>;
 export type DefaultShow = Omit<
-  CreateShow,
+  CreateShowData,
   | 'name'
   | 'sortName'
   | 'tvdbId'
@@ -213,9 +201,9 @@ export type DefaultShow = Omit<
   | 'genres'
   | 'seasonIds'
 >;
-export type CreateGame = Omit<GameData, 'id'>;
+export type CreateGameData = Omit<GameData, 'id'>;
 export type DefaultGame = Omit<
-  CreateGame,
+  CreateGameData,
   | 'name'
   | 'sortName'
   | 'originalName'

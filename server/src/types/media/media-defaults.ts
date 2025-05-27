@@ -5,23 +5,20 @@ import {
   ShowParental,
 } from '../parental/parentaly-types';
 import {
-  Author,
-  Creator,
-  Director,
-  Individual,
+  AuthorData,
+  CreatorData,
+  DirectorData,
+  IndividualData,
   AuthorType,
-  Writer,
-  Studio,
-  Actor,
+  WriterData,
+  StudioData,
+  ActorData,
   Image,
-  Character,
-  Direction,
-  Studios,
+  RoleData,
   BirthDate,
   ReleaseDate,
   DefaultMedia,
   MediaRating,
-  Writing,
   DefaultFilm,
   MediaType,
   SubMediaType,
@@ -30,8 +27,7 @@ import {
   DefaultSeason,
   DefaultDLC,
   DefaultChapter,
-  CastRole,
-  Cast,
+  RoleType,
 } from './media-types';
 
 export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
@@ -51,60 +47,61 @@ export const DEF_MEDIA_RATING: MediaRating = {
   voteCount: 0,
 };
 
-export const DEF_INDIVIDUAL: Individual = {
-  id: -1,
+export const DEF_INDIVIDUAL: IndividualData = {
   name: 'Unknown',
   country: Country.UNKNOWN,
   image: DEF_IMAGE_PERSON,
 };
 
-export const DEF_CREATOR: Creator = {
+export const DEF_CREATOR: CreatorData = {
   ...DEF_INDIVIDUAL,
 };
 
-export const DEF_AUTHOR: Author = {
+export const DEF_AUTHOR: AuthorData = {
   ...DEF_CREATOR,
   type: AuthorType.Unknown,
   birthDate: DEF_BIRTHDATE,
 };
 
-export const DEF_DIRECTOR: Director = {
+export const DEF_DIRECTOR: DirectorData = {
   ...DEF_AUTHOR,
   type: AuthorType.Director,
   name: 'Unknown director',
 };
 
-export const DEF_WRITER: Writer = {
+export const DEF_WRITER: WriterData = {
   ...DEF_AUTHOR,
   type: AuthorType.Writer,
   name: 'Unknown writer',
 };
 
-export const DEF_STUDIO: Studio = {
+export const DEF_STUDIO: StudioData = {
   ...DEF_INDIVIDUAL,
   name: 'Unknown studio',
 };
 
-export const DEF_ACTOR: Actor = {
+export const DEF_ACTOR: ActorData = {
   ...DEF_AUTHOR,
   type: AuthorType.Actor,
   name: 'Unknown actor',
 };
 
-export const DEF_CHARACTER: Character = {
+export const DEF_ROLE: RoleData = {
   ...DEF_INDIVIDUAL,
-  actorId: DEF_ACTOR.id,
-  mediaId: -1,
-  role: CastRole.Unknown,
+  character: 'Unknown',
+  roleType: RoleType.Unknown,
 };
 
-export const DEF_CAST: Cast = [DEF_CHARACTER.id];
-export const DEF_DIRECTION: Direction = [DEF_DIRECTOR.id];
-export const DEF_STUDIOS: Studios = [DEF_STUDIO.id];
-export const DEF_WRITING: Writing = [DEF_WRITER.id];
+export const DEF_STATUS = 'Released';
+
+export const DEF_CAST: RoleData[] = [DEF_ROLE];
+export const DEF_DIRECTION: DirectorData[] = [DEF_DIRECTOR];
+export const DEF_STUDIOS: StudioData[] = [DEF_STUDIO];
+export const DEF_WRITING: WriterData[] = [DEF_WRITER];
 export const DEF_COUNTRIES: Country[] = [Country.UNKNOWN];
 
 export const DEF_MEDIA: DefaultMedia = {
+  status: DEF_STATUS,
   parentalGuide: FilmParental.UNKNOWN,
   releaseDate: DEF_RELEASE_DATE,
   image: DEF_IMAGE_MEDIA,
