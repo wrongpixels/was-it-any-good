@@ -1,0 +1,179 @@
+{
+  "genres": [
+    {
+      "id": 1,
+      "name": "Soap",
+      "slug": "soap"
+    },
+    {
+      "id": 2,
+      "name": "Science Fiction",
+      "slug": "science-fiction"
+    },
+    {
+      "id": 3,
+      "name": "Reality",
+      "slug": "reality"
+    },
+    {
+      "id": 4,
+      "name": "News",
+      "slug": "news"
+    },
+    {
+      "id": 5,
+      "name": "Mini-Series",
+      "slug": "mini-series"
+    },
+    {
+      "id": 6,
+      "name": "Horror",
+      "slug": "horror"
+    },
+    {
+      "id": 7,
+      "name": "Home and Garden",
+      "slug": "home-and-garden"
+    },
+    {
+      "id": 8,
+      "name": "Game Show",
+      "slug": "game-show"
+    },
+    {
+      "id": 9,
+      "name": "Food",
+      "slug": "food"
+    },
+    {
+      "id": 10,
+      "name": "Fantasy",
+      "slug": "fantasy"
+    },
+    {
+      "id": 11,
+      "name": "Family",
+      "slug": "family"
+    },
+    {
+      "id": 12,
+      "name": "Drama",
+      "slug": "drama"
+    },
+    {
+      "id": 13,
+      "name": "Documentary",
+      "slug": "documentary"
+    },
+    {
+      "id": 14,
+      "name": "Crime",
+      "slug": "crime"
+    },
+    {
+      "id": 15,
+      "name": "Comedy",
+      "slug": "comedy"
+    },
+    {
+      "id": 16,
+      "name": "Children",
+      "slug": "children"
+    },
+    {
+      "id": 17,
+      "name": "Animation",
+      "slug": "animation"
+    },
+    {
+      "id": 18,
+      "name": "Adventure",
+      "slug": "adventure"
+    },
+    {
+      "id": 19,
+      "name": "Action",
+      "slug": "action"
+    },
+    {
+      "id": 21,
+      "name": "Sport",
+      "slug": "sport"
+    },
+    {
+      "id": 22,
+      "name": "Suspense",
+      "slug": "suspense"
+    },
+    {
+      "id": 23,
+      "name": "Talk Show",
+      "slug": "talk-show"
+    },
+    {
+      "id": 24,
+      "name": "Thriller",
+      "slug": "thriller"
+    },
+    {
+      "id": 25,
+      "name": "Travel",
+      "slug": "travel"
+    },
+    {
+      "id": 26,
+      "name": "Western",
+      "slug": "western"
+    },
+    {
+      "id": 27,
+      "name": "Anime",
+      "slug": "anime"
+    },
+    {
+      "id": 28,
+      "name": "Romance",
+      "slug": "romance"
+    },
+    {
+      "id": 29,
+      "name": "Musical",
+      "slug": "musical"
+    },
+    {
+      "id": 30,
+      "name": "Podcast",
+      "slug": "podcast"
+    },
+    {
+      "id": 31,
+      "name": "Mystery",
+      "slug": "mystery"
+    },
+    {
+      "id": 32,
+      "name": "Indie",
+      "slug": "indie"
+    },
+    {
+      "id": 33,
+      "name": "History",
+      "slug": "history"
+    },
+    {
+      "id": 34,
+      "name": "War",
+      "slug": "war"
+    },
+    {
+      "id": 35,
+      "name": "Martial Arts",
+      "slug": "martial-arts"
+    },
+    {
+      "id": 36,
+      "name": "Awards Show",
+      "slug": "awards-show"
+    }
+  ]
+}

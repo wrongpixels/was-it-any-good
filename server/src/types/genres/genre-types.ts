@@ -17,6 +17,22 @@ enum GenreBase {
   Other = 'Other',
 }
 
+interface GenreData {
+  id: number;
+  name: string;
+}
+
+export interface FilmGenreData extends GenreData {
+  tmdbId: number;
+}
+
+export interface ShowGenreData extends GenreData {
+  film: true;
+  show: false;
+  game: false;
+  tmdbId: number;
+}
+
 enum AudiovisualGenre {
   Animation = 'Animation',
   TradAnimation = '2D Animation',
@@ -57,33 +73,27 @@ enum GameplayGenre {
   Stealth = 'Stealth',
   Survival = 'Survival',
   Rhythm = 'Rhythm',
-
   Strategy = 'Strategy',
   RealTimeStrategy = 'Real-Time Strategy',
   TurnBased = 'Turn-Based',
   TowerDefense = 'Tower Defense',
-
   RPG = 'Role-Playing Game',
   ActionRPG = 'Action RPG',
   MMORPG = 'Massively Multiplayer Online RPG',
   TacticalRPG = 'Tactical RPG',
-
   VisualNovel = 'Visual Novel',
   AdventurePoint = 'Point & Click Adventure',
   InteractiveFiction = 'Interactive Fiction',
-
   Simulation = 'Simulation',
   LifeSim = 'Life Simulation',
   VehicleSim = 'Vehicle Simulation',
   CitySim = 'City Building',
   BusinessSim = 'Business Simulation',
   SportSim = 'Sports Simulation',
-
   Puzzle = 'Puzzle',
   Board = 'Board Game',
   Educational = 'Educational',
   Trivia = 'Trivia',
-
   OpenWorld = 'Open World',
   Sandbox = 'Sandbox',
   Battle = 'Battle Royale',
