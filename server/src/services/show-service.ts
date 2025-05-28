@@ -1,3 +1,4 @@
+import { createShow } from '../factories/show-factory';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
@@ -11,10 +12,10 @@ import {
   TMDBShowInfoData,
   TMDBShowInfoSchema,
 } from '../schemas/show-schema';
-//import { ShowData } from '../types/media/media-types';
+import { ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 
-export const fetchShow = async (id: string): Promise<unknown> => {
+export const fetchShow = async (id: string): Promise<ShowData> => {
   const showRes = await tmdbAPI.get(`/tv/${id}`);
   const creditsRes = await tmdbAPI.get(`/tv/${id}/credits`);
   const externalIdsRes = await tmdbAPI.get(`/tv/${id}/external_ids`);
@@ -33,7 +34,8 @@ export const fetchShow = async (id: string): Promise<unknown> => {
     imdb_id: imdbData.imdb_id,
   };
 
-  return showData;
+  const actualShowData: ShowData = createShow(showData);
+  return actualShowData;
 };
 
 const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({

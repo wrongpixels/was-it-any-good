@@ -6,7 +6,12 @@ import {
   DEF_SEASON,
   DEF_SHOW,
 } from '../types/media/media-defaults';
-import { CreatorData, SeasonData, ShowData } from '../types/media/media-types';
+import {
+  CreatorData,
+  SeasonData,
+  ShowData,
+  SubMediaType,
+} from '../types/media/media-types';
 import {
   createCast,
   createDirectors,
@@ -20,7 +25,6 @@ import {
   TMDBSeasonData,
   TMDBShowData,
 } from '../schemas/show-schema';
-import { TMDBEntryData } from '../schemas/film-schema';
 
 export const createShow = (tmdb: TMDBShowData): ShowData => ({
   ...DEF_SHOW,
@@ -45,6 +49,7 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
   writers: createWriters(tmdb.credits.crew),
   cast: createCast(tmdb.credits.cast),
   studios: createStudios(tmdb.production_companies),
+  seasons: createSeasons(tmdb.seasons),
 });
 
 const createCreators = (creators: TMDBCreatorData[]): CreatorData[] =>
@@ -57,14 +62,21 @@ const createCreator = (creator: TMDBCreatorData): CreatorData => ({
   image: creator.profile_path ? creator.profile_path : DEF_CREATOR.image,
 });
 
+const createSeasons = (seasons: TMDBSeasonData[]): SeasonData[] =>
+  seasons.map((s: TMDBSeasonData) => createSeason(s));
+
 const createSeason = (season: TMDBSeasonData): SeasonData => ({
   ...DEF_SEASON,
+  name: season.name,
+  originalName: season.name,
+  index: season.season_number,
+  sortName: season.name,
   tmdbId: season.id.toString(),
   episodeCount: season.episode_count,
   description: season.overview || '',
   image: season.poster_path
     ? imageLinker.createPosterURL(season.poster_path)
-    : DEF_SEASON.image,
+    : DEF_SHOW.image,
   releaseDate: getAirDate(season.air_date),
-  index: season.season_number,
+  subType: SubMediaType.Season,
 });

@@ -166,7 +166,6 @@ export interface SeasonData extends SubMediaData {
   tmdbId: string;
   imdbId?: string;
   episodeCount: number;
-  lastAirDate: AirDate;
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }
@@ -226,7 +225,7 @@ export type CreateSubMedia = Omit<SubMediaData, 'id'>;
 export type CreateSeason = Omit<SeasonData, 'id'>;
 export type DefaultSeason = Omit<
   CreateSeason,
-  'originalName' | 'tmdbId' | 'description' | 'genres'
+  'originalName' | 'tmdbId' | 'description'
 >;
 export type CreateDLC = Omit<DLCData, 'id'>;
 export type DefaultDLC = Omit<

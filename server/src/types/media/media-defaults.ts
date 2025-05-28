@@ -140,13 +140,14 @@ export const DEF_GAME: DefaultGame = {
   subMedia: SubMediaType.DLC,
 };
 
-export const DEF_SEASON = (index: number): DefaultSeason => ({
+export const DEF_SEASON: DefaultSeason = {
   ...DEF_SHOW,
-  name: `Season ${index + 1}`,
-  sortName: `S${index + 1}`,
+  name: '',
+  sortName: '',
+  index: 0,
   subType: SubMediaType.Season,
-  index,
-});
+  genres: [],
+};
 
 export const DEF_DLC = (index: number): DefaultDLC => ({
   ...DEF_GAME,
