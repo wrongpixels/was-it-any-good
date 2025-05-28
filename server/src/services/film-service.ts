@@ -9,23 +9,12 @@ import {
   TMDBFilmInfoSchema,
 } from '../schemas/film-schema';
 import { FilmData } from '../types/media/media-types';
-import { TMDB_TOKEN } from '../util/config';
-import axios from 'axios';
-//import { mapTMDBGenres } from './genre-mapper';
-
-const TMDB_URL = 'https://api.themoviedb.org/3/movie/';
-
-const tmdbApi = axios.create({
-  baseURL: TMDB_URL,
-  headers: {
-    Authorization: TMDB_TOKEN,
-    'Content-Type': 'application/json',
-  },
-});
+import { tmdbAPI } from '../util/config';
 
 export const fetchFilm = async (id: string): Promise<FilmData> => {
-  const filmRes = await tmdbApi.get(id);
-  const creditsRes = await tmdbApi.get(`${id}/credits`);
+  const filmRes = await tmdbAPI.get(`/movie/${id}`);
+  const creditsRes = await tmdbAPI.get(`/movie/${id}/credits`);
+
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
     TMDBCreditsSchema.parse(creditsRes.data)

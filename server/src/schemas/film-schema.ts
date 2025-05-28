@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const TMDBEntrySchema = z.object({
+export const TMDBEntrySchema = z.object({
   id: z.number(),
   name: z.string(),
 });
@@ -36,20 +36,23 @@ export const TMDBCreditsSchema = z.object({
   crew: z.array(TMDBCrewSchema),
 });
 
-export const TMDBFilmInfoSchema = z.object({
+export const TMDBInfoSchema = z.object({
   id: z.number(),
   genres: z.array(TMDBGenreSchema),
-  imdb_id: z.string(),
-  title: z.string(),
-  original_title: z.string(),
   origin_country: z.array(z.string()),
   overview: z.string(),
   poster_path: z.string().nullable(),
-  release_date: z.string().date(),
-  runtime: z.number().int().min(0),
   status: z.string(),
   adult: z.boolean(),
   production_companies: z.array(TMDBStudioSchema),
+});
+
+export const TMDBFilmInfoSchema = TMDBInfoSchema.extend({
+  title: z.string(),
+  imdb_id: z.string(),
+  original_title: z.string(),
+  release_date: z.string().date(),
+  runtime: z.number().int().min(0),
 });
 
 export const TMDBFilmSchema = TMDBFilmInfoSchema.extend({
@@ -75,4 +78,6 @@ export enum TMDBAcceptedJobs {
   Screenplay = 'Screenplay',
   Director = 'Director',
   OriginalMusicComposer = 'Original Music Composer',
+  Producer = 'Producer',
+  ExecutiveProducer = 'Executive Producer',
 }

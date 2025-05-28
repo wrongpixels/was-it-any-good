@@ -1,47 +1,45 @@
-/*import { createFilm } from '../factories/film-factory';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
   TMDBCreditsSchema,
   TMDBCrewData,
-  TMDBFilmInfoData,
-  TMDBFilmData,
-  TMDBFilmInfoSchema,
 } from '../schemas/film-schema';
-import { FilmData } from '../types/media/media-types'; */
-import { TMDB_TOKEN } from '../util/config';
-import axios from 'axios';
-//import { mapTMDBGenres } from './genre-mapper';
-
-const TMDB_URL = 'https://api.themoviedb.org/3/tv/';
-
-const tmdbApi = axios.create({
-  baseURL: TMDB_URL,
-  headers: {
-    Authorization: TMDB_TOKEN,
-    'Content-Type': 'application/json',
-  },
-});
+import {
+  TMDBExternalIdSchema,
+  TMDBImdbData,
+  TMDBShowData,
+  TMDBShowInfoData,
+  TMDBShowInfoSchema,
+} from '../schemas/show-schema';
+//import { ShowData } from '../types/media/media-types';
+import { tmdbAPI } from '../util/config';
 
 export const fetchShow = async (id: string): Promise<unknown> => {
-  const filmRes = await tmdbApi.get(id);
-  const creditsRes = await tmdbApi.get(`${id}/credits`);
-  /*
-  const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
+  const showRes = await tmdbAPI.get(`/tv/${id}`);
+  const creditsRes = await tmdbAPI.get(`/tv/${id}/credits`);
+  const externalIdsRes = await tmdbAPI.get(`/tv/${id}/external_ids`);
+
+  const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
     TMDBCreditsSchema.parse(creditsRes.data)
   );
-  const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
-  const actualFilmData: FilmData = createFilm(filmData);
-*/
-  const actualShowData = { ...filmRes, credits: creditsRes };
-  return actualShowData;
+  const imdbData: TMDBImdbData = TMDBExternalIdSchema.parse(
+    externalIdsRes.data
+  );
+
+  const showData: TMDBShowData = {
+    ...showInfoData,
+    credits: creditsData,
+    imdb_id: imdbData.imdb_id,
+  };
+
+  return showData;
 };
-/*
+
 const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
   ...credits,
   cast: credits.cast.slice(0, 10),
   crew: credits.crew.filter((crewMember: TMDBCrewData) =>
     Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
-  ), 
-});*/
+  ),
+});

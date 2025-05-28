@@ -1,57 +1,44 @@
 import { z } from 'zod';
+import {
+  TMDBCreditsSchema,
+  TMDBEntrySchema,
+  TMDBInfoSchema,
+} from './film-schema';
 
-const TVDBEntrySchema = z.object({ id: z.number(), name: z.string() });
-
-const TVDBRemoteIDSchema = z.object({ id: z.number(), sourceName: z.string() });
-
-const TVDBStatusSchema = TVDBEntrySchema.extend({});
-
-const TVDBStudioSchema = TVDBEntrySchema.extend({
-  country: z.string(),
-});
-const TVDBGenreSchema = TVDBEntrySchema.extend({});
-
-const TVDBPersonSchema = TVDBEntrySchema.extend({
-  peopleType: z.string(),
-  image: z.string().url(),
+const TMDBCreatedBySchema = TMDBEntrySchema.extend({
+  gender: z.number().nullable(),
 });
 
-const TVDBCharacterSchema = TVDBPersonSchema.extend({
-  peopleId: z.number(),
-  personName: z.string(),
-  personImageURL: z.string().url().nullable(),
-  sort: z.number(),
+const TMDBSeasonSchema = TMDBEntrySchema.extend({
+  episode_count: z.number().min(0),
+  overview: z.string().nullable(),
+  air_date: z.string().date(),
+  season_number: z.number(),
+  poster_path: z.string().nullable(),
 });
 
-const TVDBSeasonSchema = TVDBEntrySchema.extend({
-  number: z.number(),
-  type: TVDBEntrySchema,
-  image: z.string().url().nullable(),
-});
-
-const TVDBEpisodeSchema = z.object({
-  number: z.number(),
-  year: z.number(),
-});
-
-export const TVDBExtendedSeasonSchema = TVDBSeasonSchema.extend({
-  year: z.number(),
-  episodes: z.array(TVDBEpisodeSchema),
-});
-
-export const TVDBShowInfoSchema = z.object({
-  id: z.number(),
-  genres: z.array(TVDBGenreSchema),
+export const TMDBShowInfoSchema = TMDBInfoSchema.extend({
   name: z.string(),
-  status: TVDBStatusSchema,
-  originalCountry: z.string(),
-  firstAired: z.string().date(),
-  lastAired: z.string().date(),
-  averageRuntime: z.number().int().min(0),
-  overview: z.string(),
-  image: z.string().url(),
-  characters: z.array(TVDBCharacterSchema),
-  companies: z.array(TVDBStudioSchema).nullable(),
-  seasons: z.array(TVDBSeasonSchema),
-  remoteIds: z.array(TVDBRemoteIDSchema).nullable(),
+  original_name: z.string(),
+  number_of_episodes: z.number().min(0),
+  number_of_seasons: z.number().min(0),
+  first_air_date: z.string().date(),
+  last_air_date: z.string().date(),
+  in_production: z.boolean(),
+  episode_run_time: z.array(z.number()),
+  created_by: z.array(TMDBCreatedBySchema),
+  seasons: z.array(TMDBSeasonSchema),
 });
+
+export const TMDBShowSchema = TMDBShowInfoSchema.extend({
+  imdb_id: z.string(),
+  credits: TMDBCreditsSchema,
+});
+
+export const TMDBExternalIdSchema = z.object({
+  imdb_id: z.string(),
+});
+
+export type TMDBShowInfoData = z.infer<typeof TMDBShowInfoSchema>;
+export type TMDBShowData = z.infer<typeof TMDBShowSchema>;
+export type TMDBImdbData = z.infer<typeof TMDBExternalIdSchema>;
