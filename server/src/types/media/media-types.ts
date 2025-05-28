@@ -68,13 +68,11 @@ export interface IndividualData {
   name: string;
   country?: Country;
   image: Image;
-  tmdbId?: number;
-  tvdbId?: number;
+  tmdbId?: string;
+  tvdbId?: string;
 }
 
-export interface CreatorData extends IndividualData {
-  mediaIds?: number[];
-}
+export interface CreatorData extends IndividualData {}
 
 export interface AuthorData extends CreatorData {
   type: AuthorType;
@@ -127,14 +125,15 @@ export interface MediaData {
 
 // Media types
 export interface FilmData extends MediaData {
-  tmdbId: number;
+  tmdbId: string;
+  imdbId?: string;
   type: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
 }
 
 export interface ShowData extends MediaData {
-  tvdbId: number;
+  tvdbId: string;
   type: MediaType.Show;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
@@ -158,7 +157,7 @@ export interface SubMediaData extends MediaData {
 }
 
 export interface SeasonData extends SubMediaData {
-  tvdbId: number;
+  tvdbId: string;
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }

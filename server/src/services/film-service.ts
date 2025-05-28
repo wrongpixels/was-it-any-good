@@ -23,7 +23,7 @@ const tmdbApi = axios.create({
   },
 });
 
-export const fetchFilm = async (id: string): Promise<TMDBFilmData> => {
+export const fetchFilm = async (id: string): Promise<FilmData> => {
   const filmRes = await tmdbApi.get(id);
   const creditsRes = await tmdbApi.get(`${id}/credits`);
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
@@ -32,8 +32,8 @@ export const fetchFilm = async (id: string): Promise<TMDBFilmData> => {
   );
   const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
   const actualFilmData: FilmData = createFilm(filmData);
-  console.log(actualFilmData);
-  return filmData;
+
+  return actualFilmData;
 };
 
 const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
