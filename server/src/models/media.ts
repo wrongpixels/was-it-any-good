@@ -2,18 +2,20 @@ import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../util/db';
 
 class Media extends Model {
+  declare id: number;
   declare name: string;
+  declare originalName: string;
   declare sortName: string;
-  declare rating: number;
-  declare countries: number[];
-  declare writers: number[];
-  declare directors: number[];
-  declare cast: number[];
-  declare genres: number[];
   declare description: string;
-  declare year: number;
-  declare image: number;
+  declare status: string;
+  declare releaseDate: Date;
+  declare image: string;
+  declare rating: number;
+  declare voteCount: number;
+  declare runtime: number;
+  declare mediaType: string;
 }
+
 Media.init(
   {
     id: {
@@ -25,21 +27,22 @@ Media.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    originalName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     sortName: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
-    rating: {
-      type: DataTypes.DECIMAL,
+    description: {
+      type: DataTypes.TEXT,
     },
-    year: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        max: new Date().getFullYear() + 10,
-        min: 1888,
-      },
+    status: {
+      type: DataTypes.STRING,
+    },
+    releaseDate: {
+      type: DataTypes.DATE,
     },
     image: {
       type: DataTypes.STRING,
@@ -47,17 +50,24 @@ Media.init(
         isUrl: true,
       },
     },
+    rating: {
+      type: DataTypes.DECIMAL(3, 1),
+    },
+    voteCount: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    runtime: {
+      type: DataTypes.INTEGER,
+    },
+    mediaType: {
+      type: DataTypes.ENUM('Film', 'Show', 'Game'),
+      allowNull: false,
+    },
   },
   {
-    hooks: {
-      beforeCreate: (r) => {
-        if (!r.sortName) {
-          r.sortName = r.name;
-        }
-      },
-    },
     sequelize,
+    modelName: 'media',
   }
 );
-
 export default Media;
