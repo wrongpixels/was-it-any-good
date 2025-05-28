@@ -3,9 +3,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const POSTGRES_URI: string = process.env.POSTGRES_URI as string;
+const TMDB_API_URL: string = 'https://api.themoviedb.org/3';
+const TMDB_MEDIA_URL = 'https://media.themoviedb.org/t/p';
+
 const PORT = parseInt(process.env.PORT || '6060', 10);
 const TMDB_TOKEN: string = `Bearer ${process.env.API_TOKEN_TMDB}` as string;
-const TMDB_API_URL: string = 'https://api.themoviedb.org/3';
 
 if (!POSTGRES_URI) {
   throw new Error('Missing POSTGRES_URI');
@@ -25,4 +27,4 @@ const tmdbAPI = axios.create({
   },
 });
 
-export { POSTGRES_URI, PORT, tmdbAPI };
+export { POSTGRES_URI, PORT, tmdbAPI, TMDB_MEDIA_URL };

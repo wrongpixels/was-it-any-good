@@ -66,6 +66,7 @@ export type TMDBGenreData = z.infer<typeof TMDBGenreSchema>;
 export type TMDBCrewData = z.infer<typeof TMDBCrewSchema>;
 export type TMDBRoleData = z.infer<typeof TMDBCastRoleSchema>;
 export type TMDBStudioData = z.infer<typeof TMDBStudioSchema>;
+export type TMDBEntryData = z.infer<typeof TMDBEntrySchema>;
 
 export enum TMDBAcceptedDepartments {
   Writing = 'Writing',

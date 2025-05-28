@@ -16,7 +16,7 @@ import {
   Image,
   RoleData,
   BirthDate,
-  ReleaseDate,
+  AirDate,
   DefaultMedia,
   MediaRating,
   DefaultFilm,
@@ -37,7 +37,7 @@ export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
   isUnknown: true,
 };
-export const DEF_RELEASE_DATE: ReleaseDate = {
+export const DEF_RELEASE_DATE: AirDate = {
   date: null,
   isUnknown: true,
 };
@@ -55,6 +55,7 @@ export const DEF_INDIVIDUAL: IndividualData = {
 
 export const DEF_CREATOR: CreatorData = {
   ...DEF_INDIVIDUAL,
+  type: AuthorType.Creator,
 };
 
 export const DEF_AUTHOR: AuthorData = {
@@ -123,7 +124,11 @@ export const DEF_FILM: DefaultFilm = {
 
 export const DEF_SHOW: DefaultShow = {
   ...DEF_MEDIA,
+  episodeCount: 0,
+  creators: [DEF_CREATOR],
+  lastAirDate: DEF_RELEASE_DATE,
   parentalGuide: ShowParental.UNKNOWN,
+  seasonCount: 1,
   type: MediaType.Show,
   subMedia: SubMediaType.Season,
 };
@@ -135,32 +140,26 @@ export const DEF_GAME: DefaultGame = {
   subMedia: SubMediaType.DLC,
 };
 
-export const DEF_SEASON = (parentId: number, index: number): DefaultSeason => ({
+export const DEF_SEASON = (index: number): DefaultSeason => ({
   ...DEF_SHOW,
   name: `Season ${index + 1}`,
   sortName: `S${index + 1}`,
-  parentId,
   subType: SubMediaType.Season,
   index,
 });
 
-export const DEF_DLC = (parentId: number, index: number): DefaultDLC => ({
+export const DEF_DLC = (index: number): DefaultDLC => ({
   ...DEF_GAME,
   name: `DLC ${index + 1}`,
   sortName: `DLC${index + 1}`,
-  parentId,
   subType: SubMediaType.DLC,
   index,
 });
 
-export const DEF_CHAPTER = (
-  parentId: number,
-  index: number
-): DefaultChapter => ({
+export const DEF_CHAPTER = (index: number): DefaultChapter => ({
   ...DEF_GAME,
   name: `Chapter ${index + 1}`,
   sortName: `CH${index + 1}`,
-  parentId,
   subType: SubMediaType.Chapter,
   index,
 });

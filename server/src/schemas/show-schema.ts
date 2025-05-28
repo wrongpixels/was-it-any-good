@@ -5,8 +5,9 @@ import {
   TMDBInfoSchema,
 } from './film-schema';
 
-const TMDBCreatedBySchema = TMDBEntrySchema.extend({
+const TMDBCreatorSchema = TMDBEntrySchema.extend({
   gender: z.number().nullable(),
+  profile_path: z.string().nullable(),
 });
 
 const TMDBSeasonSchema = TMDBEntrySchema.extend({
@@ -26,7 +27,7 @@ export const TMDBShowInfoSchema = TMDBInfoSchema.extend({
   last_air_date: z.string().date(),
   in_production: z.boolean(),
   episode_run_time: z.array(z.number()),
-  created_by: z.array(TMDBCreatedBySchema),
+  created_by: z.array(TMDBCreatorSchema),
   seasons: z.array(TMDBSeasonSchema),
 });
 
@@ -42,3 +43,5 @@ export const TMDBExternalIdSchema = z.object({
 export type TMDBShowInfoData = z.infer<typeof TMDBShowInfoSchema>;
 export type TMDBShowData = z.infer<typeof TMDBShowSchema>;
 export type TMDBImdbData = z.infer<typeof TMDBExternalIdSchema>;
+export type TMDBSeasonData = z.infer<typeof TMDBSeasonSchema>;
+export type TMDBCreatorData = z.infer<typeof TMDBCreatorSchema>;

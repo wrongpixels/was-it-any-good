@@ -9,7 +9,7 @@ import {
 
 export type Image = string;
 
-export interface ReleaseDate {
+export interface AirDate {
   date: string | null;
   isUnknown: boolean;
 }
@@ -42,6 +42,7 @@ export enum SubMediaType {
 export enum AuthorType {
   Director = 'Director',
   Writer = 'Writer',
+  Creator = 'Creator',
   Actor = 'Actor',
   Unknown = 'Unknown',
 }
@@ -69,14 +70,15 @@ export interface IndividualData {
   country?: Country;
   image: Image;
   tmdbId?: string;
-  tvdbId?: string;
 }
 
-export interface CreatorData extends IndividualData {}
-
-export interface AuthorData extends CreatorData {
+export interface AuthorData extends IndividualData {
   type: AuthorType;
   birthDate?: BirthDate;
+}
+
+export interface CreatorData extends AuthorData {
+  type: AuthorType.Creator;
 }
 
 export interface DirectorData extends AuthorData {
@@ -107,7 +109,7 @@ export interface MediaData {
   sortName: string;
   description: string;
   parentalGuide: ParentalGuide;
-  releaseDate: ReleaseDate;
+  releaseDate: AirDate;
   image: Image;
   rating: MediaRating;
   runtime: number;
@@ -133,11 +135,16 @@ export interface FilmData extends MediaData {
 }
 
 export interface ShowData extends MediaData {
-  tvdbId: string;
+  tmdbId: string;
+  imdbId?: string;
   type: MediaType.Show;
+  creators: CreatorData[];
+  lastAirDate: AirDate;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
-  seasonIds: number[];
+  episodeCount: number;
+  seasonCount: number;
+  seasons: SeasonData[];
 }
 
 export interface GameData extends MediaData {
@@ -152,12 +159,14 @@ export interface GameData extends MediaData {
 // Sub-media types
 export interface SubMediaData extends MediaData {
   subType: SubMediaType;
-  parentId: number;
   index: number;
 }
 
 export interface SeasonData extends SubMediaData {
-  tvdbId: string;
+  tmdbId: string;
+  imdbId?: string;
+  episodeCount: number;
+  lastAirDate: AirDate;
   type: MediaType.Show;
   subType: SubMediaType.Season;
 }
@@ -194,7 +203,8 @@ export type DefaultShow = Omit<
   CreateShowData,
   | 'name'
   | 'sortName'
-  | 'tvdbId'
+  | 'seasons'
+  | 'tmdbId'
   | 'originalName'
   | 'description'
   | 'genres'
@@ -216,7 +226,7 @@ export type CreateSubMedia = Omit<SubMediaData, 'id'>;
 export type CreateSeason = Omit<SeasonData, 'id'>;
 export type DefaultSeason = Omit<
   CreateSeason,
-  'originalName' | 'tvdbId' | 'description' | 'genres'
+  'originalName' | 'tmdbId' | 'description' | 'genres'
 >;
 export type CreateDLC = Omit<DLCData, 'id'>;
 export type DefaultDLC = Omit<

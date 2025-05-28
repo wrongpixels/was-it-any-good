@@ -6,6 +6,5 @@ export const mapTMDBGenres = (orGenres: TMDBGenreData[]): CreateGenreData[] => {
     name: g.name === 'Music' ? 'Musical' : g.name,
     tmdbId: g.id,
   }));
-  console.log(genreData);
   return genreData;
 };
