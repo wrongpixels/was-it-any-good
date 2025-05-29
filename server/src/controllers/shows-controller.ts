@@ -1,6 +1,6 @@
 //import type { Request, Response } from 'express';
 import express from 'express';
-import { Media } from '../models';
+import { Show } from '../models';
 import CustomError from '../util/customError';
 import { fetchShow } from '../services/show-service';
 
@@ -18,7 +18,7 @@ router.get('/:id', async (req, res, next) => {
 
 router.post('/', async (req, res, next) => {
   try {
-    const newEntry = await Media.create(req.body);
+    const newEntry = await Show.create(req.body);
     if (!newEntry) {
       throw new CustomError('Data format is not valid', 400);
     }

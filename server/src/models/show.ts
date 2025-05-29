@@ -45,3 +45,5 @@ Show.init(
     underscored: true,
   }
 );
+
+export default Show;

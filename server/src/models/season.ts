@@ -51,3 +51,5 @@ Season.init(
     timestamps: true,
   }
 );
+
+export default Season;

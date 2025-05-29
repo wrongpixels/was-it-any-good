@@ -1,15 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Person extends Model {
-  declare id: number;
-  declare name: string;
-  declare tmdbId?: string;
-  declare gamedbId?: string;
-  declare image: string;
-  declare country?: string;
-  declare birthDate?: Date;
-}
+class Person extends Model {}
 
 Person.init(
   {
@@ -25,6 +17,7 @@ Person.init(
     tmdbId: {
       type: DataTypes.STRING,
       unique: true,
+      allowNull: true,
     },
     gamedbId: {
       type: DataTypes.STRING,
@@ -35,12 +28,15 @@ Person.init(
       validate: {
         isUrl: true,
       },
+      allowNull: true,
     },
     country: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     birthDate: {
       type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
@@ -49,3 +45,5 @@ Person.init(
     underscored: true,
   }
 );
+
+export default Person;

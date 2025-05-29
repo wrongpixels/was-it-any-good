@@ -3,11 +3,7 @@ import Media from './media';
 import { FilmParental } from '../types/parental/parental-types';
 import { sequelize } from '../util/db';
 
-class Film extends Media {
-  declare tmdbId: string;
-  declare imdbId?: string;
-  declare parentalGuide: string;
-}
+class Film extends Media {}
 
 Film.init(
   {
@@ -31,3 +27,5 @@ Film.init(
     underscored: true,
   }
 );
+
+export default Film;

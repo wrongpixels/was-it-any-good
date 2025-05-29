@@ -1,20 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Media extends Model {
-  declare id: number;
-  declare name: string;
-  declare originalName: string;
-  declare sortName: string;
-  declare description: string;
-  declare status: string;
-  declare releaseDate: Date;
-  declare image: string;
-  declare rating: number;
-  declare voteCount: number;
-  declare runtime: number;
-  declare mediaType: string;
-}
+class Media extends Model {}
 
 Media.init(
   {

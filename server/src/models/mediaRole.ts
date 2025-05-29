@@ -11,25 +11,41 @@ MediaRole.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    tmdbId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
+
     personId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'person',
+        model: 'people',
         key: 'id',
       },
       allowNull: false,
+    },
+    filmId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'films',
+        key: 'id',
+      },
+      defaultValue: null,
+    },
+    showId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'shows',
+        key: 'id',
+      },
+      defaultValue: null,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(AuthorType)),
       allowNull: false,
     },
     characterName: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: true,
+      defaultValue: [],
     },
     order: {
       type: DataTypes.INTEGER,
@@ -38,7 +54,10 @@ MediaRole.init(
   },
   {
     sequelize,
-    modelName: 'media-role',
+    modelName: 'mediaRole',
+    tableName: 'media_roles',
     underscored: true,
   }
 );
+
+export default MediaRole;
