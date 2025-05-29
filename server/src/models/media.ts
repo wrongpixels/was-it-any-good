@@ -6,6 +6,7 @@ import {
   InferCreationAttributes,
   CreationOptional,
 } from 'sequelize';
+import Country from '../types/countries/country-types';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -16,6 +17,7 @@ class Media<
   declare originalName: string;
   declare sortName: string;
   declare description: string | null;
+  declare country: [keyof typeof Country] | null;
   declare status: string | null;
   declare releaseDate: Date | null;
   declare image: string | null;
@@ -50,6 +52,10 @@ class Media<
       },
       releaseDate: {
         type: DataTypes.DATE,
+      },
+      country: {
+        type: DataTypes.ARRAY(DataTypes.ENUM(...Object.values(Country))),
+        allowNull: false,
       },
       image: {
         type: DataTypes.STRING,

@@ -3,24 +3,32 @@ import express from 'express';
 import CustomError from '../util/customError';
 import { fetchFilm } from '../services/film-service';
 import { FilmData } from '../types/media/media-types';
-import { Film } from '../models';
+import { Film, Person } from '../models';
+import { DEF_IMAGE_PERSON } from '../types/media/media-defaults';
 
 const router = express.Router();
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req, res, _next) => {
   try {
     const id: string = req.params.id;
     const filmEntry: Film | null = await Film.findOne({
-      where: { tmdbId: id },
+      where: { tmdbId: id.toString() },
     });
     if (!filmEntry) {
-      res.send('Entry does not exist in DB!');
+      const person = await Person.create({
+        name: 'Roger Rogerson',
+        tmdbId: '122323',
+        image: DEF_IMAGE_PERSON,
+        country: ['ES'],
+      });
+      res.json(person);
       return;
     }
     const data: FilmData = await fetchFilm(id);
     res.json(data);
   } catch (error) {
-    next(error);
+    res.json(error);
+    //next(error);
   }
 });
 

@@ -1,7 +1,24 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 
-class Person extends Model {}
+class Person extends Model<
+  InferAttributes<Person>,
+  InferCreationAttributes<Person>
+> {
+  declare id: CreationOptional<number>;
+  declare name: string;
+  declare tmdbId?: string;
+  declare gamedbId?: string;
+  declare image: string;
+  declare birthDate?: string;
+  declare country: [string];
+}
 
 Person.init(
   {
@@ -31,8 +48,8 @@ Person.init(
       allowNull: true,
     },
     country: {
-      type: DataTypes.STRING,
-      allowNull: true,
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
     },
     birthDate: {
       type: DataTypes.DATE,
