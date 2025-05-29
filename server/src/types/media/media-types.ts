@@ -5,7 +5,7 @@ import {
   GameParental,
   ParentalGuide,
   ShowParental,
-} from '../parental/parentaly-types';
+} from '../parental/parental-types';
 
 export type Image = string;
 
@@ -43,6 +43,9 @@ export enum AuthorType {
   Director = 'Director',
   Writer = 'Writer',
   Creator = 'Creator',
+  Producer = 'Producer',
+  ExecProducer = 'Executive Producer',
+  MusicComposer = 'Original Music Composer',
   Actor = 'Actor',
   Unknown = 'Unknown',
 }

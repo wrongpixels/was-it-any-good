@@ -3,7 +3,7 @@ import {
   FilmParental,
   GameParental,
   ShowParental,
-} from '../parental/parentaly-types';
+} from '../parental/parental-types';
 import {
   AuthorData,
   CreatorData,

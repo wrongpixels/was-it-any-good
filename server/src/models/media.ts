@@ -60,14 +60,11 @@ Media.init(
     runtime: {
       type: DataTypes.INTEGER,
     },
-    mediaType: {
-      type: DataTypes.ENUM('Film', 'Show', 'Game'),
-      allowNull: false,
-    },
   },
   {
     sequelize,
     modelName: 'media',
+    underscored: true,
   }
 );
 export default Media;
