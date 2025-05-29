@@ -184,9 +184,8 @@ export interface ChapterData extends SubMediaData {
 }
 
 // Creation
-export type CreateMedia = Omit<MediaData, 'id'>;
 export type DefaultMedia = Omit<
-  CreateMedia,
+  MediaData,
   | 'name'
   | 'sortName'
   | 'originalName'
@@ -195,14 +194,12 @@ export type DefaultMedia = Omit<
   | 'genres'
   | 'subMedia'
 >;
-export type CreateFilmData = Omit<FilmData, 'id'>;
 export type DefaultFilm = Omit<
-  CreateFilmData,
+  FilmData,
   'name' | 'sortName' | 'tmdbId' | 'originalName' | 'description' | 'genres'
 >;
-export type CreateShowData = Omit<ShowData, 'id'>;
 export type DefaultShow = Omit<
-  CreateShowData,
+  ShowData,
   | 'name'
   | 'sortName'
   | 'seasons'
@@ -212,9 +209,8 @@ export type DefaultShow = Omit<
   | 'genres'
   | 'seasonIds'
 >;
-export type CreateGameData = Omit<GameData, 'id'>;
 export type DefaultGame = Omit<
-  CreateGameData,
+  GameData,
   | 'name'
   | 'sortName'
   | 'originalName'
@@ -224,19 +220,15 @@ export type DefaultGame = Omit<
   | 'chapterIds'
   | 'dlcIds'
 >;
-export type CreateSubMedia = Omit<SubMediaData, 'id'>;
-export type CreateSeason = Omit<SeasonData, 'id'>;
 export type DefaultSeason = Omit<
-  CreateSeason,
+  SeasonData,
   'originalName' | 'tmdbId' | 'description'
 >;
-export type CreateDLC = Omit<DLCData, 'id'>;
 export type DefaultDLC = Omit<
-  CreateDLC,
+  DLCData,
   'originalName' | 'description' | 'genres'
 >;
-export type CreateChapter = Omit<ChapterData, 'id'>;
 export type DefaultChapter = Omit<
-  CreateChapter,
+  ChapterData,
   'originalName' | 'description' | 'genres'
 >;

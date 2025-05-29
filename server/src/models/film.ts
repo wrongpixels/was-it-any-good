@@ -12,11 +12,6 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
 Film.init(
   {
     ...Media.baseInit(),
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     tmdbId: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -38,5 +33,6 @@ Film.init(
     underscored: true,
   }
 );
+export type CreateFilm = Omit<InferAttributes<Film>, 'id'>;
 
 export default Film;

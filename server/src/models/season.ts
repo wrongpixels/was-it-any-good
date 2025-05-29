@@ -6,7 +6,6 @@ class Season extends Media<
   InferAttributes<Season>,
   InferCreationAttributes<Season>
 > {
-  declare id: number;
   declare showId: number;
   declare tmdbId: string;
   declare imdbId?: string;
@@ -50,5 +49,6 @@ Season.init(
     timestamps: true,
   }
 );
+export type CreateSeason = InferAttributes<Season>;
 
 export default Season;

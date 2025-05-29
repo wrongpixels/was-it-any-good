@@ -1,10 +1,9 @@
 //import type { Request, Response } from 'express';
 import express from 'express';
 import CustomError from '../util/customError';
-import { fetchFilm } from '../services/film-service';
+import { buildFilm, fetchFilm } from '../services/film-service';
 import { FilmData } from '../types/media/media-types';
-import { Film, Person } from '../models';
-import { DEF_IMAGE_PERSON } from '../types/media/media-defaults';
+import { Film } from '../models';
 
 const router = express.Router();
 
@@ -15,17 +14,15 @@ router.get('/:id', async (req, res, _next) => {
       where: { tmdbId: id.toString() },
     });
     if (!filmEntry) {
-      const person = await Person.create({
-        name: 'Roger Rogerson',
-        tmdbId: '122323',
-        image: DEF_IMAGE_PERSON,
-        country: ['ES'],
-      });
-      res.json(person);
+      const filmData: FilmData = await fetchFilm(id);
+      const film: Film | null = await Film.create(buildFilm(filmData));
+      console.log('Created film!');
+
+      res.json(film);
       return;
     }
-    const data: FilmData = await fetchFilm(id);
-    res.json(data);
+    console.log('Found film!');
+    res.json(filmEntry);
   } catch (error) {
     res.json(error);
     //next(error);

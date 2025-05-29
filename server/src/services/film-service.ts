@@ -1,4 +1,5 @@
 import { createFilm } from '../factories/film-factory';
+import { CreateFilm } from '../models/film';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
@@ -31,4 +32,21 @@ const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
   crew: credits.crew.filter((crewMember: TMDBCrewData) =>
     Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
   ),
+});
+
+export const buildFilm = (filmData: FilmData): CreateFilm => ({
+  imdbId: filmData.imdbId,
+  tmdbId: filmData.tmdbId,
+  name: filmData.name,
+  originalName: filmData.originalName,
+  sortName: filmData.sortName,
+  description: filmData.description,
+  status: filmData.status,
+  releaseDate: filmData.releaseDate.date || 'Unknown',
+  country: filmData.countries,
+  image: filmData.image,
+  rating: 0,
+  voteCount: 0,
+  runtime: filmData.runtime,
+  parentalGuide: null,
 });

@@ -62,5 +62,6 @@ Person.init(
     underscored: true,
   }
 );
+export type CreatePerson = InferAttributes<Person>;
 
 export default Person;

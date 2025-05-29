@@ -46,5 +46,6 @@ Show.init(
     underscored: true,
   }
 );
+export type CreateShow = InferAttributes<Show>;
 
 export default Show;
