@@ -1,9 +1,9 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { ShowParental } from '../types/parental/parental-types';
 import { sequelize } from '../util/db';
 import Media from './media';
 
-class Show extends Media {
+class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
   declare imdbId?: string;
   declare parentalGuide: string;
@@ -14,6 +14,7 @@ class Show extends Media {
 
 Show.init(
   {
+    ...Media.baseInit(),
     tmdbId: {
       type: DataTypes.STRING,
       unique: true,

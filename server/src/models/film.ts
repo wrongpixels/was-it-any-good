@@ -1,19 +1,30 @@
-import { DataTypes } from 'sequelize';
-import Media from './media';
-import { FilmParental } from '../types/parental/parental-types';
+import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../util/db';
+import { FilmParental } from '../types/parental/parental-types';
+import Media from './media';
 
-class Film extends Media {}
+class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
+  declare tmdbId: string;
+  declare imdbId?: string;
+  declare parentalGuide: keyof typeof FilmParental | null;
+}
 
 Film.init(
   {
+    ...Media.baseInit(),
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     tmdbId: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
+      unique: true,
     },
     imdbId: {
       type: DataTypes.STRING,
+      allowNull: true,
       unique: true,
     },
     parentalGuide: {

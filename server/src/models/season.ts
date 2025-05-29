@@ -1,23 +1,22 @@
-import { DataTypes } from 'sequelize';
+import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../util/db';
 import Media from './media';
 
-class Season extends Media {
+class Season extends Media<
+  InferAttributes<Season>,
+  InferCreationAttributes<Season>
+> {
   declare id: number;
   declare showId: number;
   declare tmdbId: string;
   declare imdbId?: string;
-  declare seasonNumber: number;
+  declare index: number;
   declare episodeCount: number;
 }
 
 Season.init(
   {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
+    ...Media.baseInit(),
     showId: {
       type: DataTypes.INTEGER,
       allowNull: false,
