@@ -1,9 +1,13 @@
 //import type { Request, Response } from 'express';
 import express from 'express';
 import CustomError from '../util/customError';
-import { buildFilm, fetchFilm } from '../services/film-service';
+import {
+  buildCast,
+  buildFilm,
+  fetchFilm as fetchTMDBFilm,
+} from '../services/film-service';
 import { FilmData } from '../types/media/media-types';
-import { Film } from '../models';
+import { Film, MediaRole } from '../models';
 
 const router = express.Router();
 
@@ -14,10 +18,14 @@ router.get('/:id', async (req, res, _next) => {
       where: { tmdbId: id.toString() },
     });
     if (!filmEntry) {
-      const filmData: FilmData = await fetchFilm(id);
+      const filmData: FilmData = await fetchTMDBFilm(id);
       const film: Film | null = await Film.create(buildFilm(filmData));
+      if (!film) {
+        throw new CustomError('Film could not be created', 400);
+      }
       console.log('Created film!');
-      res.json(film);
+      const cast: MediaRole[] = await buildCast(filmData.cast, film.id);
+      res.json({ ...film, cast });
       return;
     }
     console.log('Found film!');

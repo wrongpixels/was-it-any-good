@@ -79,28 +79,14 @@ export interface AuthorData extends IndividualData {
   type: AuthorType;
   birthDate?: BirthDate;
 }
-
-export interface CreatorData extends AuthorData {
-  type: AuthorType.Creator;
-}
-
-export interface DirectorData extends AuthorData {
-  type: AuthorType.Director;
-}
-
-export interface WriterData extends AuthorData {
-  type: AuthorType.Writer;
-}
-
-export interface ActorData extends AuthorData {
-  type: AuthorType.Actor;
-}
-
-export interface RoleData extends IndividualData {
+export interface RoleData extends AuthorData {
   character: string;
   description?: string;
   roleType: RoleType;
+  order: number;
 }
+
+export type MediaPerson = AuthorData | RoleData;
 
 export interface StudioData extends IndividualData {}
 
@@ -122,8 +108,10 @@ export interface MediaData {
   genres: CreateGenreData[];
   subMedia: SubMediaType;
   studios: StudioData[];
-  directors: DirectorData[];
-  writers: WriterData[];
+  directors: AuthorData[];
+  producers: AuthorData[];
+  writers: AuthorData[];
+  composers: AuthorData[];
   countries: Country[];
   cast: RoleData[];
 }
@@ -141,7 +129,7 @@ export interface ShowData extends MediaData {
   tmdbId: string;
   imdbId?: string;
   type: MediaType.Show;
-  creators: CreatorData[];
+  creators: AuthorData[];
   lastAirDate: AirDate;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;

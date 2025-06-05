@@ -7,8 +7,8 @@ import {
   DEF_SHOW,
 } from '../types/media/media-defaults';
 import {
-  CreatorData,
   SeasonData,
+  AuthorData,
   ShowData,
   SubMediaType,
 } from '../types/media/media-types';
@@ -52,10 +52,10 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
   seasons: createSeasons(tmdb.seasons),
 });
 
-const createCreators = (creators: TMDBCreatorData[]): CreatorData[] =>
+const createCreators = (creators: TMDBCreatorData[]): AuthorData[] =>
   creators.map((c: TMDBCreatorData) => createCreator(c));
 
-const createCreator = (creator: TMDBCreatorData): CreatorData => ({
+const createCreator = (creator: TMDBCreatorData): AuthorData => ({
   ...DEF_CREATOR,
   name: creator.name,
   tmdbId: creator.id.toString(),

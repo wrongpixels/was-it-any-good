@@ -13,14 +13,15 @@ import {
   DEF_IMAGE_PERSON,
   DEF_WRITER,
   DEF_STUDIO,
+  DEF_PRODUCER,
+  DEF_COMPOSER,
 } from '../types/media/media-defaults';
 import {
-  DirectorData,
   IndividualData,
   AirDate,
   RoleData,
   RoleType,
-  WriterData,
+  AuthorData,
   StudioData,
 } from '../types/media/media-types';
 
@@ -45,12 +46,12 @@ export const validateCountries = (codes: string[]): Country[] => {
     .filter((c): c is Country => c !== null);
 };
 
-export const createWriter = (crewMember: TMDBCrewData): WriterData => ({
+export const createWriter = (crewMember: TMDBCrewData): AuthorData => ({
   ...DEF_WRITER,
   ...createCrew(crewMember),
 });
 
-export const createWriters = (crew: TMDBCrewData[]): WriterData[] => {
+export const createWriters = (crew: TMDBCrewData[]): AuthorData[] => {
   const writers: TMDBCrewData[] = crew.filter(
     (c: TMDBCrewData) => c.department === TMDBAcceptedDepartments.Writing
   );
@@ -72,16 +73,42 @@ export const createStudios = (studios: TMDBStudioData[]): StudioData[] => {
   return trimmedStudios.map((s: TMDBStudioData) => createStudio(s));
 };
 
-export const createDirector = (crewMember: TMDBCrewData): DirectorData => ({
+export const createDirector = (crewMember: TMDBCrewData): AuthorData => ({
   ...DEF_DIRECTOR,
   ...createCrew(crewMember),
 });
 
-export const createDirectors = (crew: TMDBCrewData[]): DirectorData[] => {
+export const createDirectors = (crew: TMDBCrewData[]): AuthorData[] => {
   const directors: TMDBCrewData[] = crew.filter(
     (c: TMDBCrewData) => c.job === TMDBAcceptedJobs.Director
   );
   return directors.map((d: TMDBCrewData) => createDirector(d));
+};
+
+export const createProducer = (crewMember: TMDBCrewData): AuthorData => ({
+  ...DEF_PRODUCER,
+  ...createCrew(crewMember),
+});
+
+export const createProducers = (crew: TMDBCrewData[]): AuthorData[] => {
+  const producers: TMDBCrewData[] = crew.filter(
+    (c: TMDBCrewData) =>
+      c.job === TMDBAcceptedJobs.Producer ||
+      c.job === TMDBAcceptedJobs.ExecutiveProducer
+  );
+  return producers.map((p: TMDBCrewData) => createProducer(p));
+};
+
+export const createComposer = (crewMember: TMDBCrewData): AuthorData => ({
+  ...DEF_COMPOSER,
+  ...createCrew(crewMember),
+});
+
+export const createComposers = (crew: TMDBCrewData[]): AuthorData[] => {
+  const composers: TMDBCrewData[] = crew.filter(
+    (c: TMDBCrewData) => c.job === TMDBAcceptedJobs.OriginalMusicComposer
+  );
+  return composers.map((c: TMDBCrewData) => createComposer(c));
 };
 
 export const createCast = (cast: TMDBRoleData[]): RoleData[] => {
@@ -103,6 +130,7 @@ export const createCrew = (crewMember: TMDBCrewData): IndividualData => ({
 export const createRole = (castMember: TMDBRoleData): RoleData => ({
   ...DEF_ROLE,
   name: castMember.name,
+  order: castMember.order,
   image: castMember.profile_path
     ? imageLinker.createAvatarURL(castMember.profile_path)
     : DEF_IMAGE_PERSON,

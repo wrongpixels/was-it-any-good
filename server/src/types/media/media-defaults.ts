@@ -6,13 +6,9 @@ import {
 } from '../parental/parental-types';
 import {
   AuthorData,
-  CreatorData,
-  DirectorData,
   IndividualData,
   AuthorType,
-  WriterData,
   StudioData,
-  ActorData,
   Image,
   RoleData,
   BirthDate,
@@ -53,7 +49,7 @@ export const DEF_INDIVIDUAL: IndividualData = {
   image: DEF_IMAGE_PERSON,
 };
 
-export const DEF_CREATOR: CreatorData = {
+export const DEF_CREATOR: AuthorData = {
   ...DEF_INDIVIDUAL,
   type: AuthorType.Creator,
 };
@@ -64,41 +60,61 @@ export const DEF_AUTHOR: AuthorData = {
   birthDate: DEF_BIRTHDATE,
 };
 
-export const DEF_DIRECTOR: DirectorData = {
+export const DEF_DIRECTOR: AuthorData = {
   ...DEF_AUTHOR,
   type: AuthorType.Director,
-  name: 'Unknown director',
+  name: 'Unknown Director',
 };
 
-export const DEF_WRITER: WriterData = {
+export const DEF_WRITER: AuthorData = {
   ...DEF_AUTHOR,
   type: AuthorType.Writer,
-  name: 'Unknown writer',
+  name: 'Unknown Writer',
+};
+export const DEF_PRODUCER: AuthorData = {
+  ...DEF_AUTHOR,
+  type: AuthorType.Producer,
+  name: 'Unknown Producer',
+};
+
+export const DEF_EXEC_PRODUCER: AuthorData = {
+  ...DEF_AUTHOR,
+  type: AuthorType.ExecProducer,
+  name: 'Unknown Executive Producer',
+};
+
+export const DEF_COMPOSER: AuthorData = {
+  ...DEF_AUTHOR,
+  type: AuthorType.MusicComposer,
+  name: 'Unknown Composer',
 };
 
 export const DEF_STUDIO: StudioData = {
   ...DEF_INDIVIDUAL,
-  name: 'Unknown studio',
+  name: 'Unknown Studio',
 };
 
-export const DEF_ACTOR: ActorData = {
+export const DEF_ACTOR: AuthorData = {
   ...DEF_AUTHOR,
   type: AuthorType.Actor,
-  name: 'Unknown actor',
+  name: 'Unknown Actor',
 };
 
 export const DEF_ROLE: RoleData = {
-  ...DEF_INDIVIDUAL,
+  ...DEF_ACTOR,
   character: 'Unknown',
-  roleType: RoleType.Unknown,
+  order: 1,
+  roleType: RoleType.Main,
 };
 
 export const DEF_STATUS = 'Released';
 
 export const DEF_CAST: RoleData[] = [DEF_ROLE];
-export const DEF_DIRECTION: DirectorData[] = [DEF_DIRECTOR];
+export const DEF_DIRECTION: AuthorData[] = [DEF_DIRECTOR];
 export const DEF_STUDIOS: StudioData[] = [DEF_STUDIO];
-export const DEF_WRITING: WriterData[] = [DEF_WRITER];
+export const DEF_WRITING: AuthorData[] = [DEF_WRITER];
+export const DEF_PRODUCERS: AuthorData[] = [DEF_PRODUCER];
+export const DEF_COMPOSERS: AuthorData[] = [DEF_COMPOSER];
 export const DEF_COUNTRIES: Country[] = [Country.UNKNOWN];
 
 export const DEF_MEDIA: DefaultMedia = {
@@ -111,6 +127,8 @@ export const DEF_MEDIA: DefaultMedia = {
   studios: DEF_STUDIOS,
   directors: DEF_DIRECTION,
   writers: DEF_WRITING,
+  producers: DEF_PRODUCERS,
+  composers: DEF_COMPOSERS,
   countries: DEF_COUNTRIES,
   cast: DEF_CAST,
 };

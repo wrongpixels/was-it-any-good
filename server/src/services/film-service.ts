@@ -1,6 +1,7 @@
 import { createFilm } from '../factories/film-factory';
 import { CreateFilm } from '../models/film';
 import MediaRole, { CreateMediaRole } from '../models/mediaRole';
+import Person, { CreatePerson } from '../models/person';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
@@ -9,9 +10,9 @@ import {
   TMDBFilmInfoData,
   TMDBFilmData,
   TMDBFilmInfoSchema,
-  TMDBRoleData,
 } from '../schemas/film-schema';
-import { AuthorType, FilmData } from '../types/media/media-types';
+import Country from '../types/countries/country-types';
+import { AuthorType, FilmData, RoleData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 
 export const fetchFilm = async (id: string): Promise<FilmData> => {
@@ -53,20 +54,64 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
   parentalGuide: null,
 });
 
-const buildCast = (cast: TMDBRoleData[]): void => {
-  cast.forEach((p: TMDBRoleData) => buildPersonAndRole(p));
+export const buildCast = async (
+  cast: RoleData[],
+  filmId: number
+): Promise<MediaRole[]> => {
+  const roles: (MediaRole | null)[] = await Promise.all(
+    cast.map((castRole) => buildPersonAndRole(castRole, filmId))
+  );
+
+  const uniqueRoles = new Map<string, MediaRole>();
+
+  roles.forEach((role) => {
+    if (role) {
+      const key = `${role.personId}-${role.filmId}`;
+      uniqueRoles.set(key, role);
+    }
+  });
+  return Array.from(uniqueRoles.values());
 };
 
-const buildPersonAndRole = (person: TMDBRoleData): void => {};
+const buildPersonAndRole = async (
+  mediaData: RoleData,
+  filmId: number
+): Promise<MediaRole | null> => {
+  if (!mediaData) {
+    return null;
+  }
+  const personData: CreatePerson = {
+    name: mediaData.name,
+    tmdbId: mediaData.tmdbId,
+    image: mediaData.image,
+    country: mediaData.country ? [mediaData.country] : [Country.UNKNOWN],
+  };
+  const person: Person | null = await getOrCreatePerson(personData);
+  if (!person) {
+    return null;
+  }
+  const roleData: CreateMediaRole = {
+    personId: person.id,
+    filmId,
+    role: mediaData.type,
+  };
+  if (roleData.role === AuthorType.Actor) {
+    roleData.characterName = [mediaData.character];
+    roleData.order = mediaData.order;
+  }
+  return await buildMediaRole(roleData);
+};
 
-const buildMediaRole = async (roleData: CreateMediaRole): Promise<void> => {
+const buildMediaRole = async (
+  roleData: CreateMediaRole
+): Promise<MediaRole | null> => {
   const mediaRole: MediaRole | null = await getOrCreateMediaRole(roleData);
-  if (!mediaRole) {
-    return;
+  if (mediaRole === null) {
+    return null;
   }
   if (mediaRole.role === AuthorType.Actor) {
     if (!roleData.characterName || roleData.characterName.length < 1) {
-      return;
+      return null;
     }
     let changed: boolean = false;
     if (!mediaRole.characterName || mediaRole.characterName.length < 1) {
@@ -84,33 +129,60 @@ const buildMediaRole = async (roleData: CreateMediaRole): Promise<void> => {
     if (changed) {
       await mediaRole.save();
     }
+    return mediaRole;
+  }
+  return null;
+};
+
+export const getOrCreatePerson = async (
+  defaults: CreatePerson
+): Promise<Person | null> => {
+  if (!defaults || !defaults.tmdbId || !defaults.name) {
+    return null;
+  }
+  try {
+    const person: [Person, boolean] = await Person.findOrCreate({
+      where: {
+        tmdbId: defaults.tmdbId,
+      },
+      defaults,
+    });
+    if (!person) {
+      return null;
+    }
+    if (person[1]) {
+      console.log(`Created Person ${person[0].name} ${person[0].id}`);
+    }
+    return person[0];
+  } catch (_error) {
+    return null;
   }
 };
 
 export const getOrCreateMediaRole = async (
-  roleData: CreateMediaRole
+  defaults: CreateMediaRole
 ): Promise<MediaRole | null> => {
-  if (!roleData.filmId || !roleData.personId || !roleData.role) {
+  if (!defaults || !defaults.filmId || !defaults.personId || !defaults.role) {
     return null;
   }
   try {
-    const where = {
-      filmId: roleData.filmId,
-      showId: roleData.showId,
-      personId: roleData.personId,
-      role: roleData.role,
-    };
-    const defaults = {
-      ...where,
-      characterName:
-        roleData.role === AuthorType.Actor ? roleData.characterName : undefined,
-    };
     const role: [MediaRole, boolean] = await MediaRole.findOrCreate({
-      where,
+      where: {
+        filmId: defaults.filmId,
+        personId: defaults.personId,
+        role: defaults.role,
+      },
       defaults,
+      include: {
+        model: Person,
+        attributes: ['name'],
+      },
     });
+    if (!role) {
+      return null;
+    }
     if (role[1]) {
-      console.log(`Created Media Role ${role[0].id}`);
+      console.log(`Created Film Media Role ${role[0].id}`);
     }
     return role[0];
   } catch (_error) {
