@@ -1,8 +1,25 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../util/db';
 import { AuthorType } from '../types/media/media-types';
 
-class MediaRole extends Model {}
+class MediaRole extends Model<
+  InferAttributes<MediaRole>,
+  InferCreationAttributes<MediaRole>
+> {
+  declare id: CreationOptional<number>;
+  declare personId: number;
+  declare filmId?: number;
+  declare showId?: number;
+  declare role: string;
+  declare characterName?: string[];
+  declare order?: number;
+}
 
 MediaRole.init(
   {
@@ -59,5 +76,6 @@ MediaRole.init(
     underscored: true,
   }
 );
+export type CreateMediaRole = Omit<InferAttributes<MediaRole>, 'id'>;
 
 export default MediaRole;

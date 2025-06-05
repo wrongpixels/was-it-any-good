@@ -17,7 +17,6 @@ router.get('/:id', async (req, res, _next) => {
       const filmData: FilmData = await fetchFilm(id);
       const film: Film | null = await Film.create(buildFilm(filmData));
       console.log('Created film!');
-
       res.json(film);
       return;
     }

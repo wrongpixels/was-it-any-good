@@ -54,10 +54,10 @@ class Media<
         type: DataTypes.STRING,
       },
       country: {
-        type: DataTypes.ARRAY(DataTypes.STRING), // Change this from ENUM to STRING
+        type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
         validate: {
-          isIn: [Object.keys(Country)], // Validate against enum values
+          isIn: [Object.keys(Country)],
         },
       },
       image: {

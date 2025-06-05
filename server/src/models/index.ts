@@ -41,6 +41,6 @@ Season.belongsTo(Show, {
   as: 'show',
 });
 
-sequelize.sync({ force: true });
+sequelize.sync({ force: false });
 
 export { Person, Film, Show, Season, MediaRole };

@@ -1,5 +1,6 @@
 import { createFilm } from '../factories/film-factory';
 import { CreateFilm } from '../models/film';
+import MediaRole, { CreateMediaRole } from '../models/mediaRole';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
@@ -8,8 +9,9 @@ import {
   TMDBFilmInfoData,
   TMDBFilmData,
   TMDBFilmInfoSchema,
+  TMDBRoleData,
 } from '../schemas/film-schema';
-import { FilmData } from '../types/media/media-types';
+import { AuthorType, FilmData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 
 export const fetchFilm = async (id: string): Promise<FilmData> => {
@@ -50,3 +52,68 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
   runtime: filmData.runtime,
   parentalGuide: null,
 });
+
+const buildCast = (cast: TMDBRoleData[]): void => {
+  cast.forEach((p: TMDBRoleData) => buildPersonAndRole(p));
+};
+
+const buildPersonAndRole = (person: TMDBRoleData): void => {};
+
+const buildMediaRole = async (roleData: CreateMediaRole): Promise<void> => {
+  const mediaRole: MediaRole | null = await getOrCreateMediaRole(roleData);
+  if (!mediaRole) {
+    return;
+  }
+  if (mediaRole.role === AuthorType.Actor) {
+    if (!roleData.characterName || roleData.characterName.length < 1) {
+      return;
+    }
+    let changed: boolean = false;
+    if (!mediaRole.characterName || mediaRole.characterName.length < 1) {
+      mediaRole.characterName = roleData.characterName;
+      changed = true;
+    } else {
+      if (!mediaRole.characterName.includes(roleData.characterName[0])) {
+        mediaRole.characterName.push(roleData.characterName[0]);
+        changed = true;
+        console.log(
+          `Added character ${roleData.characterName[0]} to Media Role ${mediaRole.id}`
+        );
+      }
+    }
+    if (changed) {
+      await mediaRole.save();
+    }
+  }
+};
+
+export const getOrCreateMediaRole = async (
+  roleData: CreateMediaRole
+): Promise<MediaRole | null> => {
+  if (!roleData.filmId || !roleData.personId || !roleData.role) {
+    return null;
+  }
+  try {
+    const where = {
+      filmId: roleData.filmId,
+      showId: roleData.showId,
+      personId: roleData.personId,
+      role: roleData.role,
+    };
+    const defaults = {
+      ...where,
+      characterName:
+        roleData.role === AuthorType.Actor ? roleData.characterName : undefined,
+    };
+    const role: [MediaRole, boolean] = await MediaRole.findOrCreate({
+      where,
+      defaults,
+    });
+    if (role[1]) {
+      console.log(`Created Media Role Entry ${role[0].id}`);
+    }
+    return role[0];
+  } catch (_error) {
+    return null;
+  }
+};
