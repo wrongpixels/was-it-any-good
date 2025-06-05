@@ -110,7 +110,7 @@ export const getOrCreateMediaRole = async (
       defaults,
     });
     if (role[1]) {
-      console.log(`Created Media Role Entry ${role[0].id}`);
+      console.log(`Created Media Role ${role[0].id}`);
     }
     return role[0];
   } catch (_error) {
