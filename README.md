@@ -24,7 +24,7 @@ For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG consider
 - JWT authentication and session management
 - Automated CI/CD pipeline via GitHub Actions
 - Bootstrap + Styled Components for design
-- TMDB and IGDB API integrations
+- TMDB + IGDB API integrations
 
 ## Development
 
