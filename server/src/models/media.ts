@@ -1,12 +1,14 @@
-// models/Media.ts
 import {
   Model,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
+  Op,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
+import { Film, MediaRole, Show } from '.';
+import { AuthorType, MediaType } from '../types/media/media-types';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -75,6 +77,44 @@ class Media<
         type: DataTypes.INTEGER,
       },
     };
+  }
+
+  //To avoid repeating basic relationships between Media Models
+  static setupAssociations<T extends typeof Film | typeof Show>(
+    model: T,
+    mediaType: MediaType
+  ) {
+    //Full credits
+    model.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'credits',
+      scope: {
+        mediaType,
+      },
+      constraints: false,
+    });
+
+    //Cast only -> Only Actors
+    model.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'cast',
+      scope: {
+        mediaType,
+        role: AuthorType.Actor,
+      },
+      constraints: false,
+    });
+
+    //Crew only -> All but Actors
+    model.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'crew',
+      scope: {
+        mediaType,
+        role: { [Op.ne]: AuthorType.Actor },
+      },
+      constraints: false,
+    });
   }
 }
 

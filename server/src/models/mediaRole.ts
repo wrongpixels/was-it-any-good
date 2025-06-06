@@ -1,4 +1,5 @@
 import {
+  BelongsToGetAssociationMixin,
   CreationOptional,
   DataTypes,
   InferAttributes,
@@ -6,7 +7,8 @@ import {
   Model,
 } from 'sequelize';
 import { sequelize } from '../util/db';
-import { AuthorType } from '../types/media/media-types';
+import { AuthorType, MediaType } from '../types/media/media-types';
+import { Film, Show } from '.';
 
 class MediaRole extends Model<
   InferAttributes<MediaRole>,
@@ -14,11 +16,13 @@ class MediaRole extends Model<
 > {
   declare id: CreationOptional<number>;
   declare personId: number;
-  declare filmId?: number;
-  declare showId?: number;
+  declare mediaId: number;
+  declare mediaType: MediaType;
   declare role: string;
   declare characterName?: string[];
   declare order?: number;
+  declare getFilm: BelongsToGetAssociationMixin<Film>;
+  declare getShow: BelongsToGetAssociationMixin<Show>;
 }
 
 MediaRole.init(
@@ -37,23 +41,13 @@ MediaRole.init(
       },
       allowNull: false,
     },
-    filmId: {
+    mediaId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'films',
-        key: 'id',
-      },
-      defaultValue: null,
+      allowNull: false,
     },
-    showId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'shows',
-        key: 'id',
-      },
-      defaultValue: null,
+    mediaType: {
+      type: DataTypes.ENUM(...Object.values(MediaType)),
+      allowNull: false,
     },
     role: {
       type: DataTypes.ENUM(...Object.values(AuthorType)),

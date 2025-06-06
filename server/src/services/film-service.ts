@@ -155,6 +155,7 @@ export const getOrCreatePerson = async (
     }
     return person[0];
   } catch (_error) {
+    console.log(_error);
     return null;
   }
 };
@@ -175,17 +176,23 @@ export const getOrCreateMediaRole = async (
       defaults,
       include: {
         model: Person,
+        as: 'person',
         attributes: ['name'],
       },
     });
     if (!role) {
+      console.log('No role was created.');
       return null;
     }
     if (role[1]) {
       console.log(`Created Film Media Role ${role[0].id}`);
     }
     return role[0];
-  } catch (_error) {
+  } catch (error) {
+    console.error(
+      `Failed to create/find MediaRole for filmId=${defaults.filmId}, personId=${defaults.personId}, role=${defaults.role}:`,
+      error instanceof Error ? error.message : error
+    );
     return null;
   }
 };

@@ -1,12 +1,12 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { ShowParental } from '../types/parental/parental-types';
+import { FilmParental, ShowParental } from '../types/parental/parental-types';
 import { sequelize } from '../util/db';
 import Media from './media';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
   declare imdbId?: string;
-  declare parentalGuide: string;
+  declare parentalGuide: keyof typeof FilmParental | null;
   declare lastAirDate: Date;
   declare episodeCount: number;
   declare seasonCount: number;

@@ -1,9 +1,11 @@
 import Person from './person';
+import Media from './media';
 import Film from './film';
 import Show from './show';
 import Season from './season';
 import MediaRole from './mediaRole';
 import { sequelize } from '../util/db';
+import { MediaType } from '../types/media/media-types';
 
 Person.hasMany(MediaRole, {
   foreignKey: 'personId',
@@ -14,23 +16,9 @@ MediaRole.belongsTo(Person, {
   as: 'person',
 });
 
-Film.hasMany(MediaRole, {
-  foreignKey: 'filmId',
-  as: 'credits',
-});
-MediaRole.belongsTo(Film, {
-  foreignKey: 'filmId',
-  as: 'film',
-});
-
-Show.hasMany(MediaRole, {
-  foreignKey: 'showId',
-  as: 'credits',
-});
-MediaRole.belongsTo(Show, {
-  foreignKey: 'showId',
-  as: 'show',
-});
+//Shared Media<->MediaRole associations
+Media.setupAssociations(Film, MediaType.Film);
+Media.setupAssociations(Show, MediaType.Show);
 
 Show.hasMany(Season, {
   foreignKey: 'showId',

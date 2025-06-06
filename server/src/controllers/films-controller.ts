@@ -16,6 +16,9 @@ router.get('/:id', async (req, res, _next) => {
     const id: string = req.params.id;
     const filmEntry: Film | null = await Film.findOne({
       where: { tmdbId: id.toString() },
+      include: {
+        model: 
+      }
     });
     if (!filmEntry) {
       const filmData: FilmData = await fetchTMDBFilm(id);
@@ -25,8 +28,10 @@ router.get('/:id', async (req, res, _next) => {
       }
       console.log('Created film!');
       const cast: MediaRole[] = await buildCast(filmData.cast, film.id);
-      res.json({ ...film, cast });
-      return;
+      if (!cast)
+      {
+        throw new CustomError('Error creating cast', 400);
+      }      
     }
     console.log('Found film!');
     res.json(filmEntry);
