@@ -14,19 +14,8 @@ const router = express.Router();
 router.get('/:id', async (req, res, _next) => {
   try {
     const id: string = req.params.id;
-    let filmEntry: Film | null = await Film.findOne({
+    let filmEntry: Film | null = await Film.scope('withCredits').findOne({
       where: { tmdbId: id.toString() },
-      include: [
-        {
-          association: 'credits',
-          include: [
-            {
-              association: 'person',
-              attributes: ['name'],
-            },
-          ],
-        },
-      ],
     });
 
     if (!filmEntry) {
@@ -46,19 +35,7 @@ router.get('/:id', async (req, res, _next) => {
         throw new CustomError('Error creating cast', 400);
       }
 
-      filmEntry = await Film.findByPk(filmId, {
-        include: [
-          {
-            association: 'credits',
-            include: [
-              {
-                association: 'person',
-                attributes: ['name'],
-              },
-            ],
-          },
-        ],
-      });
+      filmEntry = await Film.scope('withCredits').findByPk(filmId);
 
       if (!filmEntry) {
         throw new CustomError('Error gathering just created Film', 400);

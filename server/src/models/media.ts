@@ -6,6 +6,7 @@ import {
   CreationOptional,
   Op,
   HasManyGetAssociationsMixin,
+  IncludeOptions,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
 import { Film, MediaRole, Show } from '.';
@@ -89,16 +90,6 @@ class Media<
     model: T,
     mediaType: MediaType
   ) {
-    //Full credits
-    model.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'credits',
-      scope: {
-        mediaType,
-      },
-      constraints: false,
-    });
-
     //Cast only -> Only Actors
     model.hasMany(MediaRole, {
       foreignKey: 'mediaId',
@@ -123,48 +114,39 @@ class Media<
   }
 
   //Scopes
-  static initScopes() {
-    return {
-      defaultScope: {
-        include: [
-          {
-            association: 'credits',
-            include: [
-              {
-                association: 'person',
-                attributes: 'name',
-              },
-            ],
-          },
-        ],
+
+  private static readonly castInclude: IncludeOptions = {
+    association: 'cast',
+    include: [
+      {
+        association: 'person',
+        attributes: ['name'],
       },
+    ],
+  };
+
+  private static readonly crewInclude: IncludeOptions = {
+    association: 'crew',
+    include: [
+      {
+        association: 'person',
+        attributes: ['name'],
+      },
+    ],
+  };
+
+  static initOptions() {
+    return {
+      defaultScope: {},
       scopes: {
-        withoutCredits: {},
+        withCredits: {
+          include: [this.castInclude, this.crewInclude],
+        },
         castOnly: {
-          include: [
-            {
-              association: 'cast',
-              include: [
-                {
-                  association: 'person',
-                  attributes: 'name',
-                },
-              ],
-            },
-          ],
+          include: [this.castInclude],
         },
         crewOnly: {
-          include: [
-            {
-              association: 'crew',
-              include: [
-                {
-                  association: 'person',
-                  attributes: 'name',
-                },
-              ],
-            },
-          ],
+          include: [this.crewInclude],
         },
       },
     };

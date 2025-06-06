@@ -28,6 +28,7 @@ Film.init(
     },
   },
   {
+    ...Media.initOptions(),
     sequelize,
     modelName: 'film',
     underscored: true,

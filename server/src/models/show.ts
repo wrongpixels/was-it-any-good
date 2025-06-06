@@ -41,6 +41,7 @@ Show.init(
     },
   },
   {
+    ...Media.initOptions(),
     sequelize,
     modelName: 'show',
     underscored: true,
