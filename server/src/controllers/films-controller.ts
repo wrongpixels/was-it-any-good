@@ -14,26 +14,59 @@ const router = express.Router();
 router.get('/:id', async (req, res, _next) => {
   try {
     const id: string = req.params.id;
-    const filmEntry: Film | null = await Film.findOne({
+    let filmEntry: Film | null = await Film.findOne({
       where: { tmdbId: id.toString() },
-      include: {
-        model: 
-      }
+      include: [
+        {
+          association: 'credits',
+          include: [
+            {
+              association: 'person',
+              attributes: ['name'],
+            },
+          ],
+        },
+      ],
     });
+
     if (!filmEntry) {
       const filmData: FilmData = await fetchTMDBFilm(id);
-      const film: Film | null = await Film.create(buildFilm(filmData));
-      if (!film) {
+      filmEntry = await Film.create(buildFilm(filmData));
+      if (!filmEntry) {
         throw new CustomError('Film could not be created', 400);
       }
+      const filmId = filmEntry.id;
       console.log('Created film!');
-      const cast: MediaRole[] = await buildCast(filmData.cast, film.id);
-      if (!cast)
-      {
+      const cast: MediaRole[] = await buildCast(
+        filmData.cast,
+        filmId,
+        filmData.type
+      );
+      if (!cast) {
         throw new CustomError('Error creating cast', 400);
-      }      
+      }
+
+      filmEntry = await Film.findByPk(filmId, {
+        include: [
+          {
+            association: 'credits',
+            include: [
+              {
+                association: 'person',
+                attributes: ['name'],
+              },
+            ],
+          },
+        ],
+      });
+
+      if (!filmEntry) {
+        throw new CustomError('Error gathering just created Film', 400);
+      }
+    } else {
+      console.log('Found film in db');
     }
-    console.log('Found film!');
+
     res.json(filmEntry);
   } catch (error) {
     res.json(error);

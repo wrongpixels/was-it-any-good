@@ -21,6 +21,7 @@ class MediaRole extends Model<
   declare role: string;
   declare characterName?: string[];
   declare order?: number;
+  //For getting the Media entry linked to mediaId
   declare getFilm: BelongsToGetAssociationMixin<Film>;
   declare getShow: BelongsToGetAssociationMixin<Show>;
 }

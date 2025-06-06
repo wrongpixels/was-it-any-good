@@ -12,7 +12,12 @@ import {
   TMDBFilmInfoSchema,
 } from '../schemas/film-schema';
 import Country from '../types/countries/country-types';
-import { AuthorType, FilmData, RoleData } from '../types/media/media-types';
+import {
+  AuthorType,
+  FilmData,
+  MediaType,
+  RoleData,
+} from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 
 export const fetchFilm = async (id: string): Promise<FilmData> => {
@@ -56,17 +61,18 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
 
 export const buildCast = async (
   cast: RoleData[],
-  filmId: number
+  mediaId: number,
+  mediaType: MediaType
 ): Promise<MediaRole[]> => {
   const roles: (MediaRole | null)[] = await Promise.all(
-    cast.map((castRole) => buildPersonAndRole(castRole, filmId))
+    cast.map((castRole) => buildPersonAndRole(castRole, mediaId, mediaType))
   );
 
   const uniqueRoles = new Map<string, MediaRole>();
 
   roles.forEach((role) => {
     if (role) {
-      const key = `${role.personId}-${role.filmId}`;
+      const key = `${role.personId}-${role.mediaId}`;
       uniqueRoles.set(key, role);
     }
   });
@@ -75,7 +81,8 @@ export const buildCast = async (
 
 const buildPersonAndRole = async (
   mediaData: RoleData,
-  filmId: number
+  mediaId: number,
+  mediaType: MediaType
 ): Promise<MediaRole | null> => {
   if (!mediaData) {
     return null;
@@ -92,7 +99,8 @@ const buildPersonAndRole = async (
   }
   const roleData: CreateMediaRole = {
     personId: person.id,
-    filmId,
+    mediaId,
+    mediaType,
     role: mediaData.type,
   };
   if (roleData.role === AuthorType.Actor) {
@@ -163,13 +171,13 @@ export const getOrCreatePerson = async (
 export const getOrCreateMediaRole = async (
   defaults: CreateMediaRole
 ): Promise<MediaRole | null> => {
-  if (!defaults || !defaults.filmId || !defaults.personId || !defaults.role) {
+  if (!defaults || !defaults.mediaId || !defaults.personId || !defaults.role) {
     return null;
   }
   try {
     const role: [MediaRole, boolean] = await MediaRole.findOrCreate({
       where: {
-        filmId: defaults.filmId,
+        mediaId: defaults.mediaId,
         personId: defaults.personId,
         role: defaults.role,
       },
@@ -190,7 +198,7 @@ export const getOrCreateMediaRole = async (
     return role[0];
   } catch (error) {
     console.error(
-      `Failed to create/find MediaRole for filmId=${defaults.filmId}, personId=${defaults.personId}, role=${defaults.role}:`,
+      `Failed to create/find MediaRole for filmId=${defaults.mediaId}, personId=${defaults.personId}, role=${defaults.role}:`,
       error instanceof Error ? error.message : error
     );
     return null;

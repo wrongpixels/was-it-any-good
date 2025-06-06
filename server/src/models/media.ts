@@ -5,6 +5,7 @@ import {
   InferCreationAttributes,
   CreationOptional,
   Op,
+  HasManyGetAssociationsMixin,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
 import { Film, MediaRole, Show } from '.';
@@ -26,6 +27,10 @@ class Media<
   declare rating: number | null;
   declare voteCount: number;
   declare runtime: number | null;
+  //For getting the Cast and Crew data
+  declare getCredits: HasManyGetAssociationsMixin<MediaRole>;
+  declare getCast: HasManyGetAssociationsMixin<MediaRole>;
+  declare getCrew: HasManyGetAssociationsMixin<MediaRole>;
 
   static baseInit() {
     return {
@@ -115,6 +120,54 @@ class Media<
       },
       constraints: false,
     });
+  }
+
+  //Scopes
+  static initScopes() {
+    return {
+      defaultScope: {
+        include: [
+          {
+            association: 'credits',
+            include: [
+              {
+                association: 'person',
+                attributes: 'name',
+              },
+            ],
+          },
+        ],
+      },
+      scopes: {
+        withoutCredits: {},
+        castOnly: {
+          include: [
+            {
+              association: 'cast',
+              include: [
+                {
+                  association: 'person',
+                  attributes: 'name',
+                },
+              ],
+            },
+          ],
+        },
+        crewOnly: {
+          include: [
+            {
+              association: 'crew',
+              include: [
+                {
+                  association: 'person',
+                  attributes: 'name',
+                },
+              ],
+            },
+          ],
+        },
+      },
+    };
   }
 }
 
