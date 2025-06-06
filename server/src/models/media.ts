@@ -120,9 +120,19 @@ class Media<
     include: [
       {
         association: 'person',
-        attributes: ['name'],
+        attributes: ['id', 'name', 'tmdbId', 'image'],
       },
     ],
+    attributes: {
+      exclude: [
+        'role',
+        'mediaId',
+        'mediaType',
+        'createdAt',
+        'updatedAt',
+        'personId',
+      ],
+    },
   };
 
   private static readonly crewInclude: IncludeOptions = {
@@ -130,9 +140,12 @@ class Media<
     include: [
       {
         association: 'person',
-        attributes: ['name'],
+        attributes: ['id', 'name', 'tmdbId', 'image'],
       },
     ],
+    attributes: {
+      exclude: ['mediaId', 'mediaType', 'createdAt', 'updatedAt', 'personId'],
+    },
   };
 
   static initOptions() {
