@@ -2,7 +2,7 @@
 import express from 'express';
 import CustomError from '../util/customError';
 import {
-  buildCast,
+  buildCredits,
   buildFilm,
   fetchFilm as fetchTMDBFilm,
 } from '../services/film-service';
@@ -26,17 +26,11 @@ router.get('/:id', async (req, res, _next) => {
       }
       const filmId = filmEntry.id;
       console.log('Created film!');
-      const cast: MediaRole[] = await buildCast(
-        filmData.cast,
-        filmId,
-        filmData.type
-      );
-      if (!cast) {
-        throw new CustomError('Error creating cast', 400);
+      const credits: MediaRole[] | null = await buildCredits(filmData, filmId);
+      if (!credits) {
+        throw new CustomError('Error creating credits', 400);
       }
-
       filmEntry = await Film.scope('withCredits').findByPk(filmId);
-
       if (!filmEntry) {
         throw new CustomError('Error gathering just created Film', 400);
       }

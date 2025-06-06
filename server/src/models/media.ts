@@ -7,6 +7,7 @@ import {
   Op,
   HasManyGetAssociationsMixin,
   IncludeOptions,
+  Sequelize,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
 import { Film, MediaRole, Show } from '.';
@@ -90,7 +91,6 @@ class Media<
     model: T,
     mediaType: MediaType
   ) {
-    //Cast only -> Only Actors
     model.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'cast',
@@ -101,7 +101,6 @@ class Media<
       constraints: false,
     });
 
-    //Crew only -> All but Actors
     model.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'crew',
@@ -114,7 +113,6 @@ class Media<
   }
 
   //Scopes
-
   private static readonly castInclude: IncludeOptions = {
     association: 'cast',
     include: [
@@ -144,8 +142,29 @@ class Media<
       },
     ],
     attributes: {
-      exclude: ['mediaId', 'mediaType', 'createdAt', 'updatedAt', 'personId'],
+      exclude: [
+        'mediaId',
+        'mediaType',
+        'createdAt',
+        'updatedAt',
+        'personId',
+        'characterName',
+        'order',
+      ],
     },
+    //We force Director to show first
+    order: [
+      [
+        Sequelize.literal(`
+          CASE            
+            WHEN role = 'Director' THEN 1
+            ELSE 3
+          END
+        `),
+        'ASC',
+      ],
+      ['person', 'name', 'ASC'],
+    ],
   };
 
   static initOptions() {

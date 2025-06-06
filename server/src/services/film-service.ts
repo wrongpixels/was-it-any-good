@@ -13,8 +13,10 @@ import {
 } from '../schemas/film-schema';
 import Country from '../types/countries/country-types';
 import {
+  AuthorData,
   AuthorType,
   FilmData,
+  MediaPerson,
   MediaType,
   RoleData,
 } from '../types/media/media-types';
@@ -59,39 +61,68 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
   parentalGuide: null,
 });
 
-export const buildCast = async (
+export const buildCredits = async (
+  filmData: FilmData,
+  mediaId: number
+): Promise<MediaRole[] | null> => {
+  const cast: MediaRole[] | null = await buildCast(
+    filmData.cast,
+    mediaId,
+    filmData.type
+  );
+  const crew: MediaRole[] | null = await buildCrew(
+    [
+      ...filmData.directors,
+      ...filmData.writers,
+      ...filmData.producers,
+      ...filmData.composers,
+    ],
+    mediaId,
+    filmData.type
+  );
+  const combinedCredits = [...(cast || []), ...(crew || [])];
+  return combinedCredits.length > 0 ? combinedCredits : null;
+};
+
+const buildCast = async (
   cast: RoleData[],
   mediaId: number,
   mediaType: MediaType
-): Promise<MediaRole[]> => {
+): Promise<MediaRole[] | null> => {
   const roles: (MediaRole | null)[] = await Promise.all(
-    cast.map((castRole) => buildPersonAndRole(castRole, mediaId, mediaType))
+    cast.map((roleData) => buildPersonAndRole(roleData, mediaId, mediaType))
   );
+  const validRoles = roles.filter((role): role is MediaRole => role !== null);
+  return validRoles.length > 0 ? validRoles : null;
+};
 
-  const uniqueRoles = new Map<string, MediaRole>();
-
-  roles.forEach((role) => {
-    if (role) {
-      const key = `${role.personId}-${role.mediaId}`;
-      uniqueRoles.set(key, role);
-    }
-  });
-  return Array.from(uniqueRoles.values());
+const buildCrew = async (
+  crew: AuthorData[],
+  mediaId: number,
+  mediaType: MediaType
+): Promise<MediaRole[] | null> => {
+  const roles: (MediaRole | null)[] = await Promise.all(
+    crew.map((authorData) => buildPersonAndRole(authorData, mediaId, mediaType))
+  );
+  const validRoles = roles.filter((role): role is MediaRole => role !== null);
+  return validRoles.length > 0 ? validRoles : null;
 };
 
 const buildPersonAndRole = async (
-  mediaData: RoleData,
+  mediaPersonData: MediaPerson,
   mediaId: number,
   mediaType: MediaType
 ): Promise<MediaRole | null> => {
-  if (!mediaData) {
+  if (!mediaPersonData) {
     return null;
   }
   const personData: CreatePerson = {
-    name: mediaData.name,
-    tmdbId: mediaData.tmdbId,
-    image: mediaData.image,
-    country: mediaData.country ? [mediaData.country] : [Country.UNKNOWN],
+    name: mediaPersonData.name,
+    tmdbId: mediaPersonData.tmdbId,
+    image: mediaPersonData.image,
+    country: mediaPersonData.country
+      ? [mediaPersonData.country]
+      : [Country.UNKNOWN],
   };
   const person: Person | null = await getOrCreatePerson(personData);
   if (!person) {
@@ -101,11 +132,15 @@ const buildPersonAndRole = async (
     personId: person.id,
     mediaId,
     mediaType,
-    role: mediaData.type,
+    role: mediaPersonData.type,
   };
-  if (roleData.role === AuthorType.Actor) {
-    roleData.characterName = [mediaData.character];
-    roleData.order = mediaData.order;
+  if (
+    mediaPersonData.type === AuthorType.Actor &&
+    'character' in mediaPersonData &&
+    'order' in mediaPersonData
+  ) {
+    roleData.characterName = [mediaPersonData.character];
+    roleData.order = mediaPersonData.order;
   }
   return await buildMediaRole(roleData);
 };
@@ -137,9 +172,8 @@ const buildMediaRole = async (
     if (changed) {
       await mediaRole.save();
     }
-    return mediaRole;
   }
-  return null;
+  return mediaRole;
 };
 
 export const getOrCreatePerson = async (
