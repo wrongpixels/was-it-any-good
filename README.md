@@ -1,6 +1,6 @@
 # WIAG <i>("Was It Any Good?")</i>
 
-## About
+## About 
 
 WIAG is a full-stack rating platform to discover and review movies, TV shows and games. Unlike traditional systems, WIAG uses a dynamic scoring approach that combines overall impressions with individual components (seasons/DLC), calculating a final score that shows how quality varies over time.
 
