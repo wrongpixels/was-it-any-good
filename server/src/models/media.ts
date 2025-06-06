@@ -131,6 +131,10 @@ class Media<
         'personId',
       ],
     },
+    separate: true,
+
+    //We force order by the 'order' value of the cast
+    order: [['"order"', 'ASC']],
   };
 
   private static readonly crewInclude: IncludeOptions = {
