@@ -25,7 +25,7 @@ For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG consider
 - **DevOps:** Automated CI/CD with GitHub Actions
 - **Styling:** Bootstrap and Styled Components
 
-### Data Architecture
+## Data Architecture
 
 The project is built around a dynamic, self-populating database shared between Films, Shows and Games. Rather than copying or mirroring external databases, TMDB and IGDB are used as the original information source.
 
