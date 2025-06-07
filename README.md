@@ -18,13 +18,20 @@ For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG consider
 
 ## Technical Implementation
 
-- TypeScript
-- Frontend (React + TanStack Query) and Backend (Node.js/Express)
-- PostgreSQL databases with Sequelize ORM and migrations
-- JWT authentication and session management
-- Automated CI/CD pipeline via GitHub Actions
-- Bootstrap + Styled Components for design
-- TMDB + IGDB API integrations
+- **Backend:** Node.js, Express, TypeScript
+- **Frontend:** React, TanStack Query, TypeScript
+- **Database:** PostgreSQL with Sequelize ORM
+- **Authentication:** JWT for session management
+- **DevOps:** Automated CI/CD with GitHub Actions
+- **Styling:** Bootstrap and Styled Components
+
+### Data Architecture
+
+The project is built around a dynamic, self-populating database shared between Films, Shows and Games. Rather than copying or mirroring external databases, TMDB and IGDB are used as the original information source.
+
+- **On-Demand Data Handling:** When a user searches for media not present in WIAG's database, the system fetches the data from the appropriate external API in real-time.
+- **Smart Data Processing:** The incoming data is converted to match WIAG's database structure. People appearing across different media are automatically linked together, creating a connected network of cast, crew and their work.
+- **Efficient and Independent:** Once media is added to WIAG, it becomes fully independent from external sources. The database grows organically based on user interests, while maintaining consistent relationships between all entries.
 
 ## Development
 
