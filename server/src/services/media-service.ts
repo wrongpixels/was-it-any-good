@@ -1,9 +1,12 @@
 //Services for building all Media
 
-import { MediaRole } from '../models';
+import { Transaction } from 'sequelize';
+import { MediaGenre, MediaRole } from '../models';
+import Genre from '../models/genre';
 import { CreateMediaRole } from '../models/mediaRole';
 import Person, { CreatePerson } from '../models/person';
 import Country from '../types/countries/country-types';
+import { CreateGenreData } from '../types/genres/genre-types';
 import {
   AuthorData,
   AuthorType,
@@ -15,17 +18,20 @@ import {
 
 export const buildCredits = async (
   mediaData: MediaData,
-  mediaId: number
+  mediaId: number,
+  transaction: Transaction
 ): Promise<MediaRole[] | null> => {
   const cast: MediaRole[] | null = await buildCast(
     mediaData.cast,
     mediaId,
-    mediaData.type
+    mediaData.type,
+    transaction
   );
   const crew: MediaRole[] | null = await buildCrew(
     mediaData.crew,
     mediaId,
-    mediaData.type
+    mediaData.type,
+    transaction
   );
   const combinedCredits = [...(cast || []), ...(crew || [])];
   return combinedCredits.length > 0 ? combinedCredits : null;
@@ -34,10 +40,13 @@ export const buildCredits = async (
 const buildCast = async (
   cast: RoleData[],
   mediaId: number,
-  mediaType: MediaType
+  mediaType: MediaType,
+  transaction: Transaction
 ): Promise<MediaRole[] | null> => {
   const roles: (MediaRole | null)[] = await Promise.all(
-    cast.map((roleData) => buildPersonAndRole(roleData, mediaId, mediaType))
+    cast.map((roleData) =>
+      buildPersonAndRole(roleData, mediaId, mediaType, transaction)
+    )
   );
   const validRoles = roles.filter((role): role is MediaRole => role !== null);
   return validRoles.length > 0 ? validRoles : null;
@@ -46,19 +55,62 @@ const buildCast = async (
 const buildCrew = async (
   crew: AuthorData[],
   mediaId: number,
-  mediaType: MediaType
+  mediaType: MediaType,
+  transaction: Transaction
 ): Promise<MediaRole[] | null> => {
   const roles: (MediaRole | null)[] = await Promise.all(
-    crew.map((authorData) => buildPersonAndRole(authorData, mediaId, mediaType))
+    crew.map((authorData) =>
+      buildPersonAndRole(authorData, mediaId, mediaType, transaction)
+    )
   );
   const validRoles = roles.filter((role): role is MediaRole => role !== null);
   return validRoles.length > 0 ? validRoles : null;
 };
 
+export const buildGenres = async (
+  mediaData: MediaData,
+  mediaId: number,
+  mediaType: MediaType,
+  transaction: Transaction
+): Promise<MediaGenre[] | null> => {
+  const genres: MediaGenre[] = await Promise.all(
+    mediaData.genres.map((g: CreateGenreData) =>
+      getOrBuildGenre(g, mediaId, mediaType, transaction)
+    )
+  );
+
+  return genres?.length > 0 ? genres : null;
+};
+
+const getOrBuildGenre = async (
+  genreData: CreateGenreData,
+  mediaId: number,
+  mediaType: MediaType,
+  transaction: Transaction
+): Promise<MediaGenre> => {
+  const genre: [Genre, boolean] = await Genre.findOrCreate({
+    where: {
+      tmdbId: genreData.mediaId,
+      name: genreData.name,
+    },
+    transaction,
+  });
+  const mediaGenre: [MediaGenre, boolean] = await MediaGenre.findOrCreate({
+    where: {
+      genreId: genre[0].id,
+      mediaId,
+      mediaType,
+    },
+    transaction,
+  });
+  return mediaGenre[0];
+};
+
 const buildPersonAndRole = async (
   mediaPersonData: MediaPerson,
   mediaId: number,
-  mediaType: MediaType
+  mediaType: MediaType,
+  transaction: Transaction
 ): Promise<MediaRole | null> => {
   if (!mediaPersonData) {
     return null;
@@ -71,7 +123,10 @@ const buildPersonAndRole = async (
       ? [mediaPersonData.country]
       : [Country.UNKNOWN],
   };
-  const person: Person | null = await getOrCreatePerson(personData);
+  const person: Person | null = await getOrCreatePerson(
+    personData,
+    transaction
+  );
   if (!person) {
     return null;
   }
@@ -89,13 +144,17 @@ const buildPersonAndRole = async (
     roleData.characterName = [mediaPersonData.character];
     roleData.order = mediaPersonData.order;
   }
-  return await buildMediaRole(roleData);
+  return await buildMediaRole(roleData, transaction);
 };
 
 const buildMediaRole = async (
-  roleData: CreateMediaRole
+  roleData: CreateMediaRole,
+  transaction: Transaction
 ): Promise<MediaRole | null> => {
-  const mediaRole: MediaRole | null = await getOrCreateMediaRole(roleData);
+  const mediaRole: MediaRole | null = await getOrCreateMediaRole(
+    roleData,
+    transaction
+  );
   if (mediaRole === null) {
     return null;
   }
@@ -117,14 +176,15 @@ const buildMediaRole = async (
       }
     }
     if (changed) {
-      await mediaRole.save();
+      await mediaRole.save({ transaction });
     }
   }
   return mediaRole;
 };
 
 export const getOrCreatePerson = async (
-  defaults: CreatePerson
+  defaults: CreatePerson,
+  _transaction: Transaction
 ): Promise<Person | null> => {
   if (!defaults || !defaults.tmdbId || !defaults.name) {
     return null;
@@ -150,7 +210,8 @@ export const getOrCreatePerson = async (
 };
 
 export const getOrCreateMediaRole = async (
-  defaults: CreateMediaRole
+  defaults: CreateMediaRole,
+  _transaction: Transaction
 ): Promise<MediaRole | null> => {
   if (!defaults || !defaults.mediaId || !defaults.personId || !defaults.role) {
     return null;

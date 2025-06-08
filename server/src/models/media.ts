@@ -99,9 +99,7 @@ class Media<
       foreignKey: 'mediaId',
       otherKey: 'genreId',
       as: 'genres',
-      scope: {
-        mediaType,
-      },
+      constraints: false,
     });
     model.hasMany(MediaRole, {
       foreignKey: 'mediaId',

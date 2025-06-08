@@ -1,48 +1,34 @@
 //import type { Request, Response } from 'express';
 import express from 'express';
 import CustomError from '../util/customError';
-import {
-  buildFilm,
-  fetchFilm as fetchTMDBFilm,
-} from '../services/film-service';
-import { FilmData } from '../types/media/media-types';
-import { Film, MediaRole } from '../models';
-import { buildCredits } from '../services/media-service';
-
+import { Film } from '../models';
+import { buildFilmEntry } from '../services/film-service';
+import { sequelize } from '../util/db';
 const router = express.Router();
 
-router.get('/:id', async (req, res, _next) => {
+router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
-    let filmEntry: Film | null = await Film.scope('withCredits').findOne({
+
+    let filmEntry = await Film.scope('withCredits').findOne({
       where: { tmdbId: id.toString() },
     });
 
     if (!filmEntry) {
-      const filmData: FilmData = await fetchTMDBFilm(id);
-      filmEntry = await Film.create(buildFilm(filmData));
-      if (!filmEntry) {
-        throw new CustomError('Film could not be created', 400);
+      const transaction = await sequelize.transaction();
+      try {
+        filmEntry = await buildFilmEntry(id, transaction);
+        await transaction.commit();
+      } catch (error) {
+        console.log('Rolling back');
+        await transaction.rollback();
+        throw error;
       }
-      const filmId = filmEntry.id;
-      console.log('Created film!');
-      const credits: MediaRole[] | null = await buildCredits(filmData, filmId);
-      if (!credits) {
-        throw new CustomError('Error creating credits', 400);
-      }
-      filmEntry = await Film.scope('withCredits').findByPk(filmId);
-      if (!filmEntry) {
-        throw new CustomError('Error gathering just created Film', 400);
-      }
-    } else {
-      console.log('Found film in db');
     }
 
     res.json(filmEntry);
   } catch (error) {
-    console.log('Something went WRONG');
-    res.json(error);
-    //next(error);
+    next(error);
   }
 });
 
