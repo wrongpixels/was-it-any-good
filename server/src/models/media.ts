@@ -8,9 +8,10 @@ import {
   HasManyGetAssociationsMixin,
   IncludeOptions,
   Sequelize,
+  BelongsToManyGetAssociationsMixin,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
-import { Film, MediaRole, Show } from '.';
+import { Film, Genre, MediaGenre, MediaRole, Show } from '.';
 import { AuthorType, MediaType } from '../types/media/media-types';
 
 class Media<
@@ -33,6 +34,8 @@ class Media<
   declare getCredits: HasManyGetAssociationsMixin<MediaRole>;
   declare getCast: HasManyGetAssociationsMixin<MediaRole>;
   declare getCrew: HasManyGetAssociationsMixin<MediaRole>;
+  //For getting the Genres
+  declare getGenres: BelongsToManyGetAssociationsMixin<MediaGenre>;
 
   static baseInit() {
     return {
@@ -91,6 +94,15 @@ class Media<
     model: T,
     mediaType: MediaType
   ) {
+    model.belongsToMany(Genre, {
+      through: MediaGenre,
+      foreignKey: 'mediaId',
+      otherKey: 'genreId',
+      as: 'genres',
+      scope: {
+        mediaType,
+      },
+    });
     model.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'cast',
@@ -137,6 +149,14 @@ class Media<
     order: [['"order"', 'ASC']],
   };
 
+  private static readonly genresInclude: IncludeOptions = {
+    association: 'genres',
+    attributes: ['id', 'name', 'tmdbId'],
+    through: {
+      attributes: [],
+    },
+  };
+
   private static readonly crewInclude: IncludeOptions = {
     association: 'crew',
     include: [
@@ -176,13 +196,13 @@ class Media<
       defaultScope: {},
       scopes: {
         withCredits: {
-          include: [this.castInclude, this.crewInclude],
+          include: [this.castInclude, this.crewInclude, this.genresInclude],
         },
         castOnly: {
-          include: [this.castInclude],
+          include: [this.castInclude, this.genresInclude],
         },
         crewOnly: {
-          include: [this.crewInclude],
+          include: [this.crewInclude, this.genresInclude],
         },
       },
     };
