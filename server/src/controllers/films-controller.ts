@@ -2,12 +2,12 @@
 import express from 'express';
 import CustomError from '../util/customError';
 import {
-  buildCredits,
   buildFilm,
   fetchFilm as fetchTMDBFilm,
 } from '../services/film-service';
 import { FilmData } from '../types/media/media-types';
 import { Film, MediaRole } from '../models';
+import { buildCredits } from '../services/media-service';
 
 const router = express.Router();
 

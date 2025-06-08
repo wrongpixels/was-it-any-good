@@ -116,7 +116,7 @@ export interface MediaData {
 // Media types
 export interface FilmData extends MediaData {
   tmdbId: string;
-  imdbId?: string;
+  imdbId: string;
   type: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
@@ -124,9 +124,8 @@ export interface FilmData extends MediaData {
 
 export interface ShowData extends MediaData {
   tmdbId: string;
-  imdbId?: string;
+  imdbId: string;
   type: MediaType.Show;
-  creators: AuthorData[];
   lastAirDate: AirDate;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
@@ -169,6 +168,18 @@ export interface ChapterData extends SubMediaData {
 }
 
 // Creation
+export interface TMDBData {
+  tmdbId: string;
+  imdbId: string;
+  description: string;
+  image: string;
+  countries: Country[];
+  genres: CreateGenreData[];
+  cast: RoleData[];
+  crew: AuthorData[];
+  studios: StudioData[];
+}
+
 export type DefaultMedia = Omit<
   MediaData,
   | 'name'
@@ -181,7 +192,13 @@ export type DefaultMedia = Omit<
 >;
 export type DefaultFilm = Omit<
   FilmData,
-  'name' | 'sortName' | 'tmdbId' | 'originalName' | 'description' | 'genres'
+  | 'name'
+  | 'sortName'
+  | 'tmdbId'
+  | 'imdbId'
+  | 'originalName'
+  | 'description'
+  | 'genres'
 >;
 export type DefaultShow = Omit<
   ShowData,
@@ -189,6 +206,7 @@ export type DefaultShow = Omit<
   | 'sortName'
   | 'seasons'
   | 'tmdbId'
+  | 'imdbId'
   | 'originalName'
   | 'description'
   | 'genres'

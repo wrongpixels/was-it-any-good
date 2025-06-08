@@ -4,14 +4,14 @@ import {
   TMDBCreditsData,
   TMDBCreditsSchema,
   TMDBCrewData,
-} from '../schemas/film-schema';
+} from '../schemas/tmdb-media-schema';
 import {
   TMDBExternalIdSchema,
   TMDBImdbData,
   TMDBShowData,
   TMDBShowInfoData,
   TMDBShowInfoSchema,
-} from '../schemas/show-schema';
+} from '../schemas/tmdb-show-schema';
 import { ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 

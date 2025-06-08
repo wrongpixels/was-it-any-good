@@ -2,8 +2,8 @@ import { z } from 'zod';
 import {
   TMDBCreditsSchema,
   TMDBEntrySchema,
-  TMDBInfoSchema,
-} from './film-schema';
+  TMDBMediaSchema,
+} from './tmdb-media-schema';
 
 const TMDBCreatorSchema = TMDBEntrySchema.extend({
   gender: z.number().nullable(),
@@ -18,7 +18,7 @@ const TMDBSeasonSchema = TMDBEntrySchema.extend({
   poster_path: z.string().nullable(),
 });
 
-export const TMDBShowInfoSchema = TMDBInfoSchema.extend({
+export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
   name: z.string(),
   original_name: z.string(),
   number_of_episodes: z.number().min(0),

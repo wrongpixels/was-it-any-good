@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { TMDBShowData } from './tmdb-show-schema';
+import { TMDBFilmData } from './tmdb-film-schema';
 
 export const TMDBEntrySchema = z.object({
   id: z.number(),
@@ -36,7 +38,7 @@ export const TMDBCreditsSchema = z.object({
   crew: z.array(TMDBCrewSchema),
 });
 
-export const TMDBInfoSchema = z.object({
+export const TMDBMediaSchema = z.object({
   id: z.number(),
   genres: z.array(TMDBGenreSchema),
   origin_country: z.array(z.string()),
@@ -47,20 +49,10 @@ export const TMDBInfoSchema = z.object({
   production_companies: z.array(TMDBStudioSchema),
 });
 
-export const TMDBFilmInfoSchema = TMDBInfoSchema.extend({
-  title: z.string(),
-  imdb_id: z.string(),
-  original_title: z.string(),
-  release_date: z.string().date(),
-  runtime: z.number().int().min(0),
-});
+export const isShow = (tmdb: TMDBMediaData): tmdb is TMDBShowData =>
+  'episode_count' in tmdb;
 
-export const TMDBFilmSchema = TMDBFilmInfoSchema.extend({
-  credits: TMDBCreditsSchema,
-});
-
-export type TMDBFilmInfoData = z.infer<typeof TMDBFilmInfoSchema>;
-export type TMDBFilmData = z.infer<typeof TMDBFilmSchema>;
+export type TMDBMediaData = TMDBShowData | TMDBFilmData;
 export type TMDBCreditsData = z.infer<typeof TMDBCreditsSchema>;
 export type TMDBGenreData = z.infer<typeof TMDBGenreSchema>;
 export type TMDBCrewData = z.infer<typeof TMDBCrewSchema>;

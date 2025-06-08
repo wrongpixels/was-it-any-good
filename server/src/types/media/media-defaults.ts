@@ -136,8 +136,8 @@ export const DEF_FILM: DefaultFilm = {
 
 export const DEF_SHOW: DefaultShow = {
   ...DEF_MEDIA,
+  crew: [DEF_CREATOR, ...DEF_CREW],
   episodeCount: 0,
-  creators: [DEF_CREATOR],
   lastAirDate: DEF_RELEASE_DATE,
   parentalGuide: ShowParental.UNKNOWN,
   seasonCount: 1,

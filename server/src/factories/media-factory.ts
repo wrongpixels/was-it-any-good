@@ -5,7 +5,9 @@ import {
   TMDBCrewData,
   TMDBRoleData,
   TMDBStudioData,
-} from '../schemas/film-schema';
+  TMDBMediaData,
+  isShow,
+} from '../schemas/tmdb-media-schema';
 import Country from '../types/countries/country-types';
 import {
   DEF_ROLE,
@@ -15,6 +17,7 @@ import {
   DEF_STUDIO,
   DEF_PRODUCER,
   DEF_COMPOSER,
+  DEF_FILM,
 } from '../types/media/media-defaults';
 import {
   IndividualData,
@@ -23,7 +26,38 @@ import {
   RoleType,
   AuthorData,
   StudioData,
+  TMDBData,
+  MediaType,
 } from '../types/media/media-types';
+import { mapTMDBGenres } from '../services/genre-mapper';
+import { createCreators } from './show-factory';
+
+export const createTMDBBase = (tmdb: TMDBMediaData): TMDBData => ({
+  tmdbId: tmdb.id.toString(),
+  imdbId: tmdb.imdb_id,
+  countries: validateCountries(tmdb.origin_country),
+  description: tmdb.overview,
+  image: tmdb.poster_path
+    ? imageLinker.createPosterURL(tmdb.poster_path)
+    : DEF_FILM.image,
+  genres: mapTMDBGenres(
+    tmdb.genres,
+    isShow(tmdb) ? MediaType.Show : MediaType.Film
+  ),
+  cast: createCast(tmdb.credits.cast),
+  crew: getCrew(tmdb),
+  studios: createStudios(tmdb.production_companies),
+});
+
+export const getCrew = (tmdb: TMDBMediaData): AuthorData[] => {
+  if (isShow(tmdb)) {
+    return [
+      ...createCrew(tmdb.credits.crew),
+      ...createCreators(tmdb.created_by),
+    ];
+  }
+  return createCrew(tmdb.credits.crew);
+};
 
 export const getAirDate = (date: string): AirDate => {
   const parsed = new Date(date);
