@@ -40,6 +40,7 @@ router.get('/:id', async (req, res, _next) => {
 
     res.json(filmEntry);
   } catch (error) {
+    console.log('Something went WRONG');
     res.json(error);
     //next(error);
   }

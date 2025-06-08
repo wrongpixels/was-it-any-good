@@ -14,9 +14,8 @@ import {
 } from '../types/media/media-types';
 import {
   createCast,
-  createDirectors,
+  createCrew,
   createStudios,
-  createWriters,
   getAirDate,
   validateCountries,
 } from './media-factory';
@@ -44,10 +43,9 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
     : DEF_FILM.image,
   runtime: tmdb.episode_run_time[0],
   genres: mapTMDBGenres(tmdb.genres),
-  creators: createCreators(tmdb.created_by),
-  directors: createDirectors(tmdb.credits.crew),
-  writers: createWriters(tmdb.credits.crew),
   cast: createCast(tmdb.credits.cast),
+  crew: createCrew(tmdb.credits.crew),
+  creators: createCreators(tmdb.created_by),
   studios: createStudios(tmdb.production_companies),
   seasons: createSeasons(tmdb.seasons),
 });

@@ -15,7 +15,7 @@ import { AuthorType, MediaType } from '../types/media/media-types';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;

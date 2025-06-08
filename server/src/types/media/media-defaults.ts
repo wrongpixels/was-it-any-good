@@ -110,11 +110,8 @@ export const DEF_ROLE: RoleData = {
 export const DEF_STATUS = 'Released';
 
 export const DEF_CAST: RoleData[] = [DEF_ROLE];
-export const DEF_DIRECTION: AuthorData[] = [DEF_DIRECTOR];
+export const DEF_CREW: AuthorData[] = [DEF_DIRECTOR];
 export const DEF_STUDIOS: StudioData[] = [DEF_STUDIO];
-export const DEF_WRITING: AuthorData[] = [DEF_WRITER];
-export const DEF_PRODUCERS: AuthorData[] = [DEF_PRODUCER];
-export const DEF_COMPOSERS: AuthorData[] = [DEF_COMPOSER];
 export const DEF_COUNTRIES: Country[] = [Country.UNKNOWN];
 
 export const DEF_MEDIA: DefaultMedia = {
@@ -125,12 +122,9 @@ export const DEF_MEDIA: DefaultMedia = {
   rating: DEF_MEDIA_RATING,
   runtime: 0,
   studios: DEF_STUDIOS,
-  directors: DEF_DIRECTION,
-  writers: DEF_WRITING,
-  producers: DEF_PRODUCERS,
-  composers: DEF_COMPOSERS,
-  countries: DEF_COUNTRIES,
   cast: DEF_CAST,
+  crew: DEF_CREW,
+  countries: DEF_COUNTRIES,
 };
 
 export const DEF_FILM: DefaultFilm = {

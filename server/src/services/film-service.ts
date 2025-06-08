@@ -71,12 +71,7 @@ export const buildCredits = async (
     filmData.type
   );
   const crew: MediaRole[] | null = await buildCrew(
-    [
-      ...filmData.directors,
-      ...filmData.writers,
-      ...filmData.producers,
-      ...filmData.composers,
-    ],
+    filmData.crew,
     mediaId,
     filmData.type
   );

@@ -5,11 +5,8 @@ import { DEF_FILM } from '../types/media/media-defaults';
 import { FilmData } from '../types/media/media-types';
 import {
   createCast,
-  createComposers,
-  createDirectors,
-  createProducers,
+  createCrew,
   createStudios,
-  createWriters,
   getAirDate,
   validateCountries,
 } from './media-factory';
@@ -29,10 +26,7 @@ export const createFilm = (tmdb: TMDBFilmData): FilmData => ({
     : DEF_FILM.image,
   runtime: tmdb.runtime,
   genres: mapTMDBGenres(tmdb.genres),
-  directors: createDirectors(tmdb.credits.crew),
-  writers: createWriters(tmdb.credits.crew),
-  producers: createProducers(tmdb.credits.crew),
-  composers: createComposers(tmdb.credits.crew),
+  crew: createCrew(tmdb.credits.crew),
   cast: createCast(tmdb.credits.cast),
   studios: createStudios(tmdb.production_companies),
 });

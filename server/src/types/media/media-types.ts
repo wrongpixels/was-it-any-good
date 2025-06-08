@@ -108,12 +108,9 @@ export interface MediaData {
   genres: CreateGenreData[];
   subMedia: SubMediaType;
   studios: StudioData[];
-  directors: AuthorData[];
-  producers: AuthorData[];
-  writers: AuthorData[];
-  composers: AuthorData[];
-  countries: Country[];
   cast: RoleData[];
+  crew: AuthorData[];
+  countries: Country[];
 }
 
 // Media types
