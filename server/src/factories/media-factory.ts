@@ -21,7 +21,6 @@ import {
 } from '../types/media/media-defaults';
 import {
   IndividualData,
-  AirDate,
   RoleData,
   RoleType,
   AuthorData,
@@ -59,13 +58,10 @@ export const getCrew = (tmdb: TMDBMediaData): AuthorData[] => {
   return createCrew(tmdb.credits.crew);
 };
 
-export const getAirDate = (date: string): AirDate => {
+export const getAirDate = (date: string): string => {
   const parsed = new Date(date);
   const isValid = !isNaN(parsed.getTime());
-  return {
-    isUnknown: !isValid,
-    date,
-  };
+  return isValid ? date : 'Unknown';
 };
 export const validateCountry = (code: string): Country | null => {
   return Object.keys(Country).includes(code as Country)

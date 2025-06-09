@@ -49,6 +49,6 @@ Season.init(
     timestamps: true,
   }
 );
-export type CreateSeason = InferAttributes<Season>;
+export type CreateSeason = Omit<InferAttributes<Season>, 'id'>;
 
 export default Season;

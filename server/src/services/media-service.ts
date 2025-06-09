@@ -1,4 +1,4 @@
-//Services for building all Media
+//Shared services for building TMDB Media
 
 import { Transaction } from 'sequelize';
 import { MediaGenre, MediaRole } from '../models';
@@ -15,6 +15,11 @@ import {
   MediaType,
   RoleData,
 } from '../types/media/media-types';
+import {
+  TMDBAcceptedJobs,
+  TMDBCreditsData,
+  TMDBCrewData,
+} from '../schemas/tmdb-media-schema';
 
 export const buildCredits = async (
   mediaData: MediaData,
@@ -246,3 +251,11 @@ export const getOrCreateMediaRole = async (
     return null;
   }
 };
+
+export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
+  ...credits,
+  cast: credits.cast.slice(0, 10),
+  crew: credits.crew.filter((crewMember: TMDBCrewData) =>
+    Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
+  ),
+});

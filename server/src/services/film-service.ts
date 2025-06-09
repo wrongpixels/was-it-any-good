@@ -8,22 +8,20 @@ import {
   TMDBFilmInfoSchema,
 } from '../schemas/tmdb-film-schema';
 import {
-  TMDBAcceptedJobs,
   TMDBCreditsData,
   TMDBCreditsSchema,
-  TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
 import { FilmData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
-import { buildCredits, buildGenres } from './media-service';
+import { buildCredits, buildGenres, trimCredits } from './media-service';
 
 export const buildFilmEntry = async (
   tmdbId: string,
   transaction: Transaction
 ): Promise<Film | null> => {
   const filmData: FilmData = await fetchTMDBFilm(tmdbId);
-  let filmEntry: Film | null = await Film.create(buildFilm(filmData), {
+  const filmEntry: Film | null = await Film.create(buildFilm(filmData), {
     transaction,
   });
   if (!filmEntry) {
@@ -48,16 +46,19 @@ export const buildFilmEntry = async (
   if (!credits) {
     throw new CustomError('Error creating credits', 400);
   }
-  filmEntry = await Film.scope('withCredits').findByPk(filmId, { transaction });
-  if (!filmEntry) {
+  const finalFilmEntry: Film | null = await Film.scope('withCredits').findByPk(
+    filmId,
+    { transaction }
+  );
+  if (!finalFilmEntry) {
     throw new CustomError('Error gathering just created Film', 400);
   }
-  return filmEntry;
+  return finalFilmEntry;
 };
 
-export const fetchTMDBFilm = async (id: string): Promise<FilmData> => {
-  const filmRes = await tmdbAPI.get(`/movie/${id}`);
-  const creditsRes = await tmdbAPI.get(`/movie/${id}/credits`);
+export const fetchTMDBFilm = async (tmdbId: string): Promise<FilmData> => {
+  const filmRes = await tmdbAPI.get(`/movie/${tmdbId}`);
+  const creditsRes = await tmdbAPI.get(`/movie/${tmdbId}/credits`);
 
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
@@ -69,17 +70,9 @@ export const fetchTMDBFilm = async (id: string): Promise<FilmData> => {
   return actualFilmData;
 };
 
-const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
-  ...credits,
-  cast: credits.cast.slice(0, 10),
-  crew: credits.crew.filter((crewMember: TMDBCrewData) =>
-    Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
-  ),
-});
-
 export const buildFilm = (filmData: FilmData): CreateFilm => ({
   ...filmData,
-  releaseDate: filmData.releaseDate.date || 'Unknown',
+  releaseDate: filmData.releaseDate,
   country: filmData.countries,
   rating: 0,
   voteCount: 0,

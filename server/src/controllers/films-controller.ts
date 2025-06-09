@@ -4,18 +4,18 @@ import CustomError from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
+import { Transaction } from 'sequelize';
 const router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
-
-    let filmEntry = await Film.scope('withCredits').findOne({
+    let filmEntry: Film | null = await Film.scope('withCredits').findOne({
       where: { tmdbId: id.toString() },
     });
 
     if (!filmEntry) {
-      const transaction = await sequelize.transaction();
+      const transaction: Transaction = await sequelize.transaction();
       try {
         filmEntry = await buildFilmEntry(id, transaction);
         await transaction.commit();

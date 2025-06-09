@@ -2,15 +2,24 @@
 import express from 'express';
 import { Show } from '../models';
 import CustomError from '../util/customError';
-import { fetchShow } from '../services/show-service';
+import { fetchTMDBShow } from '../services/show-service';
 
 const router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
-    const data = await fetchShow(id);
-    res.json(data);
+    let showEntry: Show | null = await Show.findOne({
+      where: {
+        tmdbId: id,
+      },
+    });
+    if (!showEntry) {
+      showEntry = build;
+    } else {
+      console.log('Found Show in db');
+    }
+    res.json(showEntry);
   } catch (error) {
     next(error);
   }

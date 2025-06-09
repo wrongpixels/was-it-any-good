@@ -7,7 +7,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
   declare imdbId?: string;
   declare parentalGuide: keyof typeof FilmParental | null;
-  declare lastAirDate: Date;
+  declare lastAirDate: string;
   declare episodeCount: number;
   declare seasonCount: number;
 }
@@ -29,7 +29,7 @@ Show.init(
       allowNull: true,
     },
     lastAirDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
     },
     episodeCount: {
       type: DataTypes.INTEGER,
@@ -47,6 +47,6 @@ Show.init(
     underscored: true,
   }
 );
-export type CreateShow = InferAttributes<Show>;
+export type CreateShow = Omit<InferAttributes<Show>, 'id'>;
 
 export default Show;

@@ -1,9 +1,8 @@
+import { Transaction } from 'sequelize';
 import { createShow } from '../factories/show-factory';
 import {
-  TMDBAcceptedJobs,
   TMDBCreditsData,
   TMDBCreditsSchema,
-  TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
 import {
   TMDBExternalIdSchema,
@@ -12,14 +11,70 @@ import {
   TMDBShowInfoData,
   TMDBShowInfoSchema,
 } from '../schemas/tmdb-show-schema';
-import { ShowData } from '../types/media/media-types';
+import { SeasonData, ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
+import { MediaGenre, MediaRole, Show } from '../models';
+import { buildCredits, buildGenres, trimCredits } from './media-service';
+import { CreateShow } from '../models/show';
+import Season, { CreateSeason } from '../models/season';
+import CustomError from '../util/customError';
 
-export const fetchShow = async (id: string): Promise<ShowData> => {
+export const buildShowEntry = async (
+  tmdbId: string,
+  transaction: Transaction
+): Promise<Show | null> => {
+  const showData: ShowData = await fetchTMDBShow(tmdbId);
+  const showEntry: Show | null = await Show.create(buildShow(showData), {
+    transaction,
+  });
+  if (!showEntry) {
+    throw new CustomError('Show could not be created', 400);
+  }
+  const showId = showEntry.id;
+  console.log('Created show!');
+
+  const seasonEntries: (Season | null)[] = await Promise.all(
+    showData.seasons.map((s: SeasonData) =>
+      Season.create(buildSeason(s, showEntry), { transaction })
+    )
+  );
+  if (!seasonEntries || seasonEntries.length <= 0) {
+    throw new CustomError(
+      `Seasons for Show ${showId} could not be created`,
+      400
+    );
+  }
+  const genres: MediaGenre[] | null = await buildGenres(
+    showData,
+    showId,
+    showData.type,
+    transaction
+  );
+  if (!genres) {
+    throw new CustomError('Error creating genres', 400);
+  }
+  const credits: MediaRole[] | null = await buildCredits(
+    showData,
+    showId,
+    transaction
+  );
+  if (!credits) {
+    throw new CustomError('Error creating credits', 400);
+  }
+  const finalShowEntry: Show | null = await Show.scope('withCredits').findByPk(
+    showId,
+    { transaction }
+  );
+  if (!finalShowEntry) {
+    throw new CustomError('Error gathering just created Film', 400);
+  }
+  return finalShowEntry;
+};
+
+export const fetchTMDBShow = async (id: string): Promise<ShowData> => {
   const showRes = await tmdbAPI.get(`/tv/${id}`);
   const creditsRes = await tmdbAPI.get(`/tv/${id}/credits`);
   const externalIdsRes = await tmdbAPI.get(`/tv/${id}/external_ids`);
-
   const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
     TMDBCreditsSchema.parse(creditsRes.data)
@@ -38,10 +93,22 @@ export const fetchShow = async (id: string): Promise<ShowData> => {
   return actualShowData;
 };
 
-const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
-  ...credits,
-  cast: credits.cast.slice(0, 10),
-  crew: credits.crew.filter((crewMember: TMDBCrewData) =>
-    Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
-  ),
+export const buildShow = (showData: ShowData): CreateShow => ({
+  ...showData,
+  releaseDate: showData.releaseDate,
+  country: showData.countries,
+  rating: 0,
+  voteCount: 0,
+  parentalGuide: null,
+});
+
+const buildSeason = (
+  seasonData: SeasonData,
+  showEntry: Show
+): CreateSeason => ({
+  ...seasonData,
+  showId: showEntry.id,
+  country: showEntry.country,
+  voteCount: 0,
+  rating: 0,
 });
