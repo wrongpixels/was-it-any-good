@@ -2,7 +2,9 @@
 import express from 'express';
 import { Show } from '../models';
 import CustomError from '../util/customError';
-import { fetchTMDBShow } from '../services/show-service';
+import { buildShowEntry } from '../services/show-service';
+import { sequelize } from '../util/db';
+import { Transaction } from 'sequelize';
 
 const router = express.Router();
 
@@ -15,7 +17,8 @@ router.get('/:id', async (req, res, next) => {
       },
     });
     if (!showEntry) {
-      showEntry = build;
+      const transaction: Transaction = await sequelize.transaction();
+      showEntry = await buildShowEntry(id, transaction);
     } else {
       console.log('Found Show in db');
     }

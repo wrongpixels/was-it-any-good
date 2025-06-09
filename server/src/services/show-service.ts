@@ -13,8 +13,8 @@ import {
 } from '../schemas/tmdb-show-schema';
 import { SeasonData, ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
-import { MediaGenre, MediaRole, Show } from '../models';
-import { buildCredits, buildGenres, trimCredits } from './media-service';
+import { Show } from '../models';
+import { buildCreditsAndGetFinalEntry, trimCredits } from './media-service';
 import { CreateShow } from '../models/show';
 import Season, { CreateSeason } from '../models/season';
 import CustomError from '../util/customError';
@@ -44,31 +44,12 @@ export const buildShowEntry = async (
       400
     );
   }
-  const genres: MediaGenre[] | null = await buildGenres(
+  return await buildCreditsAndGetFinalEntry(
+    showEntry,
+    Show,
     showData,
-    showId,
-    showData.type,
     transaction
   );
-  if (!genres) {
-    throw new CustomError('Error creating genres', 400);
-  }
-  const credits: MediaRole[] | null = await buildCredits(
-    showData,
-    showId,
-    transaction
-  );
-  if (!credits) {
-    throw new CustomError('Error creating credits', 400);
-  }
-  const finalShowEntry: Show | null = await Show.scope('withCredits').findByPk(
-    showId,
-    { transaction }
-  );
-  if (!finalShowEntry) {
-    throw new CustomError('Error gathering just created Film', 400);
-  }
-  return finalShowEntry;
 };
 
 export const fetchTMDBShow = async (id: string): Promise<ShowData> => {

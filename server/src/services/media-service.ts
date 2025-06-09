@@ -1,7 +1,7 @@
 //Shared services for building TMDB Media
 
 import { Transaction } from 'sequelize';
-import { MediaGenre, MediaRole } from '../models';
+import { Film, MediaGenre, MediaRole, Show } from '../models';
 import Genre from '../models/genre';
 import { CreateMediaRole } from '../models/mediaRole';
 import Person, { CreatePerson } from '../models/person';
@@ -20,6 +20,47 @@ import {
   TMDBCreditsData,
   TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
+import CustomError from '../util/customError';
+
+export const buildCreditsAndGetFinalEntry = async <
+  T extends typeof Film | typeof Show
+>(
+  media: InstanceType<T>,
+  model: T,
+  mediaData: MediaData,
+  transaction: Transaction
+): Promise<InstanceType<T> | null> => {
+  const mediaId: number = media.id;
+
+  const genres: MediaGenre[] | null = await buildGenres(
+    mediaData,
+    mediaId,
+    mediaData.type,
+    transaction
+  );
+  if (!genres) {
+    throw new CustomError('Error creating genres', 400);
+  }
+  const credits: MediaRole[] | null = await buildCredits(
+    mediaData,
+    mediaId,
+    transaction
+  );
+  if (!credits) {
+    throw new CustomError('Error creating credits', 400);
+  }
+  const finalMediaEntry = await model
+    .scope('withCredits')
+    .findByPk(mediaId, { transaction });
+
+  if (!finalMediaEntry) {
+    throw new CustomError(
+      `Error gathering just created ${mediaData.type}`,
+      400
+    );
+  }
+  return finalMediaEntry as InstanceType<T>;
+};
 
 export const buildCredits = async (
   mediaData: MediaData,

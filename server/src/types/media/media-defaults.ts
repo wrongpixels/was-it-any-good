@@ -12,7 +12,6 @@ import {
   Image,
   RoleData,
   BirthDate,
-  AirDate,
   DefaultMedia,
   MediaRating,
   DefaultFilm,
@@ -33,10 +32,7 @@ export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
   isUnknown: true,
 };
-export const DEF_RELEASE_DATE: AirDate = {
-  date: null,
-  isUnknown: true,
-};
+export const DEF_RELEASE_DATE: string = 'Unknown';
 export const DEF_MEDIA_RATING: MediaRating = {
   score: 0,
   isValid: true,
