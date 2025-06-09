@@ -141,15 +141,14 @@ const getOrBuildGenre = async (
     },
     transaction,
   });
-  const mediaGenre: [MediaGenre, boolean] = await MediaGenre.findOrCreate({
-    where: {
+  return await MediaGenre.create(
+    {
       genreId: genre[0].id,
       mediaId,
       mediaType,
     },
-    transaction,
-  });
-  return mediaGenre[0];
+    { transaction }
+  );
 };
 
 const buildPersonAndRole = async (
