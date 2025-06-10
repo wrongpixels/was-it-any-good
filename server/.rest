@@ -29,6 +29,11 @@ GET https://api.themoviedb.org/3/movie/11621
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YjQyMjdmZmM0YTdmZGI1NmQ1MGE4Yjg4MzUzMjNiYyIsIm5iZiI6MTc0ODI3MjkzNi4xNzQsInN1YiI6IjY4MzQ4NzI4OTU4ODI2ZDNiMTQxNDY2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-Afevq-Bw6safixhyqetwcxUF2Kv0rNeQSkwTFLct-M
 
+###GET SHOW
+GET https://api.themoviedb.org/3/tv/246
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YjQyMjdmZmM0YTdmZGI1NmQ1MGE4Yjg4MzUzMjNiYyIsIm5iZiI6MTc0ODI3MjkzNi4xNzQsInN1YiI6IjY4MzQ4NzI4OTU4ODI2ZDNiMTQxNDY2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-Afevq-Bw6safixhyqetwcxUF2Kv0rNeQSkwTFLct-M
+
 ###GET FILM GENRES
 GET https://api.themoviedb.org/3/genre/movie/list
 Content-Type: application/json
