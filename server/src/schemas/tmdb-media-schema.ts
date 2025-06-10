@@ -50,7 +50,7 @@ export const TMDBMediaSchema = z.object({
 });
 
 export const isShow = (tmdb: TMDBMediaData): tmdb is TMDBShowData =>
-  'episode_count' in tmdb;
+  'number_of_episodes' in tmdb;
 
 export type TMDBMediaData = TMDBShowData | TMDBFilmData;
 export type TMDBCreditsData = z.infer<typeof TMDBCreditsSchema>;
@@ -73,4 +73,5 @@ export enum TMDBAcceptedJobs {
   OriginalMusicComposer = 'Original Music Composer',
   Producer = 'Producer',
   ExecutiveProducer = 'Executive Producer',
+  Creator = 'Creator',
 }

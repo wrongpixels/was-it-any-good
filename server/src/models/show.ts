@@ -1,7 +1,17 @@
-import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
+import {
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Op,
+  Sequelize,
+} from 'sequelize';
 import { FilmParental, ShowParental } from '../types/parental/parental-types';
 import { sequelize } from '../util/db';
 import Media from './media';
+import Genre from './genre';
+import MediaGenre from './mediaGenre';
+import { AuthorType, MediaType } from '../types/media/media-types';
+import MediaRole from './mediaRole';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
@@ -10,6 +20,36 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare lastAirDate: string;
   declare episodeCount: number;
   declare seasonCount: number;
+
+  static associate() {
+    Show.belongsToMany(Genre, {
+      through: MediaGenre,
+      foreignKey: 'mediaId',
+      otherKey: 'genreId',
+      as: 'genres',
+      constraints: false,
+    });
+
+    Show.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'cast',
+      scope: {
+        mediaType: MediaType.Show,
+        role: AuthorType.Actor,
+      },
+      constraints: false,
+    });
+
+    Show.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'crew',
+      scope: {
+        mediaType: MediaType.Show,
+        role: { [Op.ne]: AuthorType.Actor },
+      },
+      constraints: false,
+    });
+  }
 }
 
 Show.init(
@@ -40,8 +80,8 @@ Show.init(
       defaultValue: 0,
     },
   },
+
   {
-    ...Media.initOptions(),
     sequelize,
     modelName: 'show',
     underscored: true,
@@ -61,6 +101,69 @@ Show.init(
           'imdbId',
           'releaseDate',
           'episodeCount',
+        ],
+      },
+    },
+    scopes: {
+      withCredits: {
+        include: [
+          {
+            association: 'cast',
+            include: [
+              {
+                association: 'person',
+                attributes: ['id', 'name', 'tmdbId', 'image'],
+              },
+            ],
+            attributes: {
+              exclude: [
+                'role',
+                'mediaId',
+                'mediaType',
+                'createdAt',
+                'updatedAt',
+                'personId',
+              ],
+            },
+            order: [['order', 'ASC']],
+          },
+          {
+            association: 'crew',
+            include: [
+              {
+                association: 'person',
+                attributes: ['id', 'name', 'tmdbId', 'image'],
+              },
+            ],
+            attributes: {
+              exclude: [
+                'mediaId',
+                'mediaType',
+                'createdAt',
+                'updatedAt',
+                'personId',
+                'characterName',
+                'order',
+              ],
+            },
+            order: [
+              [
+                Sequelize.literal(
+                  'CASE WHEN "crew"."role" = \'Director\' THEN 1 ELSE 3 END'
+                ),
+                'ASC',
+              ],
+              ['person', 'name', 'ASC'],
+            ],
+          },
+          {
+            association: 'genres',
+            attributes: ['id', 'name', 'tmdbId'],
+            through: {
+              attributes: [],
+              where: { mediaType: MediaType.Show },
+            },
+          },
         ],
       },
     },

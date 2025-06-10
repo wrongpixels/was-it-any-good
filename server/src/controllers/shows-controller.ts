@@ -11,14 +11,24 @@ const router = express.Router();
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
-    let showEntry: Show | null = await Show.findOne({
+    let showEntry: Show | null = await Show.scope([
+      'defaultScope',
+      'withCredits',
+    ]).findOne({
       where: {
         tmdbId: id,
       },
     });
     if (!showEntry) {
       const transaction: Transaction = await sequelize.transaction();
-      showEntry = await buildShowEntry(id, transaction);
+      try {
+        showEntry = await buildShowEntry(id, transaction);
+        await transaction.commit();
+      } catch (error) {
+        console.log('Rolling back');
+        await transaction.rollback();
+        throw error;
+      }
     } else {
       console.log('Found Show in db');
     }

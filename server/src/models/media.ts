@@ -4,15 +4,11 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
-  Op,
   HasManyGetAssociationsMixin,
-  IncludeOptions,
-  Sequelize,
   BelongsToManyGetAssociationsMixin,
 } from 'sequelize';
 import Country from '../types/countries/country-types';
-import { Film, Genre, MediaGenre, MediaRole, Show } from '.';
-import { AuthorType, MediaType } from '../types/media/media-types';
+import { MediaGenre, MediaRole } from '.';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -85,124 +81,6 @@ class Media<
       },
       runtime: {
         type: DataTypes.INTEGER,
-      },
-    };
-  }
-
-  //To avoid repeating basic relationships between Media Models
-
-  static setupAssociations<T extends typeof Film | typeof Show>(
-    model: T,
-    mediaType: MediaType
-  ) {
-    model.belongsToMany(Genre, {
-      through: MediaGenre,
-      foreignKey: 'mediaId',
-      otherKey: 'genreId',
-      as: 'genres',
-      constraints: false,
-    });
-    model.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'cast',
-      scope: {
-        mediaType,
-        role: AuthorType.Actor,
-      },
-      constraints: false,
-    });
-
-    model.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'crew',
-      scope: {
-        mediaType,
-        role: { [Op.ne]: AuthorType.Actor },
-      },
-      constraints: false,
-    });
-  }
-
-  //Scopes
-  private static readonly castInclude: IncludeOptions = {
-    association: 'cast',
-    include: [
-      {
-        association: 'person',
-        attributes: ['id', 'name', 'tmdbId', 'image'],
-      },
-    ],
-    attributes: {
-      exclude: [
-        'role',
-        'mediaId',
-        'mediaType',
-        'createdAt',
-        'updatedAt',
-        'personId',
-      ],
-    },
-    separate: true,
-
-    //We force order by the 'order' value of the cast
-    order: [['"order"', 'ASC']],
-  };
-
-  private static readonly genresInclude: IncludeOptions = {
-    association: 'genres',
-    attributes: ['id', 'name', 'tmdbId'],
-    through: {
-      attributes: [],
-    },
-  };
-
-  private static readonly crewInclude: IncludeOptions = {
-    association: 'crew',
-    include: [
-      {
-        association: 'person',
-        attributes: ['id', 'name', 'tmdbId', 'image'],
-      },
-    ],
-    attributes: {
-      exclude: [
-        'mediaId',
-        'mediaType',
-        'createdAt',
-        'updatedAt',
-        'personId',
-        'characterName',
-        'order',
-      ],
-    },
-    //We force Director to show first
-    order: [
-      [
-        Sequelize.literal(`
-          CASE            
-            WHEN role = 'Director' THEN 1
-            ELSE 3
-          END
-        `),
-        'ASC',
-      ],
-      ['person', 'name', 'ASC'],
-    ],
-  };
-
-  static initOptions() {
-    return {
-      defaultScope: {},
-      scopes: {
-        withCredits: {
-          include: [this.castInclude, this.crewInclude, this.genresInclude],
-        },
-        castOnly: {
-          include: [this.castInclude, this.genresInclude],
-        },
-        crewOnly: {
-          include: [this.crewInclude, this.genresInclude],
-        },
       },
     };
   }

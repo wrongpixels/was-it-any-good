@@ -30,6 +30,7 @@ import {
 } from '../types/media/media-types';
 import { mapTMDBGenres } from '../services/genre-mapper';
 import { createCreators } from './show-factory';
+import { TMDBCreatorData } from '../schemas/tmdb-show-schema';
 
 export const createTMDBBase = (tmdb: TMDBMediaData): TMDBData => ({
   tmdbId: tmdb.id.toString(),
@@ -112,7 +113,9 @@ export const createCrew = (crewData: TMDBCrewData[]): AuthorData[] => {
     .filter((c: AuthorData | null): c is AuthorData => c !== null);
 };
 
-export const createCrewMember = (crewMember: TMDBCrewData): IndividualData => ({
+export const createCrewMember = (
+  crewMember: TMDBCrewData | TMDBCreatorData
+): IndividualData => ({
   name: crewMember.name,
   image: crewMember.profile_path
     ? imageLinker.createAvatarURL(crewMember.profile_path)

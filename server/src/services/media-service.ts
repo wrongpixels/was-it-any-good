@@ -41,6 +41,7 @@ export async function buildCreditsAndGetEntry(
   mediaData: MediaData,
   transaction: Transaction
 ): Promise<Film | Show | null> {
+  console.log('\n\nSTARTING PROCESS\n\n');
   const mediaId: number = media.id;
 
   const genres: MediaGenre[] | null = await buildGenres(
@@ -73,6 +74,7 @@ export async function buildCreditsAndGetEntry(
       400
     );
   }
+  console.log('\n\nENDED PROCESS\n\n');
 
   return finalMediaEntry;
 }
@@ -84,12 +86,13 @@ const getFinalEntry = async (
 ): Promise<Film | Show | null> => {
   switch (mediaData.type) {
     case MediaType.Film:
-      return await Film.scope('withCredits').findByPk(mediaId, { transaction });
+      return await Film.unscoped()
+        .scope('withCredits')
+        .findByPk(mediaId, { transaction });
     case MediaType.Show:
-      return await Show.scope(['defaultScope', 'withCredits']).findByPk(
-        mediaId,
-        { transaction }
-      );
+      return await Show.unscoped()
+        .scope(['defaultScope', 'withCredits'])
+        .findByPk(mediaId, { transaction });
     default:
       return null;
   }
@@ -254,7 +257,7 @@ const buildMediaRole = async (
         mediaRole.characterName.push(roleData.characterName[0]);
         changed = true;
         console.log(
-          `Added character ${roleData.characterName[0]} to Media Role ${mediaRole.id}`
+          `Added person ${roleData.characterName[0]} with Media Role ${mediaRole.role}`
         );
       }
     }

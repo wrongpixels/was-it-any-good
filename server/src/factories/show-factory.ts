@@ -6,7 +6,7 @@ import {
   DEF_SHOW,
 } from '../types/media/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';
-import { createTMDBBase, getAirDate } from './media-factory';
+import { createCrewMember, createTMDBBase, getAirDate } from './media-factory';
 import {
   TMDBCreatorData,
   TMDBSeasonData,
@@ -32,9 +32,11 @@ export const createCreators = (creators: TMDBCreatorData[]): AuthorData[] =>
 
 const createCreator = (creator: TMDBCreatorData): AuthorData => ({
   ...DEF_CREATOR,
-  name: creator.name,
-  tmdbId: creator.id.toString(),
-  image: creator.profile_path ? creator.profile_path : DEF_CREATOR.image,
+  ...createCrewMember({
+    ...creator,
+    job: 'Creator',
+    department: 'Creator',
+  }),
 });
 
 const createSeasons = (seasons: TMDBSeasonData[]): SeasonData[] =>

@@ -66,6 +66,7 @@ export const fetchTMDBShow = async (id: string): Promise<ShowData> => {
   };
 
   const actualShowData: ShowData = createShow(showData);
+
   return actualShowData;
 };
 
