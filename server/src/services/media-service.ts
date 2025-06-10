@@ -22,14 +22,25 @@ import {
 } from '../schemas/tmdb-media-schema';
 import CustomError from '../util/customError';
 
-export const buildCreditsAndGetFinalEntry = async <
-  T extends typeof Film | typeof Show
->(
-  media: InstanceType<T>,
-  model: T,
+//Overrides to ensure type safety
+
+export function buildCreditsAndGetEntry(
+  media: Film,
   mediaData: MediaData,
   transaction: Transaction
-): Promise<InstanceType<T> | null> => {
+): Promise<Film | null>;
+
+export function buildCreditsAndGetEntry(
+  media: Show,
+  mediaData: MediaData,
+  transaction: Transaction
+): Promise<Show | null>;
+
+export async function buildCreditsAndGetEntry(
+  media: Film | Show,
+  mediaData: MediaData,
+  transaction: Transaction
+): Promise<Film | Show | null> {
   const mediaId: number = media.id;
 
   const genres: MediaGenre[] | null = await buildGenres(
@@ -41,6 +52,7 @@ export const buildCreditsAndGetFinalEntry = async <
   if (!genres) {
     throw new CustomError('Error creating genres', 400);
   }
+
   const credits: MediaRole[] | null = await buildCredits(
     mediaData,
     mediaId,
@@ -49,9 +61,11 @@ export const buildCreditsAndGetFinalEntry = async <
   if (!credits) {
     throw new CustomError('Error creating credits', 400);
   }
-  const finalMediaEntry = await model
-    .scope('withCredits')
-    .findByPk(mediaId, { transaction });
+  const finalMediaEntry: Film | Show | null = await getFinalEntry(
+    mediaData,
+    mediaId,
+    transaction
+  );
 
   if (!finalMediaEntry) {
     throw new CustomError(
@@ -59,7 +73,23 @@ export const buildCreditsAndGetFinalEntry = async <
       400
     );
   }
-  return finalMediaEntry as InstanceType<T>;
+
+  return finalMediaEntry;
+}
+//We need to do this to avoid 'mode.scope' ambiguity
+const getFinalEntry = async (
+  mediaData: MediaData,
+  mediaId: number,
+  transaction: Transaction
+): Promise<Film | Show | null> => {
+  switch (mediaData.type) {
+    case MediaType.Film:
+      return await Film.scope('withCredits').findByPk(mediaId, { transaction });
+    case MediaType.Show:
+      return await Show.scope('withCredits').findByPk(mediaId, { transaction });
+    default:
+      return null;
+  }
 };
 
 export const buildCredits = async (

@@ -18,10 +18,6 @@ MediaRole.belongsTo(Person, {
   as: 'person',
 });
 
-//Shared Media<->MediaRole and Genre<->MediaGenre associations
-Media.setupAssociations(Film, MediaType.Film);
-Media.setupAssociations(Show, MediaType.Show);
-
 Show.hasMany(Season, {
   foreignKey: 'showId',
   as: 'seasons',

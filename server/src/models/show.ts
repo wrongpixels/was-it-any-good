@@ -45,6 +45,29 @@ Show.init(
     sequelize,
     modelName: 'show',
     underscored: true,
+    defaultScope: {
+      include: {
+        association: 'seasons',
+        attributes: [
+          'tmdbId',
+          'imdbId',
+          'index',
+          'name',
+          'originalName',
+          'description',
+          'image',
+          'voteCount',
+          'rating',
+          'releaseDate',
+          'episodeCount',
+        ],
+      },
+    },
+    scopes: {
+      withoutSeasons: {
+        include: [],
+      },
+    },
   }
 );
 export type CreateShow = Omit<InferAttributes<Show>, 'id'>;

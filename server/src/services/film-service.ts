@@ -13,7 +13,7 @@ import {
 import { FilmData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
-import { buildCreditsAndGetFinalEntry, trimCredits } from './media-service';
+import { buildCreditsAndGetEntry, trimCredits } from './media-service';
 
 export const buildFilmEntry = async (
   tmdbId: string,
@@ -27,12 +27,7 @@ export const buildFilmEntry = async (
     throw new CustomError('Film could not be created', 400);
   }
   console.log('Created film!');
-  return await buildCreditsAndGetFinalEntry(
-    filmEntry,
-    Film,
-    filmData,
-    transaction
-  );
+  return await buildCreditsAndGetEntry(filmEntry, filmData, transaction);
 };
 
 export const fetchTMDBFilm = async (tmdbId: string): Promise<FilmData> => {

@@ -14,7 +14,7 @@ import {
 import { SeasonData, ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import { Show } from '../models';
-import { buildCreditsAndGetFinalEntry, trimCredits } from './media-service';
+import { buildCreditsAndGetEntry, trimCredits } from './media-service';
 import { CreateShow } from '../models/show';
 import Season, { CreateSeason } from '../models/season';
 import CustomError from '../util/customError';
@@ -44,12 +44,7 @@ export const buildShowEntry = async (
       400
     );
   }
-  return await buildCreditsAndGetFinalEntry(
-    showEntry,
-    Show,
-    showData,
-    transaction
-  );
+  return await buildCreditsAndGetEntry(showEntry, showData, transaction);
 };
 
 export const fetchTMDBShow = async (id: string): Promise<ShowData> => {
