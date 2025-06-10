@@ -49,8 +49,7 @@ Show.init(
       include: {
         association: 'seasons',
         attributes: [
-          'tmdbId',
-          'imdbId',
+          'id',
           'index',
           'name',
           'originalName',
@@ -58,14 +57,11 @@ Show.init(
           'image',
           'voteCount',
           'rating',
+          'tmdbId',
+          'imdbId',
           'releaseDate',
           'episodeCount',
         ],
-      },
-    },
-    scopes: {
-      withoutSeasons: {
-        include: [],
       },
     },
   }

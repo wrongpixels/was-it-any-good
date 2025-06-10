@@ -90,6 +90,7 @@ class Media<
   }
 
   //To avoid repeating basic relationships between Media Models
+
   static setupAssociations<T extends typeof Film | typeof Show>(
     model: T,
     mediaType: MediaType
@@ -120,11 +121,6 @@ class Media<
       },
       constraints: false,
     });
-  }
-
-  static initializeAssociations() {
-    this.setupAssociations(Film, MediaType.Film);
-    this.setupAssociations(Show, MediaType.Show);
   }
 
   //Scopes

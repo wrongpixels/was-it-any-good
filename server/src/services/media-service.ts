@@ -86,7 +86,10 @@ const getFinalEntry = async (
     case MediaType.Film:
       return await Film.scope('withCredits').findByPk(mediaId, { transaction });
     case MediaType.Show:
-      return await Show.scope('withCredits').findByPk(mediaId, { transaction });
+      return await Show.scope(['defaultScope', 'withCredits']).findByPk(
+        mediaId,
+        { transaction }
+      );
     default:
       return null;
   }
@@ -171,14 +174,19 @@ const getOrBuildGenre = async (
     },
     transaction,
   });
-  return await MediaGenre.create(
-    {
+  const mediaGenre: [MediaGenre, boolean] = await MediaGenre.findOrCreate({
+    where: {
       genreId: genre[0].id,
-      mediaId,
-      mediaType,
+      mediaId: mediaId,
     },
-    { transaction }
-  );
+    defaults: {
+      genreId: genre[0].id,
+      mediaId: mediaId,
+      mediaType: mediaType,
+    },
+    transaction,
+  });
+  return mediaGenre[0];
 };
 
 const buildPersonAndRole = async (
