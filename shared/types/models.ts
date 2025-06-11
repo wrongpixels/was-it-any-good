@@ -15,30 +15,42 @@ export interface PersonResponse {
   country: string[];
 }
 
-export interface MediaResponse {
+export interface BaseMediaResponse {
   id: number;
+  tmdbId?: string;
+  imdbId?: string;
   name: string;
   originalName: string;
-  sortName: string;
   description: string | null;
+  image: string | null;
+  voteCount: number;
+  rating: number | null;
+  releaseDate: string | null;
+}
+
+export interface SeasonResponse extends BaseMediaResponse {
+  index: number;
+  episodeCount: number;
+}
+
+export interface MediaResponse extends BaseMediaResponse {
+  parentalGuide: 'G' | 'PG' | 'PG13' | 'R' | 'NC17' | 'UNKNOWN' | null;
+  sortName: string;
   country: string[];
   status: string | null;
-  releaseDate: string | null;
-  image: string | null;
-  rating: number | null;
-  voteCount: number;
   runtime: number | null;
   cast?: ResponseCastMember[];
   crew?: ResponseCrewMember[];
   genres?: GenreResponse[];
 }
 
-export interface 
+export interface FilmResponse extends MediaResponse {}
 
-export interface FilmResponse extends MediaResponse {
-  tmdbId: string;
-  imdbId?: string;
-  parentalGuide: 'G' | 'PG' | 'PG13' | 'R' | 'NC17' | 'UNKNOWN' | null;
+export interface ShowResponse extends MediaResponse {
+  lastAirDate: string;
+  episodeCount: number;
+  seasonCount: number;
+  seasons?: SeasonResponse[];
 }
 
 export interface ResponseCastMember {

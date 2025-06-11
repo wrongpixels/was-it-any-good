@@ -5,6 +5,7 @@ import CustomError from '../util/customError';
 import { buildShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
+import { ShowResponse } from '../../../shared/types/models';
 
 const router = express.Router();
 
@@ -32,7 +33,11 @@ router.get('/:id', async (req, res, next) => {
     } else {
       console.log('Found Show in db');
     }
-    res.json(showEntry);
+    if (!showEntry) {
+      throw new CustomError('Could not find or create entry', 400);
+    }
+    const show: ShowResponse = showEntry.get({ plain: true });
+    res.json(show);
   } catch (error) {
     next(error);
   }

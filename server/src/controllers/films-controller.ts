@@ -5,6 +5,7 @@ import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
+import { FilmResponse } from '../../../shared/types/models';
 const router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
@@ -25,8 +26,11 @@ router.get('/:id', async (req, res, next) => {
         throw error;
       }
     }
-
-    res.json(filmEntry);
+    if (!filmEntry) {
+      throw new CustomError('Could not find or create entry', 400);
+    }
+    const film: FilmResponse = filmEntry.get({ plain: true });
+    res.json(film);
   } catch (error) {
     next(error);
   }
