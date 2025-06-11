@@ -11,6 +11,20 @@ const router = express.Router();
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
+    const filmEntry: Film | null = await Film.scope('withCredits').findByPk(id);
+    if (!filmEntry) {
+      throw new CustomError('Could not Film entry', 400);
+    }
+    const film: FilmResponse = filmEntry.get({ plain: true });
+    res.json(film);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/tmdb/:id', async (req, res, next) => {
+  try {
+    const id: string = req.params.id;
     let filmEntry: Film | null = await Film.scope('withCredits').findOne({
       where: { tmdbId: id.toString() },
     });

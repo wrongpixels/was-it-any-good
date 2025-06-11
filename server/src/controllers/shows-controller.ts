@@ -8,8 +8,23 @@ import { Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
 
 const router = express.Router();
-
 router.get('/:id', async (req, res, next) => {
+  try {
+    const id: string = req.params.id;
+    const showEntry: Show | null = await Show.scope([
+      'defaultScope',
+      'withCredits',
+    ]).findByPk(id);
+    if (!showEntry) {
+      throw new CustomError('Could not find or create entry', 400);
+    }
+    const show: ShowResponse = showEntry.get({ plain: true });
+    res.json(show);
+  } catch (error) {
+    next(error);
+  }
+});
+router.get('/tmdb/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
     let showEntry: Show | null = await Show.scope([
