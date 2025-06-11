@@ -46,7 +46,7 @@ Genre.init(
     modelName: 'genre',
   }
 );
-
-export type CreateGenre = Omit<InferAttributes<Genre>, 'id'>;
+export type GenreAttributes = InferAttributes<Genre>;
+export type CreateGenre = Omit<GenreAttributes, 'id'>;
 
 export default Genre;

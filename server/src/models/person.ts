@@ -17,7 +17,7 @@ class Person extends Model<
   declare gamedbId?: string;
   declare image: string;
   declare birthDate?: string;
-  declare country: [string];
+  declare country: string[];
 }
 
 Person.init(
@@ -39,6 +39,7 @@ Person.init(
     gamedbId: {
       type: DataTypes.STRING,
       unique: true,
+      allowNull: true,
     },
     image: {
       type: DataTypes.STRING,
@@ -62,6 +63,7 @@ Person.init(
     underscored: true,
   }
 );
-export type CreatePerson = Omit<InferAttributes<Person>, 'id'>;
+export type PersonAttributes = InferAttributes<Person>;
+export type CreatePerson = Omit<PersonAttributes, 'id'>;
 
 export default Person;

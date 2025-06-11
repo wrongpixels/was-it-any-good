@@ -136,6 +136,7 @@ Film.init(
     },
   }
 );
-export type CreateFilm = Omit<InferAttributes<Film>, 'id'>;
+export type FilmAttributes = InferAttributes<Film>;
+export type CreateFilm = Omit<FilmAttributes, 'id'>;
 
 export default Film;

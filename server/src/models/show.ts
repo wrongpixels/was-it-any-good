@@ -169,6 +169,7 @@ Show.init(
     },
   }
 );
-export type CreateShow = Omit<InferAttributes<Show>, 'id'>;
+export type ShowAttributes = InferAttributes<Show>;
+export type CreateShow = Omit<ShowAttributes, 'id'>;
 
 export default Show;
