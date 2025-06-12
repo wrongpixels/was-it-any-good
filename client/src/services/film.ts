@@ -1,7 +1,14 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { FilmResponse } from '../../../shared/types/models';
 
 export const getById = async (id: string): Promise<FilmResponse | null> => {
-  const film: FilmResponse | null = await axios.get(`/api/films/${id}`);
-  return film;
+  try {
+    const response: AxiosResponse<FilmResponse> = await axios.get<FilmResponse>(
+      `/api/films/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to fetch film with id ${id}:`, error);
+    return null;
+  }
 };

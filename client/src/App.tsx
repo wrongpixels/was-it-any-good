@@ -15,7 +15,6 @@ const App = (): JSX.Element => {
           </Routes>
         </Router>
       </div>
-      <p className="read-the-docs">So it does update. </p>
     </>
   );
 };

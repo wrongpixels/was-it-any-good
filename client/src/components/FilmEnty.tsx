@@ -4,27 +4,31 @@ import { FilmResponse } from '../../../shared/types/models';
 import { getById } from '../services/film';
 
 const FilmEntry = (): JSX.Element => {
-  const [film, setFilm] = useState<FilmResponse | null>();
+  const [film, setFilm] = useState<FilmResponse | null | undefined>(undefined);
   const match: PathMatch<'id'> | null = useMatch('/film/:id');
   const filmId: string | undefined = match?.params.id;
-  if (!filmId || filmId === undefined) {
-    return <div>Invalid Film id!</div>;
-  }
   useEffect(() => {
+    if (!filmId) {
+      return;
+    }
     const getFilm = async () => {
-      const film: FilmResponse | null = await getById(filmId);
-      setFilm(film);
+      const filmResponse: FilmResponse | null = await getById(filmId);
+      setFilm(filmResponse);
     };
     getFilm();
   }, [filmId]);
+  if (!filmId) {
+    return <div>Invalid Film id!</div>;
+  }
+  if (film === undefined) {
+    return <div>Loading...</div>;
+  }
   if (!film) {
     return <div>Film couldn't be found!</div>;
   }
-  console.log(film.name);
-
   return (
     <div>
-      <h1>Film: {film.id}</h1>
+      <h2>{film.name}</h2>
     </div>
   );
 };
