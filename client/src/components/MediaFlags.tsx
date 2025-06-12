@@ -2,10 +2,10 @@ import Country, { CountryCode } from '../../../shared/types/countries';
 const FLAG_URL = 'https://flagcdn.com/w40';
 
 interface MediaFlagsProps {
-  countries: CountryCode[];
+  countryCodes: CountryCode[];
 }
 
-const MediaFlags = ({ countries }: MediaFlagsProps) => {
+const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
   if (!countries) return null;
 
   const showCountries = countries.slice(0, 2);

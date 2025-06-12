@@ -34,7 +34,7 @@ const FilmEntry = (): JSX.Element => {
         <h2 className="text-xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
           <b>{film.name}</b>
           <span className="text-gray-400">{getYear(film.releaseDate)}</span>
-          <MediaFlags countries={film.country} />
+          <MediaFlags countryCodes={film.country} />
         </h2>
         <div className="mt-4 space-y-2">
           <b className="block text-lg">Synopsis</b>
