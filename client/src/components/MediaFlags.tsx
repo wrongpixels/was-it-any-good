@@ -1,0 +1,31 @@
+import Country, { CountryCode } from '../../../shared/types/countries';
+const FLAG_URL = 'https://flagcdn.com/w40';
+
+interface MediaFlagsProps {
+  countries: CountryCode[];
+}
+
+const MediaFlags = ({ countries }: MediaFlagsProps) => {
+  if (!countries) return null;
+
+  const showCountries = countries.slice(0, 2);
+
+  const buildCountry = (c: CountryCode) => {
+    const countryName: string = Country[c];
+
+    return (
+      <div>
+        <img
+          src={`${FLAG_URL}/${c.toLowerCase()}.png`}
+          alt={`${c} flag`}
+          title={countryName}
+          className="w-6 h-auto rounded border border-gray-300"
+        />
+      </div>
+    );
+  };
+
+  return <>{showCountries.map((c) => buildCountry(c))}</>;
+};
+
+export default MediaFlags;

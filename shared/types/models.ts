@@ -1,3 +1,5 @@
+import { CountryCode } from './countries';
+
 export interface GenreResponse {
   id: number;
   name: string;
@@ -12,7 +14,7 @@ export interface PersonResponse {
   gamedbId?: string | undefined;
   image: string;
   birthDate?: string | undefined;
-  country: string[];
+  country: CountryCode[];
 }
 
 export interface BaseMediaResponse {
@@ -21,11 +23,11 @@ export interface BaseMediaResponse {
   imdbId?: string;
   name: string;
   originalName: string;
-  description: string | null;
-  image: string | null;
+  description: string;
+  image: string;
   voteCount: number;
   rating: number | null;
-  releaseDate: string | null;
+  releaseDate: string;
 }
 
 export interface SeasonResponse extends BaseMediaResponse {
@@ -36,8 +38,8 @@ export interface SeasonResponse extends BaseMediaResponse {
 export interface MediaResponse extends BaseMediaResponse {
   parentalGuide: 'G' | 'PG' | 'PG13' | 'R' | 'NC17' | 'UNKNOWN' | null;
   sortName: string;
-  country: string[];
-  status: string | null;
+  country: CountryCode[];
+  status: string;
   runtime: number | null;
   cast?: ResponseCastMember[];
   crew?: ResponseCrewMember[];
@@ -52,6 +54,9 @@ export interface ShowResponse extends MediaResponse {
   seasonCount: number;
   seasons?: SeasonResponse[];
 }
+
+export type NoCredFilmResponse = Omit<FilmResponse, 'crew' | 'cast'>;
+export type NoCredShowResponse = Omit<ShowResponse, 'crew' | 'cast'>;
 
 export interface ResponseCastMember {
   id: number;

@@ -20,7 +20,7 @@ GET http://localhost:6060/api/films/tmdb/11621
 GET http://localhost:6060/api/films/1
 
 ###GET ANOTHER FILM DATA
-GET http://localhost:6060/api/films/tmdb/8392
+GET http://localhost:6060/api/films/tmdb/275
 
 ###GET TMDB SHOW DATA
 GET http://localhost:6060/api/shows/246

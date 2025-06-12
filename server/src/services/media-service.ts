@@ -5,7 +5,6 @@ import { Film, MediaGenre, MediaRole, Show } from '../models';
 import Genre from '../models/genre';
 import { CreateMediaRole } from '../models/mediaRole';
 import Person, { CreatePerson } from '../models/person';
-import Country from '../types/countries/country-types';
 import { CreateGenreData } from '../types/genres/genre-types';
 import {
   AuthorData,
@@ -205,9 +204,7 @@ const buildPersonAndRole = async (
     name: mediaPersonData.name,
     tmdbId: mediaPersonData.tmdbId,
     image: mediaPersonData.image,
-    country: mediaPersonData.country
-      ? [mediaPersonData.country]
-      : [Country.UNKNOWN],
+    country: mediaPersonData.country ? [mediaPersonData.country] : ['UNKNOWN'],
   };
   const person: Person | null = await getOrCreatePerson(
     personData,

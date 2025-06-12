@@ -8,7 +8,6 @@ import {
   TMDBMediaData,
   isShow,
 } from '../schemas/tmdb-media-schema';
-import Country from '../types/countries/country-types';
 import {
   DEF_ROLE,
   DEF_DIRECTOR,
@@ -31,6 +30,7 @@ import {
 import { mapTMDBGenres } from '../services/genre-mapper';
 import { createCreators } from './show-factory';
 import { TMDBCreatorData } from '../schemas/tmdb-show-schema';
+import { CountryCode, isCountryCode } from '../../../shared/types/countries';
 
 export const createTMDBBase = (tmdb: TMDBMediaData): TMDBData => ({
   tmdbId: tmdb.id.toString(),
@@ -64,17 +64,16 @@ export const getAirDate = (date: string): string => {
   const isValid = !isNaN(parsed.getTime());
   return isValid ? date : 'Unknown';
 };
-export const validateCountry = (code: string): Country | null => {
-  return Object.keys(Country).includes(code as Country)
-    ? (code as Country)
-    : null;
+export const validateCountry = (code: string): CountryCode => {
+  if (isCountryCode(code)) {
+    return code;
+  }
+  return 'UNKNOWN';
 };
 
-export const validateCountries = (codes: string[]): Country[] => {
+export const validateCountries = (codes: string[]): CountryCode[] => {
   console.log(codes);
-  return codes
-    .map((c: string) => validateCountry(c))
-    .filter((c): c is Country => c !== null);
+  return codes.map((c: string) => validateCountry(c));
 };
 
 export const createStudio = (studio: TMDBStudioData): StudioData => ({

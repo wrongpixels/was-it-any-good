@@ -7,22 +7,22 @@ import {
   HasManyGetAssociationsMixin,
   BelongsToManyGetAssociationsMixin,
 } from 'sequelize';
-import Country from '../types/countries/country-types';
 import { MediaGenre, MediaRole } from '.';
+import Country, { CountryCode } from '../../../shared/types/countries';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;
   declare originalName: string;
   declare sortName: string;
-  declare description: string | null;
-  declare country: string[];
-  declare status: string | null;
-  declare releaseDate: string | null;
-  declare image: string | null;
+  declare description: string;
+  declare country: CountryCode[];
+  declare status: string;
+  declare releaseDate: string;
+  declare image: string;
   declare rating: number | null;
   declare voteCount: number;
   declare runtime: number | null;

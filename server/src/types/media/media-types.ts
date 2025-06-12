@@ -1,4 +1,4 @@
-import Country from '../countries/country-types';
+import { CountryCode } from '../../../../shared/types/countries';
 import { CreateGenreData, GameplayGenre } from '../genres/genre-types';
 import {
   FilmParental,
@@ -70,7 +70,7 @@ export enum PerformanceType {
 // People
 export interface IndividualData {
   name: string;
-  country?: Country;
+  country?: CountryCode;
   image: Image;
   tmdbId?: string;
 }
@@ -110,7 +110,7 @@ export interface MediaData {
   studios: StudioData[];
   cast: RoleData[];
   crew: AuthorData[];
-  countries: Country[];
+  countries: CountryCode[];
 }
 
 // Media types
@@ -173,7 +173,7 @@ export interface TMDBData {
   imdbId: string;
   description: string;
   image: string;
-  countries: Country[];
+  countries: CountryCode[];
   genres: CreateGenreData[];
   cast: RoleData[];
   crew: AuthorData[];

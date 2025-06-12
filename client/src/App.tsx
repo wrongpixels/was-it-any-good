@@ -1,7 +1,6 @@
 import { JSX } from 'react';
-import './App.css';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import FilmEntry from './components/FilmEnty';
+import FilmEntry from './components/FilmEntry';
 
 const App = (): JSX.Element => {
   //const [count, setCount] = useState(0);

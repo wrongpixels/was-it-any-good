@@ -192,4 +192,9 @@ enum Country {
   ZM = 'Zambia',
   ZW = 'Zimbabwe',
 }
+export type CountryCode = keyof typeof Country;
+export const VALID_COUNTRY_KEYS = new Set(Object.keys(Country));
+export const isCountryCode = (code: string): code is CountryCode =>
+  VALID_COUNTRY_KEYS.has(code);
+
 export default Country;

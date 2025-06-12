@@ -1,4 +1,4 @@
-import Country from '../countries/country-types';
+import { CountryCode } from '../../../../shared/types/countries';
 import {
   FilmParental,
   GameParental,
@@ -41,7 +41,7 @@ export const DEF_MEDIA_RATING: MediaRating = {
 
 export const DEF_INDIVIDUAL: IndividualData = {
   name: 'Unknown',
-  country: Country.UNKNOWN,
+  country: 'UNKNOWN',
   image: DEF_IMAGE_PERSON,
 };
 
@@ -108,7 +108,7 @@ export const DEF_STATUS = 'Released';
 export const DEF_CAST: RoleData[] = [DEF_ROLE];
 export const DEF_CREW: AuthorData[] = [DEF_DIRECTOR];
 export const DEF_STUDIOS: StudioData[] = [DEF_STUDIO];
-export const DEF_COUNTRIES: Country[] = [Country.UNKNOWN];
+export const DEF_COUNTRIES: CountryCode[] = ['UNKNOWN'];
 
 export const DEF_MEDIA: DefaultMedia = {
   status: DEF_STATUS,

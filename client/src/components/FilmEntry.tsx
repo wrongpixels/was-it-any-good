@@ -2,6 +2,8 @@ import { JSX, useEffect, useState } from 'react';
 import { PathMatch, useMatch } from 'react-router-dom';
 import { FilmResponse } from '../../../shared/types/models';
 import { getById } from '../services/film';
+import { getYear } from '../utils/format-helper';
+import MediaFlags from './MediaFlags';
 
 const FilmEntry = (): JSX.Element => {
   const [film, setFilm] = useState<FilmResponse | null | undefined>(undefined);
@@ -27,8 +29,24 @@ const FilmEntry = (): JSX.Element => {
     return <div>Film couldn't be found!</div>;
   }
   return (
-    <div>
-      <h2>{film.name}</h2>
+    <div className="flex flex-row gap-8 p-4 bg-white rounded shadow max-w-2xl">
+      <div className="flex-1">
+        <h2 className="text-xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
+          <b>{film.name}</b>
+          <span className="text-gray-400">{getYear(film.releaseDate)}</span>
+          <MediaFlags countries={film.country} />
+        </h2>
+        <div className="mt-4 space-y-2">
+          <b className="block text-lg">Synopsis</b>
+          <p className="text-gray-700 text-sm leading-relaxed text-justify">
+            {film.description}
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <img src={film.image} alt={film.name} className="w-45 rounded" />
+      </div>
     </div>
   );
 };
