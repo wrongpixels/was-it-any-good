@@ -31,36 +31,39 @@ const FilmEntry = (): JSX.Element => {
     return <div>Film couldn't be found!</div>;
   }
   return (
-    <div className="flex flex-row gap-8 p-4 bg-white rounded shadow max-w-2xl">
-      <div className="flex-1">
-        <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
-          <span className="font-medium">{film.name}</span>
-          <span className="text-gray-400">{getYear(film.releaseDate)}</span>
-          <MediaFlags countryCodes={film.country} />
-        </h2>
-        {film.originalName && film.originalName !== film.name && (
-          <span className="text-gray-400 text-sm font-italic">
-            {film.originalName}
-          </span>
-        )}
-        <EntrySection
-          title="Direction"
-          peopleContent={film.crew}
-          peopleFilter={AuthorType.Director}
-        />
-        <EntrySection title="Synopsis" content={film.description} />
-        <EntrySection title="Cast" peopleContent={film.cast} />
-      </div>
+    <div className="p-4 bg-white rounded shadow max-w-3xl mx-auto">
+      <div className="flex flex-row gap-8">
+        <div className="flex-1">
+          <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
+            <span className="font-medium">{film.name}</span>
+            <span className="text-gray-400">{getYear(film.releaseDate)}</span>
+            <MediaFlags countryCodes={film.country} />
+          </h2>
+          {film.originalName && film.originalName !== film.name && (
+            <span className="text-gray-400 text-sm font-italic">
+              {film.originalName}
+            </span>
+          )}
 
-      <div>
-        <img
-          src={film.image}
-          alt={film.name}
-          title={film.name}
-          className="w-45 rounded shadow-md border border-neutral-300"
-          loading="lazy"
-        />
+          <EntrySection title="Synopsis" content={film.description} />
+        </div>
+
+        <div>
+          <img
+            src={film.image}
+            alt={film.name}
+            title={film.name}
+            className="w-45 rounded shadow-md border border-neutral-300"
+            loading="lazy"
+          />
+        </div>
       </div>
+      <EntrySection
+        title="Direction"
+        peopleContent={film.crew}
+        peopleFilter={AuthorType.Director}
+      />
+      <EntrySection title="Cast" peopleContent={film.cast} />
     </div>
   );
 };
