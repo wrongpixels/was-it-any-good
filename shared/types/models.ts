@@ -36,7 +36,6 @@ export interface SeasonResponse extends BaseMediaResponse {
 }
 
 export interface MediaResponse extends BaseMediaResponse {
-  parentalGuide: "G" | "PG" | "PG13" | "R" | "NC17" | "UNKNOWN" | null;
   sortName: string;
   country: CountryCode[];
   status: string;
@@ -44,6 +43,7 @@ export interface MediaResponse extends BaseMediaResponse {
   cast?: CreditResponse[];
   crew?: CreditResponse[];
   genres?: GenreResponse[];
+  mergedCrew?: MergedCredits[];
 }
 
 export interface FilmResponse extends MediaResponse {}
@@ -63,5 +63,10 @@ export interface CreditResponse {
   role: string;
   characterName?: string[];
   order?: number;
+  person: PersonResponse;
+}
+
+export interface MergedCredits {
+  mergedRoles: string[];
   person: PersonResponse;
 }

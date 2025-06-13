@@ -6,6 +6,8 @@ import { getYear } from "../utils/format-helper";
 import MediaFlags from "./MediaFlags";
 import EntrySection from "./EntrySection";
 import { AuthorType } from "../../../shared/types/roles";
+import mergeCredits from "../utils/credits-merger";
+import GenreSection from "./GenreList";
 
 const FilmEntry = (): JSX.Element => {
   const [film, setFilm] = useState<FilmResponse | null | undefined>(undefined);
@@ -17,7 +19,15 @@ const FilmEntry = (): JSX.Element => {
     }
     const getFilm = async () => {
       const filmResponse: FilmResponse | null = await getById(filmId);
-      setFilm(filmResponse);
+      if (filmResponse) {
+        setFilm(
+          filmResponse.crew
+            ? { ...filmResponse, mergedCrew: mergeCredits(filmResponse.crew) }
+            : filmResponse
+        );
+      } else {
+        setFilm(null);
+      }
     };
     getFilm();
   }, [filmId]);
@@ -31,7 +41,7 @@ const FilmEntry = (): JSX.Element => {
     return <div>Film couldn't be found!</div>;
   }
   return (
-    <div className="p-4 bg-white rounded shadow max-w-3xl mx-auto">
+    <div className="p-4 bg-white rounded shadow max-w-3xl w-full">
       <div className="flex flex-row gap-8">
         <div className="flex-1">
           <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
@@ -39,12 +49,14 @@ const FilmEntry = (): JSX.Element => {
             <span className="text-gray-400">{getYear(film.releaseDate)}</span>
             <MediaFlags countryCodes={film.country} />
           </h2>
-          {film.originalName && film.originalName !== film.name && (
-            <span className="text-gray-400 text-sm font-italic">
-              {film.originalName}
-            </span>
-          )}
-
+          <div>
+            {film.originalName && film.originalName !== film.name && (
+              <span className="text-gray-400 text-sm font-italic">
+                "{film.originalName}"
+              </span>
+            )}
+            <span>{film.genres && <GenreSection genres={film.genres} />}</span>
+          </div>
           <EntrySection title="Synopsis" content={film.description} />
         </div>
 
@@ -59,11 +71,11 @@ const FilmEntry = (): JSX.Element => {
         </div>
       </div>
       <EntrySection
-        title="Direction"
-        peopleContent={film.crew}
-        peopleFilter={AuthorType.Director}
+        title="Direction and Writing"
+        crewContent={film.mergedCrew}
+        peopleFilter={[AuthorType.Director, AuthorType.Writer]}
       />
-      <EntrySection title="Cast" peopleContent={film.cast} />
+      <EntrySection title="Cast" castContent={film.cast} />
     </div>
   );
 };

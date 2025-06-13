@@ -14,7 +14,7 @@ const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
     const countryName: string = Country[c];
 
     return (
-      <div>
+      <div key={countryName}>
         <img
           src={`${FLAG_URL}/${c.toLowerCase()}.png`}
           alt={`${c} flag`}

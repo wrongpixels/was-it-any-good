@@ -10,7 +10,11 @@ export const useVerticalScroll = (
 
   const animateScroll = useCallback((): void => {
     const element: HTMLDivElement | null = reference.current;
-    if (!element || targetScrollLeft.current === null) {
+    if (
+      !element ||
+      targetScrollLeft.current === null ||
+      element.scrollWidth <= element.clientWidth
+    ) {
       animationFrameId.current = null;
       return;
     }
@@ -44,19 +48,16 @@ export const useVerticalScroll = (
         return;
       }
 
+      const maxScroll: number = element.scrollWidth - element.clientWidth;
+      if (maxScroll <= 0) {
+        return;
+      }
       e.preventDefault();
 
       const delta: number = e.deltaY * multiplier;
-
-      const maxScrollLeft: number = element.scrollWidth - element.clientWidth;
       const currentScroll: number = element.scrollLeft;
-
       let potentialNewTarget: number = currentScroll + delta;
-
-      potentialNewTarget = Math.max(
-        0,
-        Math.min(potentialNewTarget, maxScrollLeft)
-      );
+      potentialNewTarget = Math.max(0, Math.min(potentialNewTarget, maxScroll));
 
       if (
         targetScrollLeft.current === null ||
@@ -67,7 +68,7 @@ export const useVerticalScroll = (
         targetScrollLeft.current += delta;
         targetScrollLeft.current = Math.max(
           0,
-          Math.min(targetScrollLeft.current, maxScrollLeft)
+          Math.min(targetScrollLeft.current, maxScroll)
         );
       }
 

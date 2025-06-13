@@ -1,26 +1,37 @@
 import { JSX } from "react";
-import { CreditResponse } from "../../../shared/types/models";
+import { CreditResponse, MergedCredits } from "../../../shared/types/models";
 import PeopleEntry from "./PersonEntry";
 import { AuthorType } from "../../../shared/types/roles";
 
 interface EntryProps {
   title: string;
   content?: string;
-  peopleContent?: CreditResponse[];
-  peopleFilter?: AuthorType;
+  crewContent?: MergedCredits[];
+  castContent?: CreditResponse[];
+  peopleFilter?: AuthorType[];
 }
 
 const EntrySection = (props: EntryProps): JSX.Element | null => {
-  if (!props.title || (!props.content && !props.peopleContent)) {
+  if (
+    !props.title ||
+    (!props.content && !props.crewContent && !props.castContent)
+  ) {
     return null;
   }
-  const filteredPeople: CreditResponse[] | null = !props.peopleContent
-    ? null
-    : !props.peopleFilter
-      ? props.peopleContent
-      : props.peopleContent.filter(
-          (p: CreditResponse) => p?.role && p.role === props.peopleFilter
-        );
+  const filteredPeople: MergedCredits[] | CreditResponse[] | null =
+    props.castContent
+      ? props.castContent
+      : !props.crewContent
+        ? null
+        : !props.peopleFilter || props.peopleFilter.length === 0
+          ? props.crewContent
+          : props.crewContent.filter(
+              (p: MergedCredits) =>
+                p?.mergedRoles &&
+                p.mergedRoles.some((role: string) =>
+                  props.peopleFilter!.includes(role as AuthorType)
+                )
+            );
 
   return (
     <div className="mt-4 space-y-2">
