@@ -10,7 +10,7 @@ interface PeopleEntryProps {
 const getExtraInfo = (person: CreditResponse | MergedCredits): string =>
   isMerged(person)
     ? person.mergedRoles.join(", ")
-    : `As ${person.characterName?.join(", ")}`;
+    : person.characterName?.join(", ") || "Unknown";
 
 const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
   const reference: React.RefObject<HTMLDivElement | null> = useVerticalScroll();
@@ -19,7 +19,7 @@ const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
   }
   return (
     <div
-      className="flex overflow-x-auto space-x-2 pb-2 scrollbar-hide"
+      className="flex overflow-x-auto p-1 space-x-2 scrollbar-hide"
       ref={reference}
     >
       {people
@@ -28,22 +28,26 @@ const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
             credit.person?.name && credit.person.id
         )
         .map((c) => (
-          <div
+          <a
             key={c.person.id}
-            className="flex-shrink-0 flex flex-col items-center"
+            className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border border-5 border-white ring-1 ring-gray-300 pt-1"
           >
             <img
               src={c.person.image}
               alt={c.person.name}
               title={c.person.name}
-              className="w-24 h-auto rounded shadow-md border border-neutral-300"
+              className="w-26 rounded h-auto shadow ring-1 ring-gray-300"
               loading="lazy"
             />
-            <div className="block mt-1 w-26 text-center overflow-hidden text-ellipsis leading-tight line-clamp-2">
-              <a className="font-medium text-sm">{c.person.name}</a>
-              <div className="text-gray-500 text-xs">{getExtraInfo(c)}</div>
+            <div className="block w-28 text-center overflow-hidden text-ellipsis py-1">
+              <div className="font-medium text-sm leading-none m-1.5">
+                {c.person.name}
+              </div>
+              <div className="text-gray-500 text-xs leading-tight">
+                {getExtraInfo(c)}
+              </div>
             </div>
-          </div>
+          </a>
         ))}
     </div>
   );

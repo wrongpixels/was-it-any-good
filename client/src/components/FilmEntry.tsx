@@ -49,7 +49,7 @@ const FilmEntry = ({ tmdb = false }: EntryProps): JSX.Element => {
     return <div>Film couldn't be found!</div>;
   }
   return (
-    <div className="p-4 bg-white rounded shadow max-w-4xl w-full">
+    <div className="p-4 bg-gray-50 rounded shadow max-w-4xl w-full">
       <div className="flex flex-row gap-8">
         <div className="flex-1">
           <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
@@ -70,12 +70,12 @@ const FilmEntry = ({ tmdb = false }: EntryProps): JSX.Element => {
           <EntrySection title="Synopsis" content={film.description} />
         </div>
 
-        <div>
+        <div className="bg-white shadow-md rounded border border-9 border-white ring-1 ring-gray-300">
           <img
             src={film.image}
             alt={film.name}
             title={film.name}
-            className="w-45 rounded shadow-md border border-neutral-300"
+            className="w-45 rounded shadow ring-1 ring-gray-300 mb-5"
             loading="lazy"
           />
         </div>
