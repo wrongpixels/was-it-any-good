@@ -10,6 +10,7 @@ const App = (): JSX.Element => {
       <Router>
         <Routes>
           <Route path="/film/:id" element={<FilmEntry />} />
+          <Route path="/tmdb/:id" element={<FilmEntry tmdb={true} />} />
         </Routes>
       </Router>
     </div>
