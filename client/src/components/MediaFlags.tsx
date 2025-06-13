@@ -8,7 +8,7 @@ interface MediaFlagsProps {
 const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
   if (!countries) return null;
 
-  const showCountries = countries.slice(0, 2);
+  const showCountries = countries.slice(0, 3);
 
   const buildCountry = (c: CountryCode) => {
     const countryName: string = Country[c];
@@ -19,13 +19,17 @@ const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
           src={`${FLAG_URL}/${c.toLowerCase()}.png`}
           alt={`${c} flag`}
           title={countryName}
-          className="w-6 rounded border border-neutral-300 shadow"
+          className="w-6 h-4 rounded border border-neutral-300 shadow"
         />
       </div>
     );
   };
 
-  return <>{showCountries.map((c) => buildCountry(c))}</>;
+  return (
+    <div className="inline-flex items-center gap-1">
+      {showCountries.map((c) => buildCountry(c))}
+    </div>
+  );
 };
 
 export default MediaFlags;

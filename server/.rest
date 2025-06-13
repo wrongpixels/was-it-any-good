@@ -17,7 +17,7 @@ Content-Type: application/json
 GET http://localhost:6060/api/films/tmdb/11621
 
 ###GET OWN FILM DATA
-GET http://localhost:6060/api/films/1
+GET http://localhost:6060/api/films/5
 
 ###GET ANOTHER FILM DATA
 GET http://localhost:6060/api/films/tmdb/275

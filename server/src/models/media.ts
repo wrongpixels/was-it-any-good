@@ -8,7 +8,7 @@ import {
   BelongsToManyGetAssociationsMixin,
 } from 'sequelize';
 import { MediaGenre, MediaRole } from '.';
-import Country, { CountryCode } from '../../../shared/types/countries';
+import { CountryCode, isCountryCode } from '../../../shared/types/countries';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -65,9 +65,23 @@ class Media<
         type: DataTypes.ARRAY(DataTypes.STRING),
         allowNull: false,
         validate: {
-          isIn: [Object.keys(Country)],
+          isValidCountryArray(value: string[]) {
+            if (!Array.isArray(value)) {
+              throw new Error('Must be an array');
+            }
+            const invalidCountries = value.filter(
+              (country) => !isCountryCode(country)
+            );
+
+            if (invalidCountries.length > 0) {
+              throw new Error(
+                `Invalid country codes found: ${invalidCountries.join(', ')}`
+              );
+            }
+          },
         },
       },
+
       image: {
         type: DataTypes.STRING,
         validate: { isUrl: true },

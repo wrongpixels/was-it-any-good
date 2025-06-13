@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import { PathMatch, useMatch } from "react-router-dom";
 import { FilmResponse } from "../../../shared/types/models";
-import { getById } from "../services/film";
+import { getById, getByTMDBId } from "../services/film";
 import { getYear } from "../utils/format-helper";
 import MediaFlags from "./MediaFlags";
 import EntrySection from "./EntrySection";
@@ -9,16 +9,24 @@ import { AuthorType } from "../../../shared/types/roles";
 import mergeCredits from "../utils/credits-merger";
 import GenreSection from "./GenreList";
 
-const FilmEntry = (): JSX.Element => {
+interface EntryProps {
+  tmdb?: boolean;
+}
+
+const FilmEntry = ({ tmdb = false }: EntryProps): JSX.Element => {
   const [film, setFilm] = useState<FilmResponse | null | undefined>(undefined);
-  const match: PathMatch<"id"> | null = useMatch("/film/:id");
+  const match: PathMatch<"id"> | null = useMatch(
+    `${tmdb ? "/tmdb" : "/film"}/:id`
+  );
   const filmId: string | undefined = match?.params.id;
   useEffect(() => {
     if (!filmId) {
       return;
     }
     const getFilm = async () => {
-      const filmResponse: FilmResponse | null = await getById(filmId);
+      const filmResponse: FilmResponse | null = tmdb
+        ? await getByTMDBId(filmId)
+        : await getById(filmId);
       if (filmResponse) {
         setFilm(
           filmResponse.crew
@@ -41,12 +49,14 @@ const FilmEntry = (): JSX.Element => {
     return <div>Film couldn't be found!</div>;
   }
   return (
-    <div className="p-4 bg-white rounded shadow max-w-3xl w-full">
+    <div className="p-4 bg-white rounded shadow max-w-4xl w-full">
       <div className="flex flex-row gap-8">
         <div className="flex-1">
           <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
-            <span className="font-medium">{film.name}</span>
-            <span className="text-gray-400">{getYear(film.releaseDate)}</span>
+            <span className="font-bold">{film.name}</span>
+            <span className="text-gray-400 font-regular">
+              {getYear(film.releaseDate)}
+            </span>
             <MediaFlags countryCodes={film.country} />
           </h2>
           <div>

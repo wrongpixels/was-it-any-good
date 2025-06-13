@@ -128,7 +128,7 @@ Film.init(
             attributes: ['id', 'name', 'tmdbId'],
             through: {
               attributes: [],
-              where: { mediaType: MediaType.Show },
+              where: { mediaType: MediaType.Film },
             },
           },
         ],

@@ -11,11 +11,11 @@ const GenreSection = ({ genres }: GenreSectionProps): JSX.Element | null => {
     return null;
   }
   return (
-    <div>
+    <div className="text-gray-400">
       {genres.map((g: GenreResponse, i: number) => (
         <React.Fragment key={g.id}>
-          {i > 0 && ", "}
-          <a className="text-xs">{g.name}</a>
+          {i > 0 && " | "}
+          <a className="text-sm">{g.name}</a>
         </React.Fragment>
       ))}
     </div>
