@@ -1,13 +1,15 @@
-import { JSX, useEffect, useState } from 'react';
-import { PathMatch, useMatch } from 'react-router-dom';
-import { FilmResponse } from '../../../shared/types/models';
-import { getById } from '../services/film';
-import { getYear } from '../utils/format-helper';
-import MediaFlags from './MediaFlags';
+import { JSX, useEffect, useState } from "react";
+import { PathMatch, useMatch } from "react-router-dom";
+import { FilmResponse } from "../../../shared/types/models";
+import { getById } from "../services/film";
+import { getYear } from "../utils/format-helper";
+import MediaFlags from "./MediaFlags";
+import EntrySection from "./EntrySection";
+import { AuthorType } from "../../../shared/types/roles";
 
 const FilmEntry = (): JSX.Element => {
   const [film, setFilm] = useState<FilmResponse | null | undefined>(undefined);
-  const match: PathMatch<'id'> | null = useMatch('/film/:id');
+  const match: PathMatch<"id"> | null = useMatch("/film/:id");
   const filmId: string | undefined = match?.params.id;
   useEffect(() => {
     if (!filmId) {
@@ -31,21 +33,33 @@ const FilmEntry = (): JSX.Element => {
   return (
     <div className="flex flex-row gap-8 p-4 bg-white rounded shadow max-w-2xl">
       <div className="flex-1">
-        <h2 className="text-xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
-          <b>{film.name}</b>
+        <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-3">
+          <span className="font-medium">{film.name}</span>
           <span className="text-gray-400">{getYear(film.releaseDate)}</span>
           <MediaFlags countryCodes={film.country} />
         </h2>
-        <div className="mt-4 space-y-2">
-          <b className="block text-lg">Synopsis</b>
-          <p className="text-gray-700 text-sm leading-relaxed text-justify">
-            {film.description}
-          </p>
-        </div>
+        {film.originalName && film.originalName !== film.name && (
+          <span className="text-gray-400 text-sm font-italic">
+            {film.originalName}
+          </span>
+        )}
+        <EntrySection
+          title="Direction"
+          peopleContent={film.crew}
+          peopleFilter={AuthorType.Director}
+        />
+        <EntrySection title="Synopsis" content={film.description} />
+        <EntrySection title="Cast" peopleContent={film.cast} />
       </div>
 
       <div>
-        <img src={film.image} alt={film.name} className="w-45 rounded" />
+        <img
+          src={film.image}
+          alt={film.name}
+          title={film.name}
+          className="w-45 rounded shadow-md border border-neutral-300"
+          loading="lazy"
+        />
       </div>
     </div>
   );

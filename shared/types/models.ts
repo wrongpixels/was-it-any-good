@@ -1,4 +1,4 @@
-import { CountryCode } from './countries';
+import { CountryCode } from "./countries";
 
 export interface GenreResponse {
   id: number;
@@ -36,13 +36,13 @@ export interface SeasonResponse extends BaseMediaResponse {
 }
 
 export interface MediaResponse extends BaseMediaResponse {
-  parentalGuide: 'G' | 'PG' | 'PG13' | 'R' | 'NC17' | 'UNKNOWN' | null;
+  parentalGuide: "G" | "PG" | "PG13" | "R" | "NC17" | "UNKNOWN" | null;
   sortName: string;
   country: CountryCode[];
   status: string;
   runtime: number | null;
-  cast?: ResponseCastMember[];
-  crew?: ResponseCrewMember[];
+  cast?: CreditResponse[];
+  crew?: CreditResponse[];
   genres?: GenreResponse[];
 }
 
@@ -55,18 +55,13 @@ export interface ShowResponse extends MediaResponse {
   seasons?: SeasonResponse[];
 }
 
-export type NoCredFilmResponse = Omit<FilmResponse, 'crew' | 'cast'>;
-export type NoCredShowResponse = Omit<ShowResponse, 'crew' | 'cast'>;
+export type NoCredFilmResponse = Omit<FilmResponse, "crew" | "cast">;
+export type NoCredShowResponse = Omit<ShowResponse, "crew" | "cast">;
 
-export interface ResponseCastMember {
-  id: number;
-  characterName: string[];
-  order: number;
-  person: PersonResponse[];
-}
-
-export interface ResponseCrewMember {
+export interface CreditResponse {
   id: number;
   role: string;
-  person: PersonResponse[];
+  characterName?: string[];
+  order?: number;
+  person: PersonResponse;
 }
