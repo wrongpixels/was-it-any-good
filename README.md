@@ -4,7 +4,7 @@
 
 WIAG is a full-stack rating platform to discover and review movies, TV shows and games. Unlike traditional systems, WIAG uses a dynamic scoring approach that combines overall impressions with individual components (seasons/DLC), calculating a final score that shows how quality varies over time.
 
-For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG considers both for the final score, while ignoring unwatched seasons.
+For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG considers both for the final score, while ignoring unwatched seasons. 
 
 ## Features
 
