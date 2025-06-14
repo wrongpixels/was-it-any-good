@@ -101,6 +101,7 @@ export interface MediaData {
   releaseDate: string;
   image: Image;
   rating: MediaRating;
+  baseRating: number;
   runtime: number;
   userReviews?: number[];
   criticReviews?: number[];
@@ -172,6 +173,7 @@ export interface TMDBData {
   tmdbId: string;
   imdbId: string;
   description: string;
+  baseRating: number;
   image: string;
   countries: CountryCode[];
   genres: CreateGenreData[];

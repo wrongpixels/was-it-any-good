@@ -25,8 +25,8 @@ import {
   RoleType,
 } from './media-types';
 
-export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/jMiceYX.png';
-export const DEF_IMAGE_MEDIA: Image = 'https://i.imgur.com/EYiJVoX.png';
+export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/EYiJVoX.png';
+export const DEF_IMAGE_MEDIA: Image = 'https://i.imgur.com/jMiceYX.png';
 
 export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
@@ -117,6 +117,7 @@ export const DEF_MEDIA: DefaultMedia = {
   image: DEF_IMAGE_MEDIA,
   rating: DEF_MEDIA_RATING,
   runtime: 0,
+  baseRating: 0,
   studios: DEF_STUDIOS,
   cast: DEF_CAST,
   crew: DEF_CREW,

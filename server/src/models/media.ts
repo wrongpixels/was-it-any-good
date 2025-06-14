@@ -12,7 +12,7 @@ import { CountryCode, isCountryCode } from '../../../shared/types/countries';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;
@@ -24,6 +24,7 @@ class Media<
   declare releaseDate: string;
   declare image: string;
   declare rating: number | null;
+  declare baseRating: number;
   declare voteCount: number;
   declare runtime: number | null;
   //For getting the Cast and Crew data
@@ -87,6 +88,9 @@ class Media<
         validate: { isUrl: true },
       },
       rating: {
+        type: DataTypes.DECIMAL(3, 1),
+      },
+      baseRating: {
         type: DataTypes.DECIMAL(3, 1),
       },
       voteCount: {

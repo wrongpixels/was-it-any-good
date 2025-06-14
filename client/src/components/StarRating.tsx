@@ -5,6 +5,8 @@ interface PropsStarRating {
   valid?: boolean;
 }
 
+const STARS: string = '★★★★★';
+
 const StarRating = ({
   rating,
   valid = true,
@@ -13,10 +15,18 @@ const StarRating = ({
     return null;
   }
   return (
-    <div className="text-gray-400 text-center">
-      <div className="text-3xl">★★★★★</div>
-      {!valid && (
-        <div className="text-xs text-gray-400 italic">Not enough ratings</div>
+    <div className="relative inline-block text-3xl">
+      <div className="text-gray-300">{STARS}</div>
+      <div
+        className="absolute top-0 left-0 overflow-hidden"
+        style={{ width: `${rating * 10}%` }}
+      >
+        <div className="text-[#6d90cf]">{STARS}</div>
+      </div>
+      {valid ? (
+        <div className="text-2xl font-medium text-gray-500 mb-1">{rating}</div>
+      ) : (
+        <div className="text-xs text-gray-400">Not enough ratings</div>
       )}
     </div>
   );

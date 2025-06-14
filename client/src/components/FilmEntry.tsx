@@ -87,7 +87,9 @@ const FilmEntry = ({ tmdb = false }: EntryProps): JSX.Element => {
             className="w-45 rounded shadow ring-1 ring-gray-300"
             loading="lazy"
           />
-          <StarRating rating={8} valid={true} />
+          <div className="text-center">
+            <StarRating rating={film.baseRating} valid={true} />
+          </div>
         </div>
       </div>
       <div className="mt-4 border-t border-gray-200">

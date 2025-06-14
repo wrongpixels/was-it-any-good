@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -26,11 +26,11 @@
 
 a {
   font-weight: 500;
-  color: #446bb3;
+  color: #5d82c7;
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #5980c7;
 }
 
 body {
@@ -70,7 +70,7 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #6d90cf;
   }
   button {
     background-color: #f9f9f9;
