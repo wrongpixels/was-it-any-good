@@ -1,5 +1,5 @@
-import Country, { CountryCode } from "../../../shared/types/countries";
-const FLAG_URL = "https://flagcdn.com/w40";
+import Country, { CountryCode } from '../../../shared/types/countries';
+const FLAG_URL = 'https://flagcdn.com/w40';
 
 interface MediaFlagsProps {
   countryCodes: CountryCode[];
@@ -19,7 +19,7 @@ const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
           src={`${FLAG_URL}/${c.toLowerCase()}.png`}
           alt={`${c} flag`}
           title={countryName}
-          className="w-6 h-4 rounded border border-neutral-300 shadow"
+          className="w-6 h-4 border border-neutral-300 shadow-xs"
         />
       </div>
     );
