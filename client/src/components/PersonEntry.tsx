@@ -1,7 +1,7 @@
-import { JSX } from "react";
-import { CreditResponse, MergedCredits } from "../../../shared/types/models";
-import { useVerticalScroll } from "../hooks/scroller";
-import { isMerged } from "../utils/credits-merger";
+import { JSX } from 'react';
+import { CreditResponse, MergedCredits } from '../../../shared/types/models';
+import { useVerticalScroll } from '../hooks/scroller';
+import { isMerged } from '../utils/credits-merger';
 
 interface PeopleEntryProps {
   people: CreditResponse[] | MergedCredits[];
@@ -9,8 +9,8 @@ interface PeopleEntryProps {
 
 const getExtraInfo = (person: CreditResponse | MergedCredits): string =>
   isMerged(person)
-    ? person.mergedRoles.join(", ")
-    : person.characterName?.join(", ") || "Unknown";
+    ? person.mergedRoles.join(', ')
+    : person.characterName?.join(', ') || 'Unknown';
 
 const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
   const reference: React.RefObject<HTMLDivElement | null> = useVerticalScroll();
@@ -43,7 +43,7 @@ const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
               <div className="font-medium text-sm leading-none m-1.5">
                 {c.person.name}
               </div>
-              <div className="text-gray-500 text-xs leading-tight">
+              <div className="text-gray-500 text-xs leading-tight font-medium">
                 {getExtraInfo(c)}
               </div>
             </div>

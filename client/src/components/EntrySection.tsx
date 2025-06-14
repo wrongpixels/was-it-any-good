@@ -1,7 +1,7 @@
-import { JSX } from "react";
-import { CreditResponse, MergedCredits } from "../../../shared/types/models";
-import PeopleEntry from "./PersonEntry";
-import { AuthorType } from "../../../shared/types/roles";
+import { JSX } from 'react';
+import { CreditResponse, MergedCredits } from '../../../shared/types/models';
+import PeopleEntry from './PersonEntry';
+import { AuthorType } from '../../../shared/types/roles';
 
 interface EntryProps {
   title: string;
@@ -34,7 +34,7 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
             );
 
   return (
-    <div className="mt-4 space-y-2">
+    <div className="mt-2 space-y-2">
       <h2 className="block text-lg font-medium">{props.title}</h2>
       {props.content && (
         <p className="text-gray-700 text-sm leading-relaxed text-justify">
