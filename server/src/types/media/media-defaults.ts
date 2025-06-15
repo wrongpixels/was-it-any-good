@@ -25,8 +25,8 @@ import {
   RoleType,
 } from './media-types';
 
-export const DEF_IMAGE_PERSON: Image = 'https://i.imgur.com/EYiJVoX.png';
-export const DEF_IMAGE_MEDIA: Image = 'https://i.imgur.com/jMiceYX.png';
+export const DEF_IMAGE_PERSON: Image = '/def-person.png';
+export const DEF_IMAGE_MEDIA: Image = '/def-media.png';
 
 export const DEF_BIRTHDATE: BirthDate = {
   year: 0,

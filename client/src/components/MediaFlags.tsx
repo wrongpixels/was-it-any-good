@@ -19,14 +19,14 @@ const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
           src={`${FLAG_URL}/${c.toLowerCase()}.png`}
           alt={`${c} flag`}
           title={countryName}
-          className="w-6 h-4 border border-neutral-300 shadow-xs"
+          className="w-6 h-4 border border-neutral-200 shadow-xs"
         />
       </div>
     );
   };
 
   return (
-    <div className="inline-flex items-center gap-1">
+    <div className="inline-flex items-center gap-1 pt-1">
       {showCountries.map((c) => buildCountry(c))}
     </div>
   );

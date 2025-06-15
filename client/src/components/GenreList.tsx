@@ -11,9 +11,9 @@ const GenreSection = ({ genres }: GenreSectionProps): JSX.Element | null => {
     return null;
   }
   return (
-    <div className="flex items-center text-gray-400 gap-2">
+    <div className="flex items-center text-gray-400 gap-2 ml-2">
       <img src="/genres.png" className="w-5 shadow-xs" />
-      <span className="text-sm">
+      <span className="text-sm ml-1">
         {genres.map((g: GenreResponse, i: number) => (
           <React.Fragment key={g.id}>
             {i > 0 && ' | '}
