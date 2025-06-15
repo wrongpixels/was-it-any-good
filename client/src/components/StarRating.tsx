@@ -23,10 +23,10 @@ const StarRating = ({
       >
         <div className="text-[#6d90cf]">{STARS}</div>
       </div>
-      {valid ? (
+      {valid && rating > 0 ? (
         <div className="text-2xl font-bold text-gray-500">{rating}</div>
       ) : (
-        <div className="text-xs text-gray-400">Not enough ratings</div>
+        <div className="text-xs text-gray-500">Not enough ratings</div>
       )}
     </div>
   );

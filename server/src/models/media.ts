@@ -85,7 +85,6 @@ class Media<
 
       image: {
         type: DataTypes.STRING,
-        validate: { isUrl: true },
       },
       rating: {
         type: DataTypes.DECIMAL(3, 1),

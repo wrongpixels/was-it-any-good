@@ -43,9 +43,7 @@ Person.init(
     },
     image: {
       type: DataTypes.STRING,
-      validate: {
-        isUrl: true,
-      },
+
       allowNull: true,
     },
     country: {
