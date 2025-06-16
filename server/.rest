@@ -16,6 +16,11 @@ Content-Type: application/json
 ###GET FILM DATA
 GET http://localhost:6060/api/films/tmdb/11621
 
+###NO CREATOR
+
+GET http://localhost:6060/api/shows/tmdb/1669
+
+
 ###GET OWN FILM DATA
 GET http://localhost:6060/api/films/5
 

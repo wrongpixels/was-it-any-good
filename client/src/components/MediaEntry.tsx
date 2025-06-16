@@ -31,7 +31,7 @@ const MediaEntry = ({
   return (
     <div>
       <div className="flex flex-row gap-8">
-        <div className="flex-1">
+        <div className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
           <EntrySection title="Synopsis" content={media.description} />
           <div className="border-t border-gray-200 mt-3">
@@ -44,15 +44,22 @@ const MediaEntry = ({
             ) : (
               <div>
                 <EntrySection
-                  title="Creators"
+                  title="Direction and Creation"
                   crewContent={media.mergedCrew}
-                  peopleFilter={[AuthorType.Creator, AuthorType.ExecProducer]}
+                  peopleFilter={[
+                    AuthorType.Creator,
+                    AuthorType.ExecProducer,
+                    AuthorType.Director,
+                    AuthorType.Writer,
+                  ]}
                 />
               </div>
             )}
           </div>
         </div>
-        <MediaPoster media={media} />
+        <div className="w-50">
+          <MediaPoster media={media} />
+        </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
       <div className="mt-4 border-t border-gray-200">

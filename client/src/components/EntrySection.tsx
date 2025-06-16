@@ -32,7 +32,9 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
                   props.peopleFilter!.includes(role as AuthorType)
                 )
             );
-
+  if (props.peopleFilter && (!filteredPeople || filteredPeople.length === 0)) {
+    return null;
+  }
   return (
     <div className="mt-2 space-y-2">
       <h2 className="block text-xl font-bold">{props.title}</h2>

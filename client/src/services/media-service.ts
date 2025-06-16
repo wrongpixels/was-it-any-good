@@ -3,6 +3,8 @@ import { MediaResponse } from '../../../shared/types/models';
 import { MediaType } from '../../../shared/types/media';
 
 const BASE_API_URL: string = '/api';
+const BASE_TMDB_URL: string = 'https://www.themoviedb.org';
+const BASE_IMDB_URL: string = 'https://www.imdb.com/title';
 
 const getMediaApiURL = (mediaType: MediaType): string => {
   switch (mediaType) {
@@ -40,6 +42,17 @@ export const buildMediaURL = (
   mediaType: MediaType,
   tmdb: boolean = false
 ): string => getMediaURL(mediaType, tmdb);
+
+export const buildTMDBorIMDBUrl = (
+  mediaType: MediaType,
+  tmdb: boolean,
+  id: string | undefined
+): string => {
+  if (!tmdb) {
+    return `${BASE_IMDB_URL}/${id}`;
+  }
+  return `${BASE_TMDB_URL}/${mediaType === MediaType.Film ? 'movie' : 'tv'}/${id}`;
+};
 
 export const getById = async (
   id: string,

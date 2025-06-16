@@ -1,6 +1,7 @@
 import { JSX } from 'react';
 import { SeasonResponse } from '../../../shared/types/models';
 import StarRating from './StarRating';
+import { MediaType } from '../../../shared/types/media';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
@@ -17,7 +18,13 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         loading="lazy"
       />
       <div className="text-center">
-        <StarRating rating={media.baseRating} valid={true} season={true} />
+        <StarRating
+          rating={media.baseRating}
+          media={media}
+          valid={true}
+          season={true}
+          mediaType={MediaType.Show}
+        />
       </div>
     </div>
   );
