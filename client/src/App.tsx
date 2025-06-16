@@ -7,7 +7,7 @@ const App = (): JSX.Element => {
   //const [count, setCount] = useState(0);
 
   return (
-    <div>
+    <div className="w-full">
       <div className="h-10 bg-[#5980c7] items-center flex justify-center sticky shadow-sm top-0">
         <div className="font-bold text-white text-2xl mb-1">
           WI★G
@@ -17,8 +17,8 @@ const App = (): JSX.Element => {
         </div>
       </div>
 
-      <div className="w-screen min-h-screen flex justify-center bg-gray-200 p-4">
-        <div className="p-4 bg-gray-50 rounded shadow max-w-5xl w-full ring ring-[#dfdfdf]">
+      <div className="min-h-screen flex justify-center bg-gray-200 p-4 box-border">
+        <div className="p-4 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
           <Router>
             <Routes>
               <Route

@@ -35,9 +35,8 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  min-width: 320px;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 500px;
   color: #575757;
 }
 
