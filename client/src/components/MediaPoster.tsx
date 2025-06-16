@@ -1,9 +1,9 @@
 import { JSX } from 'react';
-import { MediaResponse } from '../../../shared/types/models';
+import { MediaResponse, SeasonResponse } from '../../../shared/types/models';
 import StarRating from './StarRating';
 
 interface MediaPosterProps {
-  media: MediaResponse;
+  media: MediaResponse | SeasonResponse;
 }
 
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {

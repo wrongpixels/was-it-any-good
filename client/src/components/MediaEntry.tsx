@@ -5,6 +5,7 @@ import { MediaType } from '../../../shared/types/media';
 import MediaPoster from './MediaPoster';
 import MediaHeader from './MediaHeader';
 import useMedia, { UseMedia } from '../hooks/media-hook';
+import SeasonsEntry from './SeasonsEntry';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -23,7 +24,7 @@ const MediaEntry = ({
   if (media === undefined || !media) {
     return (
       <div className="flex justify-center w-full h-full font-medium">
-        {media === undefined ? 'Loading...' : `{mediaType} couldn't be found!`}
+        {media === undefined ? 'Loading...' : `${mediaType} couldn't be found!`}
       </div>
     );
   }
@@ -34,11 +35,22 @@ const MediaEntry = ({
           <MediaHeader media={media} />
           <EntrySection title="Synopsis" content={media.description} />
           <div className="border-t border-gray-200 mt-3">
-            <EntrySection
-              title="Direction and Writing"
-              crewContent={media.mergedCrew}
-              peopleFilter={[AuthorType.Director, AuthorType.Writer]}
-            />
+            {media.mediaType === MediaType.Film ? (
+              <EntrySection
+                title="Direction and Writing"
+                crewContent={media.mergedCrew}
+                peopleFilter={[AuthorType.Director, AuthorType.Writer]}
+              />
+            ) : (
+              <div>
+                <SeasonsEntry show={media} />
+                <EntrySection
+                  title="Creators"
+                  crewContent={media.mergedCrew}
+                  peopleFilter={[AuthorType.Creator, AuthorType.ExecProducer]}
+                />
+              </div>
+            )}
           </div>
         </div>
         <MediaPoster media={media} />

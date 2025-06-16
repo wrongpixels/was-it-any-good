@@ -35,7 +35,7 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
 
   return (
     <div className="mt-2 space-y-2">
-      <h2 className="block text-xl font-medium">{props.title}</h2>
+      <h2 className="block text-xl font-bold">{props.title}</h2>
       {props.content && (
         <p className="text-gray-700 text-sm leading-relaxed text-justify">
           {props.content}

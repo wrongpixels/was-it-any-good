@@ -16,12 +16,30 @@ const getMediaApiURL = (mediaType: MediaType): string => {
       throw new Error(`Unsupported media type: ${mediaType}`);
   }
 };
-
 const buildAPIMediaURL = (
   mediaType: MediaType,
   id: string,
   path: string = '/'
 ): string => `${getMediaApiURL(mediaType)}${path}${id}`;
+
+const getMediaURL = (mediaType: MediaType, tmdb: boolean = false): string => {
+  const path: string = tmdb ? '/tmdb' : '';
+  switch (mediaType) {
+    case MediaType.Film:
+      return `${path}/film`;
+    case MediaType.Show:
+      return `${path}/show`;
+    case MediaType.Game:
+      return `${path}/game`;
+    default:
+      throw new Error(`Unsupported media type: ${mediaType}`);
+  }
+};
+
+export const buildMediaURL = (
+  mediaType: MediaType,
+  tmdb: boolean = false
+): string => getMediaURL(mediaType, tmdb);
 
 export const getById = async (
   id: string,

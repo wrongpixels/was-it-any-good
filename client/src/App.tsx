@@ -16,8 +16,16 @@ const App = (): JSX.Element => {
               element={<MediaEntry mediaType={MediaType.Film} />}
             />
             <Route
-              path="/tmdb/:id"
+              path="/show/:id"
+              element={<MediaEntry mediaType={MediaType.Show} />}
+            />
+            <Route
+              path="/tmdb/film/:id"
               element={<MediaEntry mediaType={MediaType.Film} tmdb={true} />}
+            />
+            <Route
+              path="/tmdb/show/:id"
+              element={<MediaEntry mediaType={MediaType.Show} tmdb={true} />}
             />
           </Routes>
         </Router>

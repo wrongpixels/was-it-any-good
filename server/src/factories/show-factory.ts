@@ -48,6 +48,7 @@ const createSeason = (season: TMDBSeasonData): SeasonData => ({
   originalName: season.name,
   index: season.season_number,
   sortName: season.name,
+  baseRating: season.vote_average,
   tmdbId: season.id.toString(),
   episodeCount: season.episode_count,
   description: season.overview || '',

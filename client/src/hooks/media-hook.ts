@@ -2,7 +2,7 @@ import { PathMatch, useMatch } from 'react-router-dom';
 import { MediaType } from '../../../shared/types/media';
 import { MediaResponse } from '../../../shared/types/models';
 import { useEffect, useState } from 'react';
-import { getById, getByTMDBId } from '../services/media-service';
+import { buildMediaURL, getById, getByTMDBId } from '../services/media-service';
 import mergeCredits from '../utils/credits-merger';
 
 export interface UseMedia {
@@ -15,7 +15,7 @@ const useMedia = (mediaType: MediaType, tmdb: boolean): UseMedia => {
     undefined
   );
   const match: PathMatch<'id'> | null = useMatch(
-    `${tmdb ? '/tmdb' : mediaType === MediaType.Film ? '/film' : mediaType === MediaType.Show ? '/show' : '/game'}/:id`
+    `${buildMediaURL(mediaType, tmdb)}/:id`
   );
   const mediaId: string | undefined = match?.params.id;
   useEffect(() => {
