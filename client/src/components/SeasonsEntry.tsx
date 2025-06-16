@@ -1,7 +1,7 @@
 import { JSX } from 'react';
-import { ShowResponse } from '../../../shared/types/models';
+import { SeasonResponse, ShowResponse } from '../../../shared/types/models';
 import EntrySection from './EntrySection';
-import MediaPoster from './MediaPoster';
+import SeasonPoster from './SeasonPoster';
 
 interface SeasonsEntryProps {
   show: ShowResponse;
@@ -12,11 +12,15 @@ const SeasonsEntry = ({ show }: SeasonsEntryProps): JSX.Element | null => {
     return null;
   }
   return (
-    <div>
-      <div>
-        <EntrySection title="Seasons" content=" " />
+    <div className="mt-4 border-t border-gray-200">
+      <EntrySection title="Seasons" content=" " />
+      <div className="flex flex-row gap-2">
+        {show.seasons.map((s: SeasonResponse) => (
+          <div key={s.id}>
+            <SeasonPoster media={s} />
+          </div>
+        ))}
       </div>
-      <MediaPoster media={show.seasons[0]} />
     </div>
   );
 };

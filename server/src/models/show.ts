@@ -102,6 +102,7 @@ Show.init(
           'image',
           'voteCount',
           'rating',
+          'baseRating',
           'tmdbId',
           'imdbId',
           'releaseDate',

@@ -8,12 +8,12 @@ interface MediaPosterProps {
 
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
   return (
-    <div className="bg-white shadow-md rounded border border-9 border-white ring-1 ring-gray-300 self-start">
+    <div className="w-50 bg-white shadow-md rounded border border-9 border-white ring-1 ring-gray-300 self-start">
       <img
         src={media.image}
         alt={media.name}
         title={media.name}
-        className="w-45 rounded shadow ring-1 ring-gray-300"
+        className="rounded shadow ring-1 ring-gray-300"
         loading="lazy"
       />
       <div className="text-center">

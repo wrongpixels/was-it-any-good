@@ -43,7 +43,6 @@ const MediaEntry = ({
               />
             ) : (
               <div>
-                <SeasonsEntry show={media} />
                 <EntrySection
                   title="Creators"
                   crewContent={media.mergedCrew}
@@ -55,6 +54,7 @@ const MediaEntry = ({
         </div>
         <MediaPoster media={media} />
       </div>
+      {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
       <div className="mt-4 border-t border-gray-200">
         <EntrySection title="Cast" castContent={media.cast} />
       </div>
