@@ -44,7 +44,7 @@ const FilmEntry = ({ tmdb = false }: EntryProps): JSX.Element => {
     return <div>Invalid Film id!</div>;
   }
   if (film === undefined) {
-    return <div>Loading...</div>;
+    return <div className="flex items-center">Loading...</div>;
   }
   if (!film) {
     return <div>Film couldn't be found!</div>;

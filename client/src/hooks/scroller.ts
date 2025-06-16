@@ -1,12 +1,44 @@
-import { useEffect, useRef, RefObject, useCallback } from "react";
+import { useEffect, useRef, useState, RefObject, useCallback } from 'react';
 
-export const useVerticalScroll = (
-  multiplier: number = 1
-): RefObject<HTMLDivElement | null> => {
+export interface ScrollData {
+  reference: RefObject<HTMLDivElement | null>;
+  canScrollR: boolean;
+  canScrollL: boolean;
+}
+
+//We read vertical mousewheel, convert it into custom smooth horizontal scroll, and set 'canScroll' to draw a fade if necessary
+export const useVerticalScroll = (multiplier: number = 1): ScrollData => {
   const reference: RefObject<HTMLDivElement | null> =
     useRef<HTMLDivElement>(null);
-  const targetScrollLeft = useRef<number | null>(null);
-  const animationFrameId = useRef<number | null>(null);
+  const targetScrollLeft: RefObject<number | null> = useRef<number | null>(
+    null
+  );
+  const animationFrameId: RefObject<number | null> = useRef<number | null>(
+    null
+  );
+
+  const [canScrollL, setCanScrollL]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState(false);
+
+  const [canScrollR, setCanScrollR]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState(false);
+
+  const updateScrollLimits = useCallback((): void => {
+    const element: HTMLDivElement | null = reference.current;
+    if (!element) {
+      setCanScrollL(false);
+      setCanScrollR(false);
+      return;
+    }
+    setCanScrollL(element.scrollLeft > 10);
+    setCanScrollR(
+      element.scrollLeft + 10 < element.scrollWidth - element.clientWidth
+    );
+  }, []);
 
   const animateScroll = useCallback((): void => {
     const element: HTMLDivElement | null = reference.current;
@@ -26,6 +58,7 @@ export const useVerticalScroll = (
       element.scrollLeft = targetScrollLeft.current;
       targetScrollLeft.current = null;
       animationFrameId.current = null;
+      updateScrollLimits();
       return;
     }
 
@@ -33,7 +66,7 @@ export const useVerticalScroll = (
     element.scrollLeft = newScrollLeft;
 
     animationFrameId.current = requestAnimationFrame(animateScroll);
-  }, []);
+  }, [updateScrollLimits]);
 
   useEffect(() => {
     const element: HTMLDivElement | null = reference.current;
@@ -41,7 +74,8 @@ export const useVerticalScroll = (
       return;
     }
 
-    element.style.scrollBehavior = "auto";
+    element.style.scrollBehavior = 'auto';
+    updateScrollLimits();
 
     const onWheelEvent = (e: WheelEvent): void => {
       if (Math.abs(e.deltaY) === 0) {
@@ -52,6 +86,7 @@ export const useVerticalScroll = (
       if (maxScroll <= 0) {
         return;
       }
+
       e.preventDefault();
 
       const delta: number = e.deltaY * multiplier;
@@ -77,15 +112,25 @@ export const useVerticalScroll = (
       }
     };
 
-    element.addEventListener("wheel", onWheelEvent, { passive: false });
+    const onScroll = (): void => {
+      updateScrollLimits();
+    };
 
-    return () => {
-      element.removeEventListener("wheel", onWheelEvent);
-      if (animationFrameId.current) {
+    element.addEventListener('wheel', onWheelEvent, { passive: false });
+    element.addEventListener('scroll', onScroll);
+
+    return (): void => {
+      element.removeEventListener('wheel', onWheelEvent);
+      element.removeEventListener('scroll', onScroll);
+      if (animationFrameId.current !== null) {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [multiplier, animateScroll]);
+  }, [multiplier, animateScroll, updateScrollLimits]);
 
-  return reference;
+  return {
+    reference,
+    canScrollL,
+    canScrollR,
+  };
 };
