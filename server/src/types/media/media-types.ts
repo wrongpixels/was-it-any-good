@@ -105,7 +105,7 @@ export interface MediaData {
   runtime: number;
   userReviews?: number[];
   criticReviews?: number[];
-  type: MediaType;
+  mediaType: MediaType;
   genres: CreateGenreData[];
   subMedia: SubMediaType;
   studios: StudioData[];
@@ -118,7 +118,7 @@ export interface MediaData {
 export interface FilmData extends MediaData {
   tmdbId: string;
   imdbId: string;
-  type: MediaType.Film;
+  mediaType: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
 }
@@ -126,7 +126,7 @@ export interface FilmData extends MediaData {
 export interface ShowData extends MediaData {
   tmdbId: string;
   imdbId: string;
-  type: MediaType.Show;
+  mediaType: MediaType.Show;
   lastAirDate: string;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
@@ -136,7 +136,7 @@ export interface ShowData extends MediaData {
 }
 
 export interface GameData extends MediaData {
-  type: MediaType.Game;
+  mediaType: MediaType.Game;
   subMedia: SubMediaType.Chapter | SubMediaType.DLC;
   parentalGuide: GameParental;
   dlcIds: number[];
@@ -154,17 +154,17 @@ export interface SeasonData extends SubMediaData {
   tmdbId: string;
   imdbId?: string;
   episodeCount: number;
-  type: MediaType.Show;
+  mediaType: MediaType.Show;
   subType: SubMediaType.Season;
 }
 
 export interface DLCData extends SubMediaData {
-  type: MediaType.Game;
+  mediaType: MediaType.Game;
   subType: SubMediaType.DLC;
 }
 
 export interface ChapterData extends SubMediaData {
-  type: MediaType.Game;
+  mediaType: MediaType.Game;
   subType: SubMediaType.Chapter;
 }
 
@@ -184,13 +184,7 @@ export interface TMDBData {
 
 export type DefaultMedia = Omit<
   MediaData,
-  | 'name'
-  | 'sortName'
-  | 'originalName'
-  | 'description'
-  | 'type'
-  | 'genres'
-  | 'subMedia'
+  'name' | 'sortName' | 'originalName' | 'description' | 'genres' | 'subMedia'
 >;
 export type DefaultFilm = Omit<
   FilmData,

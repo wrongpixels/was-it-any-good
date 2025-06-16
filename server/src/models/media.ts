@@ -9,10 +9,11 @@ import {
 } from 'sequelize';
 import { MediaGenre, MediaRole } from '.';
 import { CountryCode, isCountryCode } from '../../../shared/types/countries';
+import { MediaType } from '../../../shared/types/media';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;
@@ -20,6 +21,7 @@ class Media<
   declare sortName: string;
   declare description: string;
   declare country: CountryCode[];
+  declare mediaType: MediaType;
   declare status: string;
   declare releaseDate: string;
   declare image: string;
@@ -79,6 +81,15 @@ class Media<
                 `Invalid country codes found: ${invalidCountries.join(', ')}`
               );
             }
+          },
+        },
+      },
+      mediaType: {
+        type: DataTypes.STRING,
+        validate: {
+          isIn: {
+            args: [Object.values(MediaType)],
+            msg: 'Must be a valid Media Type',
           },
         },
       },

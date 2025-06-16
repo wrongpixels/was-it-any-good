@@ -16,6 +16,7 @@ import MediaRole from './mediaRole';
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare tmdbId: string;
   declare imdbId?: string;
+  declare mediaType: MediaType.Film;
   declare parentalGuide: keyof typeof FilmParental | null;
 
   static associate() {
@@ -61,6 +62,10 @@ Film.init(
       type: DataTypes.STRING,
       allowNull: true,
       unique: true,
+    },
+    mediaType: {
+      type: DataTypes.STRING,
+      defaultValue: MediaType.Film,
     },
     parentalGuide: {
       type: DataTypes.ENUM(...Object.values(FilmParental)),

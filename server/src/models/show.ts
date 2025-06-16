@@ -16,6 +16,7 @@ import MediaRole from './mediaRole';
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
   declare imdbId?: string;
+  declare mediaType: MediaType.Show;
   declare parentalGuide: keyof typeof FilmParental | null;
   declare lastAirDate: string;
   declare episodeCount: number;
@@ -63,6 +64,10 @@ Show.init(
     imdbId: {
       type: DataTypes.STRING,
       unique: true,
+    },
+    mediaType: {
+      type: DataTypes.STRING,
+      defaultValue: MediaType.Show,
     },
     parentalGuide: {
       type: DataTypes.ENUM(...Object.values(ShowParental)),

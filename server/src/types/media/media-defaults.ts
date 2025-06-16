@@ -119,6 +119,7 @@ export const DEF_MEDIA: DefaultMedia = {
   runtime: 0,
   baseRating: 0,
   studios: DEF_STUDIOS,
+  mediaType: MediaType.Film,
   cast: DEF_CAST,
   crew: DEF_CREW,
   countries: DEF_COUNTRIES,
@@ -127,7 +128,7 @@ export const DEF_MEDIA: DefaultMedia = {
 export const DEF_FILM: DefaultFilm = {
   ...DEF_MEDIA,
   parentalGuide: FilmParental.UNKNOWN,
-  type: MediaType.Film,
+  mediaType: MediaType.Film,
   subMedia: SubMediaType.None,
 };
 
@@ -138,14 +139,14 @@ export const DEF_SHOW: DefaultShow = {
   lastAirDate: DEF_RELEASE_DATE,
   parentalGuide: ShowParental.UNKNOWN,
   seasonCount: 1,
-  type: MediaType.Show,
+  mediaType: MediaType.Show,
   subMedia: SubMediaType.Season,
 };
 
 export const DEF_GAME: DefaultGame = {
   ...DEF_MEDIA,
   parentalGuide: GameParental.UNKNOWN,
-  type: MediaType.Game,
+  mediaType: MediaType.Game,
   subMedia: SubMediaType.DLC,
 };
 

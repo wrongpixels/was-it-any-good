@@ -46,7 +46,7 @@ export async function buildCreditsAndGetEntry(
   const genres: MediaGenre[] | null = await buildGenres(
     mediaData,
     mediaId,
-    mediaData.type,
+    mediaData.mediaType,
     transaction
   );
   if (!genres) {
@@ -69,7 +69,7 @@ export async function buildCreditsAndGetEntry(
 
   if (!finalMediaEntry) {
     throw new CustomError(
-      `Error gathering just created ${mediaData.type}`,
+      `Error gathering just created ${mediaData.mediaType}`,
       400
     );
   }
@@ -83,7 +83,7 @@ const getFinalEntry = async (
   mediaId: number,
   transaction: Transaction
 ): Promise<Film | Show | null> => {
-  switch (mediaData.type) {
+  switch (mediaData.mediaType) {
     case MediaType.Film:
       return await Film.unscoped()
         .scope('withCredits')
@@ -105,13 +105,13 @@ export const buildCredits = async (
   const cast: MediaRole[] | null = await buildCast(
     mediaData.cast,
     mediaId,
-    mediaData.type,
+    mediaData.mediaType,
     transaction
   );
   const crew: MediaRole[] | null = await buildCrew(
     mediaData.crew,
     mediaId,
-    mediaData.type,
+    mediaData.mediaType,
     transaction
   );
   const combinedCredits = [...(cast || []), ...(crew || [])];

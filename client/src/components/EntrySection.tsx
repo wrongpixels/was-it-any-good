@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { CreditResponse, MergedCredits } from '../../../shared/types/models';
-import PeopleEntry from './PersonEntry';
+import PeopleEntry from './PeopleEntry';
 import { AuthorType } from '../../../shared/types/roles';
 
 interface EntryProps {
