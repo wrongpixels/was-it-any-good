@@ -9,7 +9,7 @@ interface SeasonPosterProps {
 
 const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   return (
-    <div className="bg-white shadow-md w-40 rounded border border-9 border-white ring-1 ring-gray-300 self-start">
+    <div className="bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
       <img
         src={media.image}
         alt={media.name}

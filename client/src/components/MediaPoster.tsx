@@ -9,7 +9,7 @@ interface MediaPosterProps {
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
   return (
     <div>
-      <div className="bg-white shadow-md rounded border border-9 border-white ring-1 ring-gray-300 self-start">
+      <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
         <img
           src={media.image}
           alt={media.name}

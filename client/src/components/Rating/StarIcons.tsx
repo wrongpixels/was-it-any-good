@@ -58,39 +58,64 @@ export default function InteractiveStarRating({
   defaultRating = 0,
   onRatingChange = () => {},
 }: StarRatingProps): JSX.Element {
-  const [userRating, setUserRating] = useState<Rating>(null);
-  const [hoverRating, setHoverRating] = useState<Rating>(null);
-  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [userRating, setUserRating]: [
+    Rating,
+    React.Dispatch<React.SetStateAction<Rating>>,
+  ] = useState<Rating>(null);
+  const [hoverRating, setHoverRating]: [
+    Rating,
+    React.Dispatch<React.SetStateAction<Rating>>,
+  ] = useState<Rating>(null);
+  const [isHovering, setIsHovering]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState<boolean>(false);
+  const [needToLeave, setNeedToLeave]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState<boolean>(false);
 
   const calculateNewRating = (x: number, width: number): number => {
-    const rating = Math.round((x / width) * 10);
+    const rating: number = Math.round((x / width) * 10);
 
-    if (rating < 1) return RATING_CONFIG.UNVOTE;
+    if (rating < 1) {
+      return RATING_CONFIG.UNVOTE;
+    }
     return Math.min(RATING_CONFIG.MAX, rating);
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>): void => {
-    const container = e.currentTarget;
-    const { left, width } = container.getBoundingClientRect();
-    const x = e.clientX - left;
-    const newRating = calculateNewRating(x, width);
+    const container: EventTarget & HTMLDivElement = e.currentTarget;
+    const { left, width }: DOMRect = container.getBoundingClientRect();
+    const x: number = e.clientX - left;
+    const newRating: number = calculateNewRating(x, width);
+    if (needToLeave) {
+      return;
+    }
     setHoverRating(newRating);
     setIsHovering(true);
   };
 
   const handleClick = (): void => {
-    if (hoverRating === RATING_CONFIG.UNVOTE) {
+    if (
+      hoverRating === RATING_CONFIG.UNVOTE ||
+      (userRating && userRating === hoverRating)
+    ) {
       setUserRating(null);
       onRatingChange(null);
     } else if (hoverRating) {
       setUserRating(hoverRating);
       onRatingChange(hoverRating);
     }
+    setIsHovering(false);
+    setNeedToLeave(true);
   };
 
   const getStarColor = (): string => {
     if (isHovering) {
-      return hoverRating === 0 ? COLORS.delete : COLORS.hover;
+      return hoverRating === 0 || hoverRating === userRating
+        ? COLORS.delete
+        : COLORS.hover;
     }
     if (userRating) {
       return COLORS.selected;
@@ -112,6 +137,7 @@ export default function InteractiveStarRating({
         onMouseLeave={(): void => {
           setHoverRating(null);
           setIsHovering(false);
+          setNeedToLeave(false);
         }}
         onClick={handleClick}
       >
