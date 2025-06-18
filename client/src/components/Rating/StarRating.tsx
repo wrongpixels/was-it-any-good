@@ -28,16 +28,12 @@ const StarRating = ({
     <div className="flex flex-col items-center mt-1 ">
       <div className={`relative ${season ? 'h-6' : 'h-7'}`}>
         <div className="text-gray-300">
-          <StarIcons width={starWidth} />
+          <StarIcons starWidth={starWidth} defaultRating={rating} />
         </div>
         <div
           className="absolute top-0 left-0 overflow-hidden"
           style={{ width: `${rating * 10}%` }}
-        >
-          <div className="text-[#6d90cf]">
-            <StarIcons width={starWidth} />
-          </div>
-        </div>
+        ></div>
       </div>
 
       {valid && rating > 0 ? (

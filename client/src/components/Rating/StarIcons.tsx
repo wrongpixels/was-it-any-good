@@ -1,10 +1,33 @@
-import { JSX } from 'react';
+import { useState, MouseEvent, JSX } from 'react';
+
+type Rating = number | null;
+type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
 
 interface StarIconProps {
-  width?: number;
+  readonly width: number;
 }
 
-const StarIcon = ({ width = 26 }: StarIconProps): JSX.Element => (
+interface StarRatingProps {
+  readonly season?: boolean;
+  readonly starWidth?: number;
+  readonly defaultRating?: number;
+  readonly onRatingChange?: (rating: Rating) => void;
+}
+
+const COLORS: Record<ColorVariant, string> = {
+  default: 'text-[#6d90cf]',
+  hover: 'text-green-600',
+  selected: 'text-yellow-500',
+  delete: 'text-red-500',
+} as const;
+
+const RATING_CONFIG = {
+  UNVOTE: 0,
+  MIN: 1,
+  MAX: 10,
+};
+
+export const StarIcon = ({ width }: StarIconProps): JSX.Element => (
   <svg
     width={width}
     height={width}
@@ -19,16 +42,91 @@ const StarIcon = ({ width = 26 }: StarIconProps): JSX.Element => (
   </svg>
 );
 
-const StarIcons = ({ width = 26 }: StarIconProps): JSX.Element => (
+const StarIcons = ({ width }: StarIconProps): JSX.Element => (
   <div
     className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
   >
-    <StarIcon width={width} />
-    <StarIcon width={width} />
-    <StarIcon width={width} />
-    <StarIcon width={width} />
-    <StarIcon width={width} />
+    {Array.from({ length: 5 }, (_, i) => (
+      <StarIcon key={i} width={width} />
+    ))}
   </div>
 );
 
-export default StarIcons;
+export default function InteractiveStarRating({
+  season = false,
+  starWidth = 26,
+  defaultRating = 0,
+  onRatingChange = () => {},
+}: StarRatingProps): JSX.Element {
+  const [userRating, setUserRating] = useState<Rating>(null);
+  const [hoverRating, setHoverRating] = useState<Rating>(null);
+  const [isHovering, setIsHovering] = useState<boolean>(false);
+
+  const calculateNewRating = (x: number, width: number): number => {
+    const rating = Math.round((x / width) * 10);
+
+    if (rating < 1) return RATING_CONFIG.UNVOTE;
+    return Math.min(RATING_CONFIG.MAX, rating);
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>): void => {
+    const container = e.currentTarget;
+    const { left, width } = container.getBoundingClientRect();
+    const x = e.clientX - left;
+    const newRating = calculateNewRating(x, width);
+    setHoverRating(newRating);
+    setIsHovering(true);
+  };
+
+  const handleClick = (): void => {
+    if (hoverRating === RATING_CONFIG.UNVOTE) {
+      setUserRating(null);
+      onRatingChange(null);
+    } else if (hoverRating) {
+      setUserRating(hoverRating);
+      onRatingChange(hoverRating);
+    }
+  };
+
+  const getStarColor = (): string => {
+    if (isHovering) {
+      return hoverRating === 0 ? COLORS.delete : COLORS.hover;
+    }
+    if (userRating) {
+      return COLORS.selected;
+    }
+    return COLORS.default;
+  };
+
+  const displayRating: number = isHovering
+    ? (hoverRating ?? 0)
+    : (userRating ?? defaultRating);
+
+  const widthPercentage: string = `${displayRating * 10}%`;
+
+  return (
+    <div className="flex flex-col items-center mt-1">
+      <div
+        className={`relative ${season ? 'h-6' : 'h-7'} cursor-pointer`}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={(): void => {
+          setHoverRating(null);
+          setIsHovering(false);
+        }}
+        onClick={handleClick}
+      >
+        <div className="text-gray-300">
+          <StarIcons width={starWidth} />
+        </div>
+        <div
+          className="absolute top-0 left-0 overflow-hidden"
+          style={{ width: widthPercentage }}
+        >
+          <div className={getStarColor()}>
+            <StarIcons width={starWidth} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
