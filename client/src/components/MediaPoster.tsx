@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../shared/types/models';
-import StarRating from './StarRating';
+import StarRating from './Rating/StarRating';
 
 interface MediaPosterProps {
   media: MediaResponse;
