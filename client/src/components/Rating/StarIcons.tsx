@@ -74,9 +74,23 @@ export default function InteractiveStarRating({
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>,
   ] = useState<boolean>(false);
+  const [justVoted, setJustVoted]: [
+    boolean,
+    React.Dispatch<React.SetStateAction<boolean>>,
+  ] = useState<boolean>(false);
+
+  const handleVote = (): void => {
+    setJustVoted(true);
+    setTimeout(() => setJustVoted(false), 200);
+  };
 
   const calculateNewRating = (x: number, width: number): number => {
-    const rating: number = Math.round((x / width) * 10);
+    const paddingWidth: number = 32;
+    const starsWidth: number = width - paddingWidth;
+
+    const adjustedX: number = x - paddingWidth / 2;
+
+    const rating: number = Math.round((adjustedX / starsWidth) * 10);
 
     if (rating < 1) {
       return RATING_CONFIG.UNVOTE;
@@ -103,9 +117,13 @@ export default function InteractiveStarRating({
     ) {
       setUserRating(null);
       onRatingChange(null);
+      if (userRating) {
+        handleVote();
+      }
     } else if (hoverRating) {
       setUserRating(hoverRating);
       onRatingChange(hoverRating);
+      handleVote();
     }
     setIsHovering(false);
     setNeedToLeave(true);
@@ -113,26 +131,34 @@ export default function InteractiveStarRating({
 
   const getStarColor = (): string => {
     if (isHovering) {
-      return hoverRating === 0 || hoverRating === userRating
-        ? COLORS.delete
-        : COLORS.hover;
+      const isUnvoteAction: boolean =
+        (hoverRating === 0 && userRating !== null) ||
+        hoverRating === userRating;
+      return isUnvoteAction ? COLORS.delete : COLORS.hover;
     }
-    if (userRating) {
-      return COLORS.selected;
-    }
-    return COLORS.default;
+
+    return userRating ? COLORS.selected : COLORS.default;
   };
 
-  const displayRating: number = isHovering
-    ? (hoverRating ?? 0)
-    : (userRating ?? defaultRating);
+  const calculateDisplayRating = (): number => {
+    if (!isHovering) {
+      return userRating ?? defaultRating;
+    }
+
+    if (userRating && hoverRating === 0) {
+      return 10;
+    }
+
+    return hoverRating && hoverRating > 0 ? hoverRating : 1;
+  };
+  const displayRating: number = calculateDisplayRating();
 
   const widthPercentage: string = `${displayRating * 10}%`;
 
   return (
     <div className="flex flex-col items-center mt-1">
       <div
-        className={`relative ${season ? 'h-6' : 'h-7'} cursor-pointer`}
+        className={`relative ${season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={(): void => {
           setHoverRating(null);
@@ -141,17 +167,24 @@ export default function InteractiveStarRating({
         }}
         onClick={handleClick}
       >
-        <div className="text-gray-300">
-          <StarIcons width={starWidth} />
-        </div>
-        <div
-          className="absolute top-0 left-0 overflow-hidden"
-          style={{ width: widthPercentage }}
-        >
-          <div className={getStarColor()}>
+        <div className="w-4" />
+        <div className={`relative`}>
+          <div className={'text-gray-300'}>
             <StarIcons width={starWidth} />
           </div>
+          <div
+            className="absolute top-0 left-0 overflow-hidden"
+            style={{ width: widthPercentage }}
+          >
+            <div
+              className={`transition-all duration-100 ${justVoted ? 'scale-105 text-yellow-400' : getStarColor()}`}
+            >
+              <StarIcons width={starWidth} />
+            </div>
+          </div>
         </div>
+
+        <div className="w-4" />
       </div>
     </div>
   );
