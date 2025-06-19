@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
 import { sequelize } from '../util/db';
+import { Film, Show } from '.';
 
 class Rating extends Model {
   declare id: number;
@@ -8,6 +9,24 @@ class Rating extends Model {
   declare mediaType: MediaType;
   declare mediaId: number;
   declare userScore: number;
+
+  static associate() {
+    this.belongsTo(Film, {
+      foreignKey: 'mediaId',
+      scope: {
+        mediaType: MediaType.Film,
+      },
+      constraints: false,
+    });
+
+    this.belongsTo(Show, {
+      foreignKey: 'mediaId',
+      scope: {
+        mediaType: MediaType.Show,
+      },
+      constraints: false,
+    });
+  }
 }
 
 Rating.init(

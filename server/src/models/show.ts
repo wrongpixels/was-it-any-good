@@ -12,6 +12,7 @@ import Genre from './genre';
 import MediaGenre from './mediaGenre';
 import { AuthorType, MediaType } from '../types/media/media-types';
 import MediaRole from './mediaRole';
+import { Rating } from '.';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;
@@ -23,7 +24,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare seasonCount: number;
 
   static associate() {
-    Show.belongsToMany(Genre, {
+    this.belongsToMany(Genre, {
       through: MediaGenre,
       foreignKey: 'mediaId',
       otherKey: 'genreId',
@@ -31,7 +32,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
       constraints: false,
     });
 
-    Show.hasMany(MediaRole, {
+    this.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'cast',
       scope: {
@@ -41,12 +42,20 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
       constraints: false,
     });
 
-    Show.hasMany(MediaRole, {
+    this.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'crew',
       scope: {
         mediaType: MediaType.Show,
         role: { [Op.ne]: AuthorType.Actor },
+      },
+      constraints: false,
+    });
+    this.hasMany(Rating, {
+      foreignKey: 'mediaId',
+      as: 'ratings',
+      scope: {
+        MediaType: MediaType.Show,
       },
       constraints: false,
     });

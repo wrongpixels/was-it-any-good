@@ -12,6 +12,7 @@ import { MediaType, AuthorType } from '../types/media/media-types';
 import Genre from './genre';
 import MediaGenre from './mediaGenre';
 import MediaRole from './mediaRole';
+import Rating from './rating';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare tmdbId: string;
@@ -20,7 +21,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare parentalGuide: keyof typeof FilmParental | null;
 
   static associate() {
-    Film.belongsToMany(Genre, {
+    this.belongsToMany(Genre, {
       through: MediaGenre,
       foreignKey: 'mediaId',
       otherKey: 'genreId',
@@ -28,7 +29,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
       constraints: false,
     });
 
-    Film.hasMany(MediaRole, {
+    this.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'cast',
       scope: {
@@ -38,12 +39,21 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
       constraints: false,
     });
 
-    Film.hasMany(MediaRole, {
+    this.hasMany(MediaRole, {
       foreignKey: 'mediaId',
       as: 'crew',
       scope: {
         mediaType: MediaType.Film,
         role: { [Op.ne]: AuthorType.Actor },
+      },
+      constraints: false,
+    });
+
+    this.hasMany(Rating, {
+      foreignKey: 'mediaId',
+      as: 'ratings',
+      scope: {
+        MediaType: MediaType.Film,
       },
       constraints: false,
     });
