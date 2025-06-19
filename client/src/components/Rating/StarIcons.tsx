@@ -42,22 +42,12 @@ export const StarIcon = ({ width }: StarIconProps): JSX.Element => (
   </svg>
 );
 
-const StarIcons = ({ width }: StarIconProps): JSX.Element => (
-  <div
-    className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
-  >
-    {Array.from({ length: 5 }, (_, i) => (
-      <StarIcon key={i} width={width} />
-    ))}
-  </div>
-);
-
-export default function InteractiveStarRating({
+const StarIcons = ({
   season = false,
   starWidth = 26,
   defaultRating = 0,
   onRatingChange = () => {},
-}: StarRatingProps): JSX.Element {
+}: StarRatingProps): JSX.Element => {
   const [userRating, setUserRating]: [
     Rating,
     React.Dispatch<React.SetStateAction<Rating>>,
@@ -170,7 +160,7 @@ export default function InteractiveStarRating({
         <div className="w-4" />
         <div className={`relative`}>
           <div className={'text-gray-300'}>
-            <StarIcons width={starWidth} />
+            <StarList width={starWidth} />
           </div>
           <div
             className="absolute top-0 left-0 overflow-hidden"
@@ -179,7 +169,7 @@ export default function InteractiveStarRating({
             <div
               className={`transition-all duration-100 ${justVoted ? 'scale-105 text-yellow-400' : getStarColor()}`}
             >
-              <StarIcons width={starWidth} />
+              <StarList width={starWidth} />
             </div>
           </div>
         </div>
@@ -188,4 +178,16 @@ export default function InteractiveStarRating({
       </div>
     </div>
   );
-}
+};
+
+const StarList = ({ width }: StarIconProps): JSX.Element => (
+  <div
+    className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
+  >
+    {Array.from({ length: 5 }, (_, i) => (
+      <StarIcon key={i} width={width} />
+    ))}
+  </div>
+);
+
+export default StarIcons;
