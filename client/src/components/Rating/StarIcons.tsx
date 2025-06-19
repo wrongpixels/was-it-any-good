@@ -222,12 +222,11 @@ const StarList = ({
         'duration-120',
         'duration-125',
         'duration-130',
-        'duration-300',
+        'duration-200',
       ];
 
-      // If there's a userRating, animate to yellow, otherwise animate to blue
       return `transition-all ${scales[i]} ${delays[i]} ${durations[i]} ${
-        userRating ? 'text-yellow-400' : 'text-[#6d90cf]'
+        userRating ? 'text-yellow-400' : 'text-blue-400'
       }`;
     }
     return '';
