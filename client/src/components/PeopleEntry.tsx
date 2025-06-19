@@ -37,7 +37,7 @@ const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
           .map((c) => (
             <a
               key={c.person.id}
-              className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border border-5 border-white ring-1 ring-gray-300 pt-1"
+              className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1"
             >
               <img
                 src={c.person.image}

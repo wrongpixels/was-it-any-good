@@ -3,6 +3,13 @@ import { useState, MouseEvent, JSX } from 'react';
 type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
 
+interface StarListProps {
+  readonly width: number;
+  readonly justVoted: boolean;
+  readonly defaultRating: number;
+  readonly userRating: Rating;
+}
+
 interface StarIconProps {
   readonly width: number;
 }
@@ -160,16 +167,24 @@ const StarIcons = ({
         <div className="w-4" />
         <div className={`relative`}>
           <div className={'text-gray-300'}>
-            <StarList width={starWidth} />
+            <StarList
+              width={starWidth}
+              justVoted={false}
+              defaultRating={defaultRating}
+              userRating={userRating}
+            />
           </div>
           <div
             className="absolute top-0 left-0 overflow-hidden"
             style={{ width: widthPercentage }}
           >
-            <div
-              className={`transition-all duration-100 ${justVoted ? 'scale-105 text-yellow-400' : getStarColor()}`}
-            >
-              <StarList width={starWidth} />
+            <div className={getStarColor()}>
+              <StarList
+                width={starWidth}
+                justVoted={justVoted}
+                defaultRating={defaultRating}
+                userRating={userRating}
+              />
             </div>
           </div>
         </div>
@@ -180,14 +195,55 @@ const StarIcons = ({
   );
 };
 
-const StarList = ({ width }: StarIconProps): JSX.Element => (
-  <div
-    className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
-  >
-    {Array.from({ length: 5 }, (_, i) => (
-      <StarIcon key={i} width={width} />
-    ))}
-  </div>
-);
+const StarList = ({
+  width,
+  justVoted,
+  userRating,
+  defaultRating,
+}: StarListProps): JSX.Element => {
+  const getStarClassname = (i: number): string => {
+    if (justVoted && i < defaultRating / 2) {
+      const scales = [
+        'scale-115',
+        'scale-120',
+        'scale-125',
+        'scale-130',
+        'scale-140',
+      ];
+      const delays = [
+        'delay-0',
+        'delay-20',
+        'delay-30',
+        'delay-50',
+        'delay-75',
+      ];
+      const durations = [
+        'duration-115',
+        'duration-120',
+        'duration-125',
+        'duration-130',
+        'duration-300',
+      ];
+
+      // If there's a userRating, animate to yellow, otherwise animate to blue
+      return `transition-all ${scales[i]} ${delays[i]} ${durations[i]} ${
+        userRating ? 'text-yellow-400' : 'text-[#6d90cf]'
+      }`;
+    }
+    return '';
+  };
+
+  return (
+    <div
+      className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
+    >
+      {Array.from({ length: 5 }, (_, i) => (
+        <span key={i} className={getStarClassname(i)}>
+          <StarIcon width={width} />
+        </span>
+      ))}
+    </div>
+  );
+};
 
 export default StarIcons;
