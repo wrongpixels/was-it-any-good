@@ -6,6 +6,7 @@ import Genre from './genre';
 import Rating from './rating';
 import MediaGenre from './mediaGenre';
 import MediaRole from './mediaRole';
+import User from './user';
 import { sequelize } from '../util/db';
 
 Person.hasMany(MediaRole, {
@@ -33,4 +34,14 @@ Season.belongsTo(Show, {
 
 sequelize.sync({ force: false });
 
-export { Person, Film, Show, Season, Genre, MediaRole, MediaGenre, Rating };
+export {
+  Person,
+  Film,
+  Show,
+  Season,
+  Genre,
+  MediaRole,
+  MediaGenre,
+  Rating,
+  User,
+};
