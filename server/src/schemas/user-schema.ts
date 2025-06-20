@@ -1,18 +1,18 @@
 import { z } from 'zod';
-import { CreateUserData } from '../../../shared/types/models';
+import { CreateUser } from '../../../shared/types/models';
 
 const CreateUserSchema = z.object({
-  name: z.string(),
-  userName: z.string(),
-  hash: z.string(),
+  name: z.string().nullable(),
+  username: z.string(),
+  password: z.string(),
   email: z.string().email(),
-  pfp: z.string().email().nullable(),
+  pfp: z.string().url().email().nullable(),
   lastActive: z.date().nullable(),
   isActive: z.boolean(),
   isAdmin: z.boolean(),
 });
 
-export const validateUser = (data: unknown): CreateUserData =>
+export const validateUser = (data: unknown): CreateUser =>
   CreateUserSchema.parse(data);
 
 export default CreateUserSchema;

@@ -13,6 +13,21 @@ Content-Type: application/json
   "description": "In 1930s Italy, a veteran World War I pilot is cursed to look like an anthropomorphic pig. Working as a freelance bounty hunter, he combats air pirates in the Adriatic Sea while attempting to reclaim his humanity."
 }
 
+###CREATE ADMIN
+POST http://localhost:6060/api/users
+Content-Type: application/json
+
+{
+  "name": "Admin",
+ "username": "admin",
+ "password": "superSafe",
+ "isAdmin": true,
+ "isActive": true,
+ "email": "email@email.com",
+ "pfp": null,
+ "lastActive": null
+}
+
 ###GET USERS
 GET http://localhost:6060/api/users
 

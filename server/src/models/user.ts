@@ -5,7 +5,7 @@ import Rating from './rating';
 class User extends Model {
   declare id: number;
   declare name: string;
-  declare userName: string;
+  declare username: string;
   declare hash: string;
   declare email: string;
   declare pfp: string | null;
@@ -33,7 +33,7 @@ User.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    userName: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,

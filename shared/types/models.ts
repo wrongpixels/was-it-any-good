@@ -20,8 +20,8 @@ export interface CreateRatingData extends CreateRating {
 
 export interface UserData {
   id: number;
-  name: string;
-  userName: string;
+  name: string | null;
+  username: string;
   hash: string;
   email: string;
   pfp: string | null;
@@ -30,7 +30,11 @@ export interface UserData {
   isAdmin: boolean;
 }
 
-export type CreateUserData = Omit<UserData, 'id'>;
+export interface CreateUser extends Omit<UserData, 'id' | 'hash'> {
+  password: string;
+}
+
+export interface CreateUserData extends Omit<UserData, 'id'> {}
 
 export interface GenreResponse {
   id: number;
