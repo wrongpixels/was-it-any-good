@@ -44,7 +44,7 @@ Rating.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'user',
+        model: 'users',
         key: 'id',
       },
     },
@@ -77,7 +77,7 @@ Rating.init(
     indexes: [
       {
         unique: true,
-        fields: ['userId', 'mediaId', 'mediaType'],
+        fields: ['user_id', 'media_id', 'media_type'],
       },
     ],
     modelName: 'rating',

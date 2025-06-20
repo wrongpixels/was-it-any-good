@@ -21,8 +21,8 @@ MediaRole.belongsTo(Person, {
 //Common Media<->MediaRole and Genre<->MediaGenre associations
 Film.associate();
 Show.associate();
+User.associate();
 Rating.associate();
-
 Show.hasMany(Season, {
   foreignKey: 'showId',
   as: 'seasons',
