@@ -1,7 +1,7 @@
-import express from 'express';
+import express, { Router } from 'express';
 import { Genre } from '../models';
 
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get('/', async (_req, res, _next) => {
   const genres: Genre[] = await Genre.findAll();

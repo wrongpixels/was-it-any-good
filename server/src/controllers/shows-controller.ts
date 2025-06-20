@@ -1,5 +1,5 @@
 //import type { Request, Response } from 'express';
-import express from 'express';
+import express, { Router } from 'express';
 import { Show } from '../models';
 import CustomError from '../util/customError';
 import { buildShowEntry } from '../services/show-service';
@@ -7,7 +7,7 @@ import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
 
-const router = express.Router();
+const router: Router = express.Router();
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;

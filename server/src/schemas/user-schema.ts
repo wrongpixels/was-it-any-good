@@ -12,7 +12,7 @@ const CreateUserSchema = z.object({
   isAdmin: z.boolean(),
 });
 
-export const validate = (data: unknown): CreateUserData =>
+export const validateUser = (data: unknown): CreateUserData =>
   CreateUserSchema.parse(data);
 
 export default CreateUserSchema;

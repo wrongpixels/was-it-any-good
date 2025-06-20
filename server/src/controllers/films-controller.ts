@@ -1,12 +1,12 @@
 //import type { Request, Response } from 'express';
-import express from 'express';
+import express, { Router } from 'express';
 import CustomError from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
-const router = express.Router();
+const router: Router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
   try {
