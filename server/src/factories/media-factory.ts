@@ -17,7 +17,7 @@ import {
   DEF_PRODUCER,
   DEF_COMPOSER,
   DEF_FILM,
-} from '../types/media/media-defaults';
+} from '../constants/media-defaults';
 import {
   IndividualData,
   RoleData,

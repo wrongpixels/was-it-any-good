@@ -1,5 +1,5 @@
-import { CountryCode } from './countries';
-import { MediaType } from './media';
+import { CountryCode } from "./countries";
+import { MediaType } from "./media";
 
 export interface RatingData {
   id: number;
@@ -12,7 +12,7 @@ export interface RatingData {
 
 export type CreateRating = Omit<
   RatingData,
-  'id' | 'createdAt' | 'updatedAt' | 'userId'
+  "id" | "createdAt" | "updatedAt" | "userId"
 >;
 export interface CreateRatingData extends CreateRating {
   userId: number;
@@ -30,11 +30,14 @@ export interface UserData {
   isAdmin: boolean;
 }
 
-export interface CreateUser extends Omit<UserData, 'id' | 'hash'> {
+export interface CreateUser extends Omit<UserData, "id" | "hash"> {
   password: string;
 }
 
-export interface CreateUserData extends Omit<UserData, 'id'> {}
+export interface DefaultUser
+  extends Pick<UserData, "pfp" | "lastActive" | "isActive" | "isAdmin"> {}
+
+export interface CreateUserData extends Omit<UserData, "id"> {}
 
 export interface GenreResponse {
   id: number;
@@ -98,8 +101,8 @@ export interface ShowResponse extends BaseMediaResponse {
 
 export type MediaResponse = FilmResponse | ShowResponse;
 
-export type NoCredFilmResponse = Omit<FilmResponse, 'crew' | 'cast'>;
-export type NoCredShowResponse = Omit<ShowResponse, 'crew' | 'cast'>;
+export type NoCredFilmResponse = Omit<FilmResponse, "crew" | "cast">;
+export type NoCredShowResponse = Omit<ShowResponse, "crew" | "cast">;
 
 export interface CreditResponse {
   id: number;

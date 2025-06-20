@@ -18,12 +18,12 @@ POST http://localhost:6060/api/users
 Content-Type: application/json
 
 {
-  "name": "Admin",
- "username": "admin",
- "password": "superSafe",
+  "name": "Richi",
+ "username": "rich4",
+ "password": "superUnsafe", 
  "isAdmin": true,
  "isActive": true,
- "email": "email@email.com",
+ "email": "email2@email.com",
  "pfp": null,
  "lastActive": null
 }

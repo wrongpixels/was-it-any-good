@@ -1,29 +1,29 @@
-import { CountryCode } from '../../../../shared/types/countries';
+import { CountryCode } from '../../../shared/types/countries';
+import { Image } from '../types/media/media-types';
 import {
-  FilmParental,
-  GameParental,
-  ShowParental,
-} from '../parental/parental-types';
-import {
-  AuthorData,
+  BirthDate,
+  MediaRating,
   IndividualData,
+  AuthorData,
   AuthorType,
   StudioData,
-  Image,
   RoleData,
-  BirthDate,
+  RoleType,
   DefaultMedia,
-  MediaRating,
-  DefaultFilm,
   MediaType,
+  DefaultFilm,
   SubMediaType,
   DefaultShow,
   DefaultGame,
   DefaultSeason,
   DefaultDLC,
   DefaultChapter,
-  RoleType,
-} from './media-types';
+} from '../types/media/media-types';
+import {
+  FilmParental,
+  ShowParental,
+  GameParental,
+} from '../types/parental/parental-types';
 
 export const DEF_IMAGE_PERSON: Image = '/def-person.png';
 export const DEF_IMAGE_MEDIA: Image = '/def-media.png';

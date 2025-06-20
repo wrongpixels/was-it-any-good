@@ -1,5 +1,5 @@
+import { DEF_FILM } from '../constants/media-defaults';
 import { TMDBFilmData } from '../schemas/tmdb-film-schema';
-import { DEF_FILM } from '../types/media/media-defaults';
 import { FilmData } from '../types/media/media-types';
 import { createTMDBBase, getAirDate } from './media-factory';
 

@@ -1,10 +1,6 @@
 import imageLinker from '../services/image-linker';
 
-import {
-  DEF_CREATOR,
-  DEF_SEASON,
-  DEF_SHOW,
-} from '../types/media/media-defaults';
+import { DEF_CREATOR, DEF_SEASON, DEF_SHOW } from '../constants/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';
 import { createCrewMember, createTMDBBase, getAirDate } from './media-factory';
 import {

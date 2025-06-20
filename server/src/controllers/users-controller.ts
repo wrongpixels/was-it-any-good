@@ -3,6 +3,7 @@ import { User } from '../models';
 import CustomError from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
+import { Error } from 'sequelize';
 
 const router: Router = express.Router();
 
@@ -33,6 +34,13 @@ router.post('/', async (req, res, next) => {
     }
     res.status(201).json(responseUser);
   } catch (error) {
+    if (error instanceof Error) {
+      console.error('Full error:', {
+        message: error.message,
+        name: error.name,
+        stack: error.stack,
+      });
+    }
     next(error);
   }
 });
