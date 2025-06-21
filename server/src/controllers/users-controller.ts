@@ -22,6 +22,22 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
+router.get('/:id', async (req, res, next) => {
+  try {
+    const id: string = req.params.id;
+    const user: User | null = await User.findByPk(id, {
+      attributes: ['id', 'username', 'lastActive'],
+    });
+    if (!user) {
+      throw new CustomError('User could not be found', 400);
+    }
+    const userData: UserData = user.get({ plain: true });
+    res.json(userData);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/', async (req, res, next) => {
   try {
     const createUserData: CreateUserData = await validateAndBuildUserData(
