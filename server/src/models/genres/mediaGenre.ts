@@ -4,8 +4,8 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { MediaType } from '../types/media/media-types';
-import { sequelize } from '../util/db';
+import { MediaType } from '../../types/media/media-types';
+import { sequelize } from '../../util/db';
 
 class MediaGenre extends Model<
   InferAttributes<MediaGenre>,

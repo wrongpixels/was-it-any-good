@@ -15,8 +15,8 @@ import { SeasonData, ShowData } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import { Show } from '../models';
 import { buildCreditsAndGetEntry, trimCredits } from './media-service';
-import { CreateShow } from '../models/show';
-import Season, { CreateSeason } from '../models/season';
+import { CreateShow } from '../models/media/show';
+import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
 
 export const buildShowEntry = async (

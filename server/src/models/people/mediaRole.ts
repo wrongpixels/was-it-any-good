@@ -6,9 +6,9 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { sequelize } from '../util/db';
-import { AuthorType, MediaType } from '../types/media/media-types';
-import { Film, Show } from '.';
+import { sequelize } from '../../util/db';
+import { AuthorType, MediaType } from '../../types/media/media-types';
+import { Film, Show } from '..';
 
 class MediaRole extends Model<
   InferAttributes<MediaRole>,

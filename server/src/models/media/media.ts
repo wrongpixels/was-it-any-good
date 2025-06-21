@@ -7,13 +7,13 @@ import {
   HasManyGetAssociationsMixin,
   BelongsToManyGetAssociationsMixin,
 } from 'sequelize';
-import { MediaGenre, MediaRole } from '.';
-import { CountryCode, isCountryCode } from '../../../shared/types/countries';
-import { MediaType } from '../../../shared/types/media';
+import { MediaGenre, MediaRole } from '..';
+import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
+import { MediaType } from '../../../../shared/types/media';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;

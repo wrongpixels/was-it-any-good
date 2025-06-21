@@ -5,14 +5,14 @@ import {
   Op,
   Sequelize,
 } from 'sequelize';
-import { sequelize } from '../util/db';
-import { FilmParental } from '../types/parental/parental-types';
-import Media from './media';
-import { MediaType, AuthorType } from '../types/media/media-types';
-import Genre from './genre';
-import MediaGenre from './mediaGenre';
-import MediaRole from './mediaRole';
-import Rating from './rating';
+import { sequelize } from '../../util/db';
+import { FilmParental } from '../../types/parental/parental-types';
+import { MediaType, AuthorType } from '../../types/media/media-types';
+import Genre from '../genres/genre';
+import MediaGenre from '../genres/mediaGenre';
+import MediaRole from '../people/mediaRole';
+import Rating from '../users/rating';
+import { Media } from '..';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare tmdbId: string;

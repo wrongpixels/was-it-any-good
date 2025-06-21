@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
-import { MediaType } from '../../../shared/types/media';
-import { sequelize } from '../util/db';
-import { Film, Show, User } from '.';
+import { MediaType } from '../../../../shared/types/media';
+import { sequelize } from '../../util/db';
+import { Film, Show, User } from '..';
 
 class Rating extends Model {
   declare id: number;

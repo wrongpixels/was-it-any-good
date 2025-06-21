@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { sequelize } from '../util/db';
+import { sequelize } from '../../util/db';
 
 class Genre extends Model<
   InferAttributes<Genre>,

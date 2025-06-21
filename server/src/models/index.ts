@@ -1,12 +1,13 @@
-import Person from './person';
-import Film from './film';
-import Show from './show';
-import Season from './season';
-import Genre from './genre';
-import Rating from './rating';
-import MediaGenre from './mediaGenre';
-import MediaRole from './mediaRole';
-import User from './user';
+import Person from './people/person';
+import Media from './media/media';
+import Film from './media/film';
+import Show from './media/show';
+import Season from './media/season';
+import Genre from './genres/genre';
+import Rating from './users/rating';
+import MediaGenre from './genres/mediaGenre';
+import MediaRole from './people/mediaRole';
+import User from './users/user';
 import { sequelize } from '../util/db';
 
 Person.hasMany(MediaRole, {
@@ -35,6 +36,7 @@ Season.belongsTo(Show, {
 sequelize.sync({ force: false });
 
 export {
+  Media,
   Person,
   Film,
   Show,

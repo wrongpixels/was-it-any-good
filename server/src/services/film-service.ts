@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 import { createFilm } from '../factories/film-factory';
-import Film, { CreateFilm } from '../models/film';
+import Film, { CreateFilm } from '../models/media/film';
 import {
   TMDBFilmInfoData,
   TMDBFilmData,

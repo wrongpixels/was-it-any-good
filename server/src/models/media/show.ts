@@ -5,14 +5,16 @@ import {
   Op,
   Sequelize,
 } from 'sequelize';
-import { FilmParental, ShowParental } from '../types/parental/parental-types';
-import { sequelize } from '../util/db';
-import Media from './media';
-import Genre from './genre';
-import MediaGenre from './mediaGenre';
-import { AuthorType, MediaType } from '../types/media/media-types';
-import MediaRole from './mediaRole';
-import { Rating } from '.';
+import {
+  FilmParental,
+  ShowParental,
+} from '../../types/parental/parental-types';
+import { sequelize } from '../../util/db';
+import Genre from '../genres/genre';
+import MediaGenre from '../genres/mediaGenre';
+import { AuthorType, MediaType } from '../../types/media/media-types';
+import MediaRole from '../people/mediaRole';
+import { Media, Rating } from '..';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: string;

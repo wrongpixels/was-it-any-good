@@ -2,9 +2,9 @@
 
 import { Transaction } from 'sequelize';
 import { Film, MediaGenre, MediaRole, Show } from '../models';
-import Genre from '../models/genre';
-import { CreateMediaRole } from '../models/mediaRole';
-import Person, { CreatePerson } from '../models/person';
+import Genre from '../models/genres/genre';
+import { CreateMediaRole } from '../models/people/mediaRole';
+import Person, { CreatePerson } from '../models/people/person';
 import { CreateGenreData } from '../types/genres/genre-types';
 import {
   AuthorData,

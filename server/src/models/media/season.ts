@@ -1,6 +1,6 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { sequelize } from '../util/db';
-import Media from './media';
+import { sequelize } from '../../util/db';
+import { Media } from '..';
 
 class Season extends Media<
   InferAttributes<Season>,
