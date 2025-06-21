@@ -19,7 +19,7 @@ export interface CreateRatingData extends CreateRating {
 }
 
 export interface ActiveUser {
-  isValid: boolean
+  isValid?: boolean
   id: number
   name: string | null
   username: string
@@ -37,11 +37,28 @@ export interface UserData extends Omit<ActiveUser, 'isValid'> {
 export interface CreateUser extends Omit<UserData, 'id' | 'hash'> {
   password: string
 }
+export interface CreateUserData extends Omit<UserData, 'id'> {}
+
+export interface SessionData {
+  id: number
+  userId: number
+  username: string
+  token: string
+  expired: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface CreateSessionData
+  extends Omit<SessionData, 'id' | 'createdAt' | 'updatedAt'> {}
+
+export interface LoginData {
+  username: string
+  password: string
+}
 
 export interface DefaultUser
   extends Pick<UserData, 'pfp' | 'lastActive' | 'isActive' | 'isAdmin'> {}
-
-export interface CreateUserData extends Omit<UserData, 'id'> {}
 
 export interface GenreResponse {
   id: number

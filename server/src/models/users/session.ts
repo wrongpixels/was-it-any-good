@@ -5,6 +5,8 @@ import { User } from '..';
 class Session extends Model {
   declare id: number;
   declare userId: number;
+  declare user?: User;
+  declare username: string;
   declare token: string;
   declare expired: boolean;
   declare createdAt: Date;
@@ -24,6 +26,7 @@ Session.init(
     },
     userId: {
       type: DataTypes.INTEGER,
+      unique: true,
       references: {
         model: 'users',
         key: 'id',
@@ -31,6 +34,10 @@ Session.init(
     },
     token: {
       type: DataTypes.STRING,
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
     },
     expired: {
       type: DataTypes.BOOLEAN,

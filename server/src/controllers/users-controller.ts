@@ -1,15 +1,19 @@
-import express, { Router } from 'express';
+import express, { Request, Router } from 'express';
 import { User } from '../models';
 import CustomError from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
 import { Error } from 'sequelize';
+import { activeUserExtractor } from '../middleware/user-extractor';
 
 const router: Router = express.Router();
 
-router.get('/', async (_req, res, next) => {
+router.get('/', activeUserExtractor, async (req: Request, res, next) => {
   try {
-    const users: User[] = await User.findAll({});
+    const options = req.activeUser?.isAdmin
+      ? {}
+      : { attributes: ['id', 'username', 'lastActive'] };
+    const users: User[] = await User.findAll(options);
     if (!users) {
       throw new CustomError('Users database could not be accessed', 400);
     }
