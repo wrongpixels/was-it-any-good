@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../../util/db';
 import Rating from './rating';
+import { Session } from '..';
 
 class User extends Model {
   declare id: number;
@@ -19,6 +20,7 @@ class User extends Model {
       foreignKey: 'userId',
       constraints: false,
     });
+    this.hasOne(Session);
   }
 }
 

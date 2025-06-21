@@ -8,6 +8,7 @@ import Rating from './users/rating';
 import MediaGenre from './genres/mediaGenre';
 import MediaRole from './people/mediaRole';
 import User from './users/user';
+import Session from './users/session';
 import { sequelize } from '../util/db';
 
 Person.hasMany(MediaRole, {
@@ -19,10 +20,10 @@ MediaRole.belongsTo(Person, {
   as: 'person',
 });
 
-//Common Media<->MediaRole and Genre<->MediaGenre associations
 Film.associate();
 Show.associate();
 User.associate();
+Session.associate();
 Rating.associate();
 Show.hasMany(Season, {
   foreignKey: 'showId',
@@ -46,4 +47,5 @@ export {
   MediaGenre,
   Rating,
   User,
+  Session,
 };
