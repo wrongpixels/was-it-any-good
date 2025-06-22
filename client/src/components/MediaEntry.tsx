@@ -60,7 +60,7 @@ const MediaEntry = ({
         </div>
         <div className="w-50">
           <MediaPoster media={media} />
-          <Notification message="You need to be logged in to vote!" />
+          <Notification message="Please, login to vote!" />
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
