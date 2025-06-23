@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MediaEntry from './components/MediaEntry';
 import { MediaType } from '../../shared/types/media';
-import Header from './components/Header';
+import Header from './components/Header/Header';
 
 const App = (): JSX.Element => {
   //const [count, setCount] = useState(0);

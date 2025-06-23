@@ -6,6 +6,27 @@ const BASE_API_URL: string = '/api';
 const BASE_TMDB_URL: string = 'https://www.themoviedb.org';
 const BASE_IMDB_URL: string = 'https://www.imdb.com/title';
 
+//We don't catch errors here, TanStack will handle them
+export const getById = async (
+  id: string,
+  mediaType: MediaType
+): Promise<MediaResponse | null> => {
+  const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
+    buildAPIMediaURL(mediaType, id)
+  );
+  return response.data;
+};
+
+export const getByTMDBId = async (
+  id: string,
+  mediaType: MediaType
+): Promise<MediaResponse | null> => {
+  const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
+    buildAPIMediaURL(mediaType, id, '/tmdb/')
+  );
+  return response.data;
+};
+
 const getMediaApiURL = (mediaType: MediaType): string => {
   switch (mediaType) {
     case MediaType.Film:
@@ -52,32 +73,4 @@ export const buildTMDBorIMDBUrl = (
     return `${BASE_IMDB_URL}/${id}`;
   }
   return `${BASE_TMDB_URL}/${mediaType === MediaType.Film ? 'movie' : 'tv'}/${id}`;
-};
-
-export const getById = async (
-  id: string,
-  mediaType: MediaType
-): Promise<MediaResponse | null> => {
-  try {
-    const response: AxiosResponse<MediaResponse> =
-      await axios.get<MediaResponse>(buildAPIMediaURL(mediaType, id));
-    return response.data;
-  } catch (error) {
-    console.error(`Failed to fetch ${mediaType} with id ${id}:`, error);
-    return null;
-  }
-};
-
-export const getByTMDBId = async (
-  id: string,
-  mediaType: MediaType
-): Promise<MediaResponse | null> => {
-  try {
-    const response: AxiosResponse<MediaResponse> =
-      await axios.get<MediaResponse>(buildAPIMediaURL(mediaType, id, '/tmdb/'));
-    return response.data;
-  } catch (error) {
-    console.error(`Failed to fetch ${mediaType} with TMDBId ${id}:`, error);
-    return null;
-  }
 };

@@ -4,8 +4,13 @@ import { AuthorType } from '../../../shared/types/roles';
 import { MediaType } from '../../../shared/types/media';
 import MediaPoster from './MediaPoster';
 import MediaHeader from './MediaHeader';
-import useMedia, { UseMedia } from '../hooks/media-hook';
 import SeasonsEntry from './SeasonsEntry';
+import { PathMatch, useMatch } from 'react-router-dom';
+import { buildMediaURL } from '../services/media-service';
+import {
+  useMediaByIDQuery,
+  useMediaByTMDBQuery,
+} from '../queries/media-queries';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -16,17 +21,29 @@ const MediaEntry = ({
   tmdb = false,
   mediaType,
 }: MediaEntryProps): JSX.Element => {
-  const { media, validId }: UseMedia = useMedia(mediaType, tmdb);
+  const match: PathMatch<'id'> | null = useMatch(
+    `${buildMediaURL(mediaType, tmdb)}/:id`
+  );
+  const mediaId: string | undefined = match?.params.id;
+  const {
+    data: media,
+    isLoading,
+    isError,
+  } = tmdb
+    ? useMediaByTMDBQuery(mediaId, mediaType)
+    : useMediaByIDQuery(mediaId, mediaType);
 
-  if (!validId) {
-    return <div>Invalid {mediaType} id!</div>;
-  }
-  if (media === undefined || !media) {
+  if (isLoading || isError) {
     return (
       <div className="flex justify-center w-full h-full font-medium">
-        {media === undefined ? 'Loading...' : `${mediaType} couldn't be found!`}
+        {isLoading
+          ? `Loading ${mediaType}...`
+          : `${mediaType} couldn't be found!`}
       </div>
     );
+  }
+  if (!mediaId || !media) {
+    return <div>Invalid {mediaType} id!</div>;
   }
   return (
     <div>
