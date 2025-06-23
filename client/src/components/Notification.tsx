@@ -1,4 +1,7 @@
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useState, useCallback } from 'react';
+
+const DEF_ANIMATION_DURATION = 3000;
+const ANIMATION_OUT_DURATION = 500;
 
 enum NotiStatus {
   Idle,
@@ -8,22 +11,17 @@ enum NotiStatus {
   Expired,
 }
 
-interface NotificationProps {
+export interface NotificationValues {
   message: string;
   isError?: boolean;
+  onComplete?: VoidFunction;
+  duration: number;
 }
 
-interface NotificationStatus {
-  status: NotiStatus;
-}
-
-const DEF_NOTIFICATION: NotificationProps = {
+export const DEF_NOTIFICATION: NotificationValues = {
   message: '',
   isError: false,
-};
-
-const DEF_STATUS: NotificationStatus = {
-  status: NotiStatus.Expired,
+  duration: DEF_ANIMATION_DURATION,
 };
 
 const classColors = (isError: boolean): string =>
@@ -32,11 +30,12 @@ const classColors = (isError: boolean): string =>
 const Notification = ({
   message,
   isError = false,
-}: NotificationProps): JSX.Element | null => {
-  const [notification, setNotification] = useState(DEF_NOTIFICATION);
-  const [{ status }, setStatus] = useState(DEF_STATUS);
+  onComplete,
+  duration,
+}: NotificationValues): JSX.Element | null => {
+  const [status, setStatus] = useState<NotiStatus>(NotiStatus.Expired);
 
-  const classAnimation = (): string => {
+  const classAnimation = useCallback((): string => {
     switch (status) {
       case NotiStatus.Started:
         return 'transform translate-y-0 opacity-0 scale-90';
@@ -47,35 +46,57 @@ const Notification = ({
       default:
         return 'opacity-0';
     }
-  };
+  }, [status]);
 
   useEffect(() => {
-    if (message !== notification.message) {
-      setNotification({ message, isError });
-      setStatus({ status: NotiStatus.Started });
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setStatus({ status: NotiStatus.Running });
-        });
-      });
-
-      setTimeout(() => setStatus({ status: NotiStatus.Expiring }), 2000);
-      setTimeout(() => setStatus({ status: NotiStatus.Expired }), 2500);
+    if (!message) {
+      setStatus(NotiStatus.Expired);
+      return;
     }
-  }, [message]);
 
-  if (!notification.message || status === NotiStatus.Expired) {
+    let animationFrame1: number;
+    let animationFrame2: number;
+    let timeoutToFadeout: number;
+    let timeoutToStop: number;
+
+    setStatus(NotiStatus.Started);
+
+    //We nest 2 animation frame requests here to force the animation trigger on render
+    animationFrame1 = requestAnimationFrame(() => {
+      animationFrame2 = requestAnimationFrame(() => {
+        setStatus(NotiStatus.Running);
+      });
+    });
+
+    timeoutToFadeout = setTimeout(
+      () => setStatus(NotiStatus.Expiring),
+      duration
+    );
+    timeoutToStop = setTimeout(() => {
+      setStatus(NotiStatus.Expired);
+      onComplete?.();
+    }, duration + ANIMATION_OUT_DURATION);
+
+    return () => {
+      //to clean the animation
+      cancelAnimationFrame(animationFrame1);
+      cancelAnimationFrame(animationFrame2);
+      clearTimeout(timeoutToFadeout);
+      clearTimeout(timeoutToStop);
+    };
+  }, [message, onComplete]);
+
+  if (!message || status === NotiStatus.Expired) {
     return null;
   }
 
   return (
     <div
-      className={`font-bold shadow-md ${classAnimation()} ${classColors(notification.isError || false)} 
+      className={`font-bold shadow-md ${classAnimation()} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
         border-3 rounded-md p-1 m-2`}
     >
-      {notification.message}
+      {message}
     </div>
   );
 };

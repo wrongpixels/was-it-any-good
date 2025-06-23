@@ -6,7 +6,6 @@ import MediaPoster from './MediaPoster';
 import MediaHeader from './MediaHeader';
 import useMedia, { UseMedia } from '../hooks/media-hook';
 import SeasonsEntry from './SeasonsEntry';
-import Notification from './Notification';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -60,7 +59,6 @@ const MediaEntry = ({
         </div>
         <div className="w-50">
           <MediaPoster media={media} />
-          <Notification message="Please, login to vote!" />
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}

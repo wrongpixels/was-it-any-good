@@ -1,9 +1,10 @@
 import { useInputField } from '../hooks/input-field';
+import { useNotification } from '../hooks/useNotification';
 import Button from './common/Button';
-import Notification from './Notification';
 import { StarIcon } from './Rating/StarIcons';
 
 const Header = () => {
+  const loginAlert = useNotification();
   const userInput = useInputField({
     label: 'User',
     name: 'username',
@@ -38,12 +39,18 @@ const Header = () => {
             <div className="flex gap-2">
               {userInput.field}
               {passInput.field}
-              <Button size="xs" variant="toolbar">
+              <Button
+                size="xs"
+                variant="toolbar"
+                onClick={() =>
+                  loginAlert.setError('Error: Wrong user or password!', 5000)
+                }
+              >
                 Login
               </Button>
             </div>
             <div className="absolute left-1/2 -translate-x-1/2 top-7">
-              <Notification message="Wrong  credentials!" isError={true} />
+              {loginAlert.field}
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ interface InputFieldProps {
 interface InputFieldValues {
   value: string;
   field: JSX.Element;
-  reset: () => void;
+  reset: VoidFunction;
 }
 
 export const useInputField = ({
