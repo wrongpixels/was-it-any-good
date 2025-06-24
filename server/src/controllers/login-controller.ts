@@ -1,8 +1,9 @@
 import express, { Request, Router } from 'express';
 import {
   ActiveUser,
-  CreateSessionData,
+  CreateUserSessionData,
   LoginData,
+  UserSessionData,
 } from '../../../shared/types/models';
 import { validateLoginData } from '../schemas/login-schema';
 import { Session, User } from '../models';
@@ -61,7 +62,7 @@ router.post('/', async (req: Request, res, next) => {
     if (!token) {
       throw new CustomError('Token error', 401);
     }
-    const sessionData: CreateSessionData = {
+    const sessionData: CreateUserSessionData = {
       username: userToken.username,
       userId: userToken.id,
       token,
@@ -72,7 +73,8 @@ router.post('/', async (req: Request, res, next) => {
       throw new CustomError('Session error', 401);
     }
     await user.update({ lastActive: new Date() });
-    res.status(201).json(session);
+    const responseSession: UserSessionData = { ...session };
+    res.status(201).json(responseSession);
   } catch (error) {
     next(error);
   }

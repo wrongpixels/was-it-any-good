@@ -10,7 +10,7 @@ const BASE_IMDB_URL: string = 'https://www.imdb.com/title';
 export const getById = async (
   id: string,
   mediaType: MediaType
-): Promise<MediaResponse | null> => {
+): Promise<MediaResponse> => {
   const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
     buildAPIMediaURL(mediaType, id)
   );
@@ -20,7 +20,7 @@ export const getById = async (
 export const getByTMDBId = async (
   id: string,
   mediaType: MediaType
-): Promise<MediaResponse | null> => {
+): Promise<MediaResponse> => {
   const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
     buildAPIMediaURL(mediaType, id, '/tmdb/')
   );
