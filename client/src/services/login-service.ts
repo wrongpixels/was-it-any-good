@@ -5,7 +5,7 @@ export const doLogin = async (
   loginData: LoginData
 ): Promise<UserSessionData> => {
   const session: AxiosResponse<UserSessionData> = await axios.post(
-    '/login',
+    '/api/login',
     loginData
   );
   return session.data;

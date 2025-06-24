@@ -11,8 +11,8 @@ const Header = () => {
             <StarIcon width={27} />
           </span>
           G
-          <span className="font-normal italic ml-2 text-base mt-1">
-            | Was It Any Good
+          <span className="font-normal italic ml-2 text-base mt-1 text-amber-100">
+            Was It Any Good
           </span>
           <span className="font-medium italic ml-0.5 text-xl mt-1">?</span>
         </div>

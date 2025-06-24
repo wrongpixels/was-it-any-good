@@ -73,7 +73,7 @@ router.post('/', async (req: Request, res, next) => {
       throw new CustomError('Session error', 401);
     }
     await user.update({ lastActive: new Date() });
-    const responseSession: UserSessionData = { ...session };
+    const responseSession: UserSessionData = session.get({ plain: true });
     res.status(201).json(responseSession);
   } catch (error) {
     next(error);
