@@ -1,4 +1,5 @@
-import { useState, MouseEvent, JSX } from 'react';
+import { useState, MouseEvent, JSX, useContext } from 'react';
+import { AuthContext } from '../../context/Auth';
 
 type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
@@ -55,6 +56,8 @@ const StarIcons = ({
   defaultRating = 0,
   onRatingChange = () => {},
 }: StarRatingProps): JSX.Element => {
+  const { session } = useContext(AuthContext);
+
   const [userRating, setUserRating]: [
     Rating,
     React.Dispatch<React.SetStateAction<Rating>>,
@@ -77,6 +80,9 @@ const StarIcons = ({
   ] = useState<boolean>(false);
 
   const handleVote = (): void => {
+    if (!session || !session.userId) {
+      return;
+    }
     setJustVoted(true);
     setTimeout(() => setJustVoted(false), 200);
   };

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { LoginData, UserSessionData } from '../../../shared/types/models';
 import { useLoginMutation } from '../queries/login-queries';
-import { saveUserSession } from '../utils/session-storage';
-import { AuthContextValues, AuthContext } from '../context/AuthContext';
+import { eraseUserSession, saveUserSession } from '../utils/session-storage';
+import { AuthContextValues, AuthContext } from '../context/Auth';
 import { UseMutationResult } from '@tanstack/react-query';
 
 interface OptionValues {
@@ -14,6 +14,7 @@ type LoginValues = (data: LoginData, options?: OptionValues) => void;
 
 export interface AuthValues {
   login: LoginValues;
+  logout: () => void;
   isSuccess: boolean;
   isError: boolean;
   isPending: boolean;
@@ -41,8 +42,14 @@ export const useAuth = (): AuthValues => {
       },
     });
 
+  const logout = () => {
+    setSession(null);
+    eraseUserSession();
+  };
+
   return {
     login,
+    logout,
     session,
     isError: mutation.isError,
     isSuccess: mutation.isSuccess,

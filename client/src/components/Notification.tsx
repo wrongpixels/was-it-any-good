@@ -96,7 +96,7 @@ const Notification = ({
         text-center leading-tight text-sm flex justify-center 
         border-3 rounded-md p-1 m-2`}
     >
-      {message}
+      <span className="w-fit min-w-40">{message}</span>
     </div>
   );
 };

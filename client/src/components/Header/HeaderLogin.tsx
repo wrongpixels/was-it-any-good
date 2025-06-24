@@ -1,15 +1,15 @@
-import { useContext } from 'react';
+import { JSX, useContext } from 'react';
 import { LoginData, UserSessionData } from '../../../../shared/types/models';
 import { AuthValues, useAuth } from '../../hooks/use-auth';
 import { useInputField } from '../../hooks/use-inputfield';
 import { useNotification } from '../../hooks/use-notification';
 import Button from '../common/Button';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../../context/Auth';
 
-const HeaderLogin = () => {
+const HeaderLogin = (): JSX.Element => {
   const { session } = useContext(AuthContext);
   const loginAlert = useNotification();
-  const { login }: AuthValues = useAuth();
+  const { login, logout }: AuthValues = useAuth();
   const userInput = useInputField({
     label: 'User',
     name: 'username',
@@ -43,24 +43,41 @@ const HeaderLogin = () => {
     login(loginData, {
       onError: (error: Error) => loginAlert.setError(error!.message),
       onSuccess: (data: UserSessionData) => {
-        console.log(data);
-        loginAlert.setNotification(`welcome, ${data.username}!`);
+        loginAlert.setNotification(`Welcome back, ${data.username}!`);
       },
     });
   };
 
+  const handleLogout = () => {
+    if (session) {
+      loginAlert.setNotification(`See you soon, ${session?.username}!`);
+    }
+    logout();
+  };
+
+  const loginNotification = (): JSX.Element => (
+    <div className="absolute left-1/2 -translate-x-1/2 top-7 min-w-40">
+      {loginAlert.field}
+    </div>
+  );
   if (session) {
     return (
       <div className="absolute right-20 text-amber-100 font-light">
-        {session.username}
+        <div className="flex items-center gap-2 text-sm">
+          {session.username}
+          <Button size="xs" variant="primary" onClick={handleLogout}>
+            Log out
+          </Button>
+        </div>
+        {loginNotification()}
       </div>
     );
   }
 
   return (
-    <div className="absolute right-20 flex gap-2">
+    <div className="absolute right-20 flex gap-2 items-center">
       <div className="relative">
-        <form onSubmit={submitLogin} className="flex gap-2">
+        <form onSubmit={submitLogin} className="flex gap-2 ">
           {userInput.field}
           {passInput.field}
           <Button size="xs" type="submit" variant="toolbar">
@@ -68,9 +85,7 @@ const HeaderLogin = () => {
           </Button>
         </form>
       </div>
-      <div className="absolute left-1/2 -translate-x-1/2 top-7">
-        {loginAlert.field}
-      </div>
+      {loginNotification()}
     </div>
   );
 };
