@@ -1,15 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { LoginData, UserSessionData } from '../../../shared/types/models';
-import { doLogin } from '../services/login-service';
+import { doLogin, verifySession } from '../services/login-service';
 
 export const useLoginMutation = () =>
   useMutation<UserSessionData, Error, LoginData>({
     mutationFn: (loginData: LoginData) => doLogin(loginData),
   });
 
-export const useAuthVerification = (session: UserSessionData) => {
-  useQuery({
-    queryKey: ['session'],
-    queryFn:
+export const useAuthVerifyMutation = () =>
+  useMutation<UserSessionData, Error, UserSessionData>({
+    mutationFn: (session: UserSessionData) => verifySession(session),
   });
-};

@@ -21,6 +21,7 @@ class Session extends Model {
     const currentDate: Date = new Date();
     if (
       this.expired ||
+      this.token === '' ||
       currentDate.getTime() - this.createdAt.getTime() > 864000000
     ) {
       return true;

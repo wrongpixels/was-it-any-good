@@ -17,9 +17,16 @@ export const tryLoadUserData = (): UserSessionData | null => {
     return null;
   }
   const sessionData: UserSessionData = JSON.parse(stringData);
-  return {
-    ...sessionData,
-    createdAt: new Date(sessionData.createdAt),
-    updatedAt: new Date(sessionData.updatedAt),
-  };
+  if (!sessionData) {
+    return null;
+  }
+
+  if (!sessionData.expired) {
+    return {
+      ...sessionData,
+      createdAt: new Date(sessionData.createdAt),
+      updatedAt: new Date(sessionData.updatedAt),
+    };
+  }
+  return null;
 };

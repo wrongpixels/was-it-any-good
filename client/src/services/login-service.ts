@@ -14,8 +14,9 @@ export const doLogin = async (
 export const verifySession = async (
   session: UserSessionData
 ): Promise<UserSessionData> => {
-  const { data }: AxiosResponse<UserSessionData> = await axios.get(
-    `/api/session/validate/${session.id}`
+  const { data }: AxiosResponse<UserSessionData> = await axios.post(
+    `/api/sessions/verify`,
+    session
   );
   return data;
 };

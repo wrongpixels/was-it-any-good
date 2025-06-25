@@ -1,6 +1,12 @@
-import { createContext, JSX, useState } from 'react';
+import { createContext, JSX, useEffect, useState } from 'react';
 import { UserSessionData } from '../../../shared/types/models';
-import { tryLoadUserData } from '../utils/session-storage';
+import {
+  eraseUserSession,
+  saveUserSession,
+  tryLoadUserData,
+} from '../utils/session-storage';
+import { useAuthVerifyMutation } from '../queries/login-queries';
+import { isAuthError } from '../../../shared/types/errors';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -12,13 +18,43 @@ export type AuthContextValues = {
 };
 
 export const AuthContext: React.Context<AuthContextValues> =
-  createContext<AuthContextValues>({ session: null, setSession: () => {} });
+  createContext<AuthContextValues>({
+    session: tryLoadUserData(),
+    setSession: () => {},
+  });
 
-//we create the app context for the session but first try to load the existing one
+//we create the context for the session but first try to load any existing
 const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+  const unverifiedSession: UserSessionData | null = tryLoadUserData();
+
+  //the mutation to verify the session loaded is not expired or the user has been banned.
+  const verifySessionMutation = useAuthVerifyMutation();
+
+  //If existing, we first set the unverified session to show the logged-in UI.
   const [session, setSession] = useState<UserSessionData | null>(
-    tryLoadUserData()
+    unverifiedSession
   );
+
+  //If a session was recovered, we verify it with a mutation
+  useEffect(() => {
+    if (unverifiedSession) {
+      verifySessionMutation.mutate(unverifiedSession, {
+        onSuccess: (session: UserSessionData) => {
+          //if verified, we set it to the App context and update the local storage
+          saveUserSession(session);
+          setSession(session);
+        },
+        onError: (error: Error) => {
+          // We don't remove the session unless a verified auth error to avoid kicking out on simple fetch issues.
+          if (isAuthError(error)) {
+            eraseUserSession();
+            setSession(null);
+          }
+        },
+      });
+    }
+  }, []);
+
   return (
     <AuthContext.Provider value={{ session, setSession }}>
       {children}
