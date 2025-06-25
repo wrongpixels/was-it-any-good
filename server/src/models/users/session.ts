@@ -12,8 +12,27 @@ class Session extends Model {
   declare createdAt: Date;
   declare updatedAt: Date;
 
-  static associate() {
+  static associate(): void {
     this.belongsTo(User);
+  }
+
+  //10 days limit
+  isExpired(): boolean {
+    const currentDate: Date = new Date();
+    if (
+      this.expired ||
+      currentDate.getTime() - this.createdAt.getTime() > 864000000
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  async expire(): Promise<void> {
+    if (!this.expired) {
+      this.expired = true;
+      await this.save();
+    }
   }
 }
 

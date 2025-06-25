@@ -4,9 +4,18 @@ import axios, { AxiosResponse } from 'axios';
 export const doLogin = async (
   loginData: LoginData
 ): Promise<UserSessionData> => {
-  const session: AxiosResponse<UserSessionData> = await axios.post(
+  const { data }: AxiosResponse<UserSessionData> = await axios.post(
     '/api/login',
     loginData
   );
-  return session.data;
+  return data;
+};
+
+export const verifySession = async (
+  session: UserSessionData
+): Promise<UserSessionData> => {
+  const { data }: AxiosResponse<UserSessionData> = await axios.get(
+    `/api/session/validate/${session.id}`
+  );
+  return data;
 };

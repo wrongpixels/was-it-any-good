@@ -8,6 +8,7 @@ import {
   showsRouter,
   usersRouter,
   loginRouter,
+  sessionsRouter,
 } from './controllers';
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/api/shows', showsRouter);
 app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
+app.use('/api/sessions', sessionsRouter);
 
 app.listen(PORT, async () => {
   await initializeDB();

@@ -1,5 +1,6 @@
 import { createContext, JSX, useState } from 'react';
 import { UserSessionData } from '../../../shared/types/models';
+import { tryLoadUserData } from '../utils/session-storage';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -13,8 +14,11 @@ export type AuthContextValues = {
 export const AuthContext: React.Context<AuthContextValues> =
   createContext<AuthContextValues>({ session: null, setSession: () => {} });
 
+//we create the app context for the session but first try to load the existing one
 const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  const [session, setSession] = useState<UserSessionData | null>(null);
+  const [session, setSession] = useState<UserSessionData | null>(
+    tryLoadUserData()
+  );
   return (
     <AuthContext.Provider value={{ session, setSession }}>
       {children}

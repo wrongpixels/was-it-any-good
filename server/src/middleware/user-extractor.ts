@@ -45,7 +45,6 @@ const tokenValidator = async (req: Request): Promise<ActiveUser | null> => {
   const session: Session | null = await Session.findOne({
     where: { userId: activeUser.id },
   });
-  console.log(session);
   if (!session || session.token !== token) {
     return null;
   }

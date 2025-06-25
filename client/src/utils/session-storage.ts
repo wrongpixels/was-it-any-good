@@ -10,7 +10,7 @@ export const eraseUserSession = () => {
   window.localStorage.removeItem(STORAGE_KEY_USER);
 };
 
-export const getUserData = (): UserSessionData | null => {
+export const tryLoadUserData = (): UserSessionData | null => {
   const stringData: string | null =
     window.localStorage.getItem(STORAGE_KEY_USER);
   if (!stringData) {
