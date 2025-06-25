@@ -6,7 +6,7 @@ import {
   tryLoadUserData,
 } from '../utils/session-storage';
 import { useAuthVerifyMutation } from '../queries/login-queries';
-import { isAuthError } from '../../../shared/types/errors';
+import { getAPIError, isAuthError } from '../utils/error-handler';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -45,8 +45,10 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
           setSession(session);
         },
         onError: (error: Error) => {
-          // We don't remove the session unless a verified auth error to avoid kicking out on simple fetch issues.
-          if (isAuthError(error)) {
+          // We don't remove the session unless auth error to avoid kicking out on simple fetch issues.
+          const apiError = getAPIError(error);
+          if (isAuthError(apiError)) {
+            console.log(apiError.message);
             eraseUserSession();
             setSession(null);
           }

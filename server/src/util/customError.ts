@@ -3,7 +3,7 @@ class CustomError extends Error {
   constructor(
     message: string = 'There was an error with the request',
     status: number = 500,
-    name: string = 'CustomError'
+    name: string = 'Error'
   ) {
     super(message);
     this.name = name;

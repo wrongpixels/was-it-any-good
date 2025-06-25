@@ -10,6 +10,7 @@ import {
   loginRouter,
   sessionsRouter,
 } from './controllers';
+import errorHandler from './middleware/error-handler';
 
 const app = express();
 app.use(cors());
@@ -20,6 +21,7 @@ app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use(errorHandler);
 
 app.listen(PORT, async () => {
   await initializeDB();
