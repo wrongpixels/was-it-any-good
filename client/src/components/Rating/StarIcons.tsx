@@ -1,5 +1,9 @@
 import { useState, MouseEvent, JSX, useContext } from 'react';
 import { AuthContext } from '../../context/Auth';
+import {
+  useNotification,
+  UseNotificationValues,
+} from '../../hooks/use-notification';
 
 type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
@@ -57,7 +61,7 @@ const StarIcons = ({
   onRatingChange = () => {},
 }: StarRatingProps): JSX.Element => {
   const { session } = useContext(AuthContext);
-
+  const notification: UseNotificationValues = useNotification();
   const [userRating, setUserRating]: [
     Rating,
     React.Dispatch<React.SetStateAction<Rating>>,
@@ -81,6 +85,7 @@ const StarIcons = ({
 
   const handleVote = (): void => {
     if (!session || !session.userId) {
+      notification.setNotification('You have to login to vote!');
       return;
     }
     setJustVoted(true);
@@ -155,7 +160,6 @@ const StarIcons = ({
     return hoverRating && hoverRating > 0 ? hoverRating : 1;
   };
   const displayRating: number = calculateDisplayRating();
-
   const widthPercentage: string = `${displayRating * 10}%`;
 
   return (
@@ -197,6 +201,7 @@ const StarIcons = ({
 
         <div className="w-4" />
       </div>
+      <div className="fixed top-110">{notification.field}</div>
     </div>
   );
 };

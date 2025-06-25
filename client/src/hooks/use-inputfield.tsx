@@ -1,4 +1,4 @@
-import { ChangeEvent, JSX, useState } from 'react';
+import { ChangeEvent, JSX, useMemo, useState } from 'react';
 
 interface InputFieldProps {
   name: string;
@@ -27,28 +27,46 @@ export const useInputField = ({
   className = 'pl-1 py-0.5 pr-1 rounded bg-white text-gray-800 text-sm',
   extraClassNames,
 }: InputFieldProps): InputFieldValues => {
-  const [value, setValue] = useState('');
-  const onChange = (e: ChangeEvent<HTMLInputElement>) =>
-    setValue(e.target.value);
-  const reset = (): void => setValue('');
-  const field = (
-    <div>
-      {label && (
-        <span
-          className={`${labelClassName}${extraLabelClassName ? ` ${extraLabelClassName}` : ''}`}
-        >
-          {label}
-        </span>
-      )}
-      <input
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        type={type}
-        className={`${className}${extraClassNames ? ` ${extraClassNames}` : ''}`}
-      />
-    </div>
+  const [value, setValue]: [
+    string,
+    React.Dispatch<React.SetStateAction<string>>,
+  ] = useState('');
+  const onChange: (e: ChangeEvent<HTMLInputElement>) => void = (
+    e: ChangeEvent<HTMLInputElement>
+  ) => setValue(e.target.value);
+  const reset: () => void = (): void => setValue('');
+  const field: JSX.Element = useMemo(
+    () => (
+      <div>
+        {label && (
+          <span
+            className={`${labelClassName}${extraLabelClassName ? ` ${extraLabelClassName}` : ''}`}
+          >
+            {label}
+          </span>
+        )}
+        <input
+          name={name}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          type={type}
+          className={`${className}${extraClassNames ? ` ${extraClassNames}` : ''}`}
+        />
+      </div>
+    ),
+    [
+      value,
+      onChange,
+      name,
+      label,
+      labelClassName,
+      extraLabelClassName,
+      placeholder,
+      type,
+      className,
+      extraClassNames,
+    ]
   );
   return { value, field, reset };
 };

@@ -7,18 +7,19 @@ import {
 } from '../utils/session-storage';
 import { useAuthVerifyMutation } from '../queries/login-queries';
 import { getAPIError, isAuthError } from '../utils/error-handler';
+import { APIError } from '../../../shared/types/errors';
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-export type AuthContextValues = {
+export type UseAuthContextValues = {
   session: UserSessionData | null;
   setSession: (session: UserSessionData | null) => void;
 };
 
-export const AuthContext: React.Context<AuthContextValues> =
-  createContext<AuthContextValues>({
+export const AuthContext: React.Context<UseAuthContextValues> =
+  createContext<UseAuthContextValues>({
     session: tryLoadUserData(),
     setSession: () => {},
   });
@@ -31,9 +32,10 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const verifySessionMutation = useAuthVerifyMutation();
 
   //If existing, we first set the unverified session to show the logged-in UI.
-  const [session, setSession] = useState<UserSessionData | null>(
-    unverifiedSession
-  );
+  const [session, setSession]: [
+    UserSessionData | null,
+    React.Dispatch<React.SetStateAction<UserSessionData | null>>,
+  ] = useState<UserSessionData | null>(unverifiedSession);
 
   //If a session was recovered, we verify it with a mutation
   useEffect(() => {
@@ -46,7 +48,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         },
         onError: (error: Error) => {
           // We don't remove the session unless auth error to avoid kicking out on simple fetch issues.
-          const apiError = getAPIError(error);
+          const apiError: APIError | null = getAPIError(error);
           if (isAuthError(apiError)) {
             console.log(apiError.message);
             eraseUserSession();

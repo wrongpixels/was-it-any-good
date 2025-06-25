@@ -2,13 +2,16 @@ import { JSX, useContext } from 'react';
 import { LoginData, UserSessionData } from '../../../../shared/types/models';
 import { AuthValues, useAuth } from '../../hooks/use-auth';
 import { useInputField } from '../../hooks/use-inputfield';
-import { useNotification } from '../../hooks/use-notification';
+import {
+  useNotification,
+  UseNotificationValues,
+} from '../../hooks/use-notification';
 import Button from '../common/Button';
-import { AuthContext } from '../../context/Auth';
+import { AuthContext, UseAuthContextValues } from '../../context/Auth';
 
 const HeaderLogin = (): JSX.Element => {
-  const { session } = useContext(AuthContext);
-  const loginAlert = useNotification();
+  const { session }: UseAuthContextValues = useContext(AuthContext);
+  const loginAlert: UseNotificationValues = useNotification();
   const { login, logout }: AuthValues = useAuth();
   const userInput = useInputField({
     label: 'User',

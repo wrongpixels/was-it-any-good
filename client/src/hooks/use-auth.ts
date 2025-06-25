@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { LoginData, UserSessionData } from '../../../shared/types/models';
 import { useLoginMutation } from '../queries/login-queries';
 import { eraseUserSession, saveUserSession } from '../utils/session-storage';
-import { AuthContextValues, AuthContext } from '../context/Auth';
+import { UseAuthContextValues, AuthContext } from '../context/Auth';
 import { UseMutationResult } from '@tanstack/react-query';
 
 interface OptionValues {
@@ -28,7 +28,7 @@ export const useAuth = (): AuthValues => {
     LoginData,
     unknown
   > = useLoginMutation();
-  const { session, setSession }: AuthContextValues = useContext(AuthContext);
+  const { session, setSession }: UseAuthContextValues = useContext(AuthContext);
 
   const login = (data: LoginData, options?: OptionValues) =>
     mutation.mutate(data, {

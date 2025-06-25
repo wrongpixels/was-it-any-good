@@ -1,13 +1,12 @@
-import { JSX, useState } from 'react';
+import { JSX, useMemo, useState } from 'react';
 import Notification, { DEF_NOTIFICATION } from '../components/Notification';
 
-interface UseNotificationValues {
+export interface UseNotificationValues {
   setNotification: (message: string, duration?: number) => void;
   setError: (message: string, duration?: number) => void;
   clear: VoidFunction;
   field: JSX.Element;
 }
-
 export const useNotification = (): UseNotificationValues => {
   const [value, setValue] = useState(DEF_NOTIFICATION);
 
@@ -27,19 +26,24 @@ export const useNotification = (): UseNotificationValues => {
     message: string,
     duration: number = DEF_NOTIFICATION.duration
   ) => setGeneric(message, false, duration);
+
   const setError = (
     message: string,
     duration: number = DEF_NOTIFICATION.duration
   ) => setGeneric(message, true, duration);
+
   const clear = () => setValue(DEF_NOTIFICATION);
 
-  const field = (
-    <Notification
-      message={value.message}
-      isError={value.isError}
-      onComplete={clear}
-      duration={value.duration}
-    />
+  const field: JSX.Element = useMemo(
+    () => (
+      <Notification
+        message={value.message}
+        isError={value.isError}
+        onComplete={clear}
+        duration={value.duration}
+      />
+    ),
+    [value.message, value.isError, value.duration]
   );
 
   return { setError, setNotification, clear, field };
