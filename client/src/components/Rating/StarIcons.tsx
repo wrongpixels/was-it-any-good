@@ -5,6 +5,7 @@ import {
   UseNotificationValues,
 } from '../../hooks/use-notification';
 import { MediaType } from '../../../../shared/types/media';
+import HoverMessage from '../notifications/HoverMessage';
 
 type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
@@ -204,6 +205,9 @@ const StarIcons = ({
         <div className="w-4" />
       </div>
       <div>{notification.field}</div>
+      {isHovering && hoverRating !== null && hoverRating !== 0 && (
+        <HoverMessage message={hoverRating.toString()} />
+      )}
     </div>
   );
 };

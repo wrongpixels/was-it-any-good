@@ -1,5 +1,7 @@
 import { JSX, useMemo, useRef, useState } from 'react';
-import Notification, { DEF_NOTIFICATION } from '../components/Notification';
+import Notification, {
+  DEF_NOTIFICATION,
+} from '../components/notifications/Notification';
 import { DEF_OFFSET, offset } from '../../../shared/types/common';
 export interface UseNotificationValues {
   setNotification: (

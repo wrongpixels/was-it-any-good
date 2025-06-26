@@ -1,5 +1,5 @@
 import { JSX, useEffect, useState, useCallback, CSSProperties } from 'react';
-import { offset } from '../../../shared/types/common';
+import { offset } from '../../../../shared/types/common';
 
 const DEF_ANIMATION_DURATION = 3000;
 const ANIMATION_OUT_DURATION = 500;
