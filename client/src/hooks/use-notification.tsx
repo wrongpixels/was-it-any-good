@@ -15,7 +15,7 @@ export interface UseNotificationValues {
 
 export const useNotification = (): UseNotificationValues => {
   const [value, setValue] = useState(DEF_NOTIFICATION);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
 
   const setGeneric = (
     message: string,
@@ -24,19 +24,20 @@ export const useNotification = (): UseNotificationValues => {
     offset: offset = DEF_OFFSET
   ): void => {
     const constrainedDuration = Math.min(10000, Math.max(500, duration));
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) {
-      return;
-    }
-    if (offset) {
+
+    const rect: DOMRect | undefined =
+      anchorRef?.current?.getBoundingClientRect();
+    if (rect && offset) {
       rect.x += offset.x;
       rect.y -= offset.y;
     }
+
     setValue({
       message,
       isError,
       duration: constrainedDuration,
-      rect,
+      ref: anchorRef,
+      offset,
     });
   };
 
@@ -61,10 +62,11 @@ export const useNotification = (): UseNotificationValues => {
         isError={value.isError}
         onComplete={clear}
         duration={value.duration}
-        rect={value.rect}
+        ref={value.ref}
+        offset={value.offset}
       />
     ),
-    [value.message, value.isError, value.duration]
+    [value.message, value.isError, value.duration, value.ref, value.offset]
   );
 
   return {
@@ -72,6 +74,6 @@ export const useNotification = (): UseNotificationValues => {
     setNotification,
     clear,
     field,
-    ref: containerRef,
+    ref: anchorRef,
   };
 };

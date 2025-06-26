@@ -1,4 +1,5 @@
 import { JSX, useEffect, useState, useCallback, CSSProperties } from 'react';
+import { offset } from '../../../shared/types/common';
 
 const DEF_ANIMATION_DURATION = 3000;
 const ANIMATION_OUT_DURATION = 500;
@@ -11,15 +12,16 @@ enum NotiStatus {
   Expired,
 }
 
-interface NotificationValues {
+interface NotificationProps {
   message: string;
   isError?: boolean;
   onComplete?: VoidFunction;
   duration: number;
-  rect?: DOMRect;
+  ref?: React.RefObject<HTMLDivElement | null>;
+  offset?: offset;
 }
 
-export const DEF_NOTIFICATION: NotificationValues = {
+export const DEF_NOTIFICATION: NotificationProps = {
   message: '',
   isError: false,
   duration: DEF_ANIMATION_DURATION,
@@ -33,9 +35,29 @@ const Notification = ({
   isError = false,
   onComplete,
   duration,
-  rect,
-}: NotificationValues): JSX.Element | null => {
+  ref,
+  offset,
+}: NotificationProps): JSX.Element | null => {
   const [status, setStatus] = useState<NotiStatus>(NotiStatus.Expired);
+
+  const [, forceUpdate] = useState({});
+
+  useEffect(() => {
+    // If we received a reference, we force re-render every animation frame
+    // to make it stay in place
+    if (!message || status === NotiStatus.Expired || !rect) {
+      return;
+    }
+
+    //we request animation frames to force the re-render
+    const updateFrame = () => {
+      forceUpdate({});
+      frameId = requestAnimationFrame(updateFrame);
+    };
+    let frameId = requestAnimationFrame(updateFrame);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [message, status]);
 
   const classAnimation = useCallback((): string => {
     switch (status) {
@@ -91,13 +113,17 @@ const Notification = ({
   if (!message || status === NotiStatus.Expired) {
     return null;
   }
-  console.log(rect);
+  const rect: DOMRect | undefined = ref?.current?.getBoundingClientRect();
+  if (rect && offset) {
+    rect.x += offset.x;
+    rect.y -= offset.y;
+  }
   const positionStyles: CSSProperties = rect
     ? {
         position: 'fixed' as const,
         left: `${rect.left + rect.width / 2}px`,
-        //We
-        top: rect.bottom,
+        //We place it at the bottom of the reference rect by default
+        top: rect.bottom + 5,
         transform: 'translateX(-50%)' as const,
       }
     : {};
