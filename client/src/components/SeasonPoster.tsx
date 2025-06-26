@@ -22,8 +22,8 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
           rating={media.baseRating}
           media={media}
           valid={true}
-          season={true}
-          mediaType={MediaType.Show}
+          season={media.index}
+          mediaType={MediaType.Season}
         />
       </div>
     </div>

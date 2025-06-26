@@ -4,6 +4,7 @@ import {
   useNotification,
   UseNotificationValues,
 } from '../../hooks/use-notification';
+import { MediaType } from '../../../../shared/types/media';
 
 type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
@@ -19,11 +20,11 @@ interface StarIconProps {
   readonly width: number;
 }
 
-interface StarRatingProps {
-  readonly season?: boolean;
+interface StarIconsProps {
+  readonly season?: number;
   readonly starWidth?: number;
   readonly defaultRating?: number;
-  readonly onRatingChange?: (rating: Rating) => void;
+  readonly mediaType: MediaType;
 }
 
 const COLORS: Record<ColorVariant, string> = {
@@ -55,11 +56,11 @@ export const StarIcon = ({ width }: StarIconProps): JSX.Element => (
 );
 
 const StarIcons = ({
-  season = false,
+  season = 0,
   starWidth = 26,
   defaultRating = 0,
-  onRatingChange = () => {},
-}: StarRatingProps): JSX.Element => {
+  mediaType,
+}: StarIconsProps): JSX.Element => {
   const { session } = useContext(AuthContext);
   const notification: UseNotificationValues = useNotification();
   const [userRating, setUserRating]: [
@@ -91,9 +92,7 @@ const StarIcons = ({
   const calculateNewRating = (x: number, width: number): number => {
     const paddingWidth: number = 32;
     const starsWidth: number = width - paddingWidth;
-
     const adjustedX: number = x - paddingWidth / 2;
-
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
 
     if (rating < 1) {
@@ -117,7 +116,6 @@ const StarIcons = ({
   const handleClick = (): void => {
     if (!session || session.expired || !session.userId) {
       notification.setNotification('You have to login to vote!');
-
       return;
     }
     if (
@@ -125,13 +123,15 @@ const StarIcons = ({
       (userRating && userRating === hoverRating)
     ) {
       setUserRating(null);
-      onRatingChange(null);
       if (userRating) {
         handleVote();
       }
     } else if (hoverRating) {
       setUserRating(hoverRating);
-      onRatingChange(hoverRating);
+      notification.setNotification(
+        `Voted ${mediaType}${mediaType === MediaType.Season && season !== 0 ? ` ${season}` : ''}\nwith a ${hoverRating}!`
+      );
+
       handleVote();
     }
     setIsHovering(false);
@@ -167,7 +167,7 @@ const StarIcons = ({
     <div className="flex flex-col items-center mt-1">
       <div
         ref={notification.ref}
-        className={`relative ${season ? 'h-6' : 'h-7'} cursor-pointer flex`}
+        className={`relative ${MediaType.Season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={(): void => {
           setHoverRating(null);

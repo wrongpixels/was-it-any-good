@@ -132,10 +132,10 @@ const Notification = ({
     <div
       className={`font-bold shadow-md ${classAnimation()} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
-        border-3 rounded-md p-1 z-[9999]`}
+        border-3 rounded-md px-2 py-1 z-[9999]`}
       style={positionStyles}
     >
-      <span className="w-fit min-w-40">{message}</span>
+      <span className="w-fit whitespace-pre-line">{message}</span>
     </div>
   );
 };

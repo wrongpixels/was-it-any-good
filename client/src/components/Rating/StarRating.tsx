@@ -9,13 +9,13 @@ interface PropsStarRating {
   mediaType: MediaType;
   rating: number;
   valid?: boolean;
-  season?: boolean;
+  season?: number;
 }
 
 const StarRating = ({
   rating,
   valid = true,
-  season = false,
+  season = 0,
   media,
   mediaType,
 }: PropsStarRating): JSX.Element | null => {
@@ -28,7 +28,12 @@ const StarRating = ({
     <div className="flex flex-col items-center mt-1 ">
       <div className={`relative ${season ? 'h-6' : 'h-7'}`}>
         <div className="text-gray-300">
-          <StarIcons starWidth={starWidth} defaultRating={rating} />
+          <StarIcons
+            starWidth={starWidth}
+            defaultRating={rating}
+            mediaType={mediaType}
+            season={season}
+          />
         </div>
         <div
           className="absolute top-0 left-0 overflow-hidden"
