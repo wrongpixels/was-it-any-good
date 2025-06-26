@@ -65,7 +65,7 @@ const HeaderLogin = (): JSX.Element => {
   );
   if (session) {
     return (
-      <div className="absolute right-20 text-amber-100 font-light">
+      <div className="absolute right-20 text-amber-100 font-normal">
         <div className="flex items-center gap-2 text-sm">
           {session.username}
           <Button size="xs" variant="primary" onClick={handleLogout}>

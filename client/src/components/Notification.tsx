@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState, useCallback } from 'react';
+import { JSX, useEffect, useState, useCallback, CSSProperties } from 'react';
 
 const DEF_ANIMATION_DURATION = 3000;
 const ANIMATION_OUT_DURATION = 500;
@@ -11,11 +11,12 @@ enum NotiStatus {
   Expired,
 }
 
-export interface NotificationValues {
+interface NotificationValues {
   message: string;
   isError?: boolean;
   onComplete?: VoidFunction;
   duration: number;
+  rect?: DOMRect;
 }
 
 export const DEF_NOTIFICATION: NotificationValues = {
@@ -32,6 +33,7 @@ const Notification = ({
   isError = false,
   onComplete,
   duration,
+  rect,
 }: NotificationValues): JSX.Element | null => {
   const [status, setStatus] = useState<NotiStatus>(NotiStatus.Expired);
 
@@ -89,12 +91,23 @@ const Notification = ({
   if (!message || status === NotiStatus.Expired) {
     return null;
   }
+  console.log(rect);
+  const positionStyles: CSSProperties = rect
+    ? {
+        position: 'fixed' as const,
+        left: `${rect.left + rect.width / 2}px`,
+        //We
+        top: rect.bottom,
+        transform: 'translateX(-50%)' as const,
+      }
+    : {};
 
   return (
     <div
       className={`font-bold shadow-md ${classAnimation()} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
-        border-3 rounded-md p-1 m-2`}
+        border-3 rounded-md p-1 z-[9999]`}
+      style={positionStyles}
     >
       <span className="w-fit min-w-40">{message}</span>
     </div>

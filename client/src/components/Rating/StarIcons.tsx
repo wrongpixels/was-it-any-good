@@ -84,10 +84,6 @@ const StarIcons = ({
   ] = useState<boolean>(false);
 
   const handleVote = (): void => {
-    if (!session || !session.userId) {
-      notification.setNotification('You have to login to vote!');
-      return;
-    }
     setJustVoted(true);
     setTimeout(() => setJustVoted(false), 200);
   };
@@ -119,6 +115,11 @@ const StarIcons = ({
   };
 
   const handleClick = (): void => {
+    if (!session || session.expired || !session.userId) {
+      notification.setNotification('You have to login to vote!');
+
+      return;
+    }
     if (
       hoverRating === RATING_CONFIG.UNVOTE ||
       (userRating && userRating === hoverRating)
@@ -165,6 +166,7 @@ const StarIcons = ({
   return (
     <div className="flex flex-col items-center mt-1">
       <div
+        ref={notification.ref}
         className={`relative ${season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={(): void => {
@@ -201,7 +203,7 @@ const StarIcons = ({
 
         <div className="w-4" />
       </div>
-      <div className="fixed top-110">{notification.field}</div>
+      <div>{notification.field}</div>
     </div>
   );
 };
