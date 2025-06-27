@@ -14,7 +14,7 @@ const TMDBSeasonSchema = TMDBEntrySchema.extend({
   episode_count: z.number().min(0),
   overview: z.string().nullable(),
   vote_average: z.number(),
-  air_date: z.string().date(),
+  air_date: z.string().date().nullable(),
   season_number: z.number(),
   poster_path: z.string().nullable(),
 });

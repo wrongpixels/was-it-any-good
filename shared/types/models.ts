@@ -88,7 +88,7 @@ export interface BaseResponse {
   voteCount: number;
   baseRating: number;
   rating: number | null;
-  releaseDate: string;
+  releaseDate: string | null;
 }
 
 export interface SeasonResponse extends BaseResponse {
@@ -114,7 +114,7 @@ export interface FilmResponse extends BaseMediaResponse {
 
 export interface ShowResponse extends BaseMediaResponse {
   mediaType: MediaType.Show;
-  lastAirDate: string;
+  lastAirDate: string | null;
   episodeCount: number;
   seasonCount: number;
   seasons?: SeasonResponse[];

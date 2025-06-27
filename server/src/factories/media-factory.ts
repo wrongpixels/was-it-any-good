@@ -60,10 +60,13 @@ export const getCrew = (tmdb: TMDBMediaData): AuthorData[] => {
   return createCrew(tmdb.credits.crew);
 };
 
-export const getAirDate = (date: string): string => {
+export const getAirDate = (date: string | null): string | null => {
+  if (date === null) {
+    return null;
+  }
   const parsed = new Date(date);
   const isValid = !isNaN(parsed.getTime());
-  return isValid ? date : 'Unknown';
+  return isValid ? date : null;
 };
 export const validateCountry = (code: string): CountryCode => {
   if (isCountryCode(code)) {

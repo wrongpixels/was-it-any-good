@@ -98,7 +98,7 @@ export interface MediaData {
   sortName: string;
   description: string;
   parentalGuide: ParentalGuide;
-  releaseDate: string;
+  releaseDate: string | null;
   image: Image;
   rating: MediaRating;
   baseRating: number;
@@ -127,7 +127,7 @@ export interface ShowData extends MediaData {
   tmdbId: string;
   imdbId: string;
   mediaType: MediaType.Show;
-  lastAirDate: string;
+  lastAirDate: string | null;
   subMedia: SubMediaType.Season;
   parentalGuide: ShowParental;
   episodeCount: number;
