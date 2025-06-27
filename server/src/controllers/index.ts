@@ -4,6 +4,7 @@ import genresRouter from './genres-controller';
 import usersRouter from './users-controller';
 import loginRouter from './login-controller';
 import sessionsRouter from './sessions-controller';
+import ratingsRouter from './ratings-controller';
 
 export {
   filmsRouter,
@@ -12,4 +13,5 @@ export {
   usersRouter,
   loginRouter,
   sessionsRouter,
+  ratingsRouter,
 };

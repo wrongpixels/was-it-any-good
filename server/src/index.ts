@@ -9,6 +9,7 @@ import {
   usersRouter,
   loginRouter,
   sessionsRouter,
+  ratingsRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 
@@ -21,6 +22,7 @@ app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/sessions', sessionsRouter);
+app.use('/api/ratings', ratingsRouter);
 app.use(errorHandler);
 
 app.listen(PORT, async () => {
