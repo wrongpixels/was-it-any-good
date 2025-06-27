@@ -61,7 +61,7 @@ GET http://localhost:6060/api/films/5
 GET http://localhost:6060/api/films/tmdb/275
 
 ###GET TMDB SHOW DATA
-GET http://localhost:6060/api/shows/tmdb/246
+GET http://localhost:6060/api/shows/tmdb/60622
 
 ###TEST SHOW STRUCTURE
 GET  https://api4.thetvdb.com/v4/series/74852/seriespeople
