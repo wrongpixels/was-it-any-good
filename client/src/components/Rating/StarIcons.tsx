@@ -5,16 +5,17 @@ import {
   UseNotificationValues,
 } from '../../hooks/use-notification';
 import { MediaType } from '../../../../shared/types/media';
+import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
+import { numToVote } from '../../utils/ratings-helper';
 
-type Rating = number | null;
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
 
 interface StarListProps {
   readonly width: number;
   readonly justVoted: boolean;
   readonly defaultRating: number;
-  readonly userRating: Rating;
+  readonly userRating: UserVote;
 }
 
 interface StarIconProps {
@@ -34,12 +35,6 @@ const COLORS: Record<ColorVariant, string> = {
   selected: 'text-yellow-500',
   delete: 'text-red-500',
 } as const;
-
-const RATING_CONFIG = {
-  UNVOTE: 0,
-  MIN: 1,
-  MAX: 10,
-};
 
 export const StarIcon = ({ width }: StarIconProps): JSX.Element => (
   <svg
@@ -65,13 +60,13 @@ const StarIcons = ({
   const { session } = useContext(AuthContext);
   const notification: UseNotificationValues = useNotification();
   const [userRating, setUserRating]: [
-    Rating,
-    React.Dispatch<React.SetStateAction<Rating>>,
-  ] = useState<Rating>(null);
+    UserVote,
+    React.Dispatch<React.SetStateAction<UserVote>>,
+  ] = useState<UserVote>(UserVote.None);
   const [hoverRating, setHoverRating]: [
-    Rating,
-    React.Dispatch<React.SetStateAction<Rating>>,
-  ] = useState<Rating>(null);
+    UserVote,
+    React.Dispatch<React.SetStateAction<UserVote>>,
+  ] = useState<UserVote>(UserVote.None);
   const [isHovering, setIsHovering]: [
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>,
@@ -90,23 +85,25 @@ const StarIcons = ({
     setTimeout(() => setJustVoted(false), 200);
   };
 
-  const calculateNewRating = (x: number, width: number): number => {
-    const paddingWidth: number = 32;
+  const calculateNewRating = (x: number, width: number): UserVote => {
+    const paddingWidth: number = 25;
     const starsWidth: number = width - paddingWidth;
     const adjustedX: number = x - paddingWidth / 2;
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
-
-    if (rating < 1) {
-      return RATING_CONFIG.UNVOTE;
+    if (rating <= 0) {
+      if (userRating === UserVote.None) {
+        return UserVote.One;
+      }
+      return UserVote.Unvote;
     }
-    return Math.min(RATING_CONFIG.MAX, rating);
+    return numToVote(rating);
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>): void => {
     const container: EventTarget & HTMLDivElement = e.currentTarget;
     const { left, width }: DOMRect = container.getBoundingClientRect();
     const x: number = e.clientX - left;
-    const newRating: number = calculateNewRating(x, width);
+    const newRating: UserVote = calculateNewRating(x, width);
     if (needToLeave) {
       return;
     }
@@ -120,10 +117,10 @@ const StarIcons = ({
       return;
     }
     if (
-      hoverRating === RATING_CONFIG.UNVOTE ||
+      hoverRating === UserVote.Unvote ||
       (userRating && userRating === hoverRating)
     ) {
-      setUserRating(null);
+      setUserRating(UserVote.None);
       if (userRating) {
         handleVote();
       }
@@ -142,27 +139,25 @@ const StarIcons = ({
   const getStarColor = (): string => {
     if (isHovering) {
       const isUnvoteAction: boolean =
-        (hoverRating === 0 && userRating !== null) ||
-        hoverRating === userRating;
+        hoverRating === UserVote.Unvote || hoverRating === userRating;
       return isUnvoteAction ? COLORS.delete : COLORS.hover;
     }
 
     return userRating ? COLORS.selected : COLORS.default;
   };
 
-  const calculateDisplayRating = (): number => {
+  const calculateDisplayRating = (): UserVote => {
     if (!isHovering) {
-      return userRating ?? defaultRating;
+      return userRating !== UserVote.None ? userRating : defaultRating;
     }
-
-    if (userRating && hoverRating === 0) {
-      return 10;
+    if (userRating !== UserVote.None && hoverRating === UserVote.Unvote) {
+      return userRating;
     }
-
-    return hoverRating && hoverRating > 0 ? hoverRating : 1;
+    return hoverRating !== UserVote.None ? hoverRating : 1;
   };
-  const displayRating: number = calculateDisplayRating();
-  const widthPercentage: string = `${displayRating * 10}%`;
+
+  const displayRating: UserVote = calculateDisplayRating();
+  const widthPercentage: string = `${displayRating.valueOf() * 10}%`;
 
   return (
     <div className="flex flex-col items-center mt-1">
@@ -171,7 +166,7 @@ const StarIcons = ({
         className={`relative ${MediaType.Season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={(): void => {
-          setHoverRating(null);
+          setHoverRating(UserVote.None);
           setIsHovering(false);
           setNeedToLeave(false);
         }}
@@ -205,21 +200,39 @@ const StarIcons = ({
         <div className="w-4" />
       </div>
       <div>{notification.field}</div>
-      {isHovering && hoverRating !== null && hoverRating !== 0 && (
-        <HoverMessage message={hoverRating.toString()} />
+      {isHovering && (
+        <HoverMessage
+          message={getHoverMessage(isHovering, hoverRating, userRating)}
+        />
       )}
     </div>
   );
+};
+
+const getHoverMessage = (
+  isHovering: boolean,
+  hoverRating: UserVote,
+  userRating: UserVote
+): string => {
+  if (isHovering && hoverRating !== UserVote.None) {
+    if (
+      userRating !== UserVote.None &&
+      (userRating === hoverRating || hoverRating === UserVote.Unvote)
+    ) {
+      return 'Unvote';
+    }
+    return hoverRating.toString();
+  }
+  return '';
 };
 
 const StarList = ({
   width,
   justVoted,
   userRating,
-  defaultRating,
 }: StarListProps): JSX.Element => {
   const getStarClassname = (i: number): string => {
-    if (justVoted && i < defaultRating / 2) {
+    if (justVoted && i < userRating / 2) {
       const scales = [
         'scale-115',
         'scale-120',
