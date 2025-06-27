@@ -1,10 +1,19 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
 import { Film, Show, User } from '..';
 
-class Rating extends Model {
-  declare id: number;
+class Rating extends Model<
+  InferAttributes<Rating>,
+  InferCreationAttributes<Rating>
+> {
+  declare id: CreationOptional<number>;
   declare userId: number;
   declare mediaType: MediaType;
   declare mediaId: number;

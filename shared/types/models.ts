@@ -7,14 +7,9 @@ export interface RatingData {
   mediaId: number
   userScore: number
   mediaType: MediaType
-  createdAt: string
-  updatedAt: string
 }
 
-export type CreateRating = Omit<
-  RatingData,
-  'id' | 'createdAt' | 'updatedAt' | 'userId'
->
+export type CreateRating = Omit<RatingData, 'id' | 'userId'>
 export interface CreateRatingData extends CreateRating {
   userId: number
 }

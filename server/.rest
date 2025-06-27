@@ -37,7 +37,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkb
 Content-Type: application/json
 
 {
- "userScore": 13,
+ "userScore": 3,
  "mediaType": "Film",
  "mediaId": 3
 }

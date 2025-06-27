@@ -11,6 +11,15 @@ import { Rating } from '../models';
 
 const router: Router = express.Router();
 
+router.get('/', async (_req, res, next) => {
+  try {
+    const allRatings: Rating[] = await Rating.findAll({});
+    res.json(allRatings);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/', activeUserExtractor, async (req: Request, res, next) => {
   try {
     if (!req.activeUser) {
@@ -21,14 +30,10 @@ router.post('/', activeUserExtractor, async (req: Request, res, next) => {
       ...reqRating,
       userId: req.activeUser.id,
     };
-    const [ratingEntry] = await Rating.upsert({
-      userId: ratingData.userId,
-      mediaId: ratingData.mediaId,
-      mediaType: ratingData.mediaType,
-      userScore: ratingData.userScore,
-    });
+    const [ratingEntry, created]: [Rating, boolean | null] =
+      await Rating.upsert(ratingData);
     const ratingResponse: RatingData = ratingEntry.get({ plain: true });
-    res.status(201).json(ratingResponse);
+    res.status(created ? 201 : 200).json(ratingResponse);
   } catch (error) {
     next(error);
   }
