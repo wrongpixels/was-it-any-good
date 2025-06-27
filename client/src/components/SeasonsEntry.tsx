@@ -3,6 +3,7 @@ import { SeasonResponse, ShowResponse } from '../../../shared/types/models';
 import EntrySection from './EntrySection';
 import SeasonPoster from './SeasonPoster';
 import { ScrollData, useVerticalScroll } from '../hooks/scroller';
+import { isSpecialSeason } from '../utils/seasons-setter';
 
 interface SeasonsEntryProps {
   show: ShowResponse;
@@ -16,7 +17,7 @@ const SeasonsEntry = ({ show }: SeasonsEntryProps): JSX.Element | null => {
   }
   return (
     <div>
-      <EntrySection title="Seasons" content=" " />
+      <EntrySection title={`Seasons (${show.seasonCount})`} content=" " />
 
       <div className="flex-1 overflow-x-hidden relative">
         {canScrollL && (
@@ -30,7 +31,7 @@ const SeasonsEntry = ({ show }: SeasonsEntryProps): JSX.Element | null => {
           ref={reference}
         >
           {show.seasons
-            .filter((s: SeasonResponse) => s.name !== 'Specials')
+            .filter((s: SeasonResponse) => !isSpecialSeason(s))
             .map((s: SeasonResponse) => (
               <div key={s.id}>
                 <SeasonPoster media={s} />

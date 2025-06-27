@@ -12,3 +12,9 @@ export const setSeasonsBaseRating = (
   }));
   return seasons;
 };
+
+export const isSpecialSeason = (season: SeasonResponse): boolean =>
+  season.index === 0;
+
+export const seasonHasCustomName = (season: SeasonResponse): boolean =>
+  season.name !== `Season ${season.index}`;

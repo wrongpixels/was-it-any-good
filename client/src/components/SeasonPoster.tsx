@@ -9,7 +9,8 @@ interface SeasonPosterProps {
 
 const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   return (
-    <div className="bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
+    <div className="text-center bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
+      <div className="font-medium -translate-y-1">{media.name}</div>
       <img
         src={media.image}
         alt={media.name}
@@ -17,7 +18,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         className="rounded shadow ring-1 ring-gray-300"
         loading="lazy"
       />
-      <div className="text-center">
+      <div>
         <StarRating
           rating={media.baseRating}
           media={media}
