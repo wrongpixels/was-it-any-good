@@ -332,7 +332,7 @@ export const getOrCreateMediaRole = async (
 
 export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
   ...credits,
-  cast: credits.cast.slice(0, 10),
+  cast: credits.cast.slice(0, 20),
   crew: credits.crew.filter((crewMember: TMDBCrewData) =>
     Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
   ),
