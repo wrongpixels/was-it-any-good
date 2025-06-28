@@ -1,4 +1,4 @@
-import express, { Request, Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { User } from '../models';
 import CustomError from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
@@ -25,6 +25,42 @@ router.get('/', activeUserExtractor, async (req: Request, res, next) => {
     next(error);
   }
 });
+router.put(
+  '/:id/activate',
+  activeUserExtractor,
+  async (
+    req: Request<{ id: string }, unknown, { activate: boolean }>,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.activeUser?.isAdmin) {
+        throw new CustomError('Unauthorized access', 401);
+      }
+      if (typeof req.body.activate !== 'boolean') {
+        throw new CustomError('Missing or invalid "validate" value', 400);
+      }
+      const id = req.params.id;
+      const activate: boolean = req.body.activate;
+      const user = await User.findByPk(id);
+      if (!user) {
+        throw new CustomError('User not found', 404);
+      }
+
+      if (user.isAdmin) {
+        throw new CustomError('Administrators cannot be banned this way', 401);
+      }
+
+      user.isActive = activate;
+      await user.save();
+      res.json({
+        message: `User ${user.username} ${activate ? 'unbanned' : 'banned'} successfully.`,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.get('/:id', async (req, res, next) => {
   try {
