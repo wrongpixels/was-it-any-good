@@ -1,4 +1,4 @@
-import { UserSessionData } from '../../../shared/types/models';
+import { ActiveUser, UserSessionData } from '../../../shared/types/models';
 import { Session } from '../models';
 
 export const isValidSession = (
@@ -15,4 +15,17 @@ export const isValidSession = (
     return false;
   }
   return true;
+};
+
+export const isAuthorizedUser = (
+  user: ActiveUser | undefined,
+  validId: number
+): boolean => {
+  if (!user || !user.isValid) {
+    return false;
+  }
+  if (user.id === validId || user.isAdmin) {
+    return true;
+  }
+  return false;
 };

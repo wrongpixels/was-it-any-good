@@ -31,6 +31,10 @@ Content-Type: application/json
  "lastActive": null
 }
 
+###DELETE VOTE
+DELETE  http://localhost:6060/api/ratings/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6ImFkbWluIiwiaWQiOjcsImlzQWRtaW4iOnRydWUsImlzQWN0aXZlIjp0cnVlLCJsYXN0QWN0aXZlIjoiMjAyNS0wNi0yN1QyMTo0Nzo0NC41MDJaIiwiaWF0IjoxNzUxMDYwODY0fQ.UHfKT2k8VAjs1iTnJKUJc4l8XbvyFAB44HHpz1br2rQ
+
 ###VOTE
 POST http://localhost:6060/api/ratings
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6ImFkbWluIiwiaWQiOjcsImlzQWRtaW4iOnRydWUsImlzQWN0aXZlIjp0cnVlLCJsYXN0QWN0aXZlIjoiMjAyNS0wNi0yN1QyMTo0Nzo0NC41MDJaIiwiaWF0IjoxNzUxMDYwODY0fQ.UHfKT2k8VAjs1iTnJKUJc4l8XbvyFAB44HHpz1br2rQ
@@ -67,7 +71,7 @@ GET http://localhost:6060/api/shows/tmdb/1669
 
 
 ###GET OWN FILM DATA
-GET http://localhost:6060/api/films/5
+GET http://localhost:6060/api/films/1
 
 ###GET ANOTHER FILM DATA
 GET http://localhost:6060/api/films/tmdb/275

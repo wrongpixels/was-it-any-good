@@ -8,6 +8,7 @@ import {
 import { activeUserExtractor } from '../middleware/user-extractor';
 import CustomError from '../util/customError';
 import { Rating } from '../models';
+import { isAuthorizedUser } from '../util/session-verifier';
 
 const router: Router = express.Router();
 
@@ -42,13 +43,18 @@ router.post('/', activeUserExtractor, async (req: Request, res, next) => {
 router.delete('/:id', activeUserExtractor, async (req: Request, res, next) => {
   try {
     if (!req.activeUser) {
-      throw new CustomError('Unauthorized', 401);
+      throw new CustomError('Not logged in', 401);
     }
     const id: string = req.params.id;
     const rating: Rating | null = await Rating.findByPk(id);
     if (!rating) {
-      throw new CustomError('Rating could not be found in db', 400);
+      throw new CustomError('Rating not found in db', 404);
     }
+    if (!isAuthorizedUser(req.activeUser, rating.userId)) {
+      throw new CustomError('Unauthorized', 403);
+    }
+    await rating.destroy();
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

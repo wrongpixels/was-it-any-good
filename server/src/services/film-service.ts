@@ -49,6 +49,6 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
   releaseDate: filmData.releaseDate,
   country: filmData.countries,
   rating: 0,
-  voteCount: 0,
+  voteCount: filmData.baseRating > 0 ? 1 : 0,
   parentalGuide: null,
 });

@@ -13,7 +13,7 @@ import { MediaType } from '../../../../shared/types/media';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare name: string;
@@ -106,7 +106,7 @@ class Media<
       },
       voteCount: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
+        defaultValue: 1,
       },
       runtime: {
         type: DataTypes.INTEGER,
