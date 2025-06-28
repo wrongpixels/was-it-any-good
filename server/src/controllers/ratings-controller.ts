@@ -39,4 +39,19 @@ router.post('/', activeUserExtractor, async (req: Request, res, next) => {
   }
 });
 
+router.delete('/:id', activeUserExtractor, async (req: Request, res, next) => {
+  try {
+    if (!req.activeUser) {
+      throw new CustomError('Unauthorized', 401);
+    }
+    const id: string = req.params.id;
+    const rating: Rating | null = await Rating.findByPk(id);
+    if (!rating) {
+      throw new CustomError('Rating could not be found in db', 400);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
