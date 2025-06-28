@@ -47,6 +47,9 @@ Season.init(
     modelName: 'season',
     underscored: true,
     timestamps: true,
+    defaultScope: {
+      order: [['index', 'ASC']],
+    },
   }
 );
 export type CreateSeason = Omit<InferAttributes<Season>, 'id'>;
