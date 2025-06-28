@@ -1,11 +1,17 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../../util/db';
 import Rating from './rating';
 import { Session } from '..';
 
-class User extends Model {
-  declare id: number;
-  declare name: string;
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+  declare id: CreationOptional<number>;
+  declare name: string | null;
   declare username: string;
   declare hash: string;
   declare email: string;
@@ -33,7 +39,7 @@ User.init(
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     username: {
       type: DataTypes.STRING,

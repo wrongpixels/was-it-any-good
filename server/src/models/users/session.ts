@@ -1,16 +1,25 @@
-import { DataTypes, Model } from 'sequelize';
+import {
+  CreationOptional,
+  DataTypes,
+  InferAttributes,
+  InferCreationAttributes,
+  Model,
+} from 'sequelize';
 import { sequelize } from '../../util/db';
 import { User } from '..';
 
-class Session extends Model {
-  declare id: number;
+class Session extends Model<
+  InferAttributes<Session>,
+  InferCreationAttributes<Session>
+> {
+  declare id: CreationOptional<number>;
   declare userId: number;
   declare user?: User;
   declare username: string;
   declare token: string;
   declare expired: boolean;
-  declare createdAt: Date;
-  declare updatedAt: Date;
+  declare createdAt: CreationOptional<Date>;
+  declare updatedAt: CreationOptional<Date>;
 
   static associate(): void {
     this.belongsTo(User);
@@ -58,6 +67,14 @@ Session.init(
     username: {
       type: DataTypes.STRING,
       unique: true,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
     expired: {
       type: DataTypes.BOOLEAN,
