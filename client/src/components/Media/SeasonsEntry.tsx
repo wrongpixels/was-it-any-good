@@ -1,9 +1,9 @@
 import { JSX } from 'react';
-import { SeasonResponse, ShowResponse } from '../../../shared/types/models';
-import EntrySection from './EntrySection';
-import SeasonPoster from './SeasonPoster';
-import { ScrollData, useVerticalScroll } from '../hooks/scroller';
-import { isSpecialSeason } from '../utils/seasons-setter';
+import { SeasonResponse, ShowResponse } from '../../../../shared/types/models';
+import EntrySection from '../EntrySection';
+import SeasonPoster from '../Poster/SeasonPoster';
+import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
+import { isSpecialSeason } from '../../utils/seasons-setter';
 
 interface SeasonsEntryProps {
   show: ShowResponse;

@@ -1,9 +1,9 @@
 import { JSX } from 'react';
-import { CreditResponse, MergedCredits } from '../../../shared/types/models';
-import { ScrollData, useVerticalScroll } from '../hooks/scroller';
-import { isMerged } from '../utils/credits-merger';
+import { CreditResponse, MergedCredits } from '../../../../shared/types/models';
+import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
+import { isMerged } from '../../utils/credits-merger';
 
-interface PeopleEntryProps {
+interface MediaPeopleEntryProps {
   people: CreditResponse[] | MergedCredits[];
 }
 
@@ -12,7 +12,9 @@ const getExtraInfo = (person: CreditResponse | MergedCredits): string =>
     ? person.mergedRoles.join(', ')
     : person.characterName?.join(', ') || 'Unknown';
 
-const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
+const MediaPeopleEntry = ({
+  people,
+}: MediaPeopleEntryProps): JSX.Element | null => {
   const { reference, canScrollR, canScrollL }: ScrollData = useVerticalScroll();
   if (!people || people.length < 1) {
     return null;
@@ -60,4 +62,4 @@ const PeopleEntry = ({ people }: PeopleEntryProps): JSX.Element | null => {
     </div>
   );
 };
-export default PeopleEntry;
+export default MediaPeopleEntry;

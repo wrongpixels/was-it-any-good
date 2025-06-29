@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { GenreResponse } from '../../../shared/types/models';
+import { GenreResponse } from '../../../../shared/types/models';
 import React from 'react';
 
 interface GenreSectionProps {

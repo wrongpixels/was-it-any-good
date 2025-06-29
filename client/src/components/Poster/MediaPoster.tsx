@@ -1,7 +1,7 @@
 import { JSX } from 'react';
-import { MediaResponse } from '../../../shared/types/models';
-import StarRating from './Rating/StarRating';
-import { calculateAverage } from '../utils/ratings-helper';
+import { MediaResponse } from '../../../../shared/types/models';
+import StarRating from '../Rating/StarRating';
+import { calculateAverage } from '../../utils/ratings-helper';
 
 interface MediaPosterProps {
   media: MediaResponse;

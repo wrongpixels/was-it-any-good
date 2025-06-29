@@ -1,16 +1,16 @@
 import { JSX } from 'react';
-import EntrySection from './EntrySection';
-import { AuthorType } from '../../../shared/types/roles';
-import { MediaType } from '../../../shared/types/media';
-import MediaPoster from './MediaPoster';
+import EntrySection from '../EntrySection';
+import { AuthorType } from '../../../../shared/types/roles';
+import { MediaType } from '../../../../shared/types/media';
+import MediaPoster from '../Poster/MediaPoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
 import { PathMatch, useMatch } from 'react-router-dom';
-import { buildMediaURL } from '../services/media-service';
+import { buildMediaURL } from '../../services/media-service';
 import {
   useMediaByIDQuery,
   useMediaByTMDBQuery,
-} from '../queries/media-queries';
+} from '../../queries/media-queries';
 
 interface MediaEntryProps {
   mediaType: MediaType;

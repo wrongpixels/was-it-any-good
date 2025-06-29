@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { CreditResponse, MergedCredits } from '../../../shared/types/models';
-import PeopleEntry from './PeopleEntry';
+import MediaPeopleEntry from './Media/MediaPeopleEntry';
 import { AuthorType } from '../../../shared/types/roles';
 
 interface EntryProps {
@@ -43,7 +43,7 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
           {props.content}
         </p>
       )}
-      {filteredPeople && <PeopleEntry people={filteredPeople} />}
+      {filteredPeople && <MediaPeopleEntry people={filteredPeople} />}
     </div>
   );
 };

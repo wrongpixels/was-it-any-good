@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', async (_req, res, next) => {
   try {
-    const people: Person[] = await Person.scope('withFilms').findAll({});
+    const people: Person[] = await Person.scope('withMedia').findAll({});
     const peopleResponse: PersonResponse[] = people.map((p: Person) =>
       p.get({ plain: true })
     );
@@ -22,7 +22,7 @@ router.get('/:id', async (req: Request, res, next) => {
     if (!id) {
       throw new CustomError('Wrong id format', 400);
     }
-    const person: Person | null = await Person.scope('withFilms').findByPk(id);
+    const person: Person | null = await Person.scope('withMedia').findByPk(id);
     if (!person) {
       throw new CustomError('Wrong person id', 400);
     }

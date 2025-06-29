@@ -1,7 +1,7 @@
-import { MediaResponse } from '../../../shared/types/models';
-import { getYear } from '../utils/format-helper';
+import { MediaResponse } from '../../../../shared/types/models';
+import { getYear } from '../../utils/format-helper';
 import GenreSection from './GenreList';
-import MediaFlags from './MediaFlags';
+import MediaFlags from '../MediaFlags';
 
 interface MediaHeaderProps {
   media: MediaResponse;

@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import MediaEntry from './components/MediaEntry';
+import MediaEntry from './components/Media/MediaEntry';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
 

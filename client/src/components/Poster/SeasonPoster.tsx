@@ -1,7 +1,7 @@
 import { JSX } from 'react';
-import { SeasonResponse } from '../../../shared/types/models';
-import StarRating from './Rating/StarRating';
-import { MediaType } from '../../../shared/types/media';
+import { SeasonResponse } from '../../../../shared/types/models';
+import StarRating from '../Rating/StarRating';
+import { MediaType } from '../../../../shared/types/media';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
