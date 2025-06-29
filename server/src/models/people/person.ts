@@ -6,6 +6,8 @@ import {
   Model,
 } from 'sequelize';
 import { sequelize } from '../../util/db';
+import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
+import { MediaType } from '../../types/media/media-types';
 
 class Person extends Model<
   InferAttributes<Person>,
@@ -17,7 +19,7 @@ class Person extends Model<
   declare gamedbId?: string;
   declare image: string;
   declare birthDate?: string;
-  declare country: string[];
+  declare country: CountryCode[];
 }
 
 Person.init(
@@ -48,6 +50,22 @@ Person.init(
     country: {
       type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false,
+      validate: {
+        isValidCountryArray(value: string[]) {
+          if (!Array.isArray(value)) {
+            throw new Error('Must be an array');
+          }
+          const invalidCountries = value.filter(
+            (country) => !isCountryCode(country)
+          );
+
+          if (invalidCountries.length > 0) {
+            throw new Error(
+              `Invalid country codes found: ${invalidCountries.join(', ')}`
+            );
+          }
+        },
+      },
     },
     birthDate: {
       type: DataTypes.DATE,
@@ -58,6 +76,40 @@ Person.init(
     sequelize,
     modelName: 'person',
     underscored: true,
+    scopes: {
+      withMedia: {
+        include: [
+          {
+            association: 'roles',
+            attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
+          },
+        ],
+      },
+      withFilms: {
+        include: [
+          {
+            association: 'roles',
+            attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
+            required: false,
+            where: {
+              mediaType: MediaType.Film,
+            },
+          },
+        ],
+      },
+      withShows: {
+        include: [
+          {
+            association: 'roles',
+            attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
+            required: false,
+            where: {
+              mediaType: MediaType.Show,
+            },
+          },
+        ],
+      },
+    },
   }
 );
 export type PersonAttributes = InferAttributes<Person>;

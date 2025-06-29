@@ -5,6 +5,7 @@ import usersRouter from './users-controller';
 import loginRouter from './login-controller';
 import sessionsRouter from './sessions-controller';
 import ratingsRouter from './ratings-controller';
+import peopleRouter from './people-controller';
 
 export {
   filmsRouter,
@@ -14,4 +15,5 @@ export {
   loginRouter,
   sessionsRouter,
   ratingsRouter,
+  peopleRouter,
 };
