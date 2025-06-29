@@ -2,6 +2,7 @@ import { JSX } from 'react';
 import { CreditResponse, MergedCredits } from '../../../../shared/types/models';
 import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
 import { isMerged } from '../../utils/credits-merger';
+import { Link } from 'react-router-dom';
 
 interface MediaPeopleEntryProps {
   people: CreditResponse[] | MergedCredits[];
@@ -37,7 +38,8 @@ const MediaPeopleEntry = ({
               credit.person?.name && credit.person.id
           )
           .map((c) => (
-            <a
+            <Link
+              to={`/person/${c.person.id}`}
               key={c.person.id}
               className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1"
             >
@@ -56,7 +58,7 @@ const MediaPeopleEntry = ({
                   {getExtraInfo(c)}
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
       </div>
     </div>

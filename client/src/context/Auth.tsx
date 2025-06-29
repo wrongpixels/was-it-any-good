@@ -5,7 +5,7 @@ import {
   saveUserSession,
   tryLoadUserData,
 } from '../utils/session-storage';
-import { useAuthVerifyMutation } from '../queries/login-queries';
+import { useAuthVerifyMutation } from '../mutations/login-mutations';
 import { getAPIError, isAuthError } from '../utils/error-handler';
 import { APIError } from '../../../shared/types/errors';
 

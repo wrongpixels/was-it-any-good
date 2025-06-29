@@ -7,7 +7,7 @@ const BASE_TMDB_URL: string = 'https://www.themoviedb.org';
 const BASE_IMDB_URL: string = 'https://www.imdb.com/title';
 
 //We don't catch errors here, TanStack will handle them
-export const getById = async (
+export const getMediaById = async (
   id: string,
   mediaType: MediaType
 ): Promise<MediaResponse> => {
@@ -17,7 +17,7 @@ export const getById = async (
   return response.data;
 };
 
-export const getByTMDBId = async (
+export const getMediaByTMDBId = async (
   id: string,
   mediaType: MediaType
 ): Promise<MediaResponse> => {

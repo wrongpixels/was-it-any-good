@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { LoginData, UserSessionData } from '../../../shared/types/models';
-import { useLoginMutation } from '../queries/login-queries';
+import { useLoginMutation } from '../mutations/login-mutations';
 import { eraseUserSession, saveUserSession } from '../utils/session-storage';
 import { UseAuthContextValues, AuthContext } from '../context/Auth';
 import { UseMutationResult } from '@tanstack/react-query';

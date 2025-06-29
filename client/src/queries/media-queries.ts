@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { MediaType } from '../../../shared/types/media';
-import { getById, getByTMDBId } from '../services/media-service';
+import { getMediaById, getMediaByTMDBId } from '../services/media-service';
 import { MediaResponse } from '../../../shared/types/models';
 import mergeCredits from '../utils/credits-merger';
 
@@ -10,7 +10,7 @@ export const useMediaByIDQuery = (
 ): UseQueryResult<MediaResponse | null, Error> =>
   useQuery({
     queryKey: ['media', mediaType, id],
-    queryFn: () => getById(id!, mediaType),
+    queryFn: () => getMediaById(id!, mediaType),
     enabled: !!id,
     select: transformCredits,
   });
@@ -21,7 +21,7 @@ export const useMediaByTMDBQuery = (
 ): UseQueryResult<MediaResponse | null, Error> =>
   useQuery({
     queryKey: ['tmdbMedia', mediaType, id],
-    queryFn: () => getByTMDBId(id!, mediaType),
+    queryFn: () => getMediaByTMDBId(id!, mediaType),
     enabled: !!id,
     select: transformCredits,
   });

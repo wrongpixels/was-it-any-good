@@ -1,7 +1,6 @@
 import { MediaResponse } from '../../../../shared/types/models';
-import { getYear } from '../../utils/format-helper';
 import GenreSection from './GenreList';
-import MediaFlags from '../MediaFlags';
+import Title from '../Title';
 
 interface MediaHeaderProps {
   media: MediaResponse;
@@ -10,13 +9,11 @@ interface MediaHeaderProps {
 const MediaHeader = ({ media }: MediaHeaderProps) => {
   return (
     <div>
-      <h2 className="text-3xl flex items-center gap-2 border-b border-gray-200 pb-3 mb-2">
-        <span className="font-bold">{media.name}</span>
-        <span className="text-gray-400 font-regular">
-          {getYear(media.releaseDate)}
-        </span>
-        <MediaFlags countryCodes={media.country} />
-      </h2>
+      <Title
+        title={media.name}
+        date={media.releaseDate}
+        country={media.country}
+      />
       <div>
         {media.originalName && media.originalName !== media.name && (
           <div className="text-gray-600 text-sm font-bold">

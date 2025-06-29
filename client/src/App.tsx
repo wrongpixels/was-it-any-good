@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MediaEntry from './components/Media/MediaEntry';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
+import PersonEntry from './components/Person/PersonEntry';
 
 const App = (): JSX.Element => {
   //const [count, setCount] = useState(0);
@@ -30,6 +31,7 @@ const App = (): JSX.Element => {
                 path="/tmdb/show/:id"
                 element={<MediaEntry mediaType={MediaType.Show} tmdb={true} />}
               />
+              <Route path="/person/:id" element={<PersonEntry />} />
             </Routes>
           </Router>
         </div>

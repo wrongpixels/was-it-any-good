@@ -1,4 +1,4 @@
-export const getYear = (dateString: string | null): string => {
+export const getYear = (dateString: string | null | undefined): string => {
   if (!dateString) {
     return '';
   }

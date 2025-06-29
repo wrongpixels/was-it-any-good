@@ -6,11 +6,16 @@ interface MediaFlagsProps {
 }
 
 const MediaFlags = ({ countryCodes: countries }: MediaFlagsProps) => {
-  if (!countries) return null;
+  if (!countries) {
+    return null;
+  }
 
   const showCountries = countries.slice(0, 3);
 
   const buildCountry = (c: CountryCode) => {
+    if (c === 'UNKNOWN') {
+      return null;
+    }
     const countryName: string = Country[c];
 
     return (
