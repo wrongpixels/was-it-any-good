@@ -1,5 +1,25 @@
 import { CountryCode } from './countries'
 import { MediaType } from './media'
+import { AuthorType } from './roles'
+
+export interface MediaRoleResponse {
+  id: number
+  role: AuthorType
+  mediaId: number
+  mediaType: MediaType
+  characterName: string[]
+  show?: BriefMediaResponse
+  film?: BriefMediaResponse
+}
+
+export interface BriefMediaResponse {
+  id: number
+  name: string
+  image: string
+  rating: number
+  baseRating: number
+  mediaType: MediaType
+}
 
 export interface RatingData {
   id: number
@@ -71,6 +91,7 @@ export interface PersonResponse {
   image: string
   birthDate?: string | undefined
   country: CountryCode[]
+  roles: MediaRoleResponse[]
 }
 
 export interface BaseResponse {

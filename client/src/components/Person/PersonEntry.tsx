@@ -28,6 +28,7 @@ const PersonEntry = (): JSX.Element | null => {
       />
       <div className="pt-3">
         <Poster title={person.name} src={person.image} alt={person.name} />
+        {person.roles.length}
       </div>
     </div>
   );
