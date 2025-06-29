@@ -102,27 +102,28 @@ Show.init(
     sequelize,
     modelName: 'show',
     underscored: true,
-    defaultScope: {
-      include: {
-        association: 'seasons',
-        attributes: [
-          'id',
-          'index',
-          'name',
-          'originalName',
-          'description',
-          'image',
-          'voteCount',
-          'rating',
-          'baseRating',
-          'tmdbId',
-          'imdbId',
-          'releaseDate',
-          'episodeCount',
-        ],
-      },
-    },
+
     scopes: {
+      withSeasons: {
+        include: {
+          association: 'seasons',
+          attributes: [
+            'id',
+            'index',
+            'name',
+            'originalName',
+            'description',
+            'image',
+            'voteCount',
+            'rating',
+            'baseRating',
+            'tmdbId',
+            'imdbId',
+            'releaseDate',
+            'episodeCount',
+          ],
+        },
+      },
       withCredits: {
         include: [
           {

@@ -82,30 +82,24 @@ Person.init(
           {
             association: 'roles',
             attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
-          },
-        ],
-      },
-      withFilms: {
-        include: [
-          {
-            association: 'roles',
-            attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
-            required: false,
-            where: {
-              mediaType: MediaType.Film,
-            },
-          },
-        ],
-      },
-      withShows: {
-        include: [
-          {
-            association: 'roles',
-            attributes: ['id', 'role', 'mediaId', 'mediaType', 'characterName'],
-            required: false,
-            where: {
-              mediaType: MediaType.Show,
-            },
+            include: [
+              {
+                association: 'film',
+                attributes: ['id', 'name', 'image', 'rating', 'baseRating'],
+                required: false,
+                where: {
+                  '$roles.media_type$': MediaType.Film,
+                },
+              },
+              {
+                association: 'show',
+                attributes: ['id', 'name', 'image', 'rating', 'baseRating'],
+                required: false,
+                where: {
+                  '$roles.media_type$': MediaType.Show,
+                },
+              },
+            ],
           },
         ],
       },

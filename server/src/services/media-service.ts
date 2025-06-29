@@ -88,7 +88,7 @@ const getFinalEntry = async (
         .findByPk(mediaId, { transaction });
     case MediaType.Show:
       return await Show.unscoped()
-        .scope(['defaultScope', 'withCredits'])
+        .scope(['withSeasons', 'withCredits'])
         .findByPk(mediaId, { transaction });
     default:
       return null;

@@ -19,7 +19,7 @@ MediaRole.belongsTo(Person, {
   foreignKey: 'personId',
   as: 'person',
 });
-
+MediaRole.associate();
 Film.associate();
 Show.associate();
 User.associate();

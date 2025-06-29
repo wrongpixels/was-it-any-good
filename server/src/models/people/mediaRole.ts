@@ -24,6 +24,26 @@ class MediaRole extends Model<
   //For getting the Media entry linked to mediaId
   declare getFilm: BelongsToGetAssociationMixin<Film>;
   declare getShow: BelongsToGetAssociationMixin<Show>;
+
+  static associate() {
+    this.belongsTo(Film, {
+      foreignKey: 'mediaId',
+      constraints: false,
+      as: 'film',
+      scope: {
+        mediaType: MediaType.Film,
+      },
+    });
+
+    this.belongsTo(Show, {
+      foreignKey: 'mediaId',
+      constraints: false,
+      as: 'show',
+      scope: {
+        mediaType: MediaType.Show,
+      },
+    });
+  }
 }
 
 MediaRole.init(

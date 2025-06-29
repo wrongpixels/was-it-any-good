@@ -12,7 +12,7 @@ router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
     const showEntry: Show | null = await Show.scope([
-      'defaultScope',
+      'withSeasons',
       'withCredits',
     ]).findByPk(id);
     if (!showEntry) {
@@ -28,7 +28,7 @@ router.get('/tmdb/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
     let showEntry: Show | null = await Show.scope([
-      'defaultScope',
+      'withSeasons',
       'withCredits',
     ]).findOne({
       where: {
