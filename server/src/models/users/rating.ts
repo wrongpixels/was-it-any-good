@@ -19,6 +19,73 @@ class Rating extends Model<
   declare mediaId: number;
   declare userScore: number;
 
+  async fastAddRating() {
+    const media: Show | Film | null =
+      this.mediaType === MediaType.Film
+        ? await Film.findByPk(this.mediaId)
+        : await Show.findByPk(this.mediaId);
+    if (!media) {
+      return;
+    }
+    if (this.mediaType === MediaType.Film && media instanceof Film) {
+      await media.update({
+        rating: media.rating + this.userScore,
+        voteCount: media.voteCount + 1,
+      });
+    } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      await media.update({
+        rating: media.rating + this.userScore,
+        voteCount: media.voteCount + 1,
+      });
+    }
+  }
+
+  async fastUpdateRating(oldScore: number) {
+    const media: Show | Film | null =
+      this.mediaType === MediaType.Film
+        ? await Film.findByPk(this.mediaId)
+        : await Show.findByPk(this.mediaId);
+    if (!media) {
+      return;
+    }
+
+    const diff = this.userScore - oldScore;
+
+    if (this.mediaType === MediaType.Film && media instanceof Film) {
+      await media.update({
+        rating: media.rating + diff,
+      });
+    } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      await media.update({
+        rating: media.rating + diff,
+      });
+    }
+  }
+
+  // For removing ratings
+  async fastRemoveRating() {
+    const media: Show | Film | null =
+      this.mediaType === MediaType.Film
+        ? await Film.findByPk(this.mediaId)
+        : await Show.findByPk(this.mediaId);
+    if (!media) {
+      return;
+    }
+
+    if (this.mediaType === MediaType.Film && media instanceof Film) {
+      await media.update({
+        rating: media.rating - this.userScore,
+        voteCount: media.voteCount - 1,
+      });
+    } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      await media.update({
+        rating: media.rating - this.userScore,
+        voteCount: media.voteCount - 1,
+      });
+    }
+  }
+
+  //Proper updater that will be moved to the Film model.
   async updateRating() {
     const media: Show | Film | null =
       this.mediaType === MediaType.Film
