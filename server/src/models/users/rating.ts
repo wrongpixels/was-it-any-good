@@ -4,6 +4,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  WhereOptions,
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
@@ -19,7 +20,7 @@ class Rating extends Model<
   declare mediaId: number;
   declare userScore: number;
 
-  async updateRating() {
+  async updateRating(countSelf: boolean = true) {
     const media: Show | Film | null =
       this.mediaType === MediaType.Film
         ? await Film.findByPk(this.mediaId)
@@ -27,11 +28,20 @@ class Rating extends Model<
     if (!media) {
       return;
     }
+
+    const where: WhereOptions = countSelf
+      ? {
+          mediaId: this.mediaId,
+          mediaType: this.mediaType,
+        }
+      : {
+          mediaId: this.mediaId,
+          mediaType: this.mediaType,
+          id: !this.id,
+        };
+
     const ratings: Rating[] = await Rating.findAll({
-      where: {
-        mediaId: this.mediaId,
-        mediaType: this.mediaType,
-      },
+      where,
     });
 
     let rating: number = media.baseRating > 0 ? media.baseRating : 0;
@@ -83,8 +93,8 @@ Rating.afterUpdate(async (rating) => {
   await rating.updateRating();
 });
 
-Rating.afterDestroy(async (rating) => {
-  await rating.updateRating();
+Rating.beforeDestroy(async (rating) => {
+  await rating.updateRating(false);
 });
 
 Rating.init(
