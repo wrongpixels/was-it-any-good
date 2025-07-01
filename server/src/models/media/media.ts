@@ -25,8 +25,13 @@ class Media<
   declare status: string;
   declare releaseDate: string | null;
   declare image: string;
+  //the cached average of all Rating entries linked to the media
   declare rating: number;
+  //a default rating score taken from TMDB so media is not '0' or 'not voted'
+  //counts as a single vote so user's ratings will weight in easier
+  //if no one voted the media on TMDB, then it'll be considered actually 'not voted'
   declare baseRating: number;
+  //the cached length of all Rating entries linked to the media entry
   declare voteCount: number;
   declare runtime: number | null;
   //For getting the Cast and Crew data

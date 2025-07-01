@@ -10,7 +10,7 @@ export const numToVote = (num: number): UserVote => {
 //their individual ratings into consideration
 export const calculateAverage = (media: MediaResponse): number => {
   const globalAverage: number =
-    media.rating !== null && media.rating > 0 ? media.rating : media.baseRating;
+    media.rating > 0 ? media.rating : media.baseRating;
 
   if (media.mediaType !== MediaType.Show) {
     return globalAverage;

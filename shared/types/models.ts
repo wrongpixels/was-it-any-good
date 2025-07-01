@@ -104,7 +104,7 @@ export interface BaseResponse {
   image: string;
   voteCount: number;
   baseRating: number;
-  rating: number | null;
+  rating: number;
   releaseDate: string | null;
 }
 

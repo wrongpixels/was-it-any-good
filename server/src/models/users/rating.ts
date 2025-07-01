@@ -1,9 +1,12 @@
 import {
+  CreateOptions,
   CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  Op,
+  Transaction,
   WhereOptions,
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
@@ -19,49 +22,10 @@ class Rating extends Model<
   declare mediaType: MediaType;
   declare mediaId: number;
   declare userScore: number;
+  //Fields for accessing the SQL results
+  declare count?: number;
+  declare total?: number;
 
-  async updateRating(countSelf: boolean = true) {
-    const media: Show | Film | null =
-      this.mediaType === MediaType.Film
-        ? await Film.findByPk(this.mediaId)
-        : await Show.findByPk(this.mediaId);
-    if (!media) {
-      return;
-    }
-
-    const where: WhereOptions = countSelf
-      ? {
-          mediaId: this.mediaId,
-          mediaType: this.mediaType,
-        }
-      : {
-          mediaId: this.mediaId,
-          mediaType: this.mediaType,
-          id: !this.id,
-        };
-
-    const ratings: Rating[] = await Rating.findAll({
-      where,
-    });
-
-    let rating: number = media.baseRating > 0 ? media.baseRating : 0;
-    let voteCount: number = rating > 0 ? 1 : 0;
-
-    if (ratings.length > 0) {
-      ratings.forEach((r: Rating) => {
-        if (r) {
-          rating += r.userScore;
-          voteCount += 1;
-        }
-      });
-    }
-    //being different models, we update them separately to keep TS happy and avoid using 'as'
-    if (this.mediaType === MediaType.Film && media instanceof Film) {
-      await media.update({ rating: rating / voteCount, voteCount });
-    } else if (this.mediaType === MediaType.Show && media instanceof Show) {
-      await media.update({ rating: rating / voteCount, voteCount });
-    }
-  }
   static associate() {
     this.belongsTo(Film, {
       foreignKey: 'mediaId',
@@ -83,19 +47,74 @@ class Rating extends Model<
       constraints: false,
     });
   }
+  async updateRating(countSelf: boolean = true, transaction?: Transaction) {
+    const media: Show | Film | null =
+      this.mediaType === MediaType.Film
+        ? await Film.findByPk(this.mediaId, { transaction })
+        : await Show.findByPk(this.mediaId, { transaction });
+    if (!media) {
+      return;
+    }
+
+    const where: WhereOptions = countSelf
+      ? {
+          mediaId: this.mediaId,
+          mediaType: this.mediaType,
+        }
+      : {
+          mediaId: this.mediaId,
+          mediaType: this.mediaType,
+          id: {
+            [Op.ne]: this.id,
+          },
+        };
+    /*
+    //classic count and addition
+    const ratings: Rating[] = await Rating.findAll({
+      where,
+      transaction,
+    });
+    if (ratings.length > 0) {
+      ratings.forEach((r: Rating) => {
+        if (r) {
+          rating += r.userScore;
+          voteCount += 1;
+        }
+      });
+    }    
+    */
+
+    //db-level count and addition
+    const summary: Rating | null = await Rating.findOne({
+      where,
+      transaction,
+      raw: true,
+      attributes: [
+        [sequelize.fn('SUM', sequelize.col('user_score')), 'total'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+      ],
+    });
+
+    const total = Number(summary?.total ?? 0);
+    const count = Number(summary?.count ?? 0);
+
+    const rating = media.baseRating > 0 ? media.baseRating + total : total;
+    const voteCount = media.baseRating > 0 ? 1 + count : count;
+
+    //being different models, we update them separately to keep TS happy and avoid using 'as'
+    if (this.mediaType === MediaType.Film && media instanceof Film) {
+      await media.update(
+        { rating: rating / voteCount, voteCount },
+        { transaction }
+      );
+    } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      await media.update(
+        { rating: rating / voteCount, voteCount },
+        { transaction }
+      );
+    }
+  }
 }
-
-Rating.afterCreate(async (rating) => {
-  await rating.updateRating();
-});
-
-Rating.afterUpdate(async (rating) => {
-  await rating.updateRating();
-});
-
-Rating.beforeDestroy(async (rating) => {
-  await rating.updateRating(false);
-});
 
 Rating.init(
   {
@@ -148,4 +167,16 @@ Rating.init(
     underscored: true,
   }
 );
+//hooks so media updates the cached 'rating' automatically
+Rating.afterCreate(async (rating: Rating, options?: CreateOptions) => {
+  await rating.updateRating(true, options?.transaction || undefined);
+});
+
+Rating.afterUpdate(async (rating: Rating, options?: CreateOptions) => {
+  await rating.updateRating(true, options?.transaction || undefined);
+});
+
+Rating.beforeDestroy(async (rating: Rating, options?: CreateOptions) => {
+  await rating.updateRating(false, options?.transaction || undefined);
+});
 export default Rating;
