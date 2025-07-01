@@ -5,12 +5,13 @@ import { MediaType } from '../../../../shared/types/media';
 import MediaPoster from '../Poster/MediaPoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
-import { PathMatch, useMatch } from 'react-router-dom';
+import { Link, PathMatch, useMatch } from 'react-router-dom';
 import { buildMediaURL } from '../../services/media-service';
 import {
   useMediaByIDQuery,
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
+import { buildOwnUrl, buildTMDBUrl } from '../../utils/url-helper';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -29,21 +30,56 @@ const MediaEntry = ({
     data: media,
     isLoading,
     isError,
+    error,
   } = tmdb
     ? useMediaByTMDBQuery(mediaId, mediaType)
     : useMediaByIDQuery(mediaId, mediaType);
 
   if (isLoading || isError) {
     return (
-      <div className="flex justify-center w-full h-full font-medium">
+      <div className="flex justify-center w-full font-medium text-xl">
         {isLoading
           ? `Loading ${mediaType}...`
-          : `${mediaType} couldn't be found!`}
+          : `There was an error loading the ${mediaType} ${error?.message}`}
       </div>
     );
   }
   if (!mediaId || !media) {
-    return <div>Invalid {mediaType} id!</div>;
+    const formatUrl: string = `/tmdb/${mediaType.toLocaleLowerCase()}`;
+    const currentUrl: string = `${formatUrl}/${mediaId}`;
+    const idSource: string = tmdb ? 'TMDB' : 'WIAG';
+    return (
+      <div className="flex flex-col items-center justify-center gap-4">
+        <div className="font-medium text-2xl">
+          {mediaType} doesn't exist in {idSource}'s database!
+        </div>
+        {(tmdb && (
+          <>
+            <div>Do you want to check if it yourself?</div>
+            <div className="font-semibold">
+              Click <a href={buildTMDBUrl(mediaType, mediaId)}>Here</a>
+            </div>
+          </>
+        )) || (
+          <>
+            (
+            <div>
+              Did you want to check a {mediaType} using a
+              <span className="font-medium"> TMDB </span>id?
+            </div>
+            <div>
+              Use the format:{' '}
+              <span className="font-bold">{`${formatUrl}/id`}</span>
+            </div>
+            <div className="pt-5 font-semibold text-lg">
+              In this case:{' '}
+              <Link to={currentUrl}>{buildOwnUrl(currentUrl)}</Link>
+            </div>
+            )
+          </>
+        )}
+      </div>
+    );
   }
   return (
     <div>

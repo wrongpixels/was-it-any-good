@@ -6,6 +6,7 @@ import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
+import { AxiosError } from 'axios';
 const router: Router = express.Router();
 
 router.get('/:id', async (req, res, next) => {
@@ -36,13 +37,20 @@ router.get('/tmdb/:id', async (req, res, next) => {
         filmEntry = await buildFilmEntry(id, transaction);
         await transaction.commit();
       } catch (error) {
-        console.log('Rolling back');
+        //we always rollback if something fails
         await transaction.rollback();
+        console.log('Rolling back');
+        if (error instanceof AxiosError && error.status === 404) {
+          //if it's a 404 Axios error, it means the logic run fine but the film doesn't exist in TMDB.
+          res.json(null);
+          return;
+        }
         throw error;
       }
     }
     if (!filmEntry) {
-      throw new CustomError('Could not find or create entry', 400);
+      res.json(null);
+      return;
     }
     const film: FilmResponse = filmEntry.get({ plain: true });
     res.json(film);

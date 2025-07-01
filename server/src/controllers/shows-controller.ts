@@ -6,6 +6,7 @@ import { buildShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
+import { AxiosError } from 'axios';
 
 const router: Router = express.Router();
 router.get('/:id', async (req, res, next) => {
@@ -42,15 +43,20 @@ router.get('/tmdb/:id', async (req, res, next) => {
         showEntry = await buildShowEntry(id, transaction);
         await transaction.commit();
       } catch (error) {
-        console.log('Rolling back');
+        //we always rollback if something fails
         await transaction.rollback();
+        console.log('Rolling back');
+        if (error instanceof AxiosError && error.status === 404) {
+          //if it's a 404 Axios error, it means the logic run fine but the show doesn't exist in TMDB.
+          res.json(null);
+          return;
+        }
         throw error;
       }
-    } else {
-      console.log('Found Show in db');
     }
     if (!showEntry) {
-      throw new CustomError('Could not find or create entry', 400);
+      res.json(null);
+      return;
     }
     const show: ShowResponse = showEntry.get({ plain: true });
     res.json(show);
