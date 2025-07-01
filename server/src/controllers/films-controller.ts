@@ -13,7 +13,8 @@ router.get('/:id', async (req, res, next) => {
     const id: string = req.params.id;
     const filmEntry: Film | null = await Film.scope('withCredits').findByPk(id);
     if (!filmEntry) {
-      throw new CustomError('Could not Film entry', 400);
+      res.json(null);
+      return;
     }
     const film: FilmResponse = filmEntry.get({ plain: true });
     res.json(film);

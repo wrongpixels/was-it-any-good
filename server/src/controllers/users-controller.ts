@@ -3,7 +3,6 @@ import { User } from '../models';
 import CustomError from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
-import { Error } from 'sequelize';
 import { activeUserExtractor } from '../middleware/user-extractor';
 
 const router: Router = express.Router();
@@ -14,9 +13,6 @@ router.get('/', activeUserExtractor, async (req: Request, res, next) => {
       ? {}
       : { attributes: ['id', 'username', 'lastActive'] };
     const users: User[] = await User.findAll(options);
-    if (!users) {
-      throw new CustomError('Users database could not be accessed', 400);
-    }
     const usersData: UserData[] = users.map(
       (u: User): UserData => u.get({ plain: true })
     );
@@ -54,7 +50,9 @@ router.put(
       user.isActive = activate;
       await user.save();
       res.json({
-        message: `User ${user.username} ${activate ? 'unbanned' : 'banned'} successfully.`,
+        message: `User ${user.username} ${
+          activate ? 'unbanned' : 'banned'
+        } successfully.`,
       });
     } catch (error) {
       next(error);
@@ -69,7 +67,8 @@ router.get('/:id', async (req, res, next) => {
       attributes: ['id', 'username', 'lastActive'],
     });
     if (!user) {
-      throw new CustomError('User could not be found', 400);
+      res.json(null);
+      return;
     }
     const userData: UserData = user.get({ plain: true });
     res.json(userData);
@@ -90,13 +89,6 @@ router.post('/', async (req, res, next) => {
     }
     res.status(201).json(responseUser);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error('Full error:', {
-        message: error.message,
-        name: error.name,
-        stack: error.stack,
-      });
-    }
     next(error);
   }
 });

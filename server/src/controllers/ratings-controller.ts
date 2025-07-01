@@ -1,4 +1,4 @@
-import express, { Request, Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { CreateRatingSchema } from '../schemas/rating-schema';
 import {
   CreateRating,
@@ -21,24 +21,58 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.post('/', activeUserExtractor, async (req: Request, res, next) => {
-  try {
-    if (!req.activeUser) {
-      throw new CustomError('Not logged in', 401);
+router.post(
+  '/',
+  activeUserExtractor,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.activeUser?.isValid) {
+        throw new CustomError('Unauthorized', 401);
+      }
+      const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
+      const ratingData: CreateRatingData = {
+        ...reqRating,
+        userId: req.activeUser.id,
+      };
+      const [ratingEntry, created]: [Rating, boolean | null] =
+        await Rating.upsert(ratingData);
+      const ratingResponse: RatingData = ratingEntry.get({ plain: true });
+      res.status(created ? 201 : 200).json(ratingResponse);
+    } catch (error) {
+      next(error);
     }
-    const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
-    const ratingData: CreateRatingData = {
-      ...reqRating,
-      userId: req.activeUser.id,
-    };
-    const [ratingEntry, created]: [Rating, boolean | null] =
-      await Rating.upsert(ratingData);
-    const ratingResponse: RatingData = ratingEntry.get({ plain: true });
-    res.status(created ? 201 : 200).json(ratingResponse);
-  } catch (error) {
-    next(error);
   }
-});
+);
+
+router.get(
+  '/match/:mediaId',
+  activeUserExtractor,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.activeUser?.isValid) {
+        throw new CustomError('Unauthorized', 401);
+      }
+      const mediaId: string = req.params.mediaId;
+      if (!mediaId) {
+        throw new CustomError('Invalid media id', 400);
+      }
+      const userRating: Rating | null = await Rating.findOne({
+        where: {
+          mediaId,
+          userId: req.activeUser.id,
+        },
+      });
+      if (!userRating) {
+        res.json(null);
+        return;
+      }
+      const ratingResponse: RatingData = userRating.get({ plain: true });
+      res.json(ratingResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.delete('/:id', activeUserExtractor, async (req: Request, res, next) => {
   try {

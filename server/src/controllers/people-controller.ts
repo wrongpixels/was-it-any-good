@@ -24,7 +24,8 @@ router.get('/:id', async (req: Request, res, next) => {
     }
     const person: Person | null = await Person.scope('withMedia').findByPk(id);
     if (!person) {
-      throw new CustomError('Wrong person id', 400);
+      res.json(null);
+      return;
     }
     const personResponse: PersonResponse = { ...person.get({ plain: true }) };
     res.json(personResponse);

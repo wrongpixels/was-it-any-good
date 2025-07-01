@@ -16,7 +16,8 @@ router.get('/:id', async (req, res, next) => {
       'withCredits',
     ]).findByPk(id);
     if (!showEntry) {
-      throw new CustomError('Could not find or create entry', 400);
+      res.json(null);
+      return;
     }
     const show: ShowResponse = showEntry.get({ plain: true });
     res.json(show);
