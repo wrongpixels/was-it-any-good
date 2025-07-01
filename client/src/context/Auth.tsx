@@ -8,6 +8,7 @@ import {
 import { useAuthVerifyMutation } from '../mutations/login-mutations';
 import { getAPIError, isAuthError } from '../utils/error-handler';
 import { APIError } from '../../../shared/types/errors';
+import { setAxiosToken } from '../utils/axios-config';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -24,12 +25,15 @@ export const AuthContext: React.Context<UseAuthContextValues> =
     setSession: () => {},
   });
 
-//we create the context for the session but first try to load any existing
+//we create the context for the session but first try to load a existing one
 const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+  //the mutation to verify the session loaded is valid.
+  const verifySessionMutation = useAuthVerifyMutation();
+  //either an existing session or nothing. Not verified yet.
   const unverifiedSession: UserSessionData | null = tryLoadUserData();
 
-  //the mutation to verify the session loaded is not expired or the user has been banned.
-  const verifySessionMutation = useAuthVerifyMutation();
+  //We set the token so the first fetch call can use it. It'll fail in the db if not valid and be removed.
+  setAxiosToken(unverifiedSession?.token || null);
 
   //If existing, we first set the unverified session to show the logged-in UI.
   const [session, setSession]: [

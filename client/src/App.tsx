@@ -10,11 +10,12 @@ const App = (): JSX.Element => {
 
   return (
     <div className="w-full">
-      <Header />
-      <div className="min-h-screen flex justify-center bg-gray-200 p-4 box-border">
-        <div className="p-4 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
-          <Router>
+      <Router>
+        <Header />
+        <div className="min-h-screen flex justify-center bg-gray-200 p-4 box-border">
+          <div className="p-4 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
             <Routes>
+              <Route path="/" element={null} />
               <Route
                 path="/film/:id"
                 element={<MediaEntry mediaType={MediaType.Film} />}
@@ -33,9 +34,9 @@ const App = (): JSX.Element => {
               />
               <Route path="/person/:id" element={<PersonEntry />} />
             </Routes>
-          </Router>
+          </div>
         </div>
-      </div>
+      </Router>
     </div>
   );
 };

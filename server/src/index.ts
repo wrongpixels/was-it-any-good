@@ -13,10 +13,12 @@ import {
   peopleRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
+import { activeUserExtractor } from './middleware/user-extractor';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(activeUserExtractor);
 app.use('/api/films', filmsRouter);
 app.use('/api/shows', showsRouter);
 app.use('/api/genres', genresRouter);

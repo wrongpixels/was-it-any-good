@@ -1,12 +1,15 @@
 import { UserSessionData } from '../../../shared/types/models';
+import { removeAxiosToken, setAxiosToken } from './axios-config';
 
 const STORAGE_KEY_USER = 'user-data';
 
 export const saveUserSession = (sessionData: UserSessionData) => {
+  setAxiosToken(sessionData.token);
   window.localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(sessionData));
 };
 
 export const eraseUserSession = () => {
+  removeAxiosToken();
   window.localStorage.removeItem(STORAGE_KEY_USER);
 };
 

@@ -5,6 +5,7 @@ import { ActiveUser } from '../../../shared/types/models';
 import { NextFunction, Request, Response } from 'express';
 import { ActiveUserSchema } from '../schemas/user-schema';
 import { Session, User } from '../models';
+import CustomError from '../util/customError';
 
 declare module 'express' {
   interface Request {
@@ -18,67 +19,51 @@ export const activeUserExtractor = async (
   next: NextFunction
 ) => {
   try {
-    const validUser: ActiveUser | null = await tokenValidator(req);
-    if (!validUser) {
+    const auth = req.header('authorization')?.toLowerCase();
+    const token = auth?.startsWith('bearer ') ? auth.slice(7) : null;
+
+    // No token → anonymous
+    if (!token) {
       req.activeUser = INV_ACTIVE_USER;
-      next();
-      return;
+      return next();
     }
-    req.activeUser = validUser;
+
+    // Verify JWT signature
+    let payload: JwtPayload | string;
+    try {
+      payload = jwt.verify(token, API_SECRET);
+    } catch {
+      throw new CustomError('Session is not valid', 401);
+    }
+
+    // Validate shape
+    const parsed = ActiveUserSchema.safeParse(payload);
+    if (parsed.error || parsed.data.id < 0 || !parsed.data.username) {
+      throw new CustomError('Session is not valid', 401);
+    }
+    const candidate = parsed.data as ActiveUser;
+
+    // Confirm user still exists & is active
+    const user = await User.findOne({
+      where: { id: candidate.id, username: candidate.username, isActive: true },
+    });
+    if (!user) {
+      throw new CustomError('Session is not valid', 401);
+    }
+
+    // Confirm session record
+    const session = await Session.findOne({
+      where: { userId: candidate.id, token },
+    });
+    if (!session || session.expired) {
+      if (session) await session.destroy();
+      throw new CustomError('Session is not valid', 401);
+    }
+
+    // All good
+    req.activeUser = { ...candidate, isValid: true };
     next();
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
-};
-
-const tokenValidator = async (req: Request): Promise<ActiveUser | null> => {
-  const token: string | null = tokenExtractor(req);
-  if (!token) {
-    return null;
-  }
-  const activeUser: ActiveUser = await validateActiveUser(
-    jwt.verify(token, API_SECRET)
-  );
-  if (!activeUser?.isActive || !activeUser.id) {
-    return null;
-  }
-  const session: Session | null = await Session.findOne({
-    where: { userId: activeUser.id },
-  });
-  if (!session || session.token !== token) {
-    return null;
-  }
-  if (session.expired) {
-    await session.destroy();
-    return null;
-  }
-  return activeUser;
-};
-
-const tokenExtractor = (req: Request): string | null => {
-  const authorization = req.header('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    return authorization.substring(7);
-  }
-  return null;
-};
-
-const validateActiveUser = async (
-  data: JwtPayload | string
-): Promise<ActiveUser> => {
-  const result = ActiveUserSchema.safeParse(data);
-  if (result.error || result.data?.id < 0 || !result.data.username) {
-    return INV_ACTIVE_USER;
-  }
-  const activeUser: ActiveUser = result.data;
-  const user = await User.findOne({
-    where: {
-      id: activeUser.id,
-      username: activeUser.username,
-    },
-  });
-  if (!user) {
-    return INV_ACTIVE_USER;
-  }
-  return { ...result.data, isValid: true };
 };

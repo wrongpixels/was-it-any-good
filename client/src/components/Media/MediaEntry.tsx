@@ -55,7 +55,7 @@ const MediaEntry = ({
         </div>
         {(tmdb && (
           <>
-            <div>Do you want to check if it yourself?</div>
+            <div>Do you want to check it yourself?</div>
             <div className="font-semibold">
               Click <a href={buildTMDBUrl(mediaType, mediaId)}>Here</a>
             </div>
