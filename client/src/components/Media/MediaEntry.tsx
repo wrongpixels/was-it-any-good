@@ -62,7 +62,6 @@ const MediaEntry = ({
           </>
         )) || (
           <>
-            (
             <div>
               Did you want to check a {mediaType} using a
               <span className="font-medium"> TMDB </span>id?
@@ -75,7 +74,6 @@ const MediaEntry = ({
               In this case:{' '}
               <Link to={currentUrl}>{buildOwnUrl(currentUrl)}</Link>
             </div>
-            )
           </>
         )}
       </div>

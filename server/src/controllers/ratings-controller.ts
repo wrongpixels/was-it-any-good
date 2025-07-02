@@ -76,7 +76,8 @@ router.delete('/:id', async (req: Request, res, next) => {
     const id: string = req.params.id;
     const rating: Rating | null = await Rating.findByPk(id);
     if (!rating) {
-      throw new CustomError('Rating not found in db', 404);
+      res.status(200).end();
+      return;
     }
     if (!isAuthorizedUser(req.activeUser, rating.userId)) {
       throw new CustomError('Unauthorized', 403);
