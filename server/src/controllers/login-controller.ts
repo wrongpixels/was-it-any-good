@@ -11,10 +11,9 @@ import CustomError from '../util/customError';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { API_SECRET } from '../util/config';
+import { logoutUser } from '../services/session-service';
 
 const router: Router = express.Router();
-
-const logout = async (session: Session) => await session.destroy();
 
 router.post('/', async (req: Request, res, next) => {
   try {
@@ -32,7 +31,7 @@ router.post('/', async (req: Request, res, next) => {
       : await User.findOne({ where: { username: loginData.username } });
 
     if (currentSession) {
-      await logout(currentSession);
+      await logoutUser(currentSession.userId);
     }
     if (!user) {
       throw new CustomError('Wrong username or password', 401);

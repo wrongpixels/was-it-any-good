@@ -1,7 +1,15 @@
+import { QueryClient } from '@tanstack/react-query';
 import { UserSessionData } from '../../../shared/types/models';
 import { removeAxiosToken, setAxiosToken } from './axios-config';
+import {
+  SESSION_QUERY_KEY,
+  STORAGE_KEY_USER,
+} from '../constants/session-constants';
 
-const STORAGE_KEY_USER = 'user-data';
+export const logoutClientSide = (queryClient: QueryClient) => {
+  eraseUserSession();
+  queryClient.setQueryData(SESSION_QUERY_KEY, null);
+};
 
 export const saveUserSession = (sessionData: UserSessionData) => {
   setAxiosToken(sessionData.token);

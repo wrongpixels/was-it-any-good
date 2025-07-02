@@ -1,5 +1,4 @@
-import { useState, MouseEvent, JSX, useContext } from 'react';
-import { AuthContext } from '../../context/Auth';
+import { useState, MouseEvent, JSX } from 'react';
 import {
   useNotification,
   UseNotificationValues,
@@ -8,6 +7,7 @@ import { MediaType } from '../../../../shared/types/media';
 import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
 import { numToVote } from '../../utils/ratings-helper';
+import { useAuth } from '../../hooks/use-auth';
 
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
 
@@ -57,7 +57,7 @@ const StarIcons = ({
   defaultRating = 0,
   mediaType,
 }: StarIconsProps): JSX.Element => {
-  const { session } = useContext(AuthContext);
+  const { session } = useAuth();
   const notification: UseNotificationValues = useNotification();
   const [userRating, setUserRating]: [
     UserVote,

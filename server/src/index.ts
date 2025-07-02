@@ -8,6 +8,7 @@ import {
   showsRouter,
   usersRouter,
   loginRouter,
+  logoutRouter,
   sessionsRouter,
   ratingsRouter,
   peopleRouter,
@@ -23,8 +24,9 @@ app.use('/api/films', filmsRouter);
 app.use('/api/shows', showsRouter);
 app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/login', loginRouter);
-app.use('/api/sessions', sessionsRouter);
+app.use('/api/auth/login', loginRouter);
+app.use('/api/auth/logout', logoutRouter);
+app.use('/api/auth/sessions', sessionsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/people', peopleRouter);
 app.use(errorHandler);

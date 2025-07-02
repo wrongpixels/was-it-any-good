@@ -5,17 +5,21 @@ export const doLogin = async (
   loginData: LoginData
 ): Promise<UserSessionData> => {
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
-    '/api/login',
+    '/api/auth/login',
     loginData
   );
   return data;
+};
+
+export const doLogout = async (): Promise<AxiosResponse> => {
+  return await axios.post('/api/auth/logout');
 };
 
 export const verifySession = async (
   session: UserSessionData
 ): Promise<UserSessionData> => {
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
-    `/api/sessions/verify`,
+    `/api/auth/sessions/verify`,
     session
   );
   return data;

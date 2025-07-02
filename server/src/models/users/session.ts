@@ -63,6 +63,7 @@ Session.init(
     },
     token: {
       type: DataTypes.STRING,
+      unique: true,
     },
     username: {
       type: DataTypes.STRING,
