@@ -1,13 +1,6 @@
-import { createContext, JSX, useEffect, useState } from 'react';
+import { createContext, JSX, useState } from 'react';
 import { UserSessionData } from '../../../shared/types/models';
-import {
-  eraseUserSession,
-  saveUserSession,
-  tryLoadUserData,
-} from '../utils/session-storage';
-import { useAuthVerifyMutation } from '../mutations/login-mutations';
-import { getAPIError, isAuthError } from '../utils/error-handler';
-import { APIError } from '../../../shared/types/errors';
+import { tryLoadUserData } from '../utils/session-storage';
 import { setAxiosToken } from '../utils/axios-config';
 
 interface AuthProviderProps {
@@ -27,8 +20,6 @@ export const AuthContext: React.Context<UseAuthContextValues> =
 
 //we create the context for the session but first try to load a existing one
 const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  //the mutation to verify the session loaded is valid.
-  const verifySessionMutation = useAuthVerifyMutation();
   //either an existing session or nothing. Not verified yet.
   const unverifiedSession: UserSessionData | null = tryLoadUserData();
 
@@ -40,7 +31,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     UserSessionData | null,
     React.Dispatch<React.SetStateAction<UserSessionData | null>>,
   ] = useState<UserSessionData | null>(unverifiedSession);
-
+  /*
   //If a session was recovered, we verify it with a mutation
   useEffect(() => {
     if (unverifiedSession) {
@@ -61,7 +52,7 @@ const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         },
       });
     }
-  }, []);
+  }, []); */
 
   return (
     <AuthContext.Provider value={{ session, setSession }}>

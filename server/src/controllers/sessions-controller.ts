@@ -1,7 +1,7 @@
 import express, { Request } from 'express';
 import { UserSessionData } from '../../../shared/types/models';
 import { Session, User } from '../models';
-import CustomError from '../util/customError';
+import { SessionAuthError } from '../util/customError';
 import { isValidSession } from '../util/session-verifier';
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.post(
         localSession.token === '' ||
         localSession.expired
       ) {
-        throw new CustomError('No session or invalid session', 401);
+        throw new SessionAuthError('No session or invalid session');
       }
       const dbSession: Session | null = await Session.findByPk(
         localSession.id,
@@ -27,11 +27,11 @@ router.post(
         }
       );
       if (!dbSession) {
-        throw new CustomError('Session could not be found in db', 401);
+        throw new SessionAuthError('Session could not be found in db');
       }
       if (!isValidSession(localSession, dbSession)) {
         await dbSession.expire();
-        throw new CustomError('Session expired', 401);
+        throw new SessionAuthError('Session expired');
       }
       const userSession: UserSessionData = dbSession.get({ plain: true });
       res.json(userSession);

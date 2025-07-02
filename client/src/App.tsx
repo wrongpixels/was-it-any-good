@@ -6,8 +6,6 @@ import Header from './components/Header/Header';
 import PersonEntry from './components/Person/PersonEntry';
 
 const App = (): JSX.Element => {
-  //const [count, setCount] = useState(0);
-
   return (
     <div className="w-full">
       <Router>

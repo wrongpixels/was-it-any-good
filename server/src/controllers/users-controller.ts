@@ -3,11 +3,10 @@ import { User } from '../models';
 import CustomError from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
-import { activeUserExtractor } from '../middleware/user-extractor';
 
 const router: Router = express.Router();
 
-router.get('/', activeUserExtractor, async (req: Request, res, next) => {
+router.get('/', async (req: Request, res, next) => {
   try {
     const options = req.activeUser?.isAdmin
       ? {}
@@ -23,7 +22,6 @@ router.get('/', activeUserExtractor, async (req: Request, res, next) => {
 });
 router.put(
   '/:id/activate',
-  activeUserExtractor,
   async (
     req: Request<{ id: string }, unknown, { activate: boolean }>,
     res: Response,

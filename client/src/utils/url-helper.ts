@@ -1,5 +1,5 @@
 import { MediaType } from '../../../shared/types/media';
-import { TMDB_URL } from '../constants/url-constants';
+import { TMDB_URL } from '../../../shared/constants/url-constants';
 
 export const buildOwnUrl = (path: string = ''): string =>
   `${window.location.origin}${path}`;

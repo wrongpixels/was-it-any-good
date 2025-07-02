@@ -5,7 +5,7 @@ import { ActiveUser } from '../../../shared/types/models';
 import { NextFunction, Request, Response } from 'express';
 import { ActiveUserSchema } from '../schemas/user-schema';
 import { Session, User } from '../models';
-import CustomError from '../util/customError';
+import { SessionAuthError } from '../util/customError';
 
 declare module 'express' {
   interface Request {
@@ -13,7 +13,7 @@ declare module 'express' {
   }
 }
 
-export const activeUserExtractor = async (
+export const authHandler = async (
   req: Request,
   _res: Response,
   next: NextFunction
@@ -22,48 +22,51 @@ export const activeUserExtractor = async (
     const auth = req.header('authorization')?.toLowerCase();
     const token = auth?.startsWith('bearer ') ? auth.slice(7) : null;
 
-    // No token → anonymous
     if (!token) {
       req.activeUser = INV_ACTIVE_USER;
       return next();
     }
 
-    // Verify JWT signature
     let payload: JwtPayload | string;
     try {
       payload = jwt.verify(token, API_SECRET);
     } catch {
-      throw new CustomError('Session is not valid', 401);
+      throw new SessionAuthError();
     }
 
-    // Validate shape
     const parsed = ActiveUserSchema.safeParse(payload);
     if (parsed.error || parsed.data.id < 0 || !parsed.data.username) {
-      throw new CustomError('Session is not valid', 401);
+      throw new SessionAuthError();
     }
-    const candidate = parsed.data as ActiveUser;
+    const sessionUser = parsed.data as ActiveUser;
 
-    // Confirm user still exists & is active
     const user = await User.findOne({
-      where: { id: candidate.id, username: candidate.username, isActive: true },
+      where: { id: sessionUser.id, username: sessionUser.username },
     });
     if (!user) {
-      throw new CustomError('Session is not valid', 401);
+      throw new SessionAuthError('User is not valid');
+    }
+    if (!user.isActive) {
+      throw new SessionAuthError(
+        'User account is inactive. Contact Administration'
+      );
     }
 
-    // Confirm session record
     const session = await Session.findOne({
-      where: { userId: candidate.id, token },
+      where: { userId: sessionUser.id, token },
     });
-    if (!session || session.expired) {
-      if (session) await session.destroy();
-      throw new CustomError('Session is not valid', 401);
+    if (!session) {
+      throw new SessionAuthError('Session is not valid');
     }
 
-    // All good
-    req.activeUser = { ...candidate, isValid: true };
+    if (session.expired) {
+      await session.destroy();
+      throw new SessionAuthError('Session has expired');
+    }
+
+    req.activeUser = { ...sessionUser, isValid: true };
     next();
-  } catch (err) {
-    next(err);
+  } catch (error) {
+    next(error);
   }
 };

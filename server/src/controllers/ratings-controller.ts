@@ -5,7 +5,6 @@ import {
   CreateRatingData,
   RatingData,
 } from '../../../shared/types/models';
-import { activeUserExtractor } from '../middleware/user-extractor';
 import CustomError from '../util/customError';
 import { Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
@@ -21,32 +20,27 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.post(
-  '/',
-  activeUserExtractor,
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      if (!req.activeUser?.isValid) {
-        throw new CustomError('Unauthorized', 401);
-      }
-      const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
-      const ratingData: CreateRatingData = {
-        ...reqRating,
-        userId: req.activeUser.id,
-      };
-      const [ratingEntry, created]: [Rating, boolean | null] =
-        await Rating.upsert(ratingData);
-      const ratingResponse: RatingData = ratingEntry.get({ plain: true });
-      res.status(created ? 201 : 200).json(ratingResponse);
-    } catch (error) {
-      next(error);
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.activeUser?.isValid) {
+      throw new CustomError('Unauthorized', 401);
     }
+    const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
+    const ratingData: CreateRatingData = {
+      ...reqRating,
+      userId: req.activeUser.id,
+    };
+    const [ratingEntry, created]: [Rating, boolean | null] =
+      await Rating.upsert(ratingData);
+    const ratingResponse: RatingData = ratingEntry.get({ plain: true });
+    res.status(created ? 201 : 200).json(ratingResponse);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.get(
   '/match/:mediaId',
-  activeUserExtractor,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.activeUser?.isValid) {
@@ -74,7 +68,7 @@ router.get(
   }
 );
 
-router.delete('/:id', activeUserExtractor, async (req: Request, res, next) => {
+router.delete('/:id', async (req: Request, res, next) => {
   try {
     if (!req.activeUser) {
       throw new CustomError('Not logged in', 401);
