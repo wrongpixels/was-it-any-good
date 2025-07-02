@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { CreateRatingData } from '../../../shared/types/models';
-import { voteMedia } from '../services/ratings-service';
+import { unvoteMedia, voteMedia } from '../services/ratings-service';
 
 export const voteMutation = () => () =>
   useMutation({
@@ -9,5 +9,5 @@ export const voteMutation = () => () =>
 
 export const unvoteMutation = () =>
   useMutation({
-    mutationFn: (rating: CreateRatingData) => voteMedia(rating),
+    mutationFn: (mediaId: number) => unvoteMedia(mediaId),
   });
