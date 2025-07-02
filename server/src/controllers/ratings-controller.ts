@@ -8,6 +8,8 @@ import {
 import CustomError from '../util/customError';
 import { Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
+import { MediaType } from '../../../shared/types/media';
+import { stringToMediaType } from '../../../shared/helpers/media-helpers';
 
 const router: Router = express.Router();
 
@@ -40,19 +42,21 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
-  '/match/:mediaId',
+  '/match/:media/:mediaId',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.activeUser?.isValid) {
         throw new CustomError('Unauthorized', 401);
       }
       const mediaId: string = req.params.mediaId;
-      if (!mediaId) {
+      const mediaType: MediaType | null = stringToMediaType(req.params.media);
+      if (!mediaId || !mediaType) {
         throw new CustomError('Invalid media id', 400);
       }
       const userRating: Rating | null = await Rating.findOne({
         where: {
           mediaId,
+          mediaType,
           userId: req.activeUser.id,
         },
       });

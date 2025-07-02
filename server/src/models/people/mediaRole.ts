@@ -6,9 +6,10 @@ import {
   Model,
 } from 'sequelize';
 import { sequelize } from '../../util/db';
-import { AuthorType, MediaType } from '../../types/media/media-types';
+import { AuthorType } from '../../types/media/media-types';
 import { Film, Show } from '..';
 import { BriefMediaResponse } from '../../../../shared/types/models';
+import { MediaType } from '../../../../shared/types/media';
 
 class MediaRole extends Model<
   InferAttributes<MediaRole>,

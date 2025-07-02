@@ -9,6 +9,7 @@ interface MediaPosterProps {
 
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
   console.log(calculateAverage(media));
+  const average: number = calculateAverage(media);
   return (
     <div>
       <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
@@ -21,7 +22,7 @@ const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
         />
         <div className="text-center">
           <StarRating
-            rating={calculateAverage(media)}
+            rating={average}
             media={media}
             valid={true}
             mediaType={media.mediaType}

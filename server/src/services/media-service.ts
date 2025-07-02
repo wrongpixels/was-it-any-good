@@ -6,21 +6,16 @@ import Genre from '../models/genres/genre';
 import { CreateMediaRole } from '../models/people/mediaRole';
 import Person, { CreatePerson } from '../models/people/person';
 import { CreateGenreData } from '../types/genres/genre-types';
-import {
-  AuthorType,
-  MediaData,
-  MediaPerson,
-  MediaType,
-} from '../types/media/media-types';
+import { AuthorType, MediaData, MediaPerson } from '../types/media/media-types';
 import {
   TMDBAcceptedJobs,
   TMDBCreditsData,
   TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
 import CustomError from '../util/customError';
+import { MediaType } from '../../../shared/types/media';
 
 //Overrides to ensure type safety
-
 export function buildCreditsAndGetEntry(
   media: Film,
   mediaData: MediaData,

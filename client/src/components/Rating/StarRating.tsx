@@ -31,6 +31,7 @@ const StarRating = ({
           <StarIcons
             starWidth={starWidth}
             defaultRating={rating}
+            mediaId={media.id}
             mediaType={mediaType}
             season={season}
           />

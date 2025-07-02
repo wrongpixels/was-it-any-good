@@ -1,13 +1,27 @@
-import { useMutation } from '@tanstack/react-query';
-import { CreateRatingData } from '../../../shared/types/models';
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
+import { CreateRating, RatingData } from '../../../shared/types/models';
 
-export const voteMutation = () => () =>
-  useMutation({
-    mutationFn: (rating: CreateRatingData) => voteMedia(rating),
-  });
+export const useVoteMutation = () => {
+  const queryClient = useQueryClient();
 
-export const unvoteMutation = () =>
-  useMutation({
-    mutationFn: (mediaId: number) => unvoteMedia(mediaId),
+  return useMutation({
+    mutationFn: (rating: CreateRating) => voteMedia(rating),
+    onSuccess: (rating: RatingData) => {
+      queryClient.setQueryData(
+        ['rating', `${rating.mediaType.toLowerCase()}-${rating.mediaId}`],
+        rating
+      );
+    },
   });
+};
+export const useUnvoteMutation = (queryClient: QueryClient) => {
+  return useMutation({
+    mutationFn: (ratingId: number) => unvoteMedia(ratingId),
+    onSuccess: ({}) => {},
+  });
+};

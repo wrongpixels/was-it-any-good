@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { getRatingByMediaId } from '../services/ratings-service';
+import { CheckRating } from '../../../shared/types/models';
 
-export const useRatingByMedia = (mediaId: number, userId: number) =>
+export const useRatingByMedia = ({ mediaId, mediaType }: CheckRating) =>
   useQuery({
-    queryKey: ['rating', `${mediaId}-${userId}`],
-    queryFn: () => getRatingByMediaId(mediaId),
-    enabled: !!mediaId && !!userId,
+    queryKey: ['rating', `${mediaType.toLocaleLowerCase()}-${mediaId}`],
+    queryFn: () => getRatingByMediaId({ mediaId, mediaType }),
+
+    enabled: !!mediaId && !!mediaType,
   });
