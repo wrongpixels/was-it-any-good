@@ -47,7 +47,7 @@ Content-Type: application/json
 }
 
 ###LOGIN
-POST http://localhost:6060/api/login
+POST http://localhost:6060/api/auth/login
 Content-Type: application/json
 
 {

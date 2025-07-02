@@ -16,8 +16,11 @@ export const doLogout = async (): Promise<AxiosResponse> => {
 };
 
 export const verifySession = async (
-  session: UserSessionData
-): Promise<UserSessionData> => {
+  session: UserSessionData | null
+): Promise<UserSessionData | null> => {
+  if (!session) {
+    return Promise.resolve(null);
+  }
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
     `/api/auth/sessions/verify`,
     session

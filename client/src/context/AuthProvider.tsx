@@ -17,6 +17,7 @@ import {
 } from '../mutations/login-mutations';
 import { SESSION_QUERY_KEY } from '../constants/session-constants';
 import { AxiosResponse } from 'axios';
+import { verifySession } from '../services/login-service';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -35,18 +36,26 @@ export interface AuthContextValues {
   isLoginPending: boolean;
   isLoadingSession: boolean;
 }
-
+//we use a React Context we'll sync to our Tanstack session entry.
+//this way, components can easily read the session, Tanstack caches the value, and we can
+//access queryClient in axios-config.ts and modify it outside components
 export const AuthContext = createContext<AuthContextValues | undefined>(
   undefined
 );
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const queryClient = useQueryClient();
+  const unverifiedSession: UserSessionData | null = tryLoadUserData();
+
+  //We load any existing session into the context before verifying it's valid so the UI doesn't flicker
+  //verifySession does return the session from the server itself or null if invalid, so it'll set the real session
   const { data: session, isLoading: isLoadingSession } = useQuery({
     queryKey: SESSION_QUERY_KEY,
-    queryFn: () => tryLoadUserData(),
-    staleTime: Infinity,
+    queryFn: () => verifySession(unverifiedSession),
+    initialData: unverifiedSession,
+    enabled: !!unverifiedSession,
     gcTime: Infinity,
+    retry: false,
   });
 
   const loginMutation: UseMutationResult<UserSessionData, Error, LoginData> =

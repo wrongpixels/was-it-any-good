@@ -9,7 +9,7 @@ export const setupAxiosInterceptors = (queryClient: QueryClient): void => {
     (res) => res,
     (error) => {
       if (isSessionAuthError(error)) {
-        console.log('SessionAuthError! Logging out client-side.');
+        console.log('SessionAuthError! Logging out client-side.', error);
         logoutClientSide(queryClient);
       }
       return Promise.reject(error);

@@ -18,6 +18,6 @@ export const useLogoutMutation = (): UseMutationResult<
   });
 };
 export const useAuthVerifyMutation = () =>
-  useMutation<UserSessionData, Error, UserSessionData>({
-    mutationFn: (session: UserSessionData) => verifySession(session),
+  useMutation<UserSessionData | null, Error, UserSessionData | null>({
+    mutationFn: (session: UserSessionData | null) => verifySession(session),
   });

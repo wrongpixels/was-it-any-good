@@ -24,6 +24,7 @@ export class AuthError extends CustomError {
 
 export class SessionAuthError extends AuthError {
   constructor(message: string = 'Session is no longer valid') {
+    console.log('called');
     super(message, SESSION_AUTH_ERROR);
   }
 }

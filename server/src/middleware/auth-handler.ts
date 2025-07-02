@@ -19,8 +19,8 @@ export const authHandler = async (
   next: NextFunction
 ) => {
   try {
-    const auth = req.header('authorization')?.toLowerCase();
-    const token = auth?.startsWith('bearer ') ? auth.slice(7) : null;
+    const auth = req.header('authorization');
+    const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
 
     if (!token) {
       req.activeUser = INV_ACTIVE_USER;
@@ -31,11 +31,14 @@ export const authHandler = async (
     try {
       payload = jwt.verify(token, API_SECRET);
     } catch {
+      console.log('here', token);
       throw new SessionAuthError();
     }
 
     const parsed = ActiveUserSchema.safeParse(payload);
     if (parsed.error || parsed.data.id < 0 || !parsed.data.username) {
+      console.log('here2', parsed);
+
       throw new SessionAuthError();
     }
     const sessionUser = parsed.data as ActiveUser;
