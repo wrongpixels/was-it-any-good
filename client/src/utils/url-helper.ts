@@ -4,6 +4,9 @@ import { TMDB_URL } from '../../../shared/constants/url-constants';
 export const buildOwnUrl = (path: string = ''): string =>
   `${window.location.origin}${path}`;
 
+export const buildPathUrl = (path: string = ''): string =>
+  `${window.location.pathname}${path}`;
+
 export const buildTMDBUrl = (
   mediaType: MediaType,
   path: string = ''

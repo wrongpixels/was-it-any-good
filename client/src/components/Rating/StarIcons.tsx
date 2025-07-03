@@ -59,7 +59,7 @@ export const StarIcon = ({ width }: StarIconProps): JSX.Element => (
 );
 
 const StarIcons = ({
-  season = 0,
+  //season = 0,
   starWidth = 26,
   defaultRating = 0,
   mediaType,
@@ -150,9 +150,9 @@ const StarIcons = ({
         handleUnvote();
       }
     } else if (hoverRating) {
-      notification.setNotification(
+      /*   notification.setNotification(
         `Voted ${mediaType}${mediaType === MediaType.Season && season !== 0 ? ` ${season}` : ''}\nwith a ${hoverRating}!`
-      );
+      );*/
       handleVote();
     }
     setIsHovering(false);

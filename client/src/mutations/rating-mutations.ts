@@ -1,7 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
-import { CreateRating, RatingData } from '../../../shared/types/models';
-import { getRatingKey } from '../utils/ratings-helper';
+import {
+  CreateRating,
+  MediaResponse,
+  RatingData,
+} from '../../../shared/types/models';
+import {
+  getMediaKey,
+  getRatingKey,
+  getTmdbMediaKey,
+  recalculateRating,
+} from '../utils/ratings-helper';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
@@ -9,16 +18,40 @@ export const useVoteMutation = () => {
   return useMutation({
     mutationKey: ['vote'],
     mutationFn: (rating: CreateRating) => voteMedia(rating),
-    onMutate: async (rating: CreateRating, tmdb: boolean = false) => {
-      const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
+    onMutate: async (rating: CreateRating) => {
+      const queryKey: string[] = getRatingKey(rating.mediaType, rating.mediaId);
+      const mediaQueryKey: string[] = getMediaKey(
+        rating.mediaType,
+        rating.mediaId
+      );
       await queryClient.cancelQueries({ queryKey });
-      const previousRating = queryClient.getQueryData(queryKey);
+      const previousRating: RatingData | undefined =
+        queryClient.getQueryData(queryKey);
+      const currentMediaData: MediaResponse | undefined =
+        queryClient.getQueryData(mediaQueryKey);
+
       queryClient.setQueryData(queryKey, rating);
-
-      const currentMediaData = queryClient.getQueryData([
-        tmdb ? 'tmdbMedia' : 'media',
-      ]);
-
+      if (currentMediaData) {
+        const tmdbMediaQueryKey: string[] = getTmdbMediaKey(
+          rating.mediaType,
+          currentMediaData.tmdbId
+        );
+        const updatedResponse: MediaResponse = {
+          ...currentMediaData,
+          ...recalculateRating(
+            rating.userScore,
+            currentMediaData.rating,
+            currentMediaData.voteCount,
+            previousRating?.userScore
+          ),
+        };
+        queryClient.setQueryData<MediaResponse>(mediaQueryKey, {
+          ...updatedResponse,
+        });
+        queryClient.setQueryData<MediaResponse>(tmdbMediaQueryKey, {
+          ...updatedResponse,
+        });
+      }
       return {
         previousRating,
         queryKey,

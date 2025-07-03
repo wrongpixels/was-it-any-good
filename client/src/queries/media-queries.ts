@@ -1,53 +1,66 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { getMediaById, getMediaByTMDBId } from '../services/media-service';
 import { MediaResponse } from '../../../shared/types/models';
 import mergeCredits from '../utils/credits-merger';
 import { MediaType } from '../../../shared/types/media';
-
-interface MediaQueryValues {
-  mediaType: MediaType;
-  id?: string;
-  tmdbId?: string;
-}
+import { useEffect } from 'react';
+import { getActiveMediaKey } from '../utils/ratings-helper';
 
 const transformCredits = (data: MediaResponse): MediaResponse => {
   if (!data.crew) return data;
   return { ...data, mergedCrew: mergeCredits(data.crew) };
 };
 
-export const useMediaQuery = ({ mediaType, id, tmdbId }: MediaQueryValues) => {
+export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
   const queryClient = useQueryClient();
-  const mapped = tmdbId
-    ? queryClient.getQueryData<{ id: string }>(['tmdbMap', mediaType, tmdbId])
-    : undefined;
-  const effectiveId = mapped?.id ?? id;
 
   const query = useQuery({
-    queryKey: ['media', mediaType, effectiveId ?? tmdbId],
-    enabled: !!(effectiveId ?? tmdbId),
+    queryKey: getActiveMediaKey(mediaType, id, false),
+    enabled: !!id,
     queryFn: async () => {
-      if (effectiveId) {
-        const raw = await getMediaById(effectiveId, mediaType);
-        return transformCredits(raw);
-      }
-      const raw = await getMediaByTMDBId(tmdbId!, mediaType);
-      return transformCredits(raw);
+      const data = await getMediaById(id, mediaType);
+      return transformCredits(data);
     },
   });
-  //tanstack has removed OnSuccess from queries, so this is a way of "sharing" values between a
-  //tmdb cache entry and the internal id one
+
   useEffect(() => {
     const media = query.data;
-    if (!media) {
-      return;
+    if (media?.tmdbId) {
+      queryClient.setQueryData(
+        getActiveMediaKey(mediaType, media.tmdbId, true),
+        media
+      );
+      queryClient.setQueryData(['tmdbMap', mediaType, media.tmdbId], {
+        id: media.id,
+      });
     }
+  }, [query.data, mediaType, id, queryClient]);
 
-    queryClient.setQueryData<MediaResponse>(
-      ['media', mediaType, media.id],
-      media
-    );
-    if (tmdbId) {
+  return query;
+};
+
+export const useMediaByTMDBQuery = (
+  tmdbId: string = '',
+  mediaType: MediaType
+) => {
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: getActiveMediaKey(mediaType, tmdbId, true),
+    enabled: !!tmdbId,
+    queryFn: async () => {
+      const data = await getMediaByTMDBId(tmdbId, mediaType);
+      return transformCredits(data);
+    },
+  });
+
+  useEffect(() => {
+    const media = query.data;
+    if (media?.id) {
+      queryClient.setQueryData(
+        getActiveMediaKey(mediaType, media.id, false),
+        media
+      );
       queryClient.setQueryData(['tmdbMap', mediaType, tmdbId], {
         id: media.id,
       });

@@ -7,9 +7,12 @@ import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
 import { Link, PathMatch, useMatch } from 'react-router-dom';
 import { buildMediaURL } from '../../services/media-service';
-import { useMediaQuery } from '../../queries/media-queries';
 import { buildOwnUrl, buildTMDBUrl } from '../../utils/url-helper';
 import { usePrefetchRating } from '../../queries/ratings-queries';
+import {
+  useMediaByIdQuery,
+  useMediaByTMDBQuery,
+} from '../../queries/media-queries';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -31,8 +34,8 @@ const MediaEntry = ({
     isError,
     error,
   } = tmdb
-    ? useMediaQuery({ mediaType, tmdbId: mediaId })
-    : useMediaQuery({ mediaType, id: mediaId });
+    ? useMediaByTMDBQuery(mediaId, mediaType)
+    : useMediaByIdQuery(mediaId, mediaType);
 
   if (isLoading || isError) {
     return (
