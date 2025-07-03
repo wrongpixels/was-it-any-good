@@ -1,25 +1,37 @@
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
 import { CreateRating, RatingData } from '../../../shared/types/models';
+import { getRatingKey } from '../utils/ratings-helper';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
+    mutationKey: ['vote'], // Optional: name the mutation
     mutationFn: (rating: CreateRating) => voteMedia(rating),
+    onMutate: async (rating: CreateRating) => {
+      const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousRating = queryClient.getQueryData(queryKey);
+      queryClient.setQueryData(queryKey, rating);
+      return {
+        previousRating,
+        queryKey,
+      };
+    },
+    onError: (_err, _rating, context) => {
+      if (context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousRating);
+      }
+    },
     onSuccess: (rating: RatingData) => {
-      queryClient.setQueryData(
-        ['rating', `${rating.mediaType.toLowerCase()}-${rating.mediaId}`],
-        rating
-      );
+      const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
+      queryClient.setQueryData(queryKey, rating);
     },
   });
 };
-export const useUnvoteMutation = (queryClient: QueryClient) => {
+export const useUnvoteMutation = () => {
   return useMutation({
     mutationFn: (ratingId: number) => unvoteMedia(ratingId),
     onSuccess: ({}) => {},

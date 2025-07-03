@@ -12,6 +12,7 @@ import {
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
 import { buildOwnUrl, buildTMDBUrl } from '../../utils/url-helper';
+import { usePrefetchRating } from '../../queries/ratings-queries';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -26,6 +27,7 @@ const MediaEntry = ({
     `${buildMediaURL(mediaType, tmdb)}/:id`
   );
   const mediaId: string | undefined = match?.params.id;
+  usePrefetchRating(mediaId, mediaType);
   const {
     data: media,
     isLoading,

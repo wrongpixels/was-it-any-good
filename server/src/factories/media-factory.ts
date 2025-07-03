@@ -37,7 +37,7 @@ export const createTMDBBase = (tmdb: TMDBMediaData): TMDBData => ({
   imdbId: tmdb.imdb_id,
   countries: validateCountries(tmdb.origin_country),
   description: tmdb.overview,
-  baseRating: tmdb.vote_average,
+  baseRating: Number(tmdb.vote_average),
   image: tmdb.poster_path
     ? imageLinker.createPosterURL(tmdb.poster_path)
     : DEF_FILM.image,

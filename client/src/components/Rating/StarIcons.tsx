@@ -1,4 +1,4 @@
-import { useState, MouseEvent, JSX, useEffect } from 'react';
+import { useState, MouseEvent, JSX } from 'react';
 import {
   useNotification,
   UseNotificationValues,
@@ -14,7 +14,6 @@ import {
   useUnvoteMutation,
   useVoteMutation,
 } from '../../mutations/rating-mutations';
-import { useQueryClient } from '@tanstack/react-query';
 
 type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
 
@@ -22,7 +21,7 @@ interface StarListProps {
   readonly width: number;
   readonly justVoted: boolean;
   readonly defaultRating: number;
-  readonly userRating: UserVote;
+  readonly userRating?: UserVote;
 }
 
 interface StarIconProps {
@@ -67,22 +66,15 @@ const StarIcons = ({
   mediaId,
 }: StarIconsProps): JSX.Element => {
   const { session } = useAuth();
-  const { data: userRating } = useRatingByMedia({ mediaId, mediaType });
-  const queryClient = useQueryClient();
+  const { data: userRating } = useRatingByMedia({
+    mediaId,
+    mediaType,
+    userId: session?.userId,
+  });
   const voteMutation = useVoteMutation();
-  const unVoteMutation = useUnvoteMutation(queryClient);
+  const unVoteMutation = useUnvoteMutation();
 
   const notification: UseNotificationValues = useNotification();
-  const [userRatingState, setUserRatingState]: [
-    UserVote,
-    React.Dispatch<React.SetStateAction<UserVote>>,
-  ] = useState<UserVote>(userRating?.userScore || UserVote.None);
-
-  useEffect(() => {
-    if (userRating) {
-      setUserRatingState(userRating.userScore), [userRating];
-    }
-  });
 
   const [hoverRating, setHoverRating]: [
     UserVote,
@@ -105,7 +97,7 @@ const StarIcons = ({
     const ratingData: CreateRating = {
       mediaId,
       mediaType,
-      userScore: userRatingState,
+      userScore: hoverRating,
     };
     setJustVoted(true);
     voteMutation.mutate(ratingData);
@@ -125,7 +117,7 @@ const StarIcons = ({
     const adjustedX: number = x - paddingWidth / 2;
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
     if (rating <= 0) {
-      if (userRatingState === UserVote.None) {
+      if (userRating?.userScore === UserVote.None) {
         return UserVote.One;
       }
       return UserVote.Unvote;
@@ -152,14 +144,12 @@ const StarIcons = ({
     }
     if (
       hoverRating === UserVote.Unvote ||
-      (userRatingState && userRatingState === hoverRating)
+      userRating?.userScore === hoverRating
     ) {
-      setUserRatingState(UserVote.None);
-      if (userRatingState) {
+      if (userRating) {
         handleUnvote();
       }
     } else if (hoverRating) {
-      setUserRatingState(hoverRating);
       notification.setNotification(
         `Voted ${mediaType}${mediaType === MediaType.Season && season !== 0 ? ` ${season}` : ''}\nwith a ${hoverRating}!`
       );
@@ -172,21 +162,26 @@ const StarIcons = ({
   const getStarColor = (): string => {
     if (isHovering) {
       const isUnvoteAction: boolean =
-        hoverRating === UserVote.Unvote || hoverRating === userRatingState;
+        hoverRating === UserVote.Unvote ||
+        hoverRating === userRating?.userScore;
       return isUnvoteAction ? COLORS.delete : COLORS.hover;
     }
 
-    return userRatingState ? COLORS.selected : COLORS.default;
+    return userRating ? COLORS.selected : COLORS.default;
   };
 
   const calculateDisplayRating = (): UserVote => {
     if (!isHovering) {
-      return userRatingState !== UserVote.None
-        ? userRatingState
+      return userRating && userRating.userScore !== UserVote.None
+        ? userRating.userScore
         : defaultRating;
     }
-    if (userRatingState !== UserVote.None && hoverRating === UserVote.Unvote) {
-      return userRatingState;
+    if (
+      userRating &&
+      userRating.userScore !== UserVote.None &&
+      hoverRating === UserVote.Unvote
+    ) {
+      return userRating.userScore;
     }
     return hoverRating !== UserVote.None ? hoverRating : 1;
   };
@@ -214,7 +209,7 @@ const StarIcons = ({
               width={starWidth}
               justVoted={false}
               defaultRating={defaultRating}
-              userRating={userRatingState}
+              userRating={userRating?.userScore}
             />
           </div>
           <div
@@ -226,7 +221,7 @@ const StarIcons = ({
                 width={starWidth}
                 justVoted={justVoted}
                 defaultRating={defaultRating}
-                userRating={userRatingState}
+                userRating={userRating?.userScore}
               />
             </div>
           </div>
@@ -237,7 +232,11 @@ const StarIcons = ({
       <div>{notification.field}</div>
       {isHovering && (
         <HoverMessage
-          message={getHoverMessage(isHovering, hoverRating, userRatingState)}
+          message={getHoverMessage(
+            isHovering,
+            hoverRating,
+            userRating?.userScore
+          )}
         />
       )}
     </div>
@@ -247,7 +246,7 @@ const StarIcons = ({
 const getHoverMessage = (
   isHovering: boolean,
   hoverRating: UserVote,
-  userRating: UserVote
+  userRating: UserVote = 0
 ): string => {
   if (isHovering && hoverRating !== UserVote.None) {
     if (
@@ -264,7 +263,7 @@ const getHoverMessage = (
 const StarList = ({
   width,
   justVoted,
-  userRating,
+  userRating = 0,
 }: StarListProps): JSX.Element => {
   const getStarClassname = (i: number): string => {
     if (justVoted && i < userRating / 2) {

@@ -1,11 +1,22 @@
-import { useQuery } from '@tanstack/react-query';
+import { usePrefetchQuery, useQuery } from '@tanstack/react-query';
 import { getRatingByMediaId } from '../services/ratings-service';
 import { CheckRating } from '../../../shared/types/models';
+import { getRatingKey } from '../utils/ratings-helper';
+import { MediaType } from '../../../shared/types/media';
 
-export const useRatingByMedia = ({ mediaId, mediaType }: CheckRating) =>
+export const useRatingByMedia = ({ mediaId, mediaType, userId }: CheckRating) =>
   useQuery({
-    queryKey: ['rating', `${mediaType.toLocaleLowerCase()}-${mediaId}`],
+    queryKey: getRatingKey(mediaType, mediaId),
     queryFn: () => getRatingByMediaId({ mediaId, mediaType }),
+    enabled: !!mediaId && !!mediaType && !!userId,
+  });
 
-    enabled: !!mediaId && !!mediaType,
+export const usePrefetchRating = (
+  mediaId: string | number | undefined = -1,
+  mediaType: MediaType
+) =>
+  usePrefetchQuery({
+    queryKey: getRatingKey(mediaType, mediaId),
+    queryFn: () => getRatingByMediaId({ mediaId, mediaType }),
+    retry: false,
   });

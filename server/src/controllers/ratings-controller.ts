@@ -34,6 +34,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     };
     const [ratingEntry, created]: [Rating, boolean | null] =
       await Rating.upsert(ratingData);
+    ratingEntry.updateRating();
     const ratingResponse: RatingData = ratingEntry.get({ plain: true });
     res.status(created ? 201 : 200).json(ratingResponse);
   } catch (error) {
@@ -86,6 +87,7 @@ router.delete('/:id', async (req: Request, res, next) => {
     if (!isAuthorizedUser(req.activeUser, rating.userId)) {
       throw new CustomError('Unauthorized', 403);
     }
+    await rating.updateRating(false);
     await rating.destroy();
     res.status(204).end();
   } catch (error) {

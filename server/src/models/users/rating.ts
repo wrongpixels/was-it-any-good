@@ -1,5 +1,4 @@
 import {
-  CreateOptions,
   CreationOptional,
   DataTypes,
   InferAttributes,
@@ -20,7 +19,7 @@ class Rating extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare mediaType: MediaType;
-  declare mediaId: number;
+  declare mediaId: number | string;
   declare userScore: number;
   //Fields for accessing the SQL results
   declare count?: number;
@@ -48,6 +47,8 @@ class Rating extends Model<
     });
   }
   async updateRating(countSelf: boolean = true, transaction?: Transaction) {
+    console.log('\n\n', 'Triggered', '\n\n');
+
     const media: Show | Film | null =
       this.mediaType === MediaType.Film
         ? await Film.findByPk(this.mediaId, { transaction })
@@ -95,10 +96,10 @@ class Rating extends Model<
       ],
     });
 
-    const total = Number(summary?.total ?? 0);
-    const count = Number(summary?.count ?? 0);
-
-    const rating = media.baseRating > 0 ? media.baseRating + total : total;
+    const total: number = Number(summary?.total ?? 0);
+    const count: number = Number(summary?.count ?? 0);
+    const rating =
+      media.baseRating > 0 ? Number(media.baseRating) + total : total;
     const voteCount = media.baseRating > 0 ? 1 + count : count;
 
     //being different models, we update them separately to keep TS happy and avoid using 'as'
@@ -108,6 +109,14 @@ class Rating extends Model<
         { transaction }
       );
     } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      console.log(
+        '\n\n',
+        rating / voteCount,
+        voteCount,
+        media.baseRating,
+        total ? total : '',
+        '\n\n'
+      );
       await media.update(
         { rating: rating / voteCount, voteCount },
         { transaction }
@@ -167,16 +176,4 @@ Rating.init(
     underscored: true,
   }
 );
-//hooks so media updates the cached 'rating' automatically
-Rating.afterCreate(async (rating: Rating, options?: CreateOptions) => {
-  await rating.updateRating(true, options?.transaction || undefined);
-});
-
-Rating.afterUpdate(async (rating: Rating, options?: CreateOptions) => {
-  await rating.updateRating(true, options?.transaction || undefined);
-});
-
-Rating.beforeDestroy(async (rating: Rating, options?: CreateOptions) => {
-  await rating.updateRating(false, options?.transaction || undefined);
-});
 export default Rating;
