@@ -7,14 +7,18 @@ export const useVoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['vote'], // Optional: name the mutation
+    mutationKey: ['vote'],
     mutationFn: (rating: CreateRating) => voteMedia(rating),
-    onMutate: async (rating: CreateRating) => {
+    onMutate: async (rating: CreateRating, tmdb: boolean = false) => {
       const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
       await queryClient.cancelQueries({ queryKey });
-
       const previousRating = queryClient.getQueryData(queryKey);
       queryClient.setQueryData(queryKey, rating);
+
+      const currentMediaData = queryClient.getQueryData([
+        tmdb ? 'tmdbMedia' : 'media',
+      ]);
+
       return {
         previousRating,
         queryKey,
