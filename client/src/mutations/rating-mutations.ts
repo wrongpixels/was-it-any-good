@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
 import {
   CreateRating,
@@ -69,8 +73,34 @@ export const useVoteMutation = () => {
   });
 };
 export const useUnvoteMutation = () => {
+  const queryClient: QueryClient = useQueryClient();
   return useMutation({
-    mutationFn: (ratingId: number) => unvoteMedia(ratingId),
-    onSuccess: ({}) => {},
+    mutationFn: ({ id }: RatingData) => unvoteMedia(id),
+    onMutate: ({ userScore, mediaId, mediaType }: RatingData) => {
+      const mediaQueryKey: string[] = getMediaKey(mediaType, mediaId);
+      const currentMediaData: MediaResponse | undefined =
+        queryClient.getQueryData(mediaQueryKey);
+      if (currentMediaData) {
+        const tmdbMediaQueryKey: string[] = getTmdbMediaKey(
+          mediaType,
+          currentMediaData.tmdbId
+        );
+        const updatedResponse: MediaResponse = {
+          ...currentMediaData,
+          ...recalculateRating(
+            0,
+            currentMediaData.rating,
+            currentMediaData.voteCount - 1,
+            userScore
+          ),
+        };
+        queryClient.setQueryData<MediaResponse>(mediaQueryKey, {
+          ...updatedResponse,
+        });
+        queryClient.setQueryData<MediaResponse>(tmdbMediaQueryKey, {
+          ...updatedResponse,
+        });
+      }
+    },
   });
 };
