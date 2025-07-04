@@ -4,6 +4,7 @@ import {
   CreateRating,
   MediaResponse,
   RatingData,
+  SeasonResponse,
 } from '../../../shared/types/models';
 import {
   getMediaKey,
@@ -14,6 +15,7 @@ import {
 export interface MediaQueryManager {
   rating: RatingData | undefined;
   media: MediaResponse | undefined;
+  seasonMedia: SeasonResponse | undefined;
   ratingQueryKey: string[];
   mediaQueryKey: string[];
   setMedia: (media: MediaResponse) => void;
@@ -22,7 +24,8 @@ export interface MediaQueryManager {
 export const useMediaQueryManager = (
   queryClient: QueryClient,
   mediaType: MediaType,
-  id: number | string
+  id: number | string,
+  seasonId?: number | string
 ): MediaQueryManager => {
   const ratingQueryKey: string[] = getRatingKey(mediaType, id);
   const rating: RatingData | undefined =
@@ -30,6 +33,9 @@ export const useMediaQueryManager = (
   const mediaQueryKey: string[] = getMediaKey(mediaType, id);
   const media: MediaResponse | undefined =
     queryClient.getQueryData(mediaQueryKey);
+  if (mediaType === MediaType.Season) {
+    console.log(media);
+  }
   const tmdbMediaQueryKey: string[] =
     media !== undefined ? getTmdbMediaKey(mediaType, media.tmdbId) : [''];
   const setMedia = (media: MediaResponse) => {
@@ -40,5 +46,13 @@ export const useMediaQueryManager = (
   const setRating = (rating: CreateRating) =>
     queryClient.setQueryData(ratingQueryKey, rating);
 
-  return { rating, media, setMedia, setRating, ratingQueryKey, mediaQueryKey };
+  return {
+    rating,
+    media,
+    setMedia,
+    setRating,
+    ratingQueryKey,
+    mediaQueryKey,
+    seasonMedia: undefined,
+  };
 };

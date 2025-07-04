@@ -29,7 +29,11 @@ export interface RatingData {
   mediaType: MediaType;
 }
 
-export type CreateRating = Omit<RatingData, 'id' | 'userId'>;
+export interface CreateRating extends Omit<RatingData, 'id' | 'userId'> {}
+//When creating a rating for a season, we need its id to refresh the page query
+export interface CreateRatingMutation extends CreateRating {
+  seasonId?: number;
+}
 export interface CheckRating extends Omit<CreateRating, 'userScore'> {
   userId?: number | string;
 }
@@ -115,6 +119,7 @@ export interface BaseResponse {
 export interface SeasonResponse extends BaseResponse {
   index: number;
   episodeCount: number;
+  showId: number;
   mediaType: MediaType.Season;
 }
 

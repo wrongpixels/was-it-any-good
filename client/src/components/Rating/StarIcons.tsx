@@ -8,7 +8,12 @@ import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
 import { numToVote } from '../../utils/ratings-helper';
 import { useAuth } from '../../hooks/use-auth';
-import { CreateRating } from '../../../../shared/types/models';
+import {
+  CreateRating,
+  CreateRatingMutation,
+  MediaResponse,
+  SeasonResponse,
+} from '../../../../shared/types/models';
 import { useRatingByMedia } from '../../queries/ratings-queries';
 import {
   useUnvoteMutation,
@@ -29,8 +34,7 @@ interface StarIconsProps {
   readonly season?: number;
   readonly starWidth?: number;
   readonly defaultRating?: number;
-  readonly mediaType: MediaType;
-  readonly mediaId: number;
+  readonly media: MediaResponse | SeasonResponse;
 }
 
 const COLORS: Record<ColorVariant, string> = {
@@ -43,9 +47,10 @@ const COLORS: Record<ColorVariant, string> = {
 const StarIcons = ({
   starWidth = 26,
   defaultRating = 0,
-  mediaType,
-  mediaId,
+  media,
 }: StarIconsProps): JSX.Element => {
+  console.log(media);
+  const { id: mediaId, mediaType } = media;
   const { session } = useAuth();
   const { data: userRating } = useRatingByMedia({
     mediaId,
@@ -75,10 +80,11 @@ const StarIcons = ({
   ] = useState<boolean>(false);
 
   const handleVote = (): void => {
-    const ratingData: CreateRating = {
-      mediaId,
+    const ratingData: CreateRatingMutation = {
+      mediaId: mediaType === MediaType.Season ? media.showId : mediaId,
       mediaType,
       userScore: hoverRating,
+      seasonId: mediaType === MediaType.Season ? mediaId : undefined,
     };
     setJustVoted(true);
     voteMutation.mutate(ratingData);
@@ -131,6 +137,10 @@ const StarIcons = ({
       userRating?.userScore === hoverRating
     ) {
       if (userRating) {
+        notification.setNotification(`Unvoted ${mediaType}`, 3000, {
+          y: -30,
+          x: 0,
+        });
         handleUnvote();
       }
     } else if (hoverRating) {

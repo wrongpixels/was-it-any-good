@@ -121,6 +121,7 @@ Show.init(
             'imdbId',
             'releaseDate',
             'episodeCount',
+            'mediaType',
           ],
         },
       },

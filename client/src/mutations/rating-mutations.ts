@@ -6,6 +6,7 @@ import {
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
 import {
   CreateRating,
+  CreateRatingMutation,
   MediaResponse,
   RatingData,
 } from '../../../shared/types/models';
@@ -26,12 +27,13 @@ export const useVoteMutation = () => {
 
   return useMutation({
     mutationKey: ['vote'],
-    mutationFn: (rating: CreateRating) => voteMedia(rating),
-    onMutate: (rating: CreateRating) => {
+    mutationFn: (rating: CreateRatingMutation) => voteMedia(rating),
+    onMutate: (rating: CreateRatingMutation) => {
       const queryManager: MediaQueryManager = useMediaQueryManager(
         queryClient,
         rating.mediaType,
-        rating.mediaId
+        rating.mediaId,
+        rating.seasonId
       );
       queryManager.setRating(rating);
       if (queryManager.media) {
