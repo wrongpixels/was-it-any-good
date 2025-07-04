@@ -115,6 +115,7 @@ export interface BaseResponse {
 export interface SeasonResponse extends BaseResponse {
   index: number;
   episodeCount: number;
+  mediaType: MediaType.Season;
 }
 
 export interface BaseMediaResponse extends BaseResponse {

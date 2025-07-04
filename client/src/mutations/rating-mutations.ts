@@ -10,11 +10,16 @@ import {
   RatingData,
 } from '../../../shared/types/models';
 import {
+  addVoteToMedia,
   getMediaKey,
   getRatingKey,
   getTmdbMediaKey,
-  recalculateRating,
+  removeVoteFromMedia,
 } from '../utils/ratings-helper';
+import {
+  useMediaQueryManager,
+  MediaQueryManager,
+} from '../utils/media-query-manager';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
@@ -22,43 +27,24 @@ export const useVoteMutation = () => {
   return useMutation({
     mutationKey: ['vote'],
     mutationFn: (rating: CreateRating) => voteMedia(rating),
-    onMutate: async (rating: CreateRating) => {
-      const queryKey: string[] = getRatingKey(rating.mediaType, rating.mediaId);
-      const mediaQueryKey: string[] = getMediaKey(
+    onMutate: (rating: CreateRating) => {
+      const queryManager: MediaQueryManager = useMediaQueryManager(
+        queryClient,
         rating.mediaType,
         rating.mediaId
       );
-      await queryClient.cancelQueries({ queryKey });
-      const previousRating: RatingData | undefined =
-        queryClient.getQueryData(queryKey);
-      const currentMediaData: MediaResponse | undefined =
-        queryClient.getQueryData(mediaQueryKey);
-
-      queryClient.setQueryData(queryKey, rating);
-      if (currentMediaData) {
-        const tmdbMediaQueryKey: string[] = getTmdbMediaKey(
-          rating.mediaType,
-          currentMediaData.tmdbId
+      queryManager.setRating(rating);
+      if (queryManager.media) {
+        const updatedMedia: MediaResponse = addVoteToMedia(
+          queryManager.media,
+          rating.userScore,
+          queryManager.rating?.userScore
         );
-        const updatedResponse: MediaResponse = {
-          ...currentMediaData,
-          ...recalculateRating(
-            rating.userScore,
-            currentMediaData.rating,
-            currentMediaData.voteCount,
-            previousRating?.userScore
-          ),
-        };
-        queryClient.setQueryData<MediaResponse>(mediaQueryKey, {
-          ...updatedResponse,
-        });
-        queryClient.setQueryData<MediaResponse>(tmdbMediaQueryKey, {
-          ...updatedResponse,
-        });
+        queryManager.setMedia(updatedMedia);
       }
       return {
-        previousRating,
-        queryKey,
+        previousRating: rating,
+        queryKey: queryManager.ratingQueryKey,
       };
     },
     onError: (_err, _rating, context) => {
@@ -87,15 +73,10 @@ export const useUnvoteMutation = () => {
           mediaType,
           currentMediaData.tmdbId
         );
-        const updatedResponse: MediaResponse = {
-          ...currentMediaData,
-          ...recalculateRating(
-            0,
-            currentMediaData.rating,
-            currentMediaData.voteCount,
-            userScore
-          ),
-        };
+        const updatedResponse: MediaResponse = removeVoteFromMedia(
+          currentMediaData,
+          userScore
+        );
         queryClient.setQueryData<MediaResponse>(mediaQueryKey, {
           ...updatedResponse,
         });

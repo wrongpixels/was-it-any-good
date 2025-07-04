@@ -155,7 +155,7 @@ export interface SeasonData extends SubMediaData {
   tmdbId: string;
   imdbId?: string;
   episodeCount: number;
-  mediaType: MediaType.Show;
+  mediaType: MediaType.Season;
   subType: SubMediaType.Season;
 }
 

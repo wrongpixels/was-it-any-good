@@ -8,7 +8,6 @@ import SeasonsEntry from './SeasonsEntry';
 import { Link, PathMatch, useMatch } from 'react-router-dom';
 import { buildMediaURL } from '../../services/media-service';
 import { buildOwnUrl, buildTMDBUrl } from '../../utils/url-helper';
-import { usePrefetchRating } from '../../queries/ratings-queries';
 import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
@@ -27,7 +26,6 @@ const MediaEntry = ({
     `${buildMediaURL(mediaType, tmdb)}/:id`
   );
   const mediaId: string | undefined = match?.params.id;
-  usePrefetchRating(mediaId, mediaType);
   const {
     data: media,
     isLoading,

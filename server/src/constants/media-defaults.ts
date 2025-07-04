@@ -152,6 +152,7 @@ export const DEF_GAME: DefaultGame = {
 
 export const DEF_SEASON: DefaultSeason = {
   ...DEF_SHOW,
+  mediaType: MediaType.Season,
   name: '',
   sortName: '',
   index: 0,

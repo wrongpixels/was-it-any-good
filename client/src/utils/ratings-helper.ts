@@ -39,6 +39,23 @@ export const getTmdbMediaKey = (
   tmdbId: string | number = -1
 ) => ['tmdbMedia', mediaType, String(tmdbId)];
 
+export const addVoteToMedia = (
+  media: MediaResponse,
+  newRating: number,
+  oldRating?: number
+): MediaResponse => ({
+  ...media,
+  ...recalculateRating(newRating, media.rating, media.voteCount, oldRating),
+});
+
+export const removeVoteFromMedia = (
+  media: MediaResponse,
+  oldRating: number
+): MediaResponse => ({
+  ...media,
+  ...recalculateRating(0, media.rating, media.voteCount, oldRating),
+});
+
 export const recalculateRating = (
   userRating: number,
   currentRating: number,
@@ -85,7 +102,7 @@ export const calculateAverage = (
 ): number => {
   const globalAverage: number =
     media.rating > 0 ? media.rating : media.baseRating;
-  return globalAverage;
+  return Math.round(globalAverage * 10) / 10;
 };
 
 //To create a weighted average for the 'show' as a whole, taking all seasons and
@@ -99,7 +116,6 @@ export const calculateShowAverage = (media: ShowResponse): number => {
   if (!media.seasons || media.seasonCount === 0) {
     return globalAverage;
   }
-
   const seasonsAverage =
     media.seasons.reduce(
       (sum, season) =>

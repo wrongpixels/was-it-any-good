@@ -1,6 +1,7 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { Media } from '..';
+import { MediaType } from '../../../../shared/types/media';
 
 class Season extends Media<
   InferAttributes<Season>,
@@ -10,6 +11,7 @@ class Season extends Media<
   declare tmdbId: string;
   declare imdbId?: string;
   declare index: number;
+  declare mediaType: MediaType.Season;
   declare episodeCount: number;
 }
 
@@ -32,6 +34,10 @@ Season.init(
     imdbId: {
       type: DataTypes.STRING,
       unique: true,
+    },
+    mediaType: {
+      type: DataTypes.STRING,
+      defaultValue: MediaType.Season,
     },
     index: {
       type: DataTypes.INTEGER,

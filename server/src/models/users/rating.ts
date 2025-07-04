@@ -10,7 +10,7 @@ import {
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
-import { Film, Show, User } from '..';
+import { Film, Season, Show, User } from '..';
 
 class Rating extends Model<
   InferAttributes<Rating>,
@@ -46,13 +46,27 @@ class Rating extends Model<
       constraints: false,
     });
   }
+
+  async getMediaByType(transaction: Transaction | undefined) {
+    switch (this.mediaType) {
+      case MediaType.Film:
+        return await Film.findByPk(this.mediaId, { transaction });
+      case MediaType.Show:
+        return await Show.findByPk(this.mediaId, { transaction });
+      case MediaType.Season:
+        return await Season.findByPk(this.mediaId, { transaction });
+      default:
+        return null;
+    }
+  }
+
   async updateRating(countSelf: boolean = true, transaction?: Transaction) {
     console.log('\n\n', 'Triggered', '\n\n');
 
-    const media: Show | Film | null =
-      this.mediaType === MediaType.Film
-        ? await Film.findByPk(this.mediaId, { transaction })
-        : await Show.findByPk(this.mediaId, { transaction });
+    const media: Show | Film | Season | null = await this.getMediaByType(
+      transaction
+    );
+
     if (!media) {
       return;
     }
@@ -69,21 +83,6 @@ class Rating extends Model<
             [Op.ne]: this.id,
           },
         };
-    /*
-    //classic count and addition
-    const ratings: Rating[] = await Rating.findAll({
-      where,
-      transaction,
-    });
-    if (ratings.length > 0) {
-      ratings.forEach((r: Rating) => {
-        if (r) {
-          rating += r.userScore;
-          voteCount += 1;
-        }
-      });
-    }    
-    */
 
     //db-level count and addition
     const summary: Rating | null = await Rating.findOne({
@@ -109,6 +108,19 @@ class Rating extends Model<
         { transaction }
       );
     } else if (this.mediaType === MediaType.Show && media instanceof Show) {
+      console.log(
+        '\n\n',
+        rating / voteCount,
+        voteCount,
+        media.baseRating,
+        total ? total : '',
+        '\n\n'
+      );
+      await media.update(
+        { rating: rating / voteCount, voteCount },
+        { transaction }
+      );
+    } else if (this.mediaType === MediaType.Season && media instanceof Season) {
       console.log(
         '\n\n',
         rating / voteCount,
