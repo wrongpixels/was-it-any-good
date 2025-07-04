@@ -8,12 +8,7 @@ import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
 import { numToVote } from '../../utils/ratings-helper';
 import { useAuth } from '../../hooks/use-auth';
-import {
-  CreateRating,
-  CreateRatingMutation,
-  MediaResponse,
-  SeasonResponse,
-} from '../../../../shared/types/models';
+import { CreateRatingMutation } from '../../../../shared/types/models';
 import { useRatingByMedia } from '../../queries/ratings-queries';
 import {
   useUnvoteMutation,
@@ -29,31 +24,31 @@ interface StarListProps {
   readonly defaultRating: number;
   readonly userRating?: UserVote;
 }
-
-interface StarIconsProps {
-  readonly season?: number;
-  readonly starWidth?: number;
-  readonly defaultRating?: number;
-  readonly media: MediaResponse | SeasonResponse;
-}
-
 const COLORS: Record<ColorVariant, string> = {
   default: 'text-[#6d90cf]',
   hover: 'text-green-600',
   selected: 'text-yellow-500',
   delete: 'text-red-500',
-} as const;
+};
+
+interface StarIconsProps {
+  readonly starWidth?: number;
+  readonly defaultRating?: number;
+  readonly mediaId: number | string;
+  readonly mediaType: MediaType;
+  readonly seasonId?: number | string;
+}
 
 const StarIcons = ({
   starWidth = 26,
   defaultRating = 0,
-  media,
+  mediaId,
+  mediaType,
+  seasonId,
 }: StarIconsProps): JSX.Element => {
-  console.log(media);
-  const { id: mediaId, mediaType } = media;
   const { session } = useAuth();
   const { data: userRating } = useRatingByMedia({
-    mediaId,
+    mediaId: seasonId ? seasonId : mediaId,
     mediaType,
     userId: session?.userId,
   });
@@ -81,10 +76,10 @@ const StarIcons = ({
 
   const handleVote = (): void => {
     const ratingData: CreateRatingMutation = {
-      mediaId: mediaType === MediaType.Season ? media.showId : mediaId,
+      mediaId,
       mediaType,
       userScore: hoverRating,
-      seasonId: mediaType === MediaType.Season ? mediaId : undefined,
+      seasonId,
     };
     setJustVoted(true);
     voteMutation.mutate(ratingData);

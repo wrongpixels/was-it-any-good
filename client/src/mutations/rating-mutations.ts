@@ -5,13 +5,14 @@ import {
 } from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
 import {
-  CreateRating,
   CreateRatingMutation,
   MediaResponse,
   RatingData,
+  SeasonResponse,
 } from '../../../shared/types/models';
 import {
   addVoteToMedia,
+  addVoteToSeason,
   getMediaKey,
   getRatingKey,
   getTmdbMediaKey,
@@ -21,13 +22,19 @@ import {
   useMediaQueryManager,
   MediaQueryManager,
 } from '../utils/media-query-manager';
+import { MediaType } from '../../../shared/types/media';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['vote'],
-    mutationFn: (rating: CreateRatingMutation) => voteMedia(rating),
+    mutationFn: (rating: CreateRatingMutation) =>
+      voteMedia({
+        userScore: rating.userScore,
+        mediaType: rating.mediaType,
+        mediaId: rating.seasonId ? rating.seasonId : rating.mediaId,
+      }),
     onMutate: (rating: CreateRatingMutation) => {
       const queryManager: MediaQueryManager = useMediaQueryManager(
         queryClient,
@@ -36,7 +43,23 @@ export const useVoteMutation = () => {
         rating.seasonId
       );
       queryManager.setRating(rating);
-      if (queryManager.media) {
+      if (
+        queryManager.seasonMedia &&
+        queryManager.media?.mediaType === MediaType.Show
+      ) {
+        const updatedSeason: SeasonResponse = addVoteToSeason(
+          queryManager.seasonMedia,
+          rating.userScore,
+          queryManager.rating?.userScore
+        );
+        console.log(updatedSeason);
+        queryManager.setMedia({
+          ...queryManager.media,
+          seasons: queryManager.media.seasons?.map((s: SeasonResponse) =>
+            s.id === updatedSeason.id ? updatedSeason : s
+          ),
+        });
+      } else if (queryManager.media) {
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
           rating.userScore,

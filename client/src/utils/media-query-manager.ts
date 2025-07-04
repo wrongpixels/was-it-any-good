@@ -24,20 +24,29 @@ export interface MediaQueryManager {
 export const useMediaQueryManager = (
   queryClient: QueryClient,
   mediaType: MediaType,
-  id: number | string,
+  mediaId: number | string,
   seasonId?: number | string
 ): MediaQueryManager => {
-  const ratingQueryKey: string[] = getRatingKey(mediaType, id);
+  const isSeason: boolean =
+    mediaType === MediaType.Season && seasonId !== undefined;
+  const ratingQueryKey: string[] = getRatingKey(mediaType, mediaId);
   const rating: RatingData | undefined =
     queryClient.getQueryData(ratingQueryKey);
-  const mediaQueryKey: string[] = getMediaKey(mediaType, id);
+  const mediaQueryKey: string[] = getMediaKey(
+    isSeason ? MediaType.Show : mediaType,
+    mediaId
+  );
+
   const media: MediaResponse | undefined =
     queryClient.getQueryData(mediaQueryKey);
-  if (mediaType === MediaType.Season) {
-    console.log(media);
-  }
+  const seasonMedia: SeasonResponse | undefined =
+    isSeason && media?.mediaType === MediaType.Show
+      ? media.seasons?.find((s: SeasonResponse) => s.id === Number(seasonId))
+      : undefined;
   const tmdbMediaQueryKey: string[] =
-    media !== undefined ? getTmdbMediaKey(mediaType, media.tmdbId) : [''];
+    media !== undefined
+      ? getTmdbMediaKey(isSeason ? MediaType.Show : mediaType, media.tmdbId)
+      : [''];
   const setMedia = (media: MediaResponse) => {
     queryClient.setQueryData(mediaQueryKey, { ...media });
     queryClient.setQueryData(tmdbMediaQueryKey, { ...media });
@@ -53,6 +62,6 @@ export const useMediaQueryManager = (
     setRating,
     ratingQueryKey,
     mediaQueryKey,
-    seasonMedia: undefined,
+    seasonMedia,
   };
 };

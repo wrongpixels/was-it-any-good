@@ -5,34 +5,39 @@ import StarIcons from './StarIcons';
 import ExternalLogo from './ExternalLogo';
 
 interface PropsStarRating {
-  media: MediaResponse | SeasonResponse;
+  media: MediaResponse;
   mediaType: MediaType;
   rating: number;
   valid?: boolean;
-  season?: number;
+  season?: SeasonResponse;
 }
 
 const StarRating = ({
   rating,
   valid = true,
-  season = 0,
   media,
   mediaType,
+  season,
 }: PropsStarRating): JSX.Element | null => {
   if (!rating) {
     return null;
   }
-  const starWidth = season ? 23 : 26;
+  const isSeason: boolean =
+    mediaType === MediaType.Season && season !== undefined;
+  const starWidth = isSeason ? 23 : 26;
 
   return (
     <div className="flex flex-col items-center mt-1 ">
-      <div className={`relative ${season ? 'h-6' : 'h-7'}`}>
+      <div
+        className={`relative ${mediaType === MediaType.Season ? 'h-6' : 'h-7'}`}
+      >
         <div className="text-gray-300">
           <StarIcons
             starWidth={starWidth}
             defaultRating={rating}
-            media={media}
-            season={season}
+            mediaId={media.id}
+            mediaType={mediaType}
+            seasonId={season?.id}
           />
         </div>
         <div
@@ -43,17 +48,17 @@ const StarRating = ({
 
       {valid && rating > 0 ? (
         <div className="flex items-center justify-center gap-6">
-          {!season && (
+          {!isSeason && (
             <div className="w-6">
               <ExternalLogo media={media} mediaType={mediaType} tmdb={true} />
             </div>
           )}
           <span
-            className={`${season ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
+            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
           >
             {rating}
           </span>
-          {!season && (
+          {!isSeason && (
             <div className="w-6 opacity-80">
               <ExternalLogo media={media} mediaType={mediaType} tmdb={false} />
             </div>

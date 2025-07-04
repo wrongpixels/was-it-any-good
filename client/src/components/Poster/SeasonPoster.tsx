@@ -1,27 +1,28 @@
 import { JSX } from 'react';
-import { SeasonResponse } from '../../../../shared/types/models';
+import { SeasonResponse, ShowResponse } from '../../../../shared/types/models';
 import StarRating from '../Rating/StarRating';
 import { MediaType } from '../../../../shared/types/media';
 import { calculateAverage } from '../../utils/ratings-helper';
 
 interface SeasonPosterProps {
-  media: SeasonResponse;
+  season: SeasonResponse;
+  media: ShowResponse;
 }
 
-const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
-  const average: number = calculateAverage(media);
+const SeasonPoster = ({ media, season }: SeasonPosterProps): JSX.Element => {
+  const average: number = calculateAverage(season);
 
   return (
     <div className="text-center bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
       <div className="text-sm font-medium -translate-y-1.5">
-        <div className="truncate" title={media.name}>
-          {media.name}
+        <div className="truncate" title={season.name}>
+          {season.name}
         </div>
       </div>
       <img
-        src={media.image}
-        alt={media.name}
-        title={media.name}
+        src={season.image}
+        alt={season.name}
+        title={season.name}
         className="rounded shadow ring-1 ring-gray-300"
         loading="lazy"
       />
@@ -29,8 +30,8 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         <StarRating
           rating={average}
           media={media}
+          season={season}
           valid={true}
-          season={media.index}
           mediaType={MediaType.Season}
         />
       </div>

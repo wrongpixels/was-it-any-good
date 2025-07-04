@@ -48,6 +48,15 @@ export const addVoteToMedia = (
   ...recalculateRating(newRating, media.rating, media.voteCount, oldRating),
 });
 
+export const addVoteToSeason = (
+  media: SeasonResponse,
+  newRating: number,
+  oldRating?: number
+): SeasonResponse => ({
+  ...media,
+  ...recalculateRating(newRating, media.rating, media.voteCount, oldRating),
+});
+
 export const removeVoteFromMedia = (
   media: MediaResponse,
   oldRating: number
