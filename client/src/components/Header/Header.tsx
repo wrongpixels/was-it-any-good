@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
-import { StarIcon } from '../Rating/StarIcons';
 import HeaderLogin from './HeaderLogin';
+import StarIcon from '../Rating/StarIcon';
 
 const Header = () => {
   return (

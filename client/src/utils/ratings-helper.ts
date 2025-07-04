@@ -1,6 +1,9 @@
 import { UserVote } from '../../../shared/types/common';
-import { MediaType } from '../../../shared/types/media';
-import { MediaResponse } from '../../../shared/types/models';
+import {
+  MediaResponse,
+  SeasonResponse,
+  ShowResponse,
+} from '../../../shared/types/models';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
@@ -77,15 +80,18 @@ export const numToVote = (num: number): UserVote => {
   return Math.max(-1, Math.min(num, 10));
 };
 
-//To create a weighted average for the 'show' as a whole, taking all seasons and
-//their individual ratings into consideration
-export const calculateAverage = (media: MediaResponse): number => {
+export const calculateAverage = (
+  media: MediaResponse | SeasonResponse
+): number => {
   const globalAverage: number =
     media.rating > 0 ? media.rating : media.baseRating;
+  return globalAverage;
+};
 
-  if (media.mediaType !== MediaType.Show) {
-    return globalAverage;
-  }
+//To create a weighted average for the 'show' as a whole, taking all seasons and
+//their individual ratings into consideration
+export const calculateShowAverage = (media: ShowResponse): number => {
+  const globalAverage: number = calculateAverage(media);
 
   const SHOW_WEIGHT = 0.4;
   const SEASONS_WEIGHT = 0.6;

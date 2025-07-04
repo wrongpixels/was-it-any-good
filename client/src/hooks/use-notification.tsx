@@ -30,8 +30,12 @@ export const useNotification = (): UseNotificationValues => {
     const rect: DOMRect | undefined =
       anchorRef?.current?.getBoundingClientRect();
     if (rect && offset) {
-      rect.x += offset.x;
-      rect.y -= offset.y;
+      if (offset.x) {
+        rect.x += offset.x;
+      }
+      if (offset.y) {
+        rect.y -= offset.y;
+      }
     }
 
     setValue({

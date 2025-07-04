@@ -50,7 +50,7 @@ const StarRating = ({
             </div>
           )}
           <span
-            className={`${season ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500`}
+            className={`${season ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
           >
             {rating}
           </span>

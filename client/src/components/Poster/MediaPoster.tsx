@@ -1,14 +1,21 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import StarRating from '../Rating/StarRating';
-import { calculateAverage } from '../../utils/ratings-helper';
+import {
+  calculateAverage,
+  calculateShowAverage,
+} from '../../utils/ratings-helper';
+import { MediaType } from '../../../../shared/types/media';
 
 interface MediaPosterProps {
   media: MediaResponse;
 }
 
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
-  const average: number = calculateAverage(media);
+  const average: number =
+    media.mediaType === MediaType.Show
+      ? calculateShowAverage(media)
+      : calculateAverage(media);
   return (
     <div>
       <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
