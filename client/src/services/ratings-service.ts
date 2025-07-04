@@ -25,5 +25,6 @@ export const voteMedia = async (rating: CreateRating): Promise<RatingData> => {
 };
 
 export const unvoteMedia = async (ratingId: number): Promise<AxiosResponse> => {
-  return await axios.delete(`/api/ratings/${ratingId}`);
+  const { data } = await axios.delete(`/api/ratings/${ratingId}`);
+  return data;
 };

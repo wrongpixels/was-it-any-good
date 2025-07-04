@@ -42,6 +42,21 @@ export const recalculateRating = (
   totalVotes: number,
   previousRating: number = 0
 ): NewMediaRating => {
+  if (userRating === 0 && previousRating > 0) {
+    if (totalVotes === 1) {
+      return {
+        rating: 0,
+        voteCount: 0,
+      };
+    }
+    const totalSum = currentRating * totalVotes;
+    const newTotalVotes = totalVotes - 1;
+    return {
+      rating: (totalSum - previousRating) / newTotalVotes,
+      voteCount: newTotalVotes,
+    };
+  }
+
   if (previousRating > 0) {
     const totalSum = currentRating * totalVotes;
     const newSum = totalSum - previousRating + userRating;
@@ -49,14 +64,14 @@ export const recalculateRating = (
       rating: newSum / totalVotes,
       voteCount: totalVotes,
     };
-  } else {
-    const totalSum = currentRating * totalVotes;
-    const newTotalVotes = totalVotes + 1;
-    return {
-      rating: (totalSum + userRating) / newTotalVotes,
-      voteCount: newTotalVotes,
-    };
   }
+
+  const totalSum = currentRating * totalVotes;
+  const newTotalVotes = totalVotes + 1;
+  return {
+    rating: (totalSum + userRating) / newTotalVotes,
+    voteCount: newTotalVotes,
+  };
 };
 export const numToVote = (num: number): UserVote => {
   return Math.max(-1, Math.min(num, 10));

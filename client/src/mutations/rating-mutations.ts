@@ -77,6 +77,8 @@ export const useUnvoteMutation = () => {
   return useMutation({
     mutationFn: ({ id }: RatingData) => unvoteMedia(id),
     onMutate: ({ userScore, mediaId, mediaType }: RatingData) => {
+      const queryKey: string[] = getRatingKey(mediaType, mediaId);
+      queryClient.setQueryData(queryKey, null);
       const mediaQueryKey: string[] = getMediaKey(mediaType, mediaId);
       const currentMediaData: MediaResponse | undefined =
         queryClient.getQueryData(mediaQueryKey);
@@ -90,7 +92,7 @@ export const useUnvoteMutation = () => {
           ...recalculateRating(
             0,
             currentMediaData.rating,
-            currentMediaData.voteCount - 1,
+            currentMediaData.voteCount,
             userScore
           ),
         };

@@ -108,7 +108,7 @@ const StarIcons = ({
     if (!userRating) {
       return;
     }
-    unVoteMutation.mutate(userRating.id);
+    unVoteMutation.mutate(userRating);
   };
 
   const calculateNewRating = (x: number, width: number): UserVote => {
@@ -138,6 +138,9 @@ const StarIcons = ({
   };
 
   const handleClick = (): void => {
+    if (needToLeave) {
+      return;
+    }
     if (!session || session.expired || !session.userId) {
       notification.setNotification('You have to login to vote!');
       return;
