@@ -117,7 +117,7 @@ const StarIcons = ({
     const adjustedX: number = x - paddingWidth / 2;
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
     if (rating <= 0) {
-      if (userRating?.userScore === UserVote.None) {
+      if (!userRating || userRating.userScore === UserVote.None) {
         return UserVote.One;
       }
       return UserVote.Unvote;
@@ -277,19 +277,13 @@ const StarList = ({
         'scale-130',
         'scale-140',
       ];
-      const delays = [
-        'delay-0',
-        'delay-20',
-        'delay-30',
-        'delay-50',
-        'delay-75',
-      ];
+      const delays = ['delay-0', 'delay-2', 'delay-4', 'delay-6', 'delay-8'];
       const durations = [
+        'duration-100',
+        'duration-105',
+        'duration-110',
         'duration-115',
         'duration-120',
-        'duration-125',
-        'duration-130',
-        'duration-200',
       ];
 
       return `transition-all ${scales[i]} ${delays[i]} ${durations[i]} ${

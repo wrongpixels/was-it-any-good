@@ -8,7 +8,6 @@ interface MediaPosterProps {
 }
 
 const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
-  console.log(calculateAverage(media));
   const average: number = calculateAverage(media);
   return (
     <div>
