@@ -19,13 +19,12 @@ const StarRating = ({
   mediaType,
   season,
 }: PropsStarRating): JSX.Element | null => {
-  if (!rating) {
+  if (isNaN(rating)) {
     return null;
   }
   const isSeason: boolean =
     mediaType === MediaType.Season && season !== undefined;
   const starWidth = isSeason ? 23 : 26;
-
   return (
     <div className="flex flex-col items-center mt-1 ">
       <div
@@ -65,7 +64,7 @@ const StarRating = ({
           )}
         </div>
       ) : (
-        <div className="text-sm text-gray-500 text-center pt-1 pb-1 italic">
+        <div className="text-sm text-gray-500 text-center pt-2 pb-1 italic">
           Not enough ratings
         </div>
       )}
