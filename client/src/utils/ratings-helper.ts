@@ -125,15 +125,23 @@ export const calculateShowAverage = (media: ShowResponse): number => {
   if (!media.seasons || media.seasonCount === 0) {
     return globalAverage;
   }
+  let validSeasons: SeasonResponse[] = [];
+  media.seasons.map((s: SeasonResponse) =>
+    s.baseRating > 0 || s.rating > 0 ? validSeasons.push(s) : null
+  );
   const seasonsAverage =
-    media.seasons.reduce(
+    validSeasons.reduce(
       (sum, season) =>
         sum +
-        ((season.rating !== null && season.rating > 0
+        (season.rating !== null && season.rating > 0
           ? Number(season.rating)
-          : Number(season.baseRating)) || 0),
+          : Number(season.baseRating)),
       0
-    ) / media.seasonCount;
+    ) / validSeasons.length;
+  //if the show itself has not been voted, we return the seasons
+  if (seasonsAverage === 0) {
+    return seasonsAverage;
+  }
   //We round the result to only 1 decimal
   return seasonsAverage > 0
     ? Math.round(

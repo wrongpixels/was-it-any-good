@@ -16,6 +16,7 @@ const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
     media.mediaType === MediaType.Show
       ? calculateShowAverage(media)
       : calculateAverage(media);
+  console.log(average);
   return (
     <div>
       <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
