@@ -93,13 +93,10 @@ export const useUnvoteMutation = () => {
         rating,
       });
       queryManager.setRating(null);
-      console.log('unvoting season ' + queryManager.media);
 
       if (!queryManager.media || !queryManager.rating) {
         return;
       }
-      console.log('unvoting season');
-
       if (queryManager.isSeason) {
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = removeVoteFromSeason(

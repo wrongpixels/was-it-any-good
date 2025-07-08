@@ -59,7 +59,10 @@ export const useMediaQueryManager = ({
   const isSeason: boolean =
     mediaType === MediaType.Season && seasonId !== undefined;
 
-  const ratingQueryKey: string[] = getRatingKey(mediaType, mediaId);
+  const ratingQueryKey: string[] = getRatingKey(
+    mediaType,
+    isSeason ? seasonId! : mediaId
+  );
   const rating: RatingData | undefined =
     queryClient.getQueryData(ratingQueryKey);
 

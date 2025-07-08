@@ -54,10 +54,11 @@ const StarIcons = ({
 }: StarIconsProps): JSX.Element => {
   const { session } = useAuth();
   const { data: userRating } = useRatingByMedia({
-    mediaId: seasonId ? seasonId : mediaId,
+    mediaId: mediaType === MediaType.Season && seasonId ? seasonId : mediaId,
     mediaType,
     userId: session?.userId,
   });
+
   const voteMutation = useVoteMutation();
   const unVoteMutation = useUnvoteMutation();
 
@@ -157,8 +158,8 @@ const StarIcons = ({
     } else if (hoverRating) {
       notification.setNotification(
         `Voted ${mediaType}\nwith a ${hoverRating}!`,
-        3000,
-        { y: -25, x: 0 }
+        DEF_NOTIFICATION_DURATION,
+        LOW_NOTIFICATION
       );
       handleVote();
     }
@@ -176,7 +177,6 @@ const StarIcons = ({
 
     return userRating ? RATING_COLORS.selected : RATING_COLORS.default;
   };
-
   const calculateDisplayRating = (): UserVote => {
     if (!isHovering) {
       return userRating && userRating.userScore !== UserVote.None
