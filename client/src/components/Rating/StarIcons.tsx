@@ -8,15 +8,27 @@ import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
 import { numToVote } from '../../utils/ratings-helper';
 import { useAuth } from '../../hooks/use-auth';
-import { CreateRatingMutation } from '../../../../shared/types/models';
+import {
+  CreateRatingMutation,
+  RemoveRatingMutation,
+} from '../../../../shared/types/models';
 import { useRatingByMedia } from '../../queries/ratings-queries';
 import {
   useUnvoteMutation,
   useVoteMutation,
 } from '../../mutations/rating-mutations';
 import StarIcon from './StarIcon';
-
-type ColorVariant = 'default' | 'hover' | 'selected' | 'delete';
+import {
+  DEF_STAR_PADDING,
+  RATING_COLORS,
+  RATING_DELAYS,
+  RATING_DURATIONS,
+  RATING_SCALES,
+} from '../../constants/ratings-constants';
+import {
+  DEF_NOTIFICATION_DURATION,
+  LOW_NOTIFICATION,
+} from '../../constants/notification-constants';
 
 interface StarListProps {
   readonly width: number;
@@ -24,12 +36,6 @@ interface StarListProps {
   readonly defaultRating: number;
   readonly userRating?: UserVote;
 }
-const COLORS: Record<ColorVariant, string> = {
-  default: 'text-[#6d90cf]',
-  hover: 'text-green-600',
-  selected: 'text-yellow-500',
-  delete: 'text-red-500',
-};
 
 interface StarIconsProps {
   readonly starWidth?: number;
@@ -90,11 +96,16 @@ const StarIcons = ({
     if (!userRating) {
       return;
     }
-    unVoteMutation.mutate(userRating);
+    const ratingData: RemoveRatingMutation = {
+      ...userRating,
+      mediaId,
+      seasonId,
+    };
+    unVoteMutation.mutate(ratingData);
   };
 
   const calculateNewRating = (x: number, width: number): UserVote => {
-    const paddingWidth: number = 25;
+    const paddingWidth: number = DEF_STAR_PADDING;
     const starsWidth: number = width - paddingWidth;
     const adjustedX: number = x - paddingWidth / 2;
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
@@ -124,10 +135,11 @@ const StarIcons = ({
       return;
     }
     if (!session || session.expired || !session.userId) {
-      notification.setNotification('You have to login to vote!', 3000, {
-        y: -25,
-        x: 0,
-      });
+      notification.setNotification(
+        'You have to login to vote!',
+        DEF_NOTIFICATION_DURATION,
+        LOW_NOTIFICATION
+      );
       return;
     }
     if (
@@ -135,10 +147,11 @@ const StarIcons = ({
       userRating?.userScore === hoverRating
     ) {
       if (userRating) {
-        notification.setNotification(`Unvoted ${mediaType}`, 3000, {
-          y: -25,
-          x: 0,
-        });
+        notification.setNotification(
+          `Unvoted ${mediaType}`,
+          DEF_NOTIFICATION_DURATION,
+          LOW_NOTIFICATION
+        );
         handleUnvote();
       }
     } else if (hoverRating) {
@@ -158,10 +171,10 @@ const StarIcons = ({
       const isUnvoteAction: boolean =
         hoverRating === UserVote.Unvote ||
         hoverRating === userRating?.userScore;
-      return isUnvoteAction ? COLORS.delete : COLORS.hover;
+      return isUnvoteAction ? RATING_COLORS.delete : RATING_COLORS.hover;
     }
 
-    return userRating ? COLORS.selected : COLORS.default;
+    return userRating ? RATING_COLORS.selected : RATING_COLORS.default;
   };
 
   const calculateDisplayRating = (): UserVote => {
@@ -261,23 +274,7 @@ const StarList = ({
 }: StarListProps): JSX.Element => {
   const getStarClassname = (i: number): string => {
     if (justVoted && i < userRating / 2) {
-      const scales = [
-        'scale-115',
-        'scale-120',
-        'scale-125',
-        'scale-130',
-        'scale-140',
-      ];
-      const delays = ['delay-0', 'delay-2', 'delay-4', 'delay-6', 'delay-8'];
-      const durations = [
-        'duration-100',
-        'duration-105',
-        'duration-110',
-        'duration-115',
-        'duration-120',
-      ];
-
-      return `transition-all ${scales[i]} ${delays[i]} ${durations[i]} ${
+      return `transition-all ${RATING_SCALES[i]} ${RATING_DELAYS[i]} ${RATING_DURATIONS[i]} ${
         userRating ? 'text-yellow-400' : 'text-blue-400'
       }`;
     }

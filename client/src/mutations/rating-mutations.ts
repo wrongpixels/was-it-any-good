@@ -8,19 +8,19 @@ import {
   CreateRatingMutation,
   MediaResponse,
   RatingData,
+  RemoveRatingMutation,
   SeasonResponse,
 } from '../../../shared/types/models';
 import {
   addVoteToMedia,
   addVoteToSeason,
-  getMediaKey,
   getRatingKey,
-  getTmdbMediaKey,
   removeVoteFromMedia,
+  removeVoteFromSeason,
 } from '../utils/ratings-helper';
 import {
-  useMediaQueryManager,
   MediaQueryManager,
+  useRatingQueryManager,
 } from '../utils/media-query-manager';
 import { MediaType } from '../../../shared/types/media';
 
@@ -33,36 +33,33 @@ export const useVoteMutation = () => {
       voteMedia({
         userScore: rating.userScore,
         mediaType: rating.mediaType,
-        mediaId: rating.seasonId ? rating.seasonId : rating.mediaId,
+        mediaId:
+          rating.mediaType === MediaType.Season && rating.seasonId
+            ? rating.seasonId
+            : rating.mediaId,
       }),
     onMutate: (rating: CreateRatingMutation) => {
-      const queryManager: MediaQueryManager = useMediaQueryManager(
+      const queryManager: MediaQueryManager = useRatingQueryManager({
         queryClient,
-        rating.mediaType,
-        rating.mediaId,
-        rating.seasonId
-      );
+        rating,
+      });
       queryManager.setRating(rating);
-      if (
-        queryManager.seasonMedia &&
-        queryManager.media?.mediaType === MediaType.Show
-      ) {
-        if (queryManager.rating) {
-          console.log('previous rating was ', queryManager.rating.userScore);
+
+      if (!queryManager.media) {
+        return;
+      }
+
+      if (queryManager.isSeason) {
+        if (queryManager.seasonMedia) {
+          const updatedSeason: SeasonResponse = addVoteToSeason(
+            queryManager.seasonMedia,
+            rating.userScore,
+            queryManager.rating?.userScore
+          );
+          console.log(updatedSeason);
+          queryManager.setSeason(updatedSeason);
         }
-        const updatedSeason: SeasonResponse = addVoteToSeason(
-          queryManager.seasonMedia,
-          rating.userScore,
-          queryManager.rating?.userScore
-        );
-        console.log(updatedSeason);
-        queryManager.setMedia({
-          ...queryManager.media,
-          seasons: queryManager.media.seasons?.map((s: SeasonResponse) =>
-            s.id === updatedSeason.id ? updatedSeason : s
-          ),
-        });
-      } else if (queryManager.media) {
+      } else {
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
           rating.userScore,
@@ -89,28 +86,35 @@ export const useVoteMutation = () => {
 export const useUnvoteMutation = () => {
   const queryClient: QueryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id }: RatingData) => unvoteMedia(id),
-    onMutate: ({ userScore, mediaId, mediaType }: RatingData) => {
-      const queryKey: string[] = getRatingKey(mediaType, mediaId);
-      queryClient.setQueryData(queryKey, null);
-      const mediaQueryKey: string[] = getMediaKey(mediaType, mediaId);
-      const currentMediaData: MediaResponse | undefined =
-        queryClient.getQueryData(mediaQueryKey);
-      if (currentMediaData) {
-        const tmdbMediaQueryKey: string[] = getTmdbMediaKey(
-          mediaType,
-          currentMediaData.tmdbId
+    mutationFn: ({ id }: RemoveRatingMutation) => unvoteMedia(id),
+    onMutate: (rating: RemoveRatingMutation) => {
+      const queryManager: MediaQueryManager = useRatingQueryManager({
+        queryClient,
+        rating,
+      });
+      queryManager.setRating(null);
+      console.log('unvoting season ' + queryManager.media);
+
+      if (!queryManager.media || !queryManager.rating) {
+        return;
+      }
+      console.log('unvoting season');
+
+      if (queryManager.isSeason) {
+        if (queryManager.seasonMedia) {
+          const updatedSeason: SeasonResponse = removeVoteFromSeason(
+            queryManager.seasonMedia,
+            queryManager.rating.userScore
+          );
+          console.log(updatedSeason);
+          queryManager.setSeason(updatedSeason);
+        }
+      } else {
+        const updatedMedia: MediaResponse = removeVoteFromMedia(
+          queryManager.media,
+          queryManager.rating.userScore
         );
-        const updatedResponse: MediaResponse = removeVoteFromMedia(
-          currentMediaData,
-          userScore
-        );
-        queryClient.setQueryData<MediaResponse>(mediaQueryKey, {
-          ...updatedResponse,
-        });
-        queryClient.setQueryData<MediaResponse>(tmdbMediaQueryKey, {
-          ...updatedResponse,
-        });
+        queryManager.setMedia(updatedMedia);
       }
     },
   });

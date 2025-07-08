@@ -1,8 +1,9 @@
 import { JSX, useEffect, useState, useCallback, CSSProperties } from 'react';
 import { offset } from '../../../../shared/types/common';
-
-const DEF_ANIMATION_DURATION = 3000;
-const ANIMATION_OUT_DURATION = 500;
+import {
+  DEF_NOTIFICATION_DURATION,
+  DEF_NOTIFICATION_OUT_TIME,
+} from '../../constants/notification-constants';
 
 enum NotiStatus {
   Idle,
@@ -24,7 +25,7 @@ interface NotificationProps {
 export const DEF_NOTIFICATION: NotificationProps = {
   message: '',
   isError: false,
-  duration: DEF_ANIMATION_DURATION,
+  duration: DEF_NOTIFICATION_DURATION,
 };
 
 const classColors = (isError: boolean): string =>
@@ -99,7 +100,7 @@ const Notification = ({
     timeoutToStop = setTimeout(() => {
       setStatus(NotiStatus.Expired);
       onComplete?.();
-    }, duration + ANIMATION_OUT_DURATION);
+    }, duration + DEF_NOTIFICATION_OUT_TIME);
 
     return () => {
       //to clean the animation
