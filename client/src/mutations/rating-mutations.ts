@@ -8,14 +8,13 @@ import {
   CreateRatingMutation,
   MediaResponse,
   RatingData,
+  RatingResponse,
   RemoveRatingMutation,
   SeasonResponse,
 } from '../../../shared/types/models';
 import {
   addVoteToMedia,
   addVoteToSeason,
-  getMediaKey,
-  getRatingKey,
   removeVoteFromMedia,
   removeVoteFromSeason,
 } from '../utils/ratings-helper';
@@ -78,12 +77,22 @@ export const useVoteMutation = () => {
         queryClient.setQueryData(context.queryKey, context.previousRating);
       }
     },
-    onSuccess: (rating: RatingData) => {
-      const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
-      queryClient.setQueryData(queryKey, rating);
-      /*queryClient.invalidateQueries({
-        queryKey: getMediaKey(rating.mediaType, rating.mediaId),
-      });*/
+    onSuccess: (ratingResponse: RatingResponse) => {
+      const { ratingStats, ...ratingData } = ratingResponse;
+      const rating: RatingData = ratingData;
+      const queryManager: MediaQueryManager = useRatingQueryManager({
+        queryClient,
+        rating,
+      });
+      queryManager.setRating(rating);
+      if (queryManager.media) {
+        console.log(ratingStats);
+        const updatedMedia: MediaResponse = {
+          ...queryManager.media,
+          ...ratingStats,
+        };
+        queryManager.setMedia(updatedMedia);
+      }
     },
   });
 };

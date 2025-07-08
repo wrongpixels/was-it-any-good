@@ -3,6 +3,7 @@ import {
   CheckRating,
   CreateRating,
   RatingData,
+  RatingResponse,
 } from '../../../shared/types/models';
 import { getById } from './common-service';
 
@@ -16,8 +17,10 @@ export const getRatingByMediaId = ({
   );
 };
 
-export const voteMedia = async (rating: CreateRating): Promise<RatingData> => {
-  const { data }: AxiosResponse<RatingData> = await axios.post(
+export const voteMedia = async (
+  rating: CreateRating
+): Promise<RatingResponse> => {
+  const { data }: AxiosResponse<RatingResponse> = await axios.post(
     `/api/ratings`,
     rating
   );
