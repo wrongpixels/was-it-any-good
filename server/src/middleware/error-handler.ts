@@ -1,7 +1,7 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { APIError } from '../../../shared/types/errors';
 import CustomError from '../util/customError';
-import { DEF_API_ERROR } from '../constants/error-defaults';
+import { DEF_API_ERROR } from '../../../shared/constants/error-constants';
 
 const errorHandler: ErrorRequestHandler = (
   err: Error,

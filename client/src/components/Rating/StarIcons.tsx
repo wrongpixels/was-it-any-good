@@ -124,7 +124,10 @@ const StarIcons = ({
       return;
     }
     if (!session || session.expired || !session.userId) {
-      notification.setNotification('You have to login to vote!');
+      notification.setNotification('You have to login to vote!', 3000, {
+        y: -25,
+        x: 0,
+      });
       return;
     }
     if (
@@ -133,7 +136,7 @@ const StarIcons = ({
     ) {
       if (userRating) {
         notification.setNotification(`Unvoted ${mediaType}`, 3000, {
-          y: -30,
+          y: -25,
           x: 0,
         });
         handleUnvote();
@@ -142,7 +145,7 @@ const StarIcons = ({
       notification.setNotification(
         `Voted ${mediaType}\nwith a ${hoverRating}!`,
         3000,
-        { y: -30, x: 0 }
+        { y: -25, x: 0 }
       );
       handleVote();
     }

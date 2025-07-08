@@ -1,6 +1,9 @@
 import { AxiosError, isAxiosError } from 'axios';
 import { APIError } from '../../../shared/types/errors';
-import { SESSION_AUTH_ERROR } from '../../../shared/constants/error-constants';
+import {
+  DEF_API_ERROR,
+  SESSION_AUTH_ERROR,
+} from '../../../shared/constants/error-constants';
 
 export const isAPIError = (error: unknown): error is APIError => {
   return isAxiosError(error) && isAPIErrorType(extractAPIError(error));
@@ -52,3 +55,24 @@ export const getAuthError = (error: unknown): APIError | null =>
 
 export const isSessionAuthError = (error: unknown): boolean =>
   getAuthError(error)?.name === SESSION_AUTH_ERROR;
+
+export const formatToAPIError = (error: unknown): APIError => {
+  const apiError: APIError | null = getAPIError(error);
+  if (apiError) {
+    return apiError;
+  }
+  const newError: APIError = DEF_API_ERROR;
+  if (!(error instanceof Error)) {
+    return newError;
+  }
+  if (error instanceof AxiosError) {
+    (newError.name = error.response?.statusText || error.name),
+      (newError.message = error.message),
+      (newError.status = error.response?.status || newError.status);
+  } else {
+    newError.name = error.name;
+    newError.message = error.message;
+    newError.status = -1;
+  }
+  return newError;
+};

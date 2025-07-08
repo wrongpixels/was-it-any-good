@@ -17,6 +17,7 @@ export interface UseNotificationValues {
 
 export const useNotification = (): UseNotificationValues => {
   const [value, setValue] = useState(DEF_NOTIFICATION);
+  //we create and return a reference so the Component can place it and we can then read its rect
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const setGeneric = (

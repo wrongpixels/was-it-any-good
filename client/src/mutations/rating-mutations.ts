@@ -47,6 +47,9 @@ export const useVoteMutation = () => {
         queryManager.seasonMedia &&
         queryManager.media?.mediaType === MediaType.Show
       ) {
+        if (queryManager.rating) {
+          console.log('previous rating was ', queryManager.rating.userScore);
+        }
         const updatedSeason: SeasonResponse = addVoteToSeason(
           queryManager.seasonMedia,
           rating.userScore,

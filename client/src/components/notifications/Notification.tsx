@@ -123,7 +123,7 @@ const Notification = ({
         position: 'fixed' as const,
         left: `${rect.left + rect.width / 2}px`,
         //We place it at the bottom of the reference rect by default
-        top: rect.bottom + 5,
+        top: rect.bottom + 4,
         transform: 'translateX(-50%)' as const,
       }
     : {};
@@ -132,7 +132,7 @@ const Notification = ({
     <div
       className={`font-bold shadow-md ${classAnimation()} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
-        border-3 rounded-md px-2 py-1 z-[9999]`}
+        border-3 rounded-md px-2 mt-2 py-1 z-[9999]`}
       style={positionStyles}
     >
       <span className="w-fit whitespace-pre-line">{message}</span>

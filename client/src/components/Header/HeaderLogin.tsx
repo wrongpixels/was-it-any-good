@@ -8,6 +8,8 @@ import {
 } from '../../hooks/use-notification';
 import Button from '../common/Button';
 import { AuthContextValues } from '../../context/AuthProvider';
+import { formatToAPIError } from '../../utils/error-handler';
+import { APIError } from '../../../../shared/types/errors';
 
 const HeaderLogin = (): JSX.Element => {
   const { session, login, logout }: AuthContextValues = useAuth();
@@ -43,7 +45,10 @@ const HeaderLogin = (): JSX.Element => {
       return;
     }
     login(loginData, {
-      onError: (error: Error) => loginAlert.setError(error!.message),
+      onError: (error: Error) => {
+        const apiError: APIError = formatToAPIError(error);
+        loginAlert.setError(apiError.message);
+      },
       onSuccess: (data: UserSessionData) => {
         loginAlert.setNotification(`Welcome back, ${data.username}!`);
       },
