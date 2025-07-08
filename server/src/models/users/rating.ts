@@ -11,6 +11,8 @@ import {
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
 import { Film, Season, Show, User } from '..';
+import { RatingStats } from '../../../../shared/types/models';
+import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 
 class Rating extends Model<
   InferAttributes<Rating>,
@@ -60,7 +62,10 @@ class Rating extends Model<
     }
   }
 
-  async updateRating(countSelf: boolean = true, transaction?: Transaction) {
+  async updateRating(
+    countSelf: boolean = true,
+    transaction?: Transaction
+  ): Promise<RatingStats> {
     console.log('\n\n', 'Triggered', '\n\n');
 
     const media: Show | Film | Season | null = await this.getMediaByType(
@@ -68,7 +73,7 @@ class Rating extends Model<
     );
 
     if (!media) {
-      return;
+      return DEF_RATING_STATS;
     }
 
     const where: WhereOptions = countSelf
@@ -108,32 +113,17 @@ class Rating extends Model<
         { transaction }
       );
     } else if (this.mediaType === MediaType.Show && media instanceof Show) {
-      console.log(
-        '\n\n',
-        rating / voteCount,
-        voteCount,
-        media.baseRating,
-        total ? total : '',
-        '\n\n'
-      );
       await media.update(
         { rating: rating / voteCount, voteCount },
         { transaction }
       );
     } else if (this.mediaType === MediaType.Season && media instanceof Season) {
-      console.log(
-        '\n\n',
-        rating / voteCount,
-        voteCount,
-        media.baseRating,
-        total ? total : '',
-        '\n\n'
-      );
       await media.update(
         { rating: rating / voteCount, voteCount },
         { transaction }
       );
     }
+    return { rating, voteCount };
   }
 }
 

@@ -14,6 +14,7 @@ import {
 import {
   addVoteToMedia,
   addVoteToSeason,
+  getMediaKey,
   getRatingKey,
   removeVoteFromMedia,
   removeVoteFromSeason,
@@ -80,6 +81,9 @@ export const useVoteMutation = () => {
     onSuccess: (rating: RatingData) => {
       const queryKey = getRatingKey(rating.mediaType, rating.mediaId);
       queryClient.setQueryData(queryKey, rating);
+      /*queryClient.invalidateQueries({
+        queryKey: getMediaKey(rating.mediaType, rating.mediaId),
+      });*/
     },
   });
 };

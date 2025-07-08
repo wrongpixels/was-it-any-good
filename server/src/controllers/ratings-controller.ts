@@ -4,6 +4,8 @@ import {
   CreateRating,
   CreateRatingData,
   RatingData,
+  RatingResponse,
+  RatingStats,
 } from '../../../shared/types/models';
 import CustomError from '../util/customError';
 import { Rating } from '../models';
@@ -34,8 +36,11 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     };
     const [ratingEntry, created]: [Rating, boolean | null] =
       await Rating.upsert(ratingData);
-    ratingEntry.updateRating();
-    const ratingResponse: RatingData = ratingEntry.get({ plain: true });
+    const ratingStats: RatingStats = await ratingEntry.updateRating();
+    const ratingResponse: RatingResponse = {
+      ...ratingEntry.get({ plain: true }),
+      ratingStats,
+    };
     res.status(created ? 201 : 200).json(ratingResponse);
   } catch (error) {
     next(error);
@@ -87,9 +92,9 @@ router.delete('/:id', async (req: Request, res, next) => {
     if (!isAuthorizedUser(req.activeUser, rating.userId)) {
       throw new CustomError('Unauthorized', 403);
     }
-    await rating.updateRating(false);
+    const ratingStats: RatingStats = await rating.updateRating(false);
     await rating.destroy();
-    res.status(204).end();
+    res.status(204).json(ratingStats);
   } catch (error) {
     next(error);
   }

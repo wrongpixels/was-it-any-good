@@ -18,6 +18,7 @@ export interface BriefMediaResponse {
   image: string;
   rating: number;
   baseRating: number;
+  voteCount: number;
   mediaType: MediaType;
 }
 
@@ -27,6 +28,15 @@ export interface RatingData {
   mediaId: number | string;
   userScore: number;
   mediaType: MediaType;
+}
+
+export interface RatingStats {
+  rating: number;
+  voteCount: number;
+}
+
+export interface RatingResponse extends RatingData {
+  ratingStats: RatingStats;
 }
 
 export interface CreateRating extends Omit<RatingData, 'id' | 'userId'> {}
