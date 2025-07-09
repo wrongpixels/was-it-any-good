@@ -20,7 +20,7 @@ import {
 } from '../utils/ratings-helper';
 import {
   MediaQueryManager,
-  useRatingQueryManager,
+  createRatingQueryManager,
 } from '../utils/media-query-manager';
 import { MediaType } from '../../../shared/types/media';
 
@@ -39,7 +39,7 @@ export const useVoteMutation = () => {
             : rating.mediaId,
       }),
     onMutate: (rating: CreateRatingMutation) => {
-      const queryManager: MediaQueryManager = useRatingQueryManager({
+      const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,
       });
@@ -78,15 +78,32 @@ export const useVoteMutation = () => {
       }
     },
     onSuccess: (ratingResponse: RatingResponse) => {
+      //the server returns the media's updated average rating and voteCount alongside the rating data
+      //this avoids invalidating the entire media query as only voteCount and rating changed.
+
       const { ratingStats, ...ratingData } = ratingResponse;
       const rating: RatingData = ratingData;
-      const queryManager: MediaQueryManager = useRatingQueryManager({
+      const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,
       });
       queryManager.setRating(rating);
-      if (queryManager.media) {
-        console.log(ratingStats);
+
+      if (!queryManager.media) {
+        //if the cache is empty, we invalidate to refetch fresh data.
+        queryManager.invalidateMedia();
+        return;
+      }
+      if (queryManager.isSeason) {
+        //we replace cached media's voteCount and rating with the server values
+        if (queryManager.seasonMedia) {
+          const updatedSeason: SeasonResponse = {
+            ...queryManager.seasonMedia,
+            ...ratingStats,
+          };
+          queryManager.setSeason(updatedSeason);
+        }
+      } else {
         const updatedMedia: MediaResponse = {
           ...queryManager.media,
           ...ratingStats,
@@ -101,7 +118,7 @@ export const useUnvoteMutation = () => {
   return useMutation({
     mutationFn: ({ id }: RemoveRatingMutation) => unvoteMedia(id),
     onMutate: (rating: RemoveRatingMutation) => {
-      const queryManager: MediaQueryManager = useRatingQueryManager({
+      const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,
       });

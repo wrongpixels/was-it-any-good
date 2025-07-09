@@ -123,7 +123,7 @@ class Rating extends Model<
         { transaction }
       );
     }
-    return { rating, voteCount };
+    return { rating: media.rating, voteCount: media.voteCount };
   }
 }
 

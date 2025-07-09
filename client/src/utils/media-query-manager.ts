@@ -25,32 +25,34 @@ export interface MediaQueryManager {
   setMedia: (media: MediaResponse) => void;
   setRating: (rating: CreateRating | null) => void;
   setSeason: (media: SeasonResponse) => void;
+  invalidateRating: VoidFunction;
+  invalidateMedia: VoidFunction;
 }
 
-export interface RatingQueryValues {
+interface RatingQueryValues {
   queryClient: QueryClient;
   rating: CreateRatingMutation;
 }
 
-export interface MediaQueryValues {
+interface MediaQueryValues {
   queryClient: QueryClient;
   mediaType: MediaType;
   mediaId: number | string;
   seasonId?: number | string;
 }
 
-export const useRatingQueryManager = ({
+export const createRatingQueryManager = ({
   queryClient,
   rating,
 }: RatingQueryValues): MediaQueryManager =>
-  useMediaQueryManager({
+  createMediaQueryManager({
     queryClient,
     mediaId: rating.mediaId,
     seasonId: rating.seasonId,
     mediaType: rating.mediaType,
   });
 
-export const useMediaQueryManager = ({
+export const createMediaQueryManager = ({
   queryClient,
   mediaType,
   mediaId,
@@ -79,18 +81,19 @@ export const useMediaQueryManager = ({
       ? media.seasons?.find((s: SeasonResponse) => s.id === Number(seasonId))
       : undefined;
 
-  const tmdbMediaQueryKey: string[] =
+  const tmdbMediaQueryKey: string[] | undefined =
     media !== undefined
       ? getTmdbMediaKey(isSeason ? MediaType.Show : mediaType, media.tmdbId)
-      : [''];
+      : undefined;
 
   const setRating = (rating: CreateRating | null) =>
     queryClient.setQueryData(ratingQueryKey, rating);
 
   const setMedia = (media: MediaResponse) => {
     queryClient.setQueryData(mediaQueryKey, { ...media });
-    queryClient.setQueryData(tmdbMediaQueryKey, { ...media });
-    console.log('setting ', media.rating);
+    if (tmdbMediaQueryKey) {
+      queryClient.setQueryData(tmdbMediaQueryKey, { ...media });
+    }
   };
 
   const setSeason = (season: SeasonResponse) => {
@@ -100,6 +103,13 @@ export const useMediaQueryManager = ({
     const updatedMedia: ShowResponse = addOrReplaceSeason(season, media);
     setMedia(updatedMedia);
   };
+
+  const invalidateRating = () =>
+    queryClient.invalidateQueries({ queryKey: ratingQueryKey });
+  const invalidateMedia = () =>
+    queryClient.invalidateQueries({
+      queryKey: [mediaQueryKey, tmdbMediaQueryKey],
+    });
 
   return {
     rating,
@@ -111,5 +121,7 @@ export const useMediaQueryManager = ({
     mediaQueryKey,
     seasonMedia,
     isSeason,
+    invalidateMedia,
+    invalidateRating,
   };
 };
