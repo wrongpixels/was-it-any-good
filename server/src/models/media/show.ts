@@ -122,8 +122,10 @@ Show.init(
             'releaseDate',
             'episodeCount',
             'mediaType',
+            'updatedAt',
           ],
         },
+        order: [['seasons', 'index', 'ASC']],
       },
       withCredits: {
         include: [
