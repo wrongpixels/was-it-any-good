@@ -15,7 +15,7 @@ import Rating from '../users/rating';
 import { Media } from '..';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
-  declare tmdbId: string;
+  declare tmdbId: number;
   declare imdbId?: string;
   declare mediaType: MediaType.Film;
   declare parentalGuide: keyof typeof FilmParental | null;
@@ -64,7 +64,7 @@ Film.init(
   {
     ...Media.baseInit(),
     tmdbId: {
-      type: DataTypes.STRING,
+      type: DataTypes.NUMBER,
       allowNull: false,
       unique: true,
     },

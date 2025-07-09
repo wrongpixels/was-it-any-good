@@ -8,18 +8,25 @@ export interface MediaRoleResponse {
   mediaId: number;
   mediaType: MediaType;
   characterName: string[];
-  show?: BriefMediaResponse;
-  film?: BriefMediaResponse;
+  show?: IndexMediaData;
+  film?: IndexMediaData;
 }
 
-export interface BriefMediaResponse {
-  id: number;
+export interface CreateIndexMedia {
+  tmdbId: number;
+  mediaId: number | null;
+  addedToMedia: boolean;
   name: string;
   image: string;
   rating: number;
   baseRating: number;
   voteCount: number;
+  popularity: number;
   mediaType: MediaType;
+}
+
+export interface IndexMediaData extends CreateIndexMedia {
+  id: number;
 }
 
 export interface RatingData {
@@ -108,7 +115,7 @@ export interface GenreResponse {
 export interface PersonResponse {
   id: number;
   name: string;
-  tmdbId?: string | undefined;
+  tmdbId?: number | undefined;
   gamedbId?: string | undefined;
   image: string;
   birthDate?: string | undefined;
@@ -118,7 +125,7 @@ export interface PersonResponse {
 
 export interface BaseResponse {
   id: number;
-  tmdbId?: string;
+  tmdbId?: number;
   imdbId?: string;
   name: string;
   originalName: string;

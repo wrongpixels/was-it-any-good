@@ -30,7 +30,7 @@ const ExternalLogo = ({
           href={buildTMDBorIMDBUrl(
             mediaType,
             tmdb,
-            tmdb ? media.tmdbId : media.imdbId
+            tmdb ? media.tmdbId?.toString() : media.imdbId
           )}
           target="_blank"
           rel="noopener noreferrer"

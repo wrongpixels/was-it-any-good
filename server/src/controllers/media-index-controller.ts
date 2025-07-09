@@ -1,8 +1,17 @@
 import express, { NextFunction, Response } from 'express';
 import path from 'path';
 import fs from 'fs/promises';
+import jsonFilms from '../db/popular-films-db.json';
+import jsonShows from '../db/popular-shows-db.json';
+
 import { tmdbAPI } from '../util/config';
 import { MediaType } from '../../../shared/types/media';
+import {
+  TMDBIndexFilm,
+  TMDBIndexFilmSchema,
+  TMDBIndexShow,
+  TMDBIndexShowSchema,
+} from '../schemas/tmdb-index-media-schemas';
 
 const router = express.Router();
 const PAGES_TO_GATHER: number = 10;
@@ -42,6 +51,17 @@ router.post('/populate', async (_req, res: Response, next: NextFunction) => {
     const films: number = await gatherMedia(MediaType.Film);
     const shows: number = await gatherMedia(MediaType.Show);
     res.json({ shows, films });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/parse', async (_req, res: Response, next: NextFunction) => {
+  try {
+    const testFilm: TMDBIndexFilm = TMDBIndexFilmSchema.parse(jsonFilms[0]);
+    const testShow: TMDBIndexShow = TMDBIndexShowSchema.parse(jsonShows[0]);
+
+    res.json({ testFilm, testShow });
   } catch (error) {
     next(error);
   }

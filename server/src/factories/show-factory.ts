@@ -2,7 +2,11 @@ import imageLinker from '../services/image-linker';
 
 import { DEF_CREATOR, DEF_SEASON, DEF_SHOW } from '../constants/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';
-import { createCrewMember, createTMDBBase, getAirDate } from './media-factory';
+import {
+  createCrewMember,
+  createTMDBMediaBase,
+  getAirDate,
+} from './media-factory';
 import {
   TMDBCreatorData,
   TMDBSeasonData,
@@ -11,7 +15,7 @@ import {
 
 export const createShow = (tmdb: TMDBShowData): ShowData => ({
   ...DEF_SHOW,
-  ...createTMDBBase(tmdb),
+  ...createTMDBMediaBase(tmdb),
   name: tmdb.name,
   sortName: tmdb.name.trim(),
   episodeCount: tmdb.number_of_episodes,
@@ -45,7 +49,7 @@ const createSeason = (season: TMDBSeasonData): SeasonData => ({
   index: season.season_number,
   sortName: season.name,
   baseRating: season.vote_average,
-  tmdbId: season.id.toString(),
+  tmdbId: season.id,
   episodeCount: season.episode_count,
   description: season.overview || '',
   image: season.poster_path

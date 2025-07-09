@@ -105,7 +105,7 @@ class Media<
       },
       rating: {
         type: DataTypes.DECIMAL(3, 1),
-        default: 0,
+        defaultValue: 0,
       },
       baseRating: {
         type: DataTypes.DECIMAL(3, 1),

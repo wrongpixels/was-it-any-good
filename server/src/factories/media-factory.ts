@@ -31,16 +31,21 @@ import { mapTMDBGenres } from '../services/genre-mapper';
 import { createCreators } from './show-factory';
 import { TMDBCreatorData } from '../schemas/tmdb-show-schema';
 import { CountryCode, isCountryCode } from '../../../shared/types/countries';
+import { TMDBIndexMedia } from '../schemas/tmdb-index-media-schemas';
 
-export const createTMDBBase = (tmdb: TMDBMediaData): TMDBData => ({
-  tmdbId: tmdb.id.toString(),
-  imdbId: tmdb.imdb_id,
-  countries: validateCountries(tmdb.origin_country),
-  description: tmdb.overview,
+export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
+  tmdbId: tmdb.id,
   baseRating: Number(tmdb.vote_average),
   image: tmdb.poster_path
     ? imageLinker.createPosterURL(tmdb.poster_path)
     : DEF_FILM.image,
+});
+
+export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
+  ...createTMDBIndexBase(tmdb),
+  imdbId: tmdb.imdb_id,
+  countries: validateCountries(tmdb.origin_country),
+  description: tmdb.overview,
   genres: mapTMDBGenres(
     tmdb.genres,
     isShow(tmdb) ? MediaType.Show : MediaType.Film
@@ -87,7 +92,7 @@ export const createStudio = (studio: TMDBStudioData): StudioData => ({
     : DEF_STUDIO.image,
   country: validateCountry(studio.origin_country) || undefined,
   name: studio.name,
-  tmdbId: studio.id.toString(),
+  tmdbId: studio.id,
 });
 
 export const createStudios = (studios: TMDBStudioData[]): StudioData[] => {
@@ -123,7 +128,7 @@ export const createCrewMember = (
   image: crewMember.profile_path
     ? imageLinker.createAvatarURL(crewMember.profile_path)
     : DEF_IMAGE_PERSON,
-  tmdbId: crewMember.id.toString(),
+  tmdbId: crewMember.id,
 });
 
 export const createDirector = (crewMember: TMDBCrewData): AuthorData => ({
@@ -161,7 +166,7 @@ export const createRole = (castMember: TMDBRoleData): RoleData => ({
   image: castMember.profile_path
     ? imageLinker.createAvatarURL(castMember.profile_path)
     : DEF_IMAGE_PERSON,
-  tmdbId: castMember.id.toString(),
+  tmdbId: castMember.id,
   character: castMember.character || '',
   roleType: RoleType.Main,
 });

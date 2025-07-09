@@ -16,7 +16,7 @@ class Person extends Model<
 > {
   declare id: CreationOptional<number>;
   declare name: string;
-  declare tmdbId?: string;
+  declare tmdbId?: number;
   declare gamedbId?: string;
   declare image: string;
   declare birthDate?: string;
@@ -35,7 +35,7 @@ Person.init(
       allowNull: false,
     },
     tmdbId: {
-      type: DataTypes.STRING,
+      type: DataTypes.NUMBER,
       unique: true,
       allowNull: true,
     },

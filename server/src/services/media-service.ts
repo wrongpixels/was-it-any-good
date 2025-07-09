@@ -182,7 +182,7 @@ const bulkCreatePeople = async (
   transaction: Transaction
 ): Promise<Person[] | null> => {
   const peopleList: CreatePerson[] = new Array<CreatePerson>();
-  const tmdbList: string[] = new Array<string>();
+  const tmdbList: number[] = new Array<number>();
   mediaPeople.map((role: MediaPerson) => {
     const person: CreatePerson | null = buildPerson(peopleList, role);
     if (person && person.tmdbId && !tmdbList.includes(person.tmdbId)) {

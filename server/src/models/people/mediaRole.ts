@@ -8,7 +8,7 @@ import {
 import { sequelize } from '../../util/db';
 import { AuthorType } from '../../types/media/media-types';
 import { Film, Show } from '..';
-import { BriefMediaResponse } from '../../../../shared/types/models';
+import { IndexMediaData } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
 
 class MediaRole extends Model<
@@ -22,8 +22,8 @@ class MediaRole extends Model<
   declare role: string;
   declare characterName?: string[];
   declare order?: number;
-  declare show?: BriefMediaResponse;
-  declare film?: BriefMediaResponse;
+  declare show?: IndexMediaData;
+  declare film?: IndexMediaData;
 
   static associate() {
     this.belongsTo(Film, {

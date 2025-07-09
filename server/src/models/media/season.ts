@@ -8,7 +8,7 @@ class Season extends Media<
   InferCreationAttributes<Season>
 > {
   declare showId: number;
-  declare tmdbId: string;
+  declare tmdbId: number;
   declare imdbId?: string;
   declare index: number;
   declare mediaType: MediaType.Season;
@@ -27,7 +27,7 @@ Season.init(
       },
     },
     tmdbId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       unique: true,
       allowNull: false,
     },

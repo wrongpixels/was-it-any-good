@@ -73,7 +73,7 @@ export interface IndividualData {
   name: string;
   country?: CountryCode;
   image: Image;
-  tmdbId?: string;
+  tmdbId?: number;
 }
 
 export interface AuthorData extends IndividualData {
@@ -117,7 +117,7 @@ export interface MediaData {
 
 // Media types
 export interface FilmData extends MediaData {
-  tmdbId: string;
+  tmdbId: number;
   imdbId: string;
   mediaType: MediaType.Film;
   subMedia: SubMediaType.None;
@@ -125,7 +125,7 @@ export interface FilmData extends MediaData {
 }
 
 export interface ShowData extends MediaData {
-  tmdbId: string;
+  tmdbId: number;
   imdbId: string;
   mediaType: MediaType.Show;
   lastAirDate: string | null;
@@ -152,7 +152,7 @@ export interface SubMediaData extends MediaData {
 }
 
 export interface SeasonData extends SubMediaData {
-  tmdbId: string;
+  tmdbId: number;
   imdbId?: string;
   episodeCount: number;
   mediaType: MediaType.Season;
@@ -171,7 +171,7 @@ export interface ChapterData extends SubMediaData {
 
 // Creation
 export interface TMDBData {
-  tmdbId: string;
+  tmdbId: number;
   imdbId: string;
   description: string;
   baseRating: number;

@@ -17,7 +17,7 @@ import MediaRole from '../people/mediaRole';
 import { Media, Rating } from '..';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
-  declare tmdbId: string;
+  declare tmdbId: number;
   declare imdbId?: string;
   declare mediaType: MediaType.Show;
   declare parentalGuide: keyof typeof FilmParental | null;
@@ -68,7 +68,7 @@ Show.init(
   {
     ...Media.baseInit(),
     tmdbId: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       unique: true,
       allowNull: false,
     },
