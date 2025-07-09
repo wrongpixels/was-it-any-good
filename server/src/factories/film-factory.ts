@@ -20,7 +20,7 @@ export const createFilm = (tmdb: TMDBFilmData): FilmData => ({
   runtime: tmdb.runtime,
 });
 
-export const createIndexFromFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
+export const createIndexForFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
   ...createTMDBIndexBase(tmdb),
   name: tmdb.title,
   popularity: tmdb.popularity,

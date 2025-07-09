@@ -4,6 +4,7 @@ import { DEF_CREATOR, DEF_SEASON, DEF_SHOW } from '../constants/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';
 import {
   createCrewMember,
+  createTMDBIndexBase,
   createTMDBMediaBase,
   getAirDate,
 } from './media-factory';
@@ -12,6 +13,9 @@ import {
   TMDBSeasonData,
   TMDBShowData,
 } from '../schemas/tmdb-show-schema';
+import { TMDBIndexShow } from '../schemas/tmdb-index-media-schemas';
+import { MediaType } from '../../../shared/types/media';
+import { CreateIndexMedia } from '../../../shared/types/models';
 
 export const createShow = (tmdb: TMDBShowData): ShowData => ({
   ...DEF_SHOW,
@@ -25,6 +29,17 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
   lastAirDate: getAirDate(tmdb.last_air_date),
   runtime: tmdb.episode_run_time[0],
   seasons: createSeasons(tmdb.seasons),
+});
+
+export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
+  ...createTMDBIndexBase(tmdb),
+  name: tmdb.name,
+  popularity: tmdb.popularity,
+  addedToMedia: false,
+  mediaId: null,
+  mediaType: MediaType.Film,
+  rating: 0,
+  voteCount: tmdb.vote_average > 0 ? 1 : 0,
 });
 
 export const createCreators = (creators: TMDBCreatorData[]): AuthorData[] =>
