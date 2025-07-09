@@ -61,6 +61,8 @@ GET http://localhost:6060/api/users
 GET http://localhost:6060/api/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6ImFkbWluIiwiaWQiOjcsImlzQWRtaW4iOnRydWUsImlzQWN0aXZlIjp0cnVlLCJsYXN0QWN0aXZlIjoiMjAyNS0wNi0yN1QyMTo0Nzo0NC41MDJaIiwiaWF0IjoxNzUxMDYwODY0fQ.UHfKT2k8VAjs1iTnJKUJc4l8XbvyFAB44HHpz1br2rQ
 
+###POPULATE MEDIA INDEX DATA
+POST http://localhost:6060/api/media-index/populate
 
 ###GET FILM DATA
 GET http://localhost:6060/api/films/tmdb/11621

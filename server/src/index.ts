@@ -12,6 +12,7 @@ import {
   sessionsRouter,
   ratingsRouter,
   peopleRouter,
+  mediaIndexRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -29,6 +30,8 @@ app.use('/api/auth/logout', logoutRouter);
 app.use('/api/auth/sessions', sessionsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/people', peopleRouter);
+app.use('/api/media-index', mediaIndexRouter);
+
 app.use(errorHandler);
 
 app.listen(PORT, async () => {
