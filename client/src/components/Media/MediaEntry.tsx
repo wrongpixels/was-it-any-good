@@ -12,6 +12,7 @@ import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
+import { usePageMediaTitle } from '../../hooks/use-page-title';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -34,6 +35,7 @@ const MediaEntry = ({
   } = tmdb
     ? useMediaByTMDBQuery(mediaId, mediaType)
     : useMediaByIdQuery(mediaId, mediaType);
+  usePageMediaTitle(media);
 
   if (isLoading || isError) {
     return (
@@ -81,6 +83,7 @@ const MediaEntry = ({
   }
   return (
     <div>
+      Hello
       <div className="flex flex-row gap-8">
         <div className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
