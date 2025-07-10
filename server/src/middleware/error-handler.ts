@@ -19,6 +19,7 @@ const errorHandler: ErrorRequestHandler = (
     responseError.message = err.message;
     responseError.name = err.name;
   }
+  console.log(err);
   res.status(responseError.status).json(responseError);
 };
 

@@ -81,7 +81,6 @@ export const validateCountry = (code: string): CountryCode => {
 };
 
 export const validateCountries = (codes: string[]): CountryCode[] => {
-  console.log(codes);
   return codes.map((c: string) => validateCountry(c));
 };
 

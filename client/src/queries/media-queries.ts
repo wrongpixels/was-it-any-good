@@ -16,7 +16,7 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
 
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, id, false),
-    enabled: !!id,
+    enabled: !!id && !isNaN(Number(id)),
     queryFn: async () => {
       const data = await getMediaById(id, mediaType);
       return data ? transformCredits(data) : null;
@@ -44,7 +44,7 @@ export const useMediaByTMDBQuery = (
 
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, tmdbId, true),
-    enabled: !!tmdbId,
+    enabled: !!tmdbId && !isNaN(Number(tmdbId)),
     queryFn: async () => {
       const data = await getMediaByTMDBId(tmdbId, mediaType);
       return data ? transformCredits(data) : null;

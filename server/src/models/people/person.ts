@@ -35,7 +35,7 @@ Person.init(
       allowNull: false,
     },
     tmdbId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       unique: true,
       allowNull: true,
     },

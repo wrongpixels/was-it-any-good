@@ -22,3 +22,7 @@ export enum UserVote {
   Nine = 9,
   Ten = 10,
 }
+
+export interface ChildrenProps {
+  children: React.ReactNode;
+}

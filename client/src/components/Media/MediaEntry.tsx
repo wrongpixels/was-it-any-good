@@ -5,14 +5,14 @@ import { MediaType } from '../../../../shared/types/media';
 import MediaPoster from '../Poster/MediaPoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
-import { Link, PathMatch, useMatch } from 'react-router-dom';
+import { PathMatch, useMatch } from 'react-router-dom';
 import { buildMediaURL } from '../../services/media-service';
-import { buildOwnUrl, buildTMDBUrl } from '../../utils/url-helper';
 import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
-import { PageTitleValues, usePageMediaTitle } from '../../hooks/use-page-title';
+import { usePageInfoContext } from '../../hooks/use-page-info';
+import MediaMissing from './MediaMissing';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -22,10 +22,11 @@ interface MediaEntryProps {
 const MediaEntry = ({
   tmdb = false,
   mediaType,
-}: MediaEntryProps): JSX.Element => {
+}: MediaEntryProps): JSX.Element | null => {
   const match: PathMatch<'id'> | null = useMatch(
     `${buildMediaURL(mediaType, tmdb)}/:id`
   );
+  const { setTitle } = usePageInfoContext();
   const mediaId: string | undefined = match?.params.id;
   const {
     data: media,
@@ -36,57 +37,35 @@ const MediaEntry = ({
     ? useMediaByTMDBQuery(mediaId, mediaType)
     : useMediaByIdQuery(mediaId, mediaType);
 
-  const { setTitle }: PageTitleValues = usePageMediaTitle(media);
+  if (mediaId && isNaN(Number(mediaId))) {
+    setTitle('Wrong id format');
+    return (
+      <div className="flex flex-col items-center justify-center w-full font-medium text-2xl gap-4 whitespace-pre-line">
+        Wrong ID format!
+        <div className="text-lg font-normal">Ids can only have numbers</div>
+      </div>
+    );
+  }
 
   if (isLoading || isError) {
     setTitle(`${isLoading ? `Loading ${mediaType}...` : 'Error'}`);
+    if (isError) {
+      console.log(error);
+    }
     return (
-      <div className="flex justify-center w-full font-medium text-xl">
+      <div className="flex justify-center w-full font-medium text-xl  whitespace-pre-line">
         {isLoading
           ? `Loading ${mediaType}...`
-          : `There was an error loading the ${mediaType} ${error?.message}`}
+          : `There was an error loading the ${mediaType}!\n(${error?.message})`}
       </div>
     );
   }
-  if (!mediaId || !media) {
-    setTitle(`${mediaType} not found`);
-    const formatUrl: string = `/tmdb/${mediaType.toLocaleLowerCase()}`;
-    const currentUrl: string = `${formatUrl}/${mediaId}`;
-    const idSource: string = tmdb ? 'TMDB' : 'WIAG';
-    return (
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="font-medium text-2xl">
-          {mediaType} doesn't exist in {idSource}'s database!
-        </div>
-        {(tmdb && (
-          <>
-            <div>Do you want to check it yourself?</div>
-            <div className="font-semibold">
-              Click <a href={buildTMDBUrl(mediaType, mediaId)}>Here</a>
-            </div>
-          </>
-        )) || (
-          <>
-            <div>
-              Did you want to check a {mediaType} using a
-              <span className="font-medium"> TMDB </span>id?
-            </div>
-            <div>
-              Use the format:{' '}
-              <span className="font-bold">{`${formatUrl}/id`}</span>
-            </div>
-            <div className="pt-5 font-semibold text-lg">
-              In this case:{' '}
-              <Link to={currentUrl}>{buildOwnUrl(currentUrl)}</Link>
-            </div>
-          </>
-        )}
-      </div>
-    );
+  if (!media) {
+    return <MediaMissing mediaId={mediaId} mediaType={mediaType} tmdb={tmdb} />;
   }
+  setTitle(`${media.name} (${mediaType})`);
   return (
     <div>
-      Hello
       <div className="flex flex-row gap-8">
         <div className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
