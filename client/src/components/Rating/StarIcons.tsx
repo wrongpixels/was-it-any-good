@@ -55,7 +55,6 @@ const StarIcons = ({
     mediaType,
     userId: session?.userId,
   });
-
   const voteMutation = useVoteMutation();
   const unVoteMutation = useUnvoteMutation();
 

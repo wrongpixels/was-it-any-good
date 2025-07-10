@@ -34,7 +34,7 @@ Season.belongsTo(Show, {
   as: 'show',
 });
 
-sequelize.sync({ force: false });
+sequelize.sync();
 
 export {
   Media,

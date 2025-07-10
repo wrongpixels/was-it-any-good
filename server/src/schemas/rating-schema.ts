@@ -3,6 +3,7 @@ import { MediaType } from '../../../shared/types/media';
 
 export const CreateRatingSchema = z.object({
   mediaId: z.number(),
+  showId: z.number().optional(),
   mediaType: z.enum([
     MediaType.Film,
     MediaType.Show,

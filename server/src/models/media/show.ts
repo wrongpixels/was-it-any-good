@@ -119,6 +119,7 @@ Show.init(
             'baseRating',
             'tmdbId',
             'imdbId',
+            'showId',
             'releaseDate',
             'episodeCount',
             'mediaType',
