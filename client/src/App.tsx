@@ -4,6 +4,7 @@ import MediaEntry from './components/Media/MediaEntry';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
 import PersonEntry from './components/Person/PersonEntry';
+import NotFound from './components/NotFound';
 
 const App = (): JSX.Element => {
   return (
@@ -31,6 +32,7 @@ const App = (): JSX.Element => {
                 element={<MediaEntry mediaType={MediaType.Show} tmdb={true} />}
               />
               <Route path="/person/:id" element={<PersonEntry />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
         </div>
