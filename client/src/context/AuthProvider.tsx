@@ -18,7 +18,6 @@ import {
 import { SESSION_QUERY_KEY } from '../constants/session-constants';
 import { AxiosResponse } from 'axios';
 import { verifySession } from '../services/login-service';
-import { ChildrenProps } from '../../../shared/types/common';
 
 export interface AuthContextValues {
   session: UserSessionData | null;
@@ -40,7 +39,11 @@ export const AuthContext = createContext<AuthContextValues | undefined>(
   undefined
 );
 
-export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
+export interface AuthProviderProps {
+  children: React.ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   const queryClient = useQueryClient();
   const unverifiedSession: UserSessionData | null = tryLoadUserData();
 

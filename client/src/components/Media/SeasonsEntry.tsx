@@ -34,7 +34,7 @@ const SeasonsEntry = ({ show }: SeasonsEntryProps): JSX.Element | null => {
             .filter((s: SeasonResponse) => !isSpecialSeason(s))
             .map((s: SeasonResponse) => (
               <div key={s.id}>
-                <SeasonPoster season={s} media={show} />
+                <SeasonPoster media={s} />
               </div>
             ))}
         </div>

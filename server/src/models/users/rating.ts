@@ -21,7 +21,8 @@ class Rating extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare mediaType: MediaType;
-  declare mediaId: number | string;
+  declare mediaId: number;
+  declare showId?: number;
   declare userScore: number;
   //Fields for accessing the SQL results
   declare count?: number;
@@ -47,6 +48,10 @@ class Rating extends Model<
       foreignKey: 'userId',
       constraints: false,
     });
+    this.belongsTo(Show, {
+      foreignKey: 'showId',
+      constraints: false,
+    });
   }
 
   async getMediaByType(transaction: Transaction | undefined) {
@@ -68,9 +73,8 @@ class Rating extends Model<
   ): Promise<RatingStats> {
     console.log('\n\n', 'Triggered', '\n\n');
 
-    const media: Show | Film | Season | null = await this.getMediaByType(
-      transaction
-    );
+    const media: Show | Film | Season | null =
+      await this.getMediaByType(transaction);
 
     if (!media) {
       return DEF_RATING_STATS;
@@ -123,7 +127,10 @@ class Rating extends Model<
         { transaction }
       );
     }
-    return { rating: media.rating, voteCount: media.voteCount };
+    return {
+      rating: media.rating,
+      voteCount: media.voteCount,
+    };
   }
 }
 
@@ -145,6 +152,10 @@ Rating.init(
     mediaId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    showId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
     mediaType: {
       type: DataTypes.ENUM(...Object.values(MediaType)),

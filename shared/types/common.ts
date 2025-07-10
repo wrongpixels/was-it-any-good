@@ -1,12 +1,12 @@
 export type offset = {
-  x: number;
-  y: number;
-};
+  x: number
+  y: number
+}
 
 export const DEF_OFFSET: offset = {
   x: 0,
   y: 0,
-};
+}
 
 export enum UserVote {
   None = 0,
@@ -21,8 +21,4 @@ export enum UserVote {
   Eight = 8,
   Nine = 9,
   Ten = 10,
-}
-
-export interface ChildrenProps {
-  children: React.ReactNode;
 }

@@ -2,7 +2,6 @@ import { QueryClient } from '@tanstack/react-query';
 import { MediaType } from '../../../shared/types/media';
 import {
   CreateRating,
-  CreateRatingMutation,
   MediaResponse,
   RatingData,
   SeasonResponse,
@@ -31,14 +30,14 @@ export interface MediaQueryManager {
 
 interface RatingQueryValues {
   queryClient: QueryClient;
-  rating: CreateRatingMutation;
+  rating: CreateRating;
 }
 
 interface MediaQueryValues {
   queryClient: QueryClient;
   mediaType: MediaType;
   mediaId: number | string;
-  seasonId?: number | string;
+  showId?: number | string;
 }
 
 export const createRatingQueryManager = ({
@@ -48,7 +47,7 @@ export const createRatingQueryManager = ({
   createMediaQueryManager({
     queryClient,
     mediaId: rating.mediaId,
-    seasonId: rating.seasonId,
+    showId: rating.showId,
     mediaType: rating.mediaType,
   });
 
@@ -56,21 +55,18 @@ export const createMediaQueryManager = ({
   queryClient,
   mediaType,
   mediaId,
-  seasonId,
+  showId,
 }: MediaQueryValues): MediaQueryManager => {
   const isSeason: boolean =
-    mediaType === MediaType.Season && seasonId !== undefined;
+    mediaType === MediaType.Season && showId !== undefined;
 
-  const ratingQueryKey: string[] = getRatingKey(
-    mediaType,
-    isSeason ? seasonId! : mediaId
-  );
+  const ratingQueryKey: string[] = getRatingKey(mediaType, mediaId);
   const rating: RatingData | undefined =
     queryClient.getQueryData(ratingQueryKey);
 
   const mediaQueryKey: string[] = getMediaKey(
-    isSeason ? MediaType.Show : mediaType,
-    mediaId
+    isSeason && showId ? MediaType.Show : mediaType,
+    isSeason && showId ? showId : mediaId
   );
 
   const media: MediaResponse | undefined =
@@ -78,7 +74,7 @@ export const createMediaQueryManager = ({
 
   const seasonMedia: SeasonResponse | undefined =
     isSeason && media?.mediaType === MediaType.Show
-      ? media.seasons?.find((s: SeasonResponse) => s.id === Number(seasonId))
+      ? media.seasons?.find((s: SeasonResponse) => s.id === mediaId)
       : undefined;
 
   const tmdbMediaQueryKey: string[] | undefined =

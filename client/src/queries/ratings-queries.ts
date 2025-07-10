@@ -12,7 +12,7 @@ export const useRatingByMedia = ({ mediaId, mediaType, userId }: CheckRating) =>
   });
 
 export const usePrefetchRating = (
-  mediaId: string | number | undefined = -1,
+  mediaId: number | undefined = -1,
   mediaType: MediaType
 ) =>
   usePrefetchQuery({

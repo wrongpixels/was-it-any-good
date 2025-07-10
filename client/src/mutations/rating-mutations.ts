@@ -5,11 +5,10 @@ import {
 } from '@tanstack/react-query';
 import { unvoteMedia, voteMedia } from '../services/ratings-service';
 import {
-  CreateRatingMutation,
+  CreateRating,
   MediaResponse,
   RatingData,
-  RatingResponse,
-  RemoveRatingMutation,
+  CreateRatingResponse,
   SeasonResponse,
 } from '../../../shared/types/models';
 import {
@@ -22,23 +21,14 @@ import {
   MediaQueryManager,
   createRatingQueryManager,
 } from '../utils/media-query-manager';
-import { MediaType } from '../../../shared/types/media';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['vote'],
-    mutationFn: (rating: CreateRatingMutation) =>
-      voteMedia({
-        userScore: rating.userScore,
-        mediaType: rating.mediaType,
-        mediaId:
-          rating.mediaType === MediaType.Season && rating.seasonId
-            ? rating.seasonId
-            : rating.mediaId,
-      }),
-    onMutate: (rating: CreateRatingMutation) => {
+    mutationFn: (rating: CreateRating) => voteMedia(rating),
+    onMutate: (rating: CreateRating) => {
       const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,
@@ -76,7 +66,7 @@ export const useVoteMutation = () => {
         queryClient.setQueryData(context.queryKey, context.previousRating);
       }
     },
-    onSuccess: (ratingResponse: RatingResponse) => {
+    onSuccess: (ratingResponse: CreateRatingResponse) => {
       //the server returns the media's updated average rating and voteCount alongside the rating data
       //this avoids invalidating the entire media query as only voteCount and rating changed.
 
@@ -120,8 +110,8 @@ export const useVoteMutation = () => {
 export const useUnvoteMutation = () => {
   const queryClient: QueryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id }: RemoveRatingMutation) => unvoteMedia(id),
-    onMutate: (rating: RemoveRatingMutation) => {
+    mutationFn: ({ id }: RatingData) => unvoteMedia(id),
+    onMutate: (rating: RatingData) => {
       const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,

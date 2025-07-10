@@ -28,12 +28,7 @@ const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
           loading="lazy"
         />
         <div className="text-center">
-          <StarRating
-            rating={average}
-            media={media}
-            valid={true}
-            mediaType={media.mediaType}
-          />
+          <StarRating rating={average} media={media} valid={true} />
         </div>
       </div>
     </div>

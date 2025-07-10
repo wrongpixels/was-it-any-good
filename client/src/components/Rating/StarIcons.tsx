@@ -8,10 +8,6 @@ import { UserVote } from '../../../../shared/types/common';
 import HoverMessage from '../notifications/HoverMessage';
 import { numToVote } from '../../utils/ratings-helper';
 import { useAuth } from '../../hooks/use-auth';
-import {
-  CreateRatingMutation,
-  RemoveRatingMutation,
-} from '../../../../shared/types/models';
 import { useRatingByMedia } from '../../queries/ratings-queries';
 import {
   useUnvoteMutation,
@@ -29,6 +25,7 @@ import {
   DEF_NOTIFICATION_DURATION,
   LOW_NOTIFICATION,
 } from '../../constants/notification-constants';
+import { CreateRating } from '../../../../shared/types/models';
 
 interface StarListProps {
   readonly width: number;
@@ -40,9 +37,9 @@ interface StarListProps {
 interface StarIconsProps {
   readonly starWidth?: number;
   readonly defaultRating?: number;
-  readonly mediaId: number | string;
+  readonly mediaId: number;
   readonly mediaType: MediaType;
-  readonly seasonId?: number | string;
+  readonly showId?: number;
 }
 
 const StarIcons = ({
@@ -50,11 +47,11 @@ const StarIcons = ({
   defaultRating = 0,
   mediaId,
   mediaType,
-  seasonId,
+  showId,
 }: StarIconsProps): JSX.Element => {
   const { session } = useAuth();
   const { data: userRating } = useRatingByMedia({
-    mediaId: mediaType === MediaType.Season && seasonId ? seasonId : mediaId,
+    mediaId: mediaType === MediaType.Season && showId ? showId : mediaId,
     mediaType,
     userId: session?.userId,
   });
@@ -82,11 +79,11 @@ const StarIcons = ({
   ] = useState<boolean>(false);
 
   const handleVote = (): void => {
-    const ratingData: CreateRatingMutation = {
+    const ratingData: CreateRating = {
       mediaId,
       mediaType,
       userScore: hoverRating,
-      seasonId,
+      showId,
     };
     setJustVoted(true);
     voteMutation.mutate(ratingData);
@@ -97,12 +94,7 @@ const StarIcons = ({
     if (!userRating) {
       return;
     }
-    const ratingData: RemoveRatingMutation = {
-      ...userRating,
-      mediaId,
-      seasonId,
-    };
-    unVoteMutation.mutate(ratingData);
+    unVoteMutation.mutate(userRating);
   };
 
   const calculateNewRating = (x: number, width: number): UserVote => {
