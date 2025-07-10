@@ -9,6 +9,23 @@ import { ShowResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 
 const router: Router = express.Router();
+
+router.get('', async (_req, res, next) => {
+  try {
+    const showEntries: Show[] = await Show.findAll({ order: [['id', 'ASC']] });
+    if (!showEntries) {
+      res.json(null);
+      return;
+    }
+    const shows: ShowResponse[] = showEntries.map((s: Show) =>
+      s.get({ plain: true })
+    );
+    res.json(shows);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;

@@ -19,10 +19,10 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
     enabled: !!id,
     queryFn: async () => {
       const data = await getMediaById(id, mediaType);
-      return transformCredits(data);
+      return data ? transformCredits(data) : null;
     },
   });
-
+  //we create a copy for tmdb id urls
   useEffect(() => {
     const media = query.data;
     if (media?.tmdbId) {
@@ -30,9 +30,6 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
         getActiveMediaKey(mediaType, media.tmdbId, true),
         media
       );
-      queryClient.setQueryData(['tmdbMap', mediaType, media.tmdbId], {
-        id: media.id,
-      });
     }
   }, [query.data, mediaType, id, queryClient]);
 
@@ -50,9 +47,10 @@ export const useMediaByTMDBQuery = (
     enabled: !!tmdbId,
     queryFn: async () => {
       const data = await getMediaByTMDBId(tmdbId, mediaType);
-      return transformCredits(data);
+      return data ? transformCredits(data) : null;
     },
   });
+  //we create a copy for id urls
 
   useEffect(() => {
     const media = query.data;
@@ -61,9 +59,6 @@ export const useMediaByTMDBQuery = (
         getActiveMediaKey(mediaType, media.id, false),
         media
       );
-      queryClient.setQueryData(['tmdbMap', mediaType, tmdbId], {
-        id: media.id,
-      });
     }
   }, [query.data, mediaType, tmdbId, queryClient]);
 

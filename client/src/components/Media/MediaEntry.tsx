@@ -12,7 +12,7 @@ import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
-import { usePageMediaTitle } from '../../hooks/use-page-title';
+import { PageTitleValues, usePageMediaTitle } from '../../hooks/use-page-title';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -35,9 +35,11 @@ const MediaEntry = ({
   } = tmdb
     ? useMediaByTMDBQuery(mediaId, mediaType)
     : useMediaByIdQuery(mediaId, mediaType);
-  usePageMediaTitle(media);
+
+  const { setTitle }: PageTitleValues = usePageMediaTitle(media);
 
   if (isLoading || isError) {
+    setTitle(`${isLoading ? `Loading ${mediaType}...` : 'Error'}`);
     return (
       <div className="flex justify-center w-full font-medium text-xl">
         {isLoading
@@ -47,6 +49,7 @@ const MediaEntry = ({
     );
   }
   if (!mediaId || !media) {
+    setTitle(`${mediaType} not found`);
     const formatUrl: string = `/tmdb/${mediaType.toLocaleLowerCase()}`;
     const currentUrl: string = `${formatUrl}/${mediaId}`;
     const idSource: string = tmdb ? 'TMDB' : 'WIAG';
