@@ -56,7 +56,6 @@ export const useVoteMutation = () => {
             rating.userScore,
             queryManager.rating?.userScore
           );
-          console.log(updatedSeason);
           queryManager.setSeason(updatedSeason);
         }
       } else {
@@ -91,6 +90,9 @@ export const useVoteMutation = () => {
 
       if (!queryManager.media) {
         //if the cache is empty, we invalidate to refetch fresh data.
+        console.log(rating);
+        console.log(ratingStats);
+
         queryManager.invalidateMedia();
         return;
       }
@@ -102,6 +104,7 @@ export const useVoteMutation = () => {
             ...ratingStats,
           };
           queryManager.setSeason(updatedSeason);
+          console.log(ratingStats);
         }
       } else {
         const updatedMedia: MediaResponse = {
@@ -109,6 +112,7 @@ export const useVoteMutation = () => {
           ...ratingStats,
         };
         queryManager.setMedia(updatedMedia);
+        console.log(ratingStats);
       }
     },
   });
@@ -133,7 +137,6 @@ export const useUnvoteMutation = () => {
             queryManager.seasonMedia,
             queryManager.rating.userScore
           );
-          console.log(updatedSeason);
           queryManager.setSeason(updatedSeason);
         }
       } else {

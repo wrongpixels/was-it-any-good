@@ -2,8 +2,7 @@ import { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { buildTMDBUrl, buildOwnUrl } from '../../utils/url-helper';
 import { MediaType } from '../../../../shared/types/media';
-import { usePageInfoContext } from '../../hooks/use-page-info';
-import { PageInfoContextValues } from '../../context/PageInfoProvider';
+import { setTitle } from '../../utils/page-info-setter';
 
 interface MissingMediaProps {
   mediaType: MediaType;
@@ -16,7 +15,6 @@ const MediaMissing = ({
   mediaId,
   tmdb,
 }: MissingMediaProps): JSX.Element | null => {
-  const { setTitle }: PageInfoContextValues = usePageInfoContext();
   setTitle(`${mediaType} not found`);
   const idSource: string = tmdb ? 'TMDB' : 'WIAG';
 

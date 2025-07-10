@@ -25,42 +25,57 @@ export const PageInfoContext = createContext<PageInfoContextValues | null>(
 );
 
 export const PageInfoProvider = ({ children }: ChildrenProps) => {
-  const [info, setInfo] = useState<PageInfo>(DEF_PAGE_INFO);
+  const [info, setInfo] = useState<PageInfo | null>(DEF_PAGE_INFO);
 
   const setPageInfo = ({ title: newTitle, description }: PageInfo) => {
+    console.log('Requesting title ', newTitle);
+    if (!info) {
+      return;
+    }
     const title =
       newTitle === undefined && description
         ? (info.title ?? DEF_PAGE_TITLE)
         : (newTitle ?? DEF_PAGE_TITLE);
-
-    setInfo((prev) =>
-      prev.title === title && prev.description === description
-        ? prev
-        : { title, description }
-    );
+    useEffect(() => {
+      console.log('Setting title ', newTitle);
+      setInfo((prev) =>
+        prev?.title === title && prev.description === description
+          ? prev
+          : { title, description }
+      );
+    }, [newTitle, description]);
   };
 
   const setTitle = (newTitle: string | undefined) => {
+    if (!info) {
+      return;
+    }
     const title = newTitle ?? DEF_PAGE_TITLE;
-    setInfo((prev) =>
-      prev.title === title && prev.description === undefined
-        ? prev
+    setPageInfo(
+      info.title === title && info.description === undefined
+        ? info
         : { title, description: undefined }
     );
   };
 
   const setDescription = (newDescription: string | undefined) => {
-    setInfo((prev) =>
-      prev.description === newDescription
-        ? prev
+    if (!info) {
+      return;
+    }
+    setPageInfo(
+      info.description === newDescription
+        ? info
         : {
-            title: prev.title ?? DEF_PAGE_TITLE,
+            title: info.title ?? DEF_PAGE_TITLE,
             description: newDescription,
           }
     );
   };
 
   useEffect(() => {
+    if (!info) {
+      return;
+    }
     document.title =
       info.title === DEF_PAGE_TITLE
         ? DEF_PAGE_TITLE

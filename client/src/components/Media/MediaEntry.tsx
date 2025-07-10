@@ -11,8 +11,8 @@ import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
-import { usePageInfoContext } from '../../hooks/use-page-info';
 import MediaMissing from './MediaMissing';
+import { setTitle } from '../../utils/page-info-setter';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -26,7 +26,6 @@ const MediaEntry = ({
   const match: PathMatch<'id'> | null = useMatch(
     `${buildMediaURL(mediaType, tmdb)}/:id`
   );
-  const { setTitle } = usePageInfoContext();
   const mediaId: string | undefined = match?.params.id;
   const {
     data: media,
