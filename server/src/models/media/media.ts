@@ -19,6 +19,8 @@ class Media<
   TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
+  declare tmdbId: number;
+  declare imdbId?: string;
   declare name: string;
   declare originalName: string;
   declare sortName: string;
@@ -50,6 +52,16 @@ class Media<
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      tmdbId: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+      },
+      imdbId: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true,
       },
       name: {
         type: DataTypes.STRING,

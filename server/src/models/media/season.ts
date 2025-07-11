@@ -8,8 +8,6 @@ class Season extends Media<
   InferCreationAttributes<Season>
 > {
   declare showId: number;
-  declare tmdbId: number;
-  declare imdbId?: string;
   declare index: number;
   declare mediaType: MediaType.Season;
   declare episodeCount: number;
@@ -32,15 +30,6 @@ Season.init(
         model: 'shows',
         key: 'id',
       },
-    },
-    tmdbId: {
-      type: DataTypes.INTEGER,
-      unique: true,
-      allowNull: false,
-    },
-    imdbId: {
-      type: DataTypes.STRING,
-      unique: true,
     },
     mediaType: {
       type: DataTypes.STRING,

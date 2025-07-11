@@ -6,8 +6,6 @@ import { MediaType } from '../../types/media/media-types';
 import { Media } from '..';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
-  declare tmdbId: number;
-  declare imdbId?: string;
   declare mediaType: MediaType.Film;
   declare parentalGuide: keyof typeof FilmParental | null;
 
@@ -19,16 +17,6 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
 Film.init(
   {
     ...Media.baseInit(),
-    tmdbId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      unique: true,
-    },
-    imdbId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-      unique: true,
-    },
     mediaType: {
       type: DataTypes.STRING,
       defaultValue: MediaType.Film,

@@ -8,8 +8,6 @@ import { MediaType } from '../../types/media/media-types';
 import { Media, Season } from '..';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
-  declare tmdbId: number;
-  declare imdbId?: string;
   declare mediaType: MediaType.Show;
   declare parentalGuide: keyof typeof FilmParental | null;
   declare lastAirDate: string | null;
@@ -28,15 +26,6 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
 Show.init(
   {
     ...Media.baseInit(),
-    tmdbId: {
-      type: DataTypes.INTEGER,
-      unique: true,
-      allowNull: false,
-    },
-    imdbId: {
-      type: DataTypes.STRING,
-      unique: true,
-    },
     mediaType: {
       type: DataTypes.STRING,
       defaultValue: MediaType.Show,
