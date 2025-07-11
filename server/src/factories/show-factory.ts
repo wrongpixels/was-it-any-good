@@ -65,6 +65,7 @@ const createSeason = (
   index: season.season_number,
   sortName: season.name,
   baseRating: season.vote_average,
+  voteCount: season.vote_average > 0 ? 1 : 0,
   tmdbId: season.id,
   episodeCount: season.episode_count,
   description: season.overview || '',
