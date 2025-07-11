@@ -8,7 +8,11 @@ import { getActiveMediaKey } from '../utils/ratings-helper';
 
 const transformCredits = (data: MediaResponse): MediaResponse => {
   if (!data.crew) return data;
-  return { ...data, mergedCrew: mergeCredits(data.crew) };
+  return {
+    ...data,
+    cast: data.cast && data.cast.length > 0 ? data.cast : undefined,
+    mergedCrew: mergeCredits(data.crew),
+  };
 };
 
 export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {

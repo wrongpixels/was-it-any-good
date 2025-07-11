@@ -1,7 +1,9 @@
-import { CreditResponse, MergedCredits } from "../../../shared/types/models";
-import { AuthorType } from "../../../shared/types/roles";
+import { CreditResponse, MergedCredits } from '../../../shared/types/models';
+import { AuthorType } from '../../../shared/types/roles';
 
-const mergeCredits = (credits: CreditResponse[]): MergedCredits[] => {
+const mergeCredits = (
+  credits: CreditResponse[]
+): MergedCredits[] | undefined => {
   const mergedMap: Map<number, MergedCredits> = new Map<
     number,
     MergedCredits
@@ -52,13 +54,13 @@ const mergeCredits = (credits: CreditResponse[]): MergedCredits[] => {
     }
     return 0;
   });
-  return mergedList;
+  return mergedList.length > 0 ? mergedList : undefined;
 };
 
 export const isMerged = (
   c: MergedCredits | CreditResponse
 ): c is MergedCredits => {
-  return "mergedRoles" in c;
+  return 'mergedRoles' in c;
 };
 
 export default mergeCredits;

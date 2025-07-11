@@ -6,13 +6,7 @@ import {
   ParentalGuide,
   ShowParental,
 } from '../parental/parental-types';
-
-export type Image = string;
-
-export interface AirDate {
-  date: string | null;
-  isUnknown: boolean;
-}
+import { Image } from '../../../../shared/types/common';
 
 export interface BirthDate {
   year: number;

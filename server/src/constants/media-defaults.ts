@@ -1,5 +1,8 @@
+import {
+  DEF_IMAGE_MEDIA,
+  DEF_IMAGE_PERSON,
+} from '../../../shared/defaults/media-defaults';
 import { CountryCode } from '../../../shared/types/countries';
-import { Image } from '../types/media/media-types';
 import {
   BirthDate,
   MediaRating,
@@ -24,10 +27,10 @@ import {
   ShowParental,
   GameParental,
 } from '../types/parental/parental-types';
-
-export const DEF_IMAGE_PERSON: Image = '/def-person.png';
-export const DEF_IMAGE_MEDIA: Image = '/def-media.png';
-
+export interface AirDate {
+  date: string | null;
+  isUnknown: boolean;
+}
 export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
   isUnknown: true,

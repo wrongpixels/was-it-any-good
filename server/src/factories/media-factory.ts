@@ -11,7 +11,6 @@ import {
 import {
   DEF_ROLE,
   DEF_DIRECTOR,
-  DEF_IMAGE_PERSON,
   DEF_WRITER,
   DEF_STUDIO,
   DEF_PRODUCER,
@@ -32,6 +31,7 @@ import { createCreators } from './show-factory';
 import { TMDBCreatorData } from '../schemas/tmdb-show-schema';
 import { CountryCode, isCountryCode } from '../../../shared/types/countries';
 import { TMDBIndexMedia } from '../schemas/tmdb-index-media-schemas';
+import { DEF_IMAGE_PERSON } from '../../../shared/defaults/media-defaults';
 
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
