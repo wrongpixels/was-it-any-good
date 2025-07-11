@@ -51,6 +51,7 @@ export const useVoteMutation = () => {
           queryManager.setSeason(updatedSeason);
         }
       } else {
+        console.log(rating.userScore);
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
           rating.userScore,
@@ -82,6 +83,7 @@ export const useVoteMutation = () => {
       if (!queryManager.media) {
         //if the cache is empty, we invalidate to refetch fresh data.
         console.log('Invalidation');
+        console.log(rating);
         queryManager.invalidateMedia();
         return;
       }

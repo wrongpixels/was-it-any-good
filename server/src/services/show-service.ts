@@ -71,8 +71,6 @@ export const buildShow = (showData: ShowData): CreateShow => ({
   imdbId: showData.imdbId ? showData.imdbId : undefined,
   releaseDate: showData.releaseDate,
   country: showData.countries,
-  rating: 0,
-  voteCount: showData.baseRating > 0 ? 1 : 0,
   parentalGuide: null,
 });
 
@@ -83,6 +81,4 @@ const buildSeason = (
   ...seasonData,
   showId: showEntry.id,
   country: showEntry.country,
-  voteCount: showEntry.baseRating > 0 ? 1 : 0,
-  rating: 0,
 });

@@ -4,6 +4,7 @@ import EntrySection from '../EntrySection';
 import SeasonPoster from '../Poster/SeasonPoster';
 import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
 import { isSpecialSeason } from '../../utils/seasons-setter';
+import Separator from '../common/Separator';
 
 interface SeasonsEntryProps {
   show: ShowResponse;
@@ -17,6 +18,7 @@ const SeasonsEntry = ({ show }: SeasonsEntryProps): JSX.Element | null => {
   }
   return (
     <div>
+      <Separator />
       <EntrySection title={`Seasons (${show.seasonCount})`} content=" " />
       {show.seasons.length < 1 ? (
         <div>Show has no seasons.</div>

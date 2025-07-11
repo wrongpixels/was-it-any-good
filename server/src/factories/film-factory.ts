@@ -27,6 +27,4 @@ export const createIndexForFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
   addedToMedia: false,
   mediaId: null,
   mediaType: MediaType.Film,
-  rating: 0,
-  voteCount: tmdb.vote_average > 0 ? 1 : 0,
 });

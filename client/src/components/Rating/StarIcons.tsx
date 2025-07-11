@@ -51,7 +51,7 @@ const StarIcons = ({
 }: StarIconsProps): JSX.Element => {
   const { session } = useAuth();
   const { data: userRating } = useRatingByMedia({
-    mediaId: mediaType === MediaType.Season && showId ? showId : mediaId,
+    mediaId,
     mediaType,
     userId: session?.userId,
   });

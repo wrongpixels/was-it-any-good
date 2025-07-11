@@ -5,7 +5,6 @@ import {
 import { CountryCode } from '../../../shared/types/countries';
 import {
   BirthDate,
-  MediaRating,
   IndividualData,
   AuthorData,
   AuthorType,
@@ -36,11 +35,7 @@ export const DEF_BIRTHDATE: BirthDate = {
   isUnknown: true,
 };
 export const DEF_RELEASE_DATE: string = 'Unknown';
-export const DEF_MEDIA_RATING: MediaRating = {
-  score: 0,
-  isValid: true,
-  voteCount: 0,
-};
+export const DEF_MEDIA_RATING: number = 0;
 
 export const DEF_INDIVIDUAL: IndividualData = {
   name: 'Unknown',
@@ -121,6 +116,7 @@ export const DEF_MEDIA: DefaultMedia = {
   rating: DEF_MEDIA_RATING,
   runtime: 0,
   baseRating: 0,
+  voteCount: 0,
   studios: DEF_STUDIOS,
   mediaType: MediaType.Film,
   cast: DEF_CAST,

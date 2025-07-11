@@ -38,8 +38,6 @@ export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   addedToMedia: false,
   mediaId: null,
   mediaType: MediaType.Film,
-  rating: 0,
-  voteCount: tmdb.vote_average > 0 ? 1 : 0,
 });
 
 export const createCreators = (creators: TMDBCreatorData[]): AuthorData[] =>

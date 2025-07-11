@@ -45,7 +45,12 @@ export const addVoteToMedia = (
   oldRating?: number
 ): MediaResponse => ({
   ...media,
-  ...recalculateRating(newRating, media.rating, media.voteCount, oldRating),
+  ...recalculateRating(
+    newRating,
+    getMediaCurrentRating(media),
+    media.voteCount,
+    oldRating
+  ),
 });
 
 export const addVoteToSeason = (
@@ -54,7 +59,12 @@ export const addVoteToSeason = (
   oldRating?: number
 ): SeasonResponse => ({
   ...media,
-  ...recalculateRating(newRating, media.rating, media.voteCount, oldRating),
+  ...recalculateRating(
+    newRating,
+    getMediaCurrentRating(media),
+    media.voteCount,
+    oldRating
+  ),
 });
 
 export const removeVoteFromSeason = (
@@ -62,7 +72,12 @@ export const removeVoteFromSeason = (
   oldRating: number
 ): SeasonResponse => ({
   ...media,
-  ...recalculateRating(0, media.rating, media.voteCount, oldRating),
+  ...recalculateRating(
+    0,
+    getMediaCurrentRating(media),
+    media.voteCount,
+    oldRating
+  ),
 });
 
 export const removeVoteFromMedia = (
@@ -70,7 +85,12 @@ export const removeVoteFromMedia = (
   oldRating: number
 ): MediaResponse => ({
   ...media,
-  ...recalculateRating(0, media.rating, media.voteCount, oldRating),
+  ...recalculateRating(
+    0,
+    getMediaCurrentRating(media),
+    media.voteCount,
+    oldRating
+  ),
 });
 
 export const recalculateRating = (
@@ -80,7 +100,8 @@ export const recalculateRating = (
   previousRating: number = 0
 ): NewMediaRating => {
   console.log(1);
-  console.log(userRating, currentRating, previousRating);
+  console.log(userRating, currentRating, previousRating, totalVotes);
+  const firstVote: boolean = totalVotes === 0;
 
   if (userRating === 0 && previousRating > 0) {
     console.log('Should not be here');
@@ -108,9 +129,11 @@ export const recalculateRating = (
       voteCount: totalVotes,
     };
   }
-  console.log('here');
+  console.log('here ', currentRating);
   const totalSum = currentRating * totalVotes;
-  const newTotalVotes = totalVotes + 1;
+  const newTotalVotes = firstVote ? 1 : totalVotes + 1;
+  console.log(totalSum, firstVote, newTotalVotes, totalVotes);
+
   return {
     rating: (totalSum + userRating) / newTotalVotes,
     voteCount: newTotalVotes,
@@ -120,11 +143,14 @@ export const numToVote = (num: number): UserVote => {
   return Math.max(-1, Math.min(num, 10));
 };
 
+export const getMediaCurrentRating = (
+  media: MediaResponse | SeasonResponse
+): number => (media.rating > 0 ? media.rating : media.baseRating);
+
 export const calculateAverage = (
   media: MediaResponse | SeasonResponse
 ): number => {
-  const globalAverage: number =
-    media.rating > 0 ? media.rating : media.baseRating;
+  const globalAverage: number = getMediaCurrentRating(media);
   return Math.round(globalAverage * 10) / 10;
 };
 

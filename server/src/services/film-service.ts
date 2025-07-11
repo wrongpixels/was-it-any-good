@@ -49,7 +49,5 @@ export const buildFilm = (filmData: FilmData): CreateFilm => ({
   imdbId: filmData.imdbId ? filmData.imdbId : undefined,
   releaseDate: filmData.releaseDate,
   country: filmData.countries,
-  rating: 0,
-  voteCount: filmData.baseRating > 0 ? 1 : 0,
   parentalGuide: null,
 });

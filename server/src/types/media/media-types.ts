@@ -13,12 +13,6 @@ export interface BirthDate {
   isUnknown: boolean;
 }
 
-export interface MediaRating {
-  score: number;
-  isValid: boolean;
-  voteCount: number;
-}
-
 // Enums
 export enum MediaType {
   Film = 'Film',
@@ -95,8 +89,9 @@ export interface MediaData {
   parentalGuide: ParentalGuide;
   releaseDate: string | null;
   image: Image;
-  rating: MediaRating;
+  rating: number;
   baseRating: number;
+  voteCount: number;
   runtime: number;
   userReviews?: number[];
   criticReviews?: number[];
