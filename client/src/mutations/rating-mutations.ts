@@ -46,6 +46,8 @@ export const useVoteMutation = () => {
             rating.userScore,
             queryManager.rating?.userScore
           );
+          console.log('mutating season');
+          console.log(rating);
           queryManager.setSeason(updatedSeason);
         }
       } else {
@@ -69,7 +71,6 @@ export const useVoteMutation = () => {
     onSuccess: (ratingResponse: CreateRatingResponse) => {
       //the server returns the media's updated average rating and voteCount alongside the rating data
       //this avoids invalidating the entire media query as only voteCount and rating changed.
-
       const { ratingStats, ...ratingData } = ratingResponse;
       const rating: RatingData = ratingData;
       const queryManager: MediaQueryManager = createRatingQueryManager({
@@ -80,13 +81,13 @@ export const useVoteMutation = () => {
 
       if (!queryManager.media) {
         //if the cache is empty, we invalidate to refetch fresh data.
-        console.log(rating);
-        console.log(ratingStats);
-
+        console.log('Invalidation');
         queryManager.invalidateMedia();
         return;
       }
       if (queryManager.isSeason) {
+        console.log(ratingResponse);
+
         //we replace cached media's voteCount and rating with the server values
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = {
@@ -94,6 +95,7 @@ export const useVoteMutation = () => {
             ...ratingStats,
           };
           queryManager.setSeason(updatedSeason);
+          console.log('success in season');
           console.log(ratingStats);
         }
       } else {

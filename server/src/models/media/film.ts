@@ -64,7 +64,7 @@ Film.init(
   {
     ...Media.baseInit(),
     tmdbId: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       unique: true,
     },

@@ -39,7 +39,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       await Rating.upsert(ratingData);
     const ratingStats: RatingStats = await ratingEntry.updateRating();
     const ratingResponse: CreateRatingResponse = {
-      ...ratingEntry,
+      ...ratingEntry.get({ plain: true }),
       ratingStats,
     };
     res.status(created ? 201 : 200).json(ratingResponse);

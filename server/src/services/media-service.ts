@@ -43,7 +43,7 @@ export async function buildCreditsAndGetEntry(
     transaction
   );
   if (!genres) {
-    throw new CustomError('Error creating genres', 400);
+    //throw new CustomError('Error creating genres', 400);
   }
 
   const credits: MediaRole[] | null = await buildCredits(
@@ -52,7 +52,7 @@ export async function buildCreditsAndGetEntry(
     transaction
   );
   if (!credits) {
-    throw new CustomError('Error creating credits', 400);
+    //throw new CustomError('Error creating credits', 400);
   }
   const finalMediaEntry: Film | Show | null = await getFinalEntry(
     mediaData,
@@ -155,7 +155,9 @@ const getOrBuildGenre = async (
   mediaType: MediaType,
   transaction: Transaction
 ): Promise<MediaGenre> => {
-  const genre: [Genre, boolean] = await Genre.findOrCreate({
+  console.log('getOrBuildGenre input:', genreData);
+
+  const [genre]: [Genre, boolean] = await Genre.findOrCreate({
     where: {
       tmdbId: genreData.mediaId,
       name: genreData.name,
@@ -164,13 +166,14 @@ const getOrBuildGenre = async (
   });
   const mediaGenre: [MediaGenre, boolean] = await MediaGenre.findOrCreate({
     where: {
-      genreId: genre[0].id,
-      mediaId: mediaId,
+      genreId: genre.id,
+      mediaId,
+      mediaType,
     },
     defaults: {
-      genreId: genre[0].id,
-      mediaId: mediaId,
-      mediaType: mediaType,
+      genreId: genre.id,
+      mediaId,
+      mediaType,
     },
     transaction,
   });

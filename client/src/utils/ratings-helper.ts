@@ -79,6 +79,8 @@ export const recalculateRating = (
   totalVotes: number,
   previousRating: number = 0
 ): NewMediaRating => {
+  console.log(userRating, currentRating, previousRating);
+
   if (userRating === 0 && previousRating > 0) {
     if (totalVotes === 1) {
       return {
@@ -88,6 +90,7 @@ export const recalculateRating = (
     }
     const totalSum = currentRating * totalVotes;
     const newTotalVotes = totalVotes - 1;
+    console.log(totalSum, newTotalVotes, previousRating);
     return {
       rating: (totalSum - previousRating) / newTotalVotes,
       voteCount: newTotalVotes,
