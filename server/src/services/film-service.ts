@@ -46,6 +46,7 @@ export const fetchTMDBFilm = async (tmdbId: string): Promise<FilmData> => {
 
 export const buildFilm = (filmData: FilmData): CreateFilm => ({
   ...filmData,
+  imdbId: filmData.imdbId ? filmData.imdbId : undefined,
   releaseDate: filmData.releaseDate,
   country: filmData.countries,
   rating: 0,

@@ -112,7 +112,7 @@ export interface MediaData {
 // Media types
 export interface FilmData extends MediaData {
   tmdbId: number;
-  imdbId: string;
+  imdbId: string | null;
   mediaType: MediaType.Film;
   subMedia: SubMediaType.None;
   parentalGuide: FilmParental;
@@ -120,7 +120,7 @@ export interface FilmData extends MediaData {
 
 export interface ShowData extends MediaData {
   tmdbId: number;
-  imdbId: string;
+  imdbId: string | null;
   mediaType: MediaType.Show;
   lastAirDate: string | null;
   subMedia: SubMediaType.Season;
@@ -166,7 +166,7 @@ export interface ChapterData extends SubMediaData {
 // Creation
 export interface TMDBData {
   tmdbId: number;
-  imdbId: string;
+  imdbId: string | null;
   description: string;
   baseRating: number;
   image: string;

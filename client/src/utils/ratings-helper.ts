@@ -79,9 +79,11 @@ export const recalculateRating = (
   totalVotes: number,
   previousRating: number = 0
 ): NewMediaRating => {
+  console.log(1);
   console.log(userRating, currentRating, previousRating);
 
   if (userRating === 0 && previousRating > 0) {
+    console.log('Should not be here');
     if (totalVotes === 1) {
       return {
         rating: 0,
@@ -100,12 +102,13 @@ export const recalculateRating = (
   if (previousRating > 0) {
     const totalSum = currentRating * totalVotes;
     const newSum = totalSum - previousRating + userRating;
+
     return {
       rating: newSum / totalVotes,
       voteCount: totalVotes,
     };
   }
-
+  console.log('here');
   const totalSum = currentRating * totalVotes;
   const newTotalVotes = totalVotes + 1;
   return {

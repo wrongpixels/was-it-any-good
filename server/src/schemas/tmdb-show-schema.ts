@@ -24,8 +24,8 @@ export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
   original_name: z.string(),
   number_of_episodes: z.number().min(0),
   number_of_seasons: z.number().min(0),
-  first_air_date: z.string().date().nullable(),
-  last_air_date: z.string().date().nullable(),
+  first_air_date: z.string().nullable().optional(),
+  last_air_date: z.string().nullable().optional(),
   in_production: z.boolean(),
   episode_run_time: z.array(z.number()),
   created_by: z.array(TMDBCreatorSchema),
@@ -33,12 +33,12 @@ export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
 });
 
 export const TMDBShowSchema = TMDBShowInfoSchema.extend({
-  imdb_id: z.string(),
+  imdb_id: z.string().nullable(),
   credits: TMDBCreditsSchema,
 });
 
 export const TMDBExternalIdSchema = z.object({
-  imdb_id: z.string(),
+  imdb_id: z.string().nullable(),
 });
 
 export type TMDBShowInfoData = z.infer<typeof TMDBShowInfoSchema>;

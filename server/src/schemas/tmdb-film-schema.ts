@@ -3,7 +3,7 @@ import { TMDBCreditsSchema, TMDBMediaSchema } from './tmdb-media-schema';
 
 export const TMDBFilmInfoSchema = TMDBMediaSchema.extend({
   title: z.string(),
-  imdb_id: z.string(),
+  imdb_id: z.string().nullable(),
   original_title: z.string(),
   release_date: z.string().date().nullable(),
   runtime: z.number().int().min(0),

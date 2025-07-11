@@ -20,7 +20,6 @@ export const setTitle = (newTitle?: string): void => {
   const base = newTitle ?? getCurrentTitle() ?? DEF_PAGE_TITLE;
   document.title =
     base === DEF_PAGE_TITLE ? DEF_PAGE_TITLE : `${base} | ${DEF_PAGE_TITLE}`;
-  console.log(document.title);
 };
 
 export const setDescription = (newDescription?: string): void => {

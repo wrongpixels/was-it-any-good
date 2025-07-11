@@ -65,8 +65,8 @@ export const getCrew = (tmdb: TMDBMediaData): AuthorData[] => {
   return createCrew(tmdb.credits.crew);
 };
 
-export const getAirDate = (date: string | null): string | null => {
-  if (date === null) {
+export const getAirDate = (date: string | null | undefined): string | null => {
+  if (!date) {
     return null;
   }
   const parsed = new Date(date);

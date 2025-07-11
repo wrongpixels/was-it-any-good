@@ -30,7 +30,6 @@ export const buildShowEntry = async (
   if (!showEntry) {
     throw new CustomError('Show could not be created', 400);
   }
-  const showId = showEntry.id;
   console.log('Created show!');
 
   const seasonEntries: (Season | null)[] = await Promise.all(
@@ -39,10 +38,7 @@ export const buildShowEntry = async (
     )
   );
   if (!seasonEntries || seasonEntries.length <= 0) {
-    throw new CustomError(
-      `Seasons for Show ${showId} could not be created`,
-      400
-    );
+    //throw new CustomError(`Seasons for Show ${showId} could not be created`, 400 );
   }
   return await buildCreditsAndGetEntry(showEntry, showData, transaction);
 };
@@ -72,6 +68,7 @@ export const fetchTMDBShow = async (id: string): Promise<ShowData> => {
 
 export const buildShow = (showData: ShowData): CreateShow => ({
   ...showData,
+  imdbId: showData.imdbId ? showData.imdbId : undefined,
   releaseDate: showData.releaseDate,
   country: showData.countries,
   rating: 0,
