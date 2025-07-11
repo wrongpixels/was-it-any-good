@@ -9,7 +9,7 @@ import {
   RemoveRatingResponse,
 } from '../../../shared/types/models';
 import CustomError from '../util/customError';
-import { Rating } from '../models';
+import { Media, Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
 import { MediaType } from '../../../shared/types/media';
 import { stringToMediaType } from '../../../shared/helpers/media-helpers';
@@ -37,7 +37,10 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     };
     const [ratingEntry, created]: [Rating, boolean | null] =
       await Rating.upsert(ratingData);
-    const ratingStats: RatingStats = await ratingEntry.updateRating();
+    const ratingStats: RatingStats = await Media.updateRatingById(
+      ratingEntry.mediaId,
+      ratingEntry.mediaType
+    );
     const ratingResponse: CreateRatingResponse = {
       ...ratingEntry.get({ plain: true }),
       ratingStats,
@@ -93,12 +96,15 @@ router.delete('/:id', async (req: Request, res, next) => {
     if (!isAuthorizedUser(req.activeUser, rating.userId)) {
       throw new CustomError('Unauthorized', 403);
     }
-    const ratingStats: RatingStats = await rating.updateRating(false);
+    await rating.destroy();
+    const ratingStats: RatingStats = await Media.updateRatingById(
+      rating.mediaId,
+      rating.mediaType
+    );
     const ratingResponse: RemoveRatingResponse = {
       ...rating,
       ratingStats,
     };
-    await rating.destroy();
     res.status(204).json(ratingResponse);
   } catch (error) {
     next(error);

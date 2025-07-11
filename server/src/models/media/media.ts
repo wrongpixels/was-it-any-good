@@ -8,11 +8,15 @@ import {
   BelongsToManyGetAssociationsMixin,
   FindOptions,
   Op,
+  Transaction,
 } from 'sequelize';
-import { Genre, MediaGenre, MediaRole, Rating } from '..';
+import { Film, Genre, MediaGenre, MediaRole, Rating, Season, Show } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { AuthorType } from '../../../../shared/types/roles';
+import { sequelize } from '../../util/db';
+import { RatingStats } from '../../../../shared/types/models';
+import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -174,6 +178,77 @@ class Media<
       },
       constraints: false,
     });
+  }
+
+  async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {
+    const mediaId: number = this.id;
+    const mediaType: MediaType = this.mediaType;
+    // Get sum of all related ratings
+    const summary: Rating | null = await Rating.findOne({
+      where: { mediaId, mediaType },
+      transaction,
+      raw: true,
+      attributes: [
+        [sequelize.fn('SUM', sequelize.col('user_score')), 'total'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+      ],
+    });
+
+    // If no ratings exist yet, 0
+    const total: number = Number(summary?.total ?? 0);
+    const count: number = Number(summary?.count ?? 0);
+
+    let finalRating: number;
+    let finalVoteCount: number;
+
+    if (this.baseRating > 0) {
+      finalRating = (Number(this.baseRating) + total) / (1 + count);
+      finalVoteCount = 1 + count;
+    } else {
+      finalRating = count > 0 ? total / count : 0;
+      finalVoteCount = count;
+    }
+
+    this.rating = finalRating;
+    this.voteCount = finalVoteCount;
+
+    await this.save({ transaction });
+
+    return {
+      rating: finalRating,
+      voteCount: finalVoteCount,
+    };
+  }
+
+  static async findByType(
+    id: number,
+    mediaType: MediaType,
+    transaction?: Transaction
+  ) {
+    switch (mediaType) {
+      case MediaType.Season:
+        return await Season.findByPk(id, { transaction });
+      case MediaType.Show:
+        return await Show.findByPk(id, { transaction });
+      case MediaType.Film:
+        return await Film.findByPk(id, { transaction });
+      default:
+        return null;
+    }
+  }
+
+  static async updateRatingById(
+    id: number,
+    mediaType: MediaType,
+    transaction?: Transaction
+  ): Promise<RatingStats> {
+    const media = await this.findByType(id, mediaType, transaction);
+
+    if (!media) {
+      return DEF_RATING_STATS;
+    }
+
+    return media.doUpdateRatings(transaction);
   }
 
   //shared scope between Media models
