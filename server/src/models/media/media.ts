@@ -6,6 +6,7 @@ import {
   CreationOptional,
   HasManyGetAssociationsMixin,
   BelongsToManyGetAssociationsMixin,
+  FindOptions,
 } from 'sequelize';
 import { MediaGenre, MediaRole } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
@@ -117,6 +118,61 @@ class Media<
       runtime: {
         type: DataTypes.INTEGER,
       },
+    };
+  }
+
+  static creditsScope(mediaType: MediaType): FindOptions {
+    return {
+      order: [['cast', 'order', 'ASC']],
+      include: [
+        {
+          association: 'cast',
+          include: [
+            {
+              association: 'person',
+              attributes: ['id', 'name', 'tmdbId', 'image'],
+            },
+          ],
+          attributes: {
+            exclude: [
+              'role',
+              'mediaId',
+              'mediaType',
+              'createdAt',
+              'updatedAt',
+              'personId',
+            ],
+          },
+        },
+        {
+          association: 'crew',
+          include: [
+            {
+              association: 'person',
+              attributes: ['id', 'name', 'tmdbId', 'image'],
+            },
+          ],
+          attributes: {
+            exclude: [
+              'mediaId',
+              'mediaType',
+              'createdAt',
+              'updatedAt',
+              'personId',
+              'characterName',
+              'order',
+            ],
+          },
+        },
+        {
+          association: 'genres',
+          attributes: ['id', 'name', 'tmdbId'],
+          through: {
+            attributes: [],
+            where: { mediaType },
+          },
+        },
+      ],
     };
   }
 }

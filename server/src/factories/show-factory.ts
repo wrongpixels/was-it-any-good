@@ -28,7 +28,7 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
   releaseDate: getAirDate(tmdb.first_air_date),
   lastAirDate: getAirDate(tmdb.last_air_date),
   runtime: tmdb.episode_run_time[0],
-  seasons: createSeasons(tmdb.seasons),
+  seasons: createSeasons(tmdb),
 });
 
 export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
@@ -52,10 +52,13 @@ const createCreator = (creator: TMDBCreatorData): AuthorData => ({
   }),
 });
 
-const createSeasons = (seasons: TMDBSeasonData[]): SeasonData[] =>
-  seasons.map((s: TMDBSeasonData) => createSeason(s));
+const createSeasons = (show: TMDBShowData): SeasonData[] =>
+  show.seasons.map((s: TMDBSeasonData) => createSeason(s, show.poster_path));
 
-const createSeason = (season: TMDBSeasonData): SeasonData => ({
+const createSeason = (
+  season: TMDBSeasonData,
+  showPoster: string | null
+): SeasonData => ({
   ...DEF_SEASON,
   name: season.name,
   originalName: season.name,
@@ -67,6 +70,8 @@ const createSeason = (season: TMDBSeasonData): SeasonData => ({
   description: season.overview || '',
   image: season.poster_path
     ? imageLinker.createPosterURL(season.poster_path)
+    : showPoster
+    ? imageLinker.createPosterURL(showPoster)
     : DEF_SHOW.image,
   releaseDate: getAirDate(season.air_date),
 });

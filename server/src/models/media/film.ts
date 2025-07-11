@@ -3,7 +3,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Op,
-  Sequelize,
 } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { FilmParental } from '../../types/parental/parental-types';
@@ -87,67 +86,7 @@ Film.init(
     modelName: 'film',
     underscored: true,
     scopes: {
-      withCredits: {
-        include: [
-          {
-            association: 'cast',
-            include: [
-              {
-                association: 'person',
-                attributes: ['id', 'name', 'tmdbId', 'image'],
-              },
-            ],
-            attributes: {
-              exclude: [
-                'role',
-                'mediaId',
-                'mediaType',
-                'createdAt',
-                'updatedAt',
-                'personId',
-              ],
-            },
-            order: [['order', 'ASC']],
-          },
-          {
-            association: 'crew',
-            include: [
-              {
-                association: 'person',
-                attributes: ['id', 'name', 'tmdbId', 'image'],
-              },
-            ],
-            attributes: {
-              exclude: [
-                'mediaId',
-                'mediaType',
-                'createdAt',
-                'updatedAt',
-                'personId',
-                'characterName',
-                'order',
-              ],
-            },
-            order: [
-              [
-                Sequelize.literal(
-                  'CASE WHEN "crew"."role" = \'Director\' THEN 1 ELSE 3 END'
-                ),
-                'ASC',
-              ],
-              ['person', 'name', 'ASC'],
-            ],
-          },
-          {
-            association: 'genres',
-            attributes: ['id', 'name', 'tmdbId'],
-            through: {
-              attributes: [],
-              where: { mediaType: MediaType.Film },
-            },
-          },
-        ],
-      },
+      withCredits: Media.creditsScope(MediaType.Film),
     },
   }
 );

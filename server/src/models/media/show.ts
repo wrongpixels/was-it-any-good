@@ -3,7 +3,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Op,
-  Sequelize,
 } from 'sequelize';
 import {
   FilmParental,
@@ -128,67 +127,7 @@ Show.init(
         },
         order: [['seasons', 'index', 'ASC']],
       },
-      withCredits: {
-        include: [
-          {
-            association: 'cast',
-            include: [
-              {
-                association: 'person',
-                attributes: ['id', 'name', 'tmdbId', 'image'],
-              },
-            ],
-            attributes: {
-              exclude: [
-                'role',
-                'mediaId',
-                'mediaType',
-                'createdAt',
-                'updatedAt',
-                'personId',
-              ],
-            },
-            order: [['order', 'ASC']],
-          },
-          {
-            association: 'crew',
-            include: [
-              {
-                association: 'person',
-                attributes: ['id', 'name', 'tmdbId', 'image'],
-              },
-            ],
-            attributes: {
-              exclude: [
-                'mediaId',
-                'mediaType',
-                'createdAt',
-                'updatedAt',
-                'personId',
-                'characterName',
-                'order',
-              ],
-            },
-            order: [
-              [
-                Sequelize.literal(
-                  'CASE WHEN "crew"."role" = \'Director\' THEN 1 ELSE 3 END'
-                ),
-                'ASC',
-              ],
-              ['person', 'name', 'ASC'],
-            ],
-          },
-          {
-            association: 'genres',
-            attributes: ['id', 'name', 'tmdbId'],
-            through: {
-              attributes: [],
-              where: { mediaType: MediaType.Show },
-            },
-          },
-        ],
-      },
+      withCredits: Media.creditsScope(MediaType.Show),
     },
   }
 );
