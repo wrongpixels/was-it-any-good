@@ -1,19 +1,11 @@
-import {
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Op,
-} from 'sequelize';
+import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import {
   FilmParental,
   ShowParental,
 } from '../../types/parental/parental-types';
 import { sequelize } from '../../util/db';
-import Genre from '../genres/genre';
-import MediaGenre from '../genres/mediaGenre';
-import { AuthorType, MediaType } from '../../types/media/media-types';
-import MediaRole from '../people/mediaRole';
-import { Media, Rating } from '..';
+import { MediaType } from '../../types/media/media-types';
+import { Media, Season } from '..';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare tmdbId: number;
@@ -25,40 +17,10 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare seasonCount: number;
 
   static associate() {
-    this.belongsToMany(Genre, {
-      through: MediaGenre,
-      foreignKey: 'mediaId',
-      otherKey: 'genreId',
-      as: 'genres',
-      constraints: false,
-    });
-
-    this.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'cast',
-      scope: {
-        mediaType: MediaType.Show,
-        role: AuthorType.Actor,
-      },
-      constraints: false,
-    });
-
-    this.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'crew',
-      scope: {
-        mediaType: MediaType.Show,
-        role: { [Op.ne]: AuthorType.Actor },
-      },
-      constraints: false,
-    });
-    this.hasMany(Rating, {
-      foreignKey: 'mediaId',
-      as: 'ratings',
-      scope: {
-        MediaType: MediaType.Show,
-      },
-      constraints: false,
+    this.doAssociate(MediaType.Show);
+    Show.hasMany(Season, {
+      foreignKey: 'showId',
+      as: 'seasons',
     });
   }
 }
@@ -127,7 +89,7 @@ Show.init(
         },
         order: [['seasons', 'index', 'ASC']],
       },
-      withCredits: Media.creditsScope(MediaType.Show),
+      withCredits: Show.creditsScope(MediaType.Show),
     },
   }
 );

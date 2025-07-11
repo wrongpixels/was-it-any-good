@@ -25,14 +25,7 @@ Show.associate();
 User.associate();
 Session.associate();
 Rating.associate();
-Show.hasMany(Season, {
-  foreignKey: 'showId',
-  as: 'seasons',
-});
-Season.belongsTo(Show, {
-  foreignKey: 'showId',
-  as: 'show',
-});
+Season.associate();
 
 sequelize.sync();
 

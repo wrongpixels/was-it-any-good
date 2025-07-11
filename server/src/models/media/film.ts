@@ -1,16 +1,8 @@
-import {
-  DataTypes,
-  InferAttributes,
-  InferCreationAttributes,
-  Op,
-} from 'sequelize';
+import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { FilmParental } from '../../types/parental/parental-types';
-import { MediaType, AuthorType } from '../../types/media/media-types';
-import Genre from '../genres/genre';
-import MediaGenre from '../genres/mediaGenre';
-import MediaRole from '../people/mediaRole';
-import Rating from '../users/rating';
+import { MediaType } from '../../types/media/media-types';
+
 import { Media } from '..';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
@@ -20,42 +12,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare parentalGuide: keyof typeof FilmParental | null;
 
   static associate() {
-    this.belongsToMany(Genre, {
-      through: MediaGenre,
-      foreignKey: 'mediaId',
-      otherKey: 'genreId',
-      as: 'genres',
-      constraints: false,
-    });
-
-    this.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'cast',
-      scope: {
-        mediaType: MediaType.Film,
-        role: AuthorType.Actor,
-      },
-      constraints: false,
-    });
-
-    this.hasMany(MediaRole, {
-      foreignKey: 'mediaId',
-      as: 'crew',
-      scope: {
-        mediaType: MediaType.Film,
-        role: { [Op.ne]: AuthorType.Actor },
-      },
-      constraints: false,
-    });
-
-    this.hasMany(Rating, {
-      foreignKey: 'mediaId',
-      as: 'ratings',
-      scope: {
-        MediaType: MediaType.Film,
-      },
-      constraints: false,
-    });
+    this.doAssociate(MediaType.Film);
   }
 }
 
@@ -86,7 +43,7 @@ Film.init(
     modelName: 'film',
     underscored: true,
     scopes: {
-      withCredits: Media.creditsScope(MediaType.Film),
+      withCredits: Film.creditsScope(MediaType.Film),
     },
   }
 );

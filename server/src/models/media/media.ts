@@ -7,10 +7,12 @@ import {
   HasManyGetAssociationsMixin,
   BelongsToManyGetAssociationsMixin,
   FindOptions,
+  Op,
 } from 'sequelize';
-import { MediaGenre, MediaRole } from '..';
+import { Genre, MediaGenre, MediaRole, Rating } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
+import { AuthorType } from '../../../../shared/types/roles';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -120,7 +122,49 @@ class Media<
       },
     };
   }
+  //a bridge for shared associations between models extending Media
+  //has to be called from the models so 'this' works properly
 
+  static doAssociate(mediaType: MediaType) {
+    this.belongsToMany(Genre, {
+      through: MediaGenre,
+      foreignKey: 'mediaId',
+      otherKey: 'genreId',
+      as: 'genres',
+      constraints: false,
+    });
+
+    this.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'cast',
+      scope: {
+        mediaType,
+        role: AuthorType.Actor,
+      },
+      constraints: false,
+    });
+
+    this.hasMany(MediaRole, {
+      foreignKey: 'mediaId',
+      as: 'crew',
+      scope: {
+        mediaType,
+        role: { [Op.ne]: AuthorType.Actor },
+      },
+      constraints: false,
+    });
+
+    this.hasMany(Rating, {
+      foreignKey: 'mediaId',
+      as: 'ratings',
+      scope: {
+        mediaType,
+      },
+      constraints: false,
+    });
+  }
+
+  //shared scope between Media models
   static creditsScope(mediaType: MediaType): FindOptions {
     return {
       order: [['cast', 'order', 'ASC']],
