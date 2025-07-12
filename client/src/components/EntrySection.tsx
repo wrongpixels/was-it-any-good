@@ -18,6 +18,7 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
   ) {
     return null;
   }
+
   const filteredPeople: MergedCredits[] | CreditResponse[] | null =
     props.castContent
       ? props.castContent

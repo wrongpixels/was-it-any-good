@@ -41,6 +41,10 @@ export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   mediaType: MediaType.Film,
 });
 
+export const createIndexForShowBulk = (
+  tmdbs: TMDBIndexShow[]
+): CreateIndexMedia[] => tmdbs.map((t: TMDBIndexShow) => createIndexForShow(t));
+
 export const createCreators = (creators: TMDBCreatorData[]): AuthorData[] =>
   creators.map((c: TMDBCreatorData) => createCreator(c));
 

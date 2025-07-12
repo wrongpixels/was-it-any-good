@@ -7,7 +7,7 @@ import logoutRouter from './logout-controller';
 import sessionsRouter from './sessions-controller';
 import ratingsRouter from './ratings-controller';
 import peopleRouter from './people-controller';
-import mediaIndexRouter from './media-index-controller';
+import mediaIndexRouter from './index-media-controller';
 
 export {
   filmsRouter,

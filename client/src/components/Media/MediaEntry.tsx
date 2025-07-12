@@ -69,6 +69,7 @@ const MediaEntry = ({
     return <MediaMissing mediaId={mediaId} mediaType={mediaType} tmdb={tmdb} />;
   }
   setTitle(`${media.name} (${mediaType})`);
+
   return (
     <div>
       <div className="flex flex-row gap-8">
@@ -85,7 +86,7 @@ const MediaEntry = ({
                 crewContent={media.mergedCrew || DEF_CREW}
                 peopleFilter={
                   media.mergedCrew
-                    ? [(AuthorType.Director, AuthorType.Writer)]
+                    ? [AuthorType.Director, AuthorType.Writer]
                     : undefined
                 }
               />

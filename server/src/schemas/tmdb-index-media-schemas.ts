@@ -22,5 +22,7 @@ export const TMDBIndexShowSchema = TMDBShowSchema.pick({
 
 export type TMDBIndexFilm = z.infer<typeof TMDBIndexFilmSchema>;
 export type TMDBIndexShow = z.infer<typeof TMDBIndexShowSchema>;
+export const TMDBIndexFilmArraySchema = z.array(TMDBIndexFilmSchema);
+export const TMDBIndexShowArraySchema = z.array(TMDBIndexShowSchema);
 
 export type TMDBIndexMedia = TMDBIndexFilm | TMDBIndexShow;

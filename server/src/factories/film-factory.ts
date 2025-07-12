@@ -29,3 +29,7 @@ export const createIndexForFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
   mediaId: null,
   mediaType: MediaType.Film,
 });
+
+export const createIndexForFilmBulk = (
+  tmdbs: TMDBIndexFilm[]
+): CreateIndexMedia[] => tmdbs.map((t: TMDBIndexFilm) => createIndexForFilm(t));

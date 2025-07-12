@@ -7,7 +7,9 @@ import { useEffect } from 'react';
 import { getActiveMediaKey } from '../utils/ratings-helper';
 
 const transformCredits = (data: MediaResponse): MediaResponse => {
-  if (!data.crew) return data;
+  if (!data.crew) {
+    return data;
+  }
   return {
     ...data,
     cast: data.cast && data.cast.length > 0 ? data.cast : undefined,

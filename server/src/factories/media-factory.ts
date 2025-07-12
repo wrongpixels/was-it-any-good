@@ -27,11 +27,17 @@ import {
   MediaType,
 } from '../types/media/media-types';
 import { mapTMDBGenres } from '../services/genre-mapper';
-import { createCreators } from './show-factory';
+import { createCreators, createIndexForShowBulk } from './show-factory';
 import { TMDBCreatorData } from '../schemas/tmdb-show-schema';
 import { CountryCode, isCountryCode } from '../../../shared/types/countries';
-import { TMDBIndexMedia } from '../schemas/tmdb-index-media-schemas';
+import {
+  TMDBIndexFilm,
+  TMDBIndexMedia,
+  TMDBIndexShow,
+} from '../schemas/tmdb-index-media-schemas';
 import { DEF_IMAGE_PERSON } from '../../../shared/defaults/media-defaults';
+import { CreateIndexMedia } from '../../../shared/types/models';
+import { createIndexForFilmBulk } from './film-factory';
 
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
@@ -43,6 +49,14 @@ export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
     ? imageLinker.createPosterURL(tmdb.poster_path)
     : DEF_FILM.image,
 });
+
+export const createIndexForMediaBulk = (
+  tmdbFilms: TMDBIndexFilm[],
+  tmdbShows: TMDBIndexShow[]
+): CreateIndexMedia[] => [
+  ...createIndexForFilmBulk(tmdbFilms),
+  ...createIndexForShowBulk(tmdbShows),
+];
 
 export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
   ...createTMDBIndexBase(tmdb),
