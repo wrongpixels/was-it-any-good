@@ -149,13 +149,13 @@ export const buildGenres = async (
     .map((genre) => genre.tmdbId)
     .filter((id): id is number => id !== undefined);
   const genres: Genre[] = await Genre.findAll({
+    transaction,
     where: {
       tmdbId: {
         [Op.in]: tmdbIds,
       },
     },
   });
-  console.log(genres);
 
   const createMediaGenres: CreateMediaGenre[] = genres.map((g: Genre) => ({
     mediaId,
@@ -224,14 +224,11 @@ export const bulkCreateMediaRoles = async (
       tmdbIdToIdMap.set(p.tmdbId, p.id);
     }
   });
-
   const mediaRolesMap = new Map<string, CreateMediaRole>();
-
   mediaPeople.forEach((mediaPerson: MediaPerson) => {
     if (!mediaPerson.tmdbId || !mediaPerson.type) {
       return;
     }
-
     const personDbId = tmdbIdToIdMap.get(mediaPerson.tmdbId);
     if (!personDbId) {
       return;
@@ -257,13 +254,10 @@ export const bulkCreateMediaRoles = async (
       createRole.order = mediaPerson.order;
     }
   });
-
   const rolesToCreateInDb = Array.from(mediaRolesMap.values());
-
   if (rolesToCreateInDb.length === 0) {
     return null;
   }
-
   const mediaRoleEntries: MediaRole[] = await MediaRole.bulkCreate(
     rolesToCreateInDb,
     {
@@ -271,7 +265,6 @@ export const bulkCreateMediaRoles = async (
       transaction,
     }
   );
-
   return mediaRoleEntries.length > 0 ? mediaRoleEntries : null;
 };
 
