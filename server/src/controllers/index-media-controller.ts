@@ -13,7 +13,9 @@ const router = express.Router();
 router.post('/', async (_req, res, next) => {
   try {
     const indexMedia: CreateIndexMedia[] = TMDBIndexToIndexMedia();
-    const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia);
+    const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
+      updateOnDuplicate: ['popularity', 'baseRating'],
+    });
     res.json(entries);
   } catch (error) {
     next(error);

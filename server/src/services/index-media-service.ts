@@ -17,11 +17,19 @@ import jsonShows from '../db/popular-shows-db.json';
 const PAGES_TO_GATHER: number = 10;
 const DB_PATH: string = path.join(__dirname, '../db');
 
-export const TMDBIndexToIndexMedia = () => {
+export const TMDBIndexToIndexMedia = (): CreateIndexMedia[] => {
   const testFilm: TMDBIndexFilm[] = TMDBIndexFilmArraySchema.parse(jsonFilms);
   const testShow: TMDBIndexShow[] = TMDBIndexShowArraySchema.parse(jsonShows);
 
-  return createIndexForMediaBulk(testFilm, testShow);
+  const uniquieIndexMedia = new Map<string, CreateIndexMedia>();
+
+  createIndexForMediaBulk(testFilm, testShow).forEach(
+    (im: CreateIndexMedia) => {
+      const key = `${im.tmdbId}-${im.mediaType}`;
+      uniquieIndexMedia.set(key, im);
+    }
+  );
+  return Array.from(uniquieIndexMedia.values());
 };
 
 export const gatherMedia = async (mediaType: MediaType): Promise<number> => {

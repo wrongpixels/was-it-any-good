@@ -34,6 +34,7 @@ class Media<
   TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
+  declare indexId?: CreationOptional<number | null>;
   declare tmdbId: number;
   declare imdbId?: string;
   declare name: string;
@@ -159,6 +160,11 @@ class Media<
   //has to be called from the models so 'this' works properly
 
   static doAssociate(mediaType: MediaType) {
+    this.belongsTo(IndexMedia, {
+      foreignKey: 'indexId',
+      as: 'indexMedia',
+    });
+
     this.belongsToMany(Genre, {
       through: MediaGenre,
       foreignKey: 'mediaId',

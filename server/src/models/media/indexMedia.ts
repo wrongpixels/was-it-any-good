@@ -7,6 +7,7 @@ import {
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
+import { Film, Show } from '..';
 
 //stores TMDB media metadata and maps TMDB ids to internal media ids (if they exist).
 //used for search results and checking if TMDB entries are already in our database.
@@ -28,6 +29,25 @@ class IndexMedia extends Model<
   declare voteCount: number;
   declare popularity: number;
   declare mediaType: MediaType;
+
+  static associate() {
+    this.belongsTo(Film, {
+      foreignKey: 'mediaId',
+      constraints: false,
+      as: 'film',
+      scope: {
+        mediatype: MediaType.Film,
+      },
+    });
+    this.belongsTo(Show, {
+      foreignKey: 'mediaId',
+      constraints: false,
+      as: 'show',
+      scope: {
+        mediatype: MediaType.Show,
+      },
+    });
+  }
 }
 
 IndexMedia.init(
@@ -43,7 +63,6 @@ IndexMedia.init(
     },
     mediaId: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: true,
     },
     mediaType: {
