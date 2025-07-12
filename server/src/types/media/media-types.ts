@@ -92,6 +92,7 @@ export interface MediaData {
   rating: number;
   baseRating: number;
   voteCount: number;
+  popularity: number;
   runtime: number;
   userReviews?: number[];
   criticReviews?: number[];
@@ -163,6 +164,7 @@ export interface TMDBData {
   tmdbId: number;
   imdbId: string | null;
   description: string;
+  popularity: number;
   baseRating: number;
   image: string;
   countries: CountryCode[];

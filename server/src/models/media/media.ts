@@ -10,17 +10,28 @@ import {
   Op,
   Transaction,
 } from 'sequelize';
-import { Film, Genre, MediaGenre, MediaRole, Rating, Season, Show } from '..';
+import {
+  Film,
+  Genre,
+  IndexMedia,
+  MediaGenre,
+  MediaRole,
+  Rating,
+  Season,
+  Show,
+} from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { AuthorType } from '../../../../shared/types/roles';
 import { sequelize } from '../../util/db';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
+import { addIndexMedia } from '../../services/index-media-service';
+import { getYearNum } from '../../../../shared/src/helpers/format-helper';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
@@ -42,6 +53,7 @@ class Media<
   declare baseRating: number;
   //the cached length of all Rating entries linked to the media entry
   declare voteCount: number;
+  declare popularity: number;
   declare runtime: number | null;
   //For getting the Cast and Crew data
   declare getCredits: HasManyGetAssociationsMixin<MediaRole>;
@@ -133,11 +145,16 @@ class Media<
         type: DataTypes.INTEGER,
         defaultValue: 1,
       },
+      popularity: {
+        type: DataTypes.DECIMAL,
+        defaultValue: 0,
+      },
       runtime: {
         type: DataTypes.INTEGER,
       },
     };
   }
+
   //a bridge for shared associations between models extending Media
   //has to be called from the models so 'this' works properly
 
@@ -249,6 +266,55 @@ class Media<
     }
 
     return media.doUpdateRatings(transaction);
+  }
+
+  public async syncIndex(): Promise<void> {
+    try {
+      console.log('Trying to update');
+      const indexMediaData = {
+        tmdbId: this.tmdbId,
+        mediaType: this.mediaType,
+        mediaId: this.id,
+        addedToMedia: true,
+        name: this.name,
+        image: this.image,
+        rating: this.rating,
+        baseRating: this.baseRating,
+        year: getYearNum(this.releaseDate),
+        voteCount: this.voteCount,
+        popularity: this.popularity,
+      };
+      if (indexMediaData) {
+        console.log('updating');
+
+        await addIndexMedia(indexMediaData);
+      }
+    } catch (error) {
+      console.error(`Failed to sync index for mediaId: ${this.id}`, error);
+    }
+  }
+
+  static async removeIndex(mediaId: number): Promise<void> {
+    try {
+      await IndexMedia.destroy({ where: { mediaId } });
+    } catch (error) {
+      console.error(`Failed to destroy index for mediaId: ${mediaId}`, error);
+    }
+  }
+
+  static hooks() {
+    return {
+      afterCreate: async (media: Show | Film) => {
+        await media.syncIndex();
+      },
+
+      afterUpdate: async (media: Show | Film) => {
+        await media.syncIndex();
+      },
+      afterDestroy: async (media: Show | Film) => {
+        await Media.removeIndex(media.id);
+      },
+    };
   }
 
   //shared scope between Media models

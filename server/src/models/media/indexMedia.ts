@@ -23,7 +23,7 @@ class IndexMedia extends Model<
   declare name: string;
   declare image: string;
   declare rating: number;
-  declare year: number;
+  declare year: number | null;
   declare baseRating: number;
   declare voteCount: number;
   declare popularity: number;
@@ -56,7 +56,7 @@ IndexMedia.init(
       },
     },
     popularity: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL,
       defaultValue: 0,
     },
     addedToMedia: {
@@ -82,6 +82,7 @@ IndexMedia.init(
     },
     year: {
       type: DataTypes.INTEGER,
+      allowNull: true,
     },
   },
   {

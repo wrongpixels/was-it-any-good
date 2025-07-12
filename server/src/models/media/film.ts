@@ -30,6 +30,7 @@ Film.init(
     sequelize,
     modelName: 'film',
     underscored: true,
+    hooks: Film.hooks(),
     scopes: {
       withCredits: Film.creditsScope(MediaType.Film),
     },

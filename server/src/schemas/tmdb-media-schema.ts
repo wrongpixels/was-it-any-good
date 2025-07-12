@@ -43,6 +43,7 @@ export const TMDBMediaSchema = z.object({
   genres: z.array(TMDBGenreSchema),
   origin_country: z.array(z.string()),
   overview: z.string(),
+  popularity: z.number(),
   vote_average: z.number(),
   poster_path: z.string().nullable(),
   status: z.string(),

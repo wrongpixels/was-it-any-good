@@ -9,6 +9,7 @@ import MediaGenre from './genres/mediaGenre';
 import MediaRole from './people/mediaRole';
 import User from './users/user';
 import Session from './users/session';
+import IndexMedia from './media/indexMedia';
 import { sequelize } from '../util/db';
 
 Person.hasMany(MediaRole, {
@@ -26,8 +27,7 @@ User.associate();
 Session.associate();
 Rating.associate();
 Season.associate();
-
-sequelize.sync();
+sequelize.sync({ force: true });
 
 export {
   Media,
@@ -41,4 +41,5 @@ export {
   Rating,
   User,
   Session,
+  IndexMedia,
 };

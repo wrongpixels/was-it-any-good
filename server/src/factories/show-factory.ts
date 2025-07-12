@@ -16,6 +16,7 @@ import {
 import { TMDBIndexShow } from '../schemas/tmdb-index-media-schemas';
 import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
+import { getYearNum } from '../../../shared/src/helpers/format-helper';
 
 export const createShow = (tmdb: TMDBShowData): ShowData => ({
   ...DEF_SHOW,
@@ -34,7 +35,7 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
 export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   ...createTMDBIndexBase(tmdb),
   name: tmdb.name,
-  popularity: tmdb.popularity,
+  year: getYearNum(tmdb.first_air_date),
   addedToMedia: false,
   mediaId: null,
   mediaType: MediaType.Film,
@@ -72,7 +73,7 @@ const createSeason = (
   image: season.poster_path
     ? imageLinker.createPosterURL(season.poster_path)
     : showPoster
-    ? imageLinker.createPosterURL(showPoster)
-    : DEF_SHOW.image,
+      ? imageLinker.createPosterURL(showPoster)
+      : DEF_SHOW.image,
   releaseDate: getAirDate(season.air_date),
 });

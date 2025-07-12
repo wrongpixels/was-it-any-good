@@ -19,6 +19,7 @@ export interface CreateIndexMedia {
   name: string
   image: string
   rating: number
+  year: number | null
   baseRating: number
   voteCount: number
   popularity: number
@@ -129,6 +130,7 @@ export interface BaseResponse {
   image: string
   voteCount: number
   baseRating: number
+  popularity: number
   rating: number
   mediaType: MediaType
   releaseDate: string | null
@@ -150,6 +152,7 @@ export interface BaseMediaResponse extends BaseResponse {
   crew?: CreditResponse[]
   genres?: GenreResponse[]
   mergedCrew?: MergedCredits[]
+  indexMedia?: IndexMediaData
 }
 
 export interface FilmResponse extends BaseMediaResponse {

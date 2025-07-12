@@ -8,8 +8,7 @@ export const TMDBIndexFilmSchema = TMDBFilmSchema.pick({
   release_date: true,
   vote_average: true,
   title: true,
-}).extend({
-  popularity: z.number(),
+  popularity: true,
 });
 
 export const TMDBIndexShowSchema = TMDBShowSchema.pick({
@@ -18,8 +17,7 @@ export const TMDBIndexShowSchema = TMDBShowSchema.pick({
   first_air_date: true,
   vote_average: true,
   name: true,
-}).extend({
-  popularity: z.number(),
+  popularity: true,
 });
 
 export type TMDBIndexFilm = z.infer<typeof TMDBIndexFilmSchema>;

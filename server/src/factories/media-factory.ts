@@ -37,6 +37,7 @@ export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
   baseRating: Number(tmdb.vote_average),
   rating: 0,
+  popularity: tmdb.popularity,
   voteCount: tmdb.vote_average > 0 ? 1 : 0,
   image: tmdb.poster_path
     ? imageLinker.createPosterURL(tmdb.poster_path)

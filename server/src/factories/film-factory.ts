@@ -1,3 +1,4 @@
+import { getYearNum } from '../../../shared/src/helpers/format-helper';
 import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { DEF_FILM } from '../constants/media-defaults';
@@ -23,8 +24,8 @@ export const createFilm = (tmdb: TMDBFilmData): FilmData => ({
 export const createIndexForFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
   ...createTMDBIndexBase(tmdb),
   name: tmdb.title,
-  popularity: tmdb.popularity,
   addedToMedia: false,
+  year: getYearNum(tmdb.release_date),
   mediaId: null,
   mediaType: MediaType.Film,
 });

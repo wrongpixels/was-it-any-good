@@ -116,6 +116,7 @@ export const DEF_MEDIA: DefaultMedia = {
   rating: DEF_MEDIA_RATING,
   runtime: 0,
   baseRating: 0,
+  popularity: 0,
   voteCount: 0,
   studios: DEF_STUDIOS,
   mediaType: MediaType.Film,

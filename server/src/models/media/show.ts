@@ -52,7 +52,7 @@ Show.init(
     sequelize,
     modelName: 'show',
     underscored: true,
-
+    hooks: Show.hooks(),
     scopes: {
       withSeasons: {
         include: {
