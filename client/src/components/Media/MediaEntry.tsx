@@ -15,7 +15,7 @@ import MediaMissing from './MediaMissing';
 import { setTitle } from '../../utils/page-info-setter';
 import {
   UNKNOWN_CAST,
-  DEF_CREW,
+  UNKNOWN_CREW,
   DEF_CREW_TV,
   DEF_SYNOPSIS,
 } from '../../../../shared/defaults/media-defaults';
@@ -83,7 +83,7 @@ const MediaEntry = ({
             {media.mediaType === MediaType.Film ? (
               <EntrySection
                 title="Direction and Writing"
-                crewContent={media.mergedCrew || DEF_CREW}
+                crewContent={media.mergedCrew || UNKNOWN_CREW}
                 peopleFilter={
                   media.mergedCrew
                     ? [AuthorType.Director, AuthorType.Writer]

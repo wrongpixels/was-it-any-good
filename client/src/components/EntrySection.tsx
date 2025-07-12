@@ -2,6 +2,10 @@ import { JSX } from 'react';
 import { CreditResponse, MergedCredits } from '../../../shared/types/models';
 import MediaPeopleEntry from './Media/MediaPeopleEntry';
 import { AuthorType } from '../../../shared/types/roles';
+import {
+  UNKNOWN_CREW,
+  UNKNOWN_CAST,
+} from '../../../shared/defaults/media-defaults';
 
 interface EntryProps {
   title: string;
@@ -19,7 +23,7 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
     return null;
   }
 
-  const filteredPeople: MergedCredits[] | CreditResponse[] | null =
+  let filteredPeople: MergedCredits[] | CreditResponse[] | null =
     props.castContent
       ? props.castContent
       : !props.crewContent
@@ -33,6 +37,14 @@ const EntrySection = (props: EntryProps): JSX.Element | null => {
                   props.peopleFilter!.includes(role as AuthorType)
                 )
             );
+  if (filteredPeople && filteredPeople.length < 1) {
+    if (props.crewContent) {
+      filteredPeople = UNKNOWN_CREW;
+    }
+    if (props.castContent) {
+      filteredPeople = UNKNOWN_CAST;
+    }
+  }
   if (props.peopleFilter && (!filteredPeople || filteredPeople.length === 0)) {
     return null;
   }

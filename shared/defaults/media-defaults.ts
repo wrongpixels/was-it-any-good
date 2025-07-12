@@ -38,7 +38,7 @@ export const UNKNOWN_DIRECTORS: PersonResponse = {
   name: 'Unknown Direction',
 }
 
-export const DEF_CREW: MergedCredits[] = [
+export const UNKNOWN_CREW: MergedCredits[] = [
   {
     mergedRoles: [],
     person: UNKNOWN_CREATORS,
