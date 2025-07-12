@@ -172,7 +172,20 @@ export const createCast = (cast: TMDBRoleData[]): RoleData[] => {
     (c: TMDBRoleData) =>
       c.known_for_department === TMDBAcceptedDepartments.Acting
   );
-  return filteredCast.map((c: TMDBRoleData) => createRole(c));
+  const combinedRoleMap = new Map<string, RoleData>();
+  filteredCast.forEach((c: TMDBRoleData) => {
+    const key: string = `${c.id}`;
+    const entry: RoleData | undefined = combinedRoleMap.get(key);
+    if (entry) {
+      combinedRoleMap.set(key, {
+        ...entry,
+        character: entry.character.concat(c.character),
+      });
+      return;
+    }
+    combinedRoleMap.set(key, createRole(c));
+  });
+  return Array.from(combinedRoleMap.values());
 };
 
 export const createRole = (castMember: TMDBRoleData): RoleData => ({
@@ -183,6 +196,6 @@ export const createRole = (castMember: TMDBRoleData): RoleData => ({
     ? imageLinker.createAvatarURL(castMember.profile_path)
     : DEF_IMAGE_PERSON,
   tmdbId: castMember.id,
-  character: castMember.character || '',
+  character: castMember.character ? [castMember.character] : [''],
   roleType: RoleType.Main,
 });

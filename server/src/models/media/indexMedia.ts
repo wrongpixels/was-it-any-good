@@ -59,7 +59,7 @@ IndexMedia.init(
     },
     tmdbId: {
       type: DataTypes.INTEGER,
-      unique: true,
+      allowNull: false,
     },
     mediaId: {
       type: DataTypes.INTEGER,
@@ -108,6 +108,12 @@ IndexMedia.init(
     modelName: 'index-media',
     underscored: true,
     sequelize,
+    indexes: [
+      {
+        unique: true,
+        fields: ['tmdb_id', 'media_type'],
+      },
+    ],
   }
 );
 

@@ -38,6 +38,12 @@ MediaGenre.init(
   },
   {
     sequelize,
+    indexes: [
+      {
+        unique: true,
+        fields: ['media_id', 'media_type', 'genre_id'],
+      },
+    ],
     underscored: true,
     modelName: 'mediaGenre',
     tableName: 'media_genres',

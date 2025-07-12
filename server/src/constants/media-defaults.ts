@@ -96,7 +96,7 @@ export const DEF_ACTOR: AuthorData = {
 
 export const DEF_ROLE: RoleData = {
   ...DEF_ACTOR,
-  character: 'Unknown',
+  character: ['Unknown'],
   order: 1,
   roleType: RoleType.Main,
 };

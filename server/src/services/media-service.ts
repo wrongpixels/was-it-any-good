@@ -306,9 +306,7 @@ const buildRole = (
     'order' in mediaPerson
   ) {
     if (!roleData.characterName || roleData.characterName.length === 0) {
-      roleData.characterName = [mediaPerson.character];
-    } else {
-      roleData.characterName.push(mediaPerson.character);
+      roleData.characterName = mediaPerson.character;
     }
     roleData.order = mediaPerson.order;
   }

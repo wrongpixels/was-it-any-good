@@ -69,7 +69,7 @@ export interface AuthorData extends IndividualData {
   birthDate?: BirthDate;
 }
 export interface RoleData extends AuthorData {
-  character: string;
+  character: string[];
   description?: string;
   roleType: RoleType;
   order: number;

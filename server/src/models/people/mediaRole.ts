@@ -87,6 +87,12 @@ MediaRole.init(
   },
   {
     sequelize,
+    indexes: [
+      {
+        unique: true,
+        fields: ['media_id', 'media_type', 'person_id', 'role'],
+      },
+    ],
     modelName: 'mediaRole',
     tableName: 'media_roles',
     underscored: true,
