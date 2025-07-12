@@ -8,8 +8,8 @@ export const mapTMDBGenres = (
 ): CreateGenreData[] => {
   const genreData: CreateGenreData[] = orGenres.map((g: TMDBGenreData) => ({
     name: g.name === 'Music' ? 'Musical' : g.name,
-    mediaId: g.id,
-    mediaType,
+    tmdbId: mediaType === MediaType.Game ? undefined : g.id,
+    gamedbId: mediaType === MediaType.Game ? g.id : undefined,
   }));
   return genreData;
 };

@@ -1,4 +1,5 @@
 import {
+  CreationOptional,
   DataTypes,
   InferAttributes,
   InferCreationAttributes,
@@ -11,6 +12,7 @@ class MediaGenre extends Model<
   InferAttributes<MediaGenre>,
   InferCreationAttributes<MediaGenre>
 > {
+  declare id: CreationOptional<number>;
   declare mediaId: number;
   declare genreId: number;
   declare mediaType: MediaType;
@@ -18,9 +20,13 @@ class MediaGenre extends Model<
 
 MediaGenre.init(
   {
-    genreId: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      autoIncrement: true,
+    },
+    genreId: {
+      type: DataTypes.INTEGER,
       references: {
         model: 'genres',
         key: 'id',
@@ -28,11 +34,10 @@ MediaGenre.init(
     },
     mediaId: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
+      allowNull: false,
     },
     mediaType: {
       type: DataTypes.ENUM(...Object.values(MediaType)),
-      primaryKey: true,
       allowNull: false,
     },
   },

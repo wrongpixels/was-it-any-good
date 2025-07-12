@@ -184,3 +184,9 @@ export interface MergedCredits {
   mergedRoles: string[]
   person: PersonResponse
 }
+
+export interface CreateMediaGenre {
+  mediaId: number
+  genreId: number
+  mediaType: MediaType
+}

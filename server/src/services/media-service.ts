@@ -5,7 +5,7 @@ import { Film, MediaGenre, MediaRole, Show } from '../models';
 import Genre from '../models/genres/genre';
 import { CreateMediaRole } from '../models/people/mediaRole';
 import Person, { CreatePerson } from '../models/people/person';
-import { CreateGenreData } from '../types/genres/genre-types';
+//import { CreateGenreData } from '../types/genres/genre-types';
 import { AuthorType, MediaData, MediaPerson } from '../types/media/media-types';
 import {
   TMDBAcceptedJobs,
@@ -14,6 +14,7 @@ import {
 } from '../schemas/tmdb-media-schema';
 import CustomError from '../util/customError';
 import { MediaType } from '../../../shared/types/media';
+import { CreateMediaGenre } from '../../../shared/types/models';
 
 //Overrides to ensure type safety
 export function buildCreditsAndGetEntry(
@@ -140,200 +141,138 @@ export const buildGenres = async (
   mediaType: MediaType,
   transaction: Transaction
 ): Promise<MediaGenre[] | null> => {
-  const genres: MediaGenre[] = await Promise.all(
-    mediaData.genres.map((g: CreateGenreData) =>
-      getOrBuildGenre(g, mediaId, mediaType, transaction)
-    )
+  await Genre.bulkCreate(mediaData.genres, {
+    ignoreDuplicates: true,
+    transaction,
+  });
+  const tmdbIds: number[] = mediaData.genres
+    .map((genre) => genre.tmdbId)
+    .filter((id): id is number => id !== undefined);
+  const genres: Genre[] = await Genre.findAll({
+    where: {
+      tmdbId: {
+        [Op.in]: tmdbIds,
+      },
+    },
+  });
+  console.log(genres);
+
+  const createMediaGenres: CreateMediaGenre[] = genres.map((g: Genre) => ({
+    mediaId,
+    mediaType,
+    genreId: g.id,
+  }));
+  console.log(createMediaGenres);
+  const mediaGenres: MediaGenre[] = await MediaGenre.bulkCreate(
+    createMediaGenres,
+    { ignoreDuplicates: true, transaction }
   );
-
-  return genres?.length > 0 ? genres : null;
+  return mediaGenres?.length > 0 ? mediaGenres : null;
 };
 
-const getOrBuildGenre = async (
-  genreData: CreateGenreData,
-  mediaId: number,
-  mediaType: MediaType,
-  transaction: Transaction
-): Promise<MediaGenre> => {
-  console.log('getOrBuildGenre input:', genreData);
-
-  const [genre]: [Genre, boolean] = await Genre.findOrCreate({
-    where: {
-      tmdbId: genreData.mediaId,
-      name: genreData.name,
-    },
-    transaction,
-  });
-  const mediaGenre: [MediaGenre, boolean] = await MediaGenre.findOrCreate({
-    where: {
-      genreId: genre.id,
-      mediaId,
-      mediaType,
-    },
-    defaults: {
-      genreId: genre.id,
-      mediaId,
-      mediaType,
-    },
-    transaction,
-  });
-  return mediaGenre[0];
-};
+const mediaPersonToCreatePerson = (mediaPerson: MediaPerson): CreatePerson => ({
+  name: mediaPerson.name,
+  tmdbId: mediaPerson.tmdbId,
+  image: mediaPerson.image,
+  country: mediaPerson.country ? [mediaPerson.country] : ['UNKNOWN'],
+});
 
 const bulkCreatePeople = async (
   mediaPeople: MediaPerson[],
   transaction: Transaction
 ): Promise<Person[] | null> => {
-  const peopleList: CreatePerson[] = new Array<CreatePerson>();
-  const tmdbList: number[] = new Array<number>();
-  mediaPeople.map((role: MediaPerson) => {
-    const person: CreatePerson | null = buildPerson(peopleList, role);
-    if (person && person.tmdbId && !tmdbList.includes(person.tmdbId)) {
-      peopleList.push(person);
-      tmdbList.push(person.tmdbId);
+  const peopleMap = new Map<number, CreatePerson>();
+  mediaPeople.forEach((mp: MediaPerson) => {
+    if (mp?.tmdbId) {
+      peopleMap.set(mp.tmdbId, mediaPersonToCreatePerson(mp));
     }
   });
-  if (peopleList.length === 0) {
+  const peopleToCreate: CreatePerson[] = Array.from(peopleMap.values());
+  if (peopleToCreate.length === 0) {
     return null;
   }
-  await Person.bulkCreate(peopleList, { transaction, ignoreDuplicates: true });
+  await Person.bulkCreate(peopleToCreate, {
+    transaction,
+    updateOnDuplicate: ['image'],
+  });
+  const tmdbIdList: number[] = Array.from(peopleMap.keys());
   const peopleEntries: Person[] = await Person.findAll({
     transaction,
     where: {
       tmdbId: {
-        [Op.in]: tmdbList,
+        [Op.in]: tmdbIdList,
       },
     },
+    attributes: ['tmdbId', 'id'],
   });
+
   if (peopleEntries.length > 0) {
     return peopleEntries;
   }
   return null;
 };
-
-const buildPerson = (
-  peopleList: CreatePerson[],
-  mediaPersonData: MediaPerson
-): CreatePerson | null => {
-  if (!mediaPersonData) {
-    return null;
-  }
-  const personData: CreatePerson | null = findOrCreatePerson(
-    mediaPersonData,
-    peopleList
-  );
-  return personData;
-};
-
-const findOrCreatePerson = (
-  mediaPerson: MediaPerson,
-  personList: CreatePerson[]
-): CreatePerson | null => {
-  if (!mediaPerson.tmdbId) {
-    return null;
-  }
-  let createPerson: CreatePerson | null =
-    personList.find((p: CreatePerson) => p.tmdbId === mediaPerson.tmdbId) ||
-    null;
-  if (!createPerson) {
-    createPerson = {
-      name: mediaPerson.name,
-      tmdbId: mediaPerson.tmdbId,
-      image: mediaPerson.image,
-      country: mediaPerson.country ? [mediaPerson.country] : ['UNKNOWN'],
-    };
-  }
-  return createPerson;
-};
-
-const bulkCreateMediaRoles = async (
+export const bulkCreateMediaRoles = async (
   mediaPeople: MediaPerson[],
   people: Person[],
   mediaId: number,
   mediaType: MediaType,
   transaction: Transaction
 ): Promise<MediaRole[] | null> => {
-  const rolesList: CreateMediaRole[] = new Array<CreateMediaRole>();
-  mediaPeople.map((mediaPerson: MediaPerson) => {
-    const mediaRole: CreateMediaRole | null = buildRole(
-      rolesList,
-      people,
-      mediaId,
-      mediaType,
-      mediaPerson
-    );
-    if (mediaRole && mediaRole.personId) {
-      rolesList.push(mediaRole);
+  const tmdbIdToIdMap = new Map<number, number>();
+  people.forEach((p) => {
+    if (p.tmdbId && p.id) {
+      tmdbIdToIdMap.set(p.tmdbId, p.id);
     }
   });
-  if (rolesList.length === 0) {
-    return null;
-  }
-  const mediaRoleEntries: MediaRole[] = await MediaRole.bulkCreate(rolesList, {
-    transaction,
-  });
-  if (mediaRoleEntries.length === 0) {
-    return null;
-  }
-  return mediaRoleEntries;
-};
 
-const buildRole = (
-  rolesList: CreateMediaRole[],
-  people: Person[],
-  mediaId: number,
-  mediaType: MediaType,
-  mediaPerson: MediaPerson
-): CreateMediaRole | null => {
-  const personId: number | null =
-    people.find((p: Person) => p.tmdbId === mediaPerson.tmdbId)?.id || null;
-  if (!personId) {
-    return null;
-  }
-  const roleData: CreateMediaRole | null = findOrCreateMediaRole(
-    rolesList,
-    personId,
-    mediaId,
-    mediaType,
-    mediaPerson
-  );
-  if (!roleData) {
-    return null;
-  }
-  if (
-    mediaPerson.type === AuthorType.Actor &&
-    'character' in mediaPerson &&
-    'order' in mediaPerson
-  ) {
-    if (!roleData.characterName || roleData.characterName.length === 0) {
-      roleData.characterName = mediaPerson.character;
+  const mediaRolesMap = new Map<string, CreateMediaRole>();
+
+  mediaPeople.forEach((mediaPerson: MediaPerson) => {
+    if (!mediaPerson.tmdbId || !mediaPerson.type) {
+      return;
     }
-    roleData.order = mediaPerson.order;
-  }
-  return roleData;
-};
 
-const findOrCreateMediaRole = (
-  rolesList: CreateMediaRole[],
-  personId: number,
-  mediaId: number,
-  mediaType: MediaType,
-  mediaPerson: MediaPerson
-): CreateMediaRole | null => {
-  let createMediaRole: CreateMediaRole | null =
-    rolesList.find(
-      (m: CreateMediaRole) =>
-        m.personId === personId && m.role === mediaPerson.type
-    ) || null;
-  if (!createMediaRole) {
-    createMediaRole = {
-      personId,
+    const personDbId = tmdbIdToIdMap.get(mediaPerson.tmdbId);
+    if (!personDbId) {
+      return;
+    }
+    const key = `${personDbId}_${mediaId}_${mediaType}_${mediaPerson.type}`;
+    const createRole: CreateMediaRole = {
+      personId: personDbId,
       mediaId,
       mediaType,
       role: mediaPerson.type,
     };
+    mediaRolesMap.set(key, createRole);
+
+    if (
+      mediaPerson.type === AuthorType.Actor &&
+      'character' in mediaPerson &&
+      mediaPerson.character
+    ) {
+      createRole.characterName =
+        mediaPerson.character && mediaPerson.character.length > 0
+          ? mediaPerson.character
+          : ['UNKNOWN'];
+      createRole.order = mediaPerson.order;
+    }
+  });
+
+  const rolesToCreateInDb = Array.from(mediaRolesMap.values());
+
+  if (rolesToCreateInDb.length === 0) {
+    return null;
   }
-  return createMediaRole;
+
+  const mediaRoleEntries: MediaRole[] = await MediaRole.bulkCreate(
+    rolesToCreateInDb,
+    {
+      ignoreDuplicates: true,
+      transaction,
+    }
+  );
+
+  return mediaRoleEntries.length > 0 ? mediaRoleEntries : null;
 };
 
 export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({

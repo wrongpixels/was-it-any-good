@@ -1,5 +1,3 @@
-import { MediaType } from '../media/media-types';
-
 enum GenreBase {
   Action = 'Action',
   Adventure = 'Adventure',
@@ -23,8 +21,8 @@ enum GenreBase {
 export interface GenreData {
   id: number;
   name: string;
-  mediaId: number;
-  mediaType: MediaType;
+  tmdbId?: number;
+  gamedbId?: number;
 }
 
 export type CreateGenreData = Omit<GenreData, 'id'>;

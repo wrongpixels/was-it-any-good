@@ -100,7 +100,6 @@ const MediaEntry = ({
                       ? [
                           AuthorType.Creator,
                           AuthorType.ExecProducer,
-                          AuthorType.Producer,
                           AuthorType.Director,
                           AuthorType.Writer,
                         ]
