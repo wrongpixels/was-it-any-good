@@ -183,7 +183,7 @@ interface SearchRowProps {
 const SearchRow = ({ indexMedia }: SearchRowProps): JSX.Element => (
   <div
     key={indexMedia.id}
-    className="flex flex-row gap-2 items-center px-1 py-0.5 font-medium hover:bg-amber-50 hover:text-cyan-950"
+    className="flex flex-row gap-2 items-center px-1.5 py-0.5 font-medium rounded-lg hover:bg-amber-50 hover:text-cyan-900"
   >
     {getIconByType(indexMedia.mediaType)}
     <div>
@@ -196,7 +196,7 @@ const SearchRow = ({ indexMedia }: SearchRowProps): JSX.Element => (
 const LastSearchRow = ({ searchValue }: SearchProps): JSX.Element => (
   <div
     key="last-search"
-    className="flex flex-row gap-2 items-center px-1 py-0.5 font-medium hover:bg-blue-50 hover:text-cyan-950"
+    className="flex flex-row gap-2 items-center px-1.5 py-0.5 font-medium hover:bg-blue-50 hover:text-cyan-850"
   >
     <div>
       <span className="font-light pl-1">
@@ -219,7 +219,7 @@ const SearchField = (): JSX.Element => {
       </span>
       {searchField.field}
       {searchField.value && (
-        <div className="absolute translate-y-7 -translate-x-2">
+        <div className="absolute translate-y-7 -translate-x-2.5">
           <SearchResults searchValue={searchField.value} />
         </div>
       )}
