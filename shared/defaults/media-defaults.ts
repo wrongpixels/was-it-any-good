@@ -1,5 +1,6 @@
 import { CreditResponse, MergedCredits, PersonResponse } from '../types/models'
 import { Image } from '../types/common'
+import { AuthorType } from '../types/roles'
 export const DEF_IMAGE_PERSON: Image = '/def-person.png'
 export const DEF_IMAGE_MEDIA: Image = '/def-media.png'
 
@@ -22,7 +23,7 @@ export const UNKNOWN_ACTOR: PersonResponse = {
 export const UNKNOWN_CAST: CreditResponse[] = [
   {
     id: -1,
-    role: '',
+    role: AuthorType.Actor,
     characterName: [' '],
     person: UNKNOWN_ACTOR,
   },

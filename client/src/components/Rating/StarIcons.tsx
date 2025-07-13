@@ -16,6 +16,7 @@ import {
 import StarIcon from './StarIcon';
 import {
   DEF_STAR_PADDING,
+  DEF_STAR_WIDTH,
   RATING_COLORS,
   RATING_DELAYS,
   RATING_DURATIONS,
@@ -43,7 +44,7 @@ interface StarIconsProps {
 }
 
 const StarIcons = ({
-  starWidth = 26,
+  starWidth = DEF_STAR_WIDTH,
   defaultRating = 0,
   mediaId,
   mediaType,
@@ -185,7 +186,7 @@ const StarIcons = ({
   };
 
   const displayRating: UserVote = calculateDisplayRating();
-  const widthPercentage: string = `${displayRating.valueOf() * 10}%`;
+  const widthPercentage = `${displayRating * 10}%`;
 
   return (
     <div className="flex flex-col items-center mt-1">
@@ -274,7 +275,7 @@ const StarList = ({
 
   return (
     <div
-      className={`inline-flex whitespace-nowrap ${width === 26 ? 'gap-1' : ''}`}
+      className={`inline-flex whitespace-nowrap ${width === DEF_STAR_WIDTH ? 'gap-1' : ''}`}
     >
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={getStarClassname(i)}>

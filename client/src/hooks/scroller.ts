@@ -87,13 +87,19 @@ export const useVerticalScroll = (multiplier: number = 1): ScrollData => {
         return;
       }
 
-      e.preventDefault();
-
       const delta: number = e.deltaY * multiplier;
+      const direction: boolean = delta > 0;
       const currentScroll: number = element.scrollLeft;
       let potentialNewTarget: number = currentScroll + delta;
       potentialNewTarget = Math.max(0, Math.min(potentialNewTarget, maxScroll));
-
+      //To allow vertical scrolling if we're at the start/end and there's nothing else to scroll horizontally
+      if (
+        (currentScroll <= 1 && !direction) ||
+        (currentScroll >= maxScroll - 1 && direction)
+      ) {
+        return;
+      }
+      e.preventDefault();
       if (
         targetScrollLeft.current === null ||
         Math.abs(targetScrollLeft.current - potentialNewTarget) > 5

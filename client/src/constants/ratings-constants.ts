@@ -1,4 +1,7 @@
 export const DEF_STAR_PADDING: number = 25;
+export const DEF_STAR_WIDTH: number = 25;
+export const DEF_MINISTAR_WIDTH: number = 25;
+
 export const RATING_SCALES = [
   'scale-115',
   'scale-120',
