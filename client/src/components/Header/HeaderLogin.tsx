@@ -82,7 +82,7 @@ const HeaderLogin = (): JSX.Element => {
   }
 
   return (
-    <div className="absolute right-20 flex gap-2 items-center">
+    <div className="flex gap-2 items-center">
       <div className="relative">
         <form onSubmit={submitLogin} className="flex gap-2 ">
           {userInput.field}

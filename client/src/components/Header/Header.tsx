@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import HeaderLogin from './HeaderLogin';
 import StarIcon from '../Rating/StarIcon';
+import SearchField from './SearchField';
 
 const Header = () => {
   return (
-    <div>
-      <div className="h-10 bg-[#5980c7] sticky shadow-sm top-0 flex justify-center items-center">
+    <div className="h-10 bg-[#5980c7] sticky shadow-sm top-0 flex ">
+      <div className="flex flex-row w-5xl justify-between items-center mx-auto">
+        <SearchField />
         <Link to="/">
           <div className="font-bold text-white text-2xl flex items-center pb-1">
             WI
@@ -19,7 +21,9 @@ const Header = () => {
             <span className="font-medium italic ml-0.5 text-xl mt-1">?</span>
           </div>
         </Link>
-        <HeaderLogin />
+        <span className="right-1">
+          <HeaderLogin />
+        </span>
       </div>
     </div>
   );
