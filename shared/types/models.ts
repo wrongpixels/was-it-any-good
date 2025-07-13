@@ -174,14 +174,14 @@ export type NoCredShowResponse = Omit<ShowResponse, 'crew' | 'cast'>
 
 export interface CreditResponse {
   id: number
-  role: string
+  role: AuthorType
   characterName?: string[]
   order?: number
   person: PersonResponse
 }
 
 export interface MergedCredits {
-  mergedRoles: string[]
+  mergedRoles: AuthorType[]
   person: PersonResponse
 }
 

@@ -19,6 +19,8 @@ import {
   DEF_CREW_TV,
   DEF_SYNOPSIS,
 } from '../../../../shared/defaults/media-defaults';
+import CrewEntrySection from '../CrewEntrySection';
+import CastEntrySection from '../CasEntrySection';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -81,10 +83,10 @@ const MediaEntry = ({
           />
           <div className="border-t border-gray-200 mt-3">
             {media.mediaType === MediaType.Film ? (
-              <EntrySection
+              <CrewEntrySection
                 title="Direction and Writing"
-                crewContent={media.mergedCrew || UNKNOWN_CREW}
-                peopleFilter={
+                crew={media.mergedCrew || UNKNOWN_CREW}
+                filterRoles={
                   media.mergedCrew
                     ? [AuthorType.Director, AuthorType.Writer]
                     : undefined
@@ -92,10 +94,10 @@ const MediaEntry = ({
               />
             ) : (
               <div>
-                <EntrySection
+                <CrewEntrySection
                   title="Direction and Creation"
-                  crewContent={media.mergedCrew || DEF_CREW_TV}
-                  peopleFilter={
+                  crew={media.mergedCrew || DEF_CREW_TV}
+                  filterRoles={
                     media.mergedCrew
                       ? [
                           AuthorType.Creator,
@@ -116,7 +118,7 @@ const MediaEntry = ({
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
       <div className="mt-4 border-t border-gray-200">
-        <EntrySection title="Cast" castContent={media.cast || UNKNOWN_CAST} />
+        <CastEntrySection title="Cast" cast={media.cast || UNKNOWN_CAST} />
       </div>
     </div>
   );

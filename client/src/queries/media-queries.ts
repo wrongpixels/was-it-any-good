@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMediaById, getMediaByTMDBId } from '../services/media-service';
 import { MediaResponse } from '../../../shared/types/models';
-import mergeCredits from '../utils/credits-merger';
+import { mergeCredits } from '../utils/credits-merger';
 import { MediaType } from '../../../shared/types/media';
 import { useEffect } from 'react';
 import { getActiveMediaKey } from '../utils/ratings-helper';
@@ -13,7 +13,7 @@ const transformCredits = (data: MediaResponse): MediaResponse => {
   return {
     ...data,
     cast: data.cast && data.cast.length > 0 ? data.cast : undefined,
-    mergedCrew: mergeCredits(data.crew),
+    mergedCrew: data.crew.length > 0 ? mergeCredits(data.crew) : undefined,
   };
 };
 
@@ -23,10 +23,8 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, id, false),
     enabled: !!id && !isNaN(Number(id)),
-    queryFn: async () => {
-      const data = await getMediaById(id, mediaType);
-      return data ? transformCredits(data) : null;
-    },
+    select: (data) => (data ? transformCredits(data) : null),
+    queryFn: () => getMediaById(id, mediaType),
   });
   //we create a copy for tmdb id urls
   useEffect(() => {

@@ -1,7 +1,18 @@
 import { CreditResponse, MergedCredits } from '../../../shared/types/models';
 import { AuthorType } from '../../../shared/types/roles';
 
-const mergeCredits = (
+const crewRolePriority: Record<AuthorType, number> = {
+  [AuthorType.Creator]: 0,
+  [AuthorType.Director]: 1,
+  [AuthorType.Writer]: 2,
+  [AuthorType.ExecProducer]: 3,
+  [AuthorType.Producer]: 4,
+  [AuthorType.MusicComposer]: 5,
+  [AuthorType.Actor]: 98,
+  [AuthorType.Unknown]: 99,
+};
+
+export const mergeCredits = (
   credits: CreditResponse[]
 ): MergedCredits[] | undefined => {
   const mergedMap: Map<number, MergedCredits> = new Map<
@@ -11,7 +22,7 @@ const mergeCredits = (
 
   credits.forEach((c: CreditResponse) => {
     const personId: number = c.person.id;
-    const currentRole: string = c.role;
+    const currentRole: AuthorType = c.role;
 
     if (!personId) {
       return;
@@ -32,35 +43,21 @@ const mergeCredits = (
 
   mergedMap.forEach((entry: MergedCredits) => {
     entry.mergedRoles.sort((a, b) => {
-      if (a === AuthorType.Director && b !== AuthorType.Director) {
-        return -1;
-      }
-      if (b === AuthorType.Director && a !== AuthorType.Director) {
-        return 1;
-      }
-      return a.localeCompare(b);
+      return (crewRolePriority[a] ?? 99) - (crewRolePriority[b] ?? 99);
     });
   });
 
   const mergedList: MergedCredits[] = Array.from(mergedMap.values());
-  mergedList.sort((a: MergedCredits, b: MergedCredits) => {
-    const aIsDirector: boolean = a.mergedRoles.includes(AuthorType.Director);
-    const bIsDirector: boolean = b.mergedRoles.includes(AuthorType.Director);
-    if (aIsDirector && !bIsDirector) {
-      return -1;
-    }
-    if (!aIsDirector && bIsDirector) {
-      return 1;
-    }
-    return 0;
+  mergedList.sort((a, b) => {
+    const aPriority = crewRolePriority[a.mergedRoles[0]] ?? 99;
+    const bPriority = crewRolePriority[b.mergedRoles[0]] ?? 99;
+    return aPriority - bPriority;
   });
+
   return mergedList.length > 0 ? mergedList : undefined;
 };
 
 export const isMerged = (
   c: MergedCredits | CreditResponse
-): c is MergedCredits => {
-  return 'mergedRoles' in c;
-};
-
-export default mergeCredits;
+): c is MergedCredits =>
+  c && 'mergedRoles' in c && Array.isArray((c as MergedCredits).mergedRoles);
