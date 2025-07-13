@@ -14,7 +14,7 @@ router.post('/', async (_req, res, next) => {
   try {
     const indexMedia: CreateIndexMedia[] = TMDBIndexToIndexMedia();
     const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
-      updateOnDuplicate: ['popularity', 'baseRating'],
+      updateOnDuplicate: ['popularity', 'baseRating', 'mediaType'],
     });
     res.json(entries);
   } catch (error) {

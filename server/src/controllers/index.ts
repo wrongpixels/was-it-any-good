@@ -8,6 +8,7 @@ import sessionsRouter from './sessions-controller';
 import ratingsRouter from './ratings-controller';
 import peopleRouter from './people-controller';
 import mediaIndexRouter from './index-media-controller';
+import suggestionsRouter from './suggestions-controller';
 
 export {
   filmsRouter,
@@ -20,4 +21,5 @@ export {
   ratingsRouter,
   peopleRouter,
   mediaIndexRouter,
+  suggestionsRouter,
 };

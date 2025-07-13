@@ -13,6 +13,7 @@ import {
   ratingsRouter,
   peopleRouter,
   mediaIndexRouter,
+  suggestionsRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -31,6 +32,7 @@ app.use('/api/auth/sessions', sessionsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/people', peopleRouter);
 app.use('/api/media-index', mediaIndexRouter);
+app.use('/api/suggest', suggestionsRouter);
 
 app.use(errorHandler);
 
