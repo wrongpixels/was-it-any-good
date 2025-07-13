@@ -1,23 +1,3 @@
-import { JSX } from 'react';
-import { useInputField } from '../../hooks/use-inputfield';
-
-const SearchField = (): JSX.Element => {
-  const searchField = useInputField({
-    name: 'search',
-    placeholder: 'Films, shows...',
-    extraClassNames: 'pl-7',
-  });
-  return (
-    <div className="flex gap-2 items-center">
-      <span className="absolute text-gray-400 ml-0.5">
-        <SearchIcon />
-      </span>
-
-      {searchField.field}
-    </div>
-  );
-};
-
 const SearchIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -33,5 +13,4 @@ const SearchIcon = () => (
     />
   </svg>
 );
-
-export default SearchField;
+export default SearchIcon;

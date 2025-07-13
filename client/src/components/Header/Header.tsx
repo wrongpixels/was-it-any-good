@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import HeaderLogin from './HeaderLogin';
 import StarIcon from '../Rating/StarIcon';
-import SearchField from './SearchField';
+import SearchField from './Search/SearchField';
 
 const Header = () => {
   return (
