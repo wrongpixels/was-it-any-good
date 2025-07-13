@@ -50,12 +50,16 @@ const MediaPeopleEntry = ({
                 className="w-26 rounded h-auto shadow ring-1 ring-gray-300"
                 loading="lazy"
               />
-              <div className="block w-28 text-center overflow-hidden text-ellipsis py-1">
-                <div className="font-medium text-sm leading-none m-1.5">
-                  {c.person.name}
-                </div>
-                <div className="text-gray-500 text-xs leading-tight font-medium">
-                  {getExtraInfo(c)}
+              <div className="w-28 flex flex-col items-center text-center py-1.5 flex-grow">
+                <div className="flex-grow flex items-center justify-center px-1">
+                  <div className="flex flex-col items-center gap-1.5">
+                    <div className="font-medium text-sm leading-tight break-words">
+                      {c.person.name}
+                    </div>
+                    <div className="text-gray-500 text-xs font-medium leading-tight">
+                      {getExtraInfo(c)}
+                    </div>
+                  </div>
                 </div>
               </div>
             </Link>

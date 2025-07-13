@@ -5,7 +5,7 @@ import SearchField from './SearchField';
 
 const Header = () => {
   return (
-    <div className="h-10 bg-[#5980c7] sticky shadow-sm top-0 flex ">
+    <div className="h-10 bg-[#5980c7] sticky shadow-sm top-0 flex z-99">
       <div className="flex flex-row w-5xl justify-between items-center mx-auto">
         <SearchField />
         <Link to="/">
