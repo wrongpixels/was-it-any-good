@@ -6,6 +6,7 @@ import { DEF_IMAGE_MEDIA } from '../../../../../shared/defaults/media-defaults';
 import { MediaType } from '../../../../../shared/types/media';
 import FilmIcon from './Icons/FilmIcon';
 import ShowIcon from './Icons/ShowIcon';
+import Separator from '../../common/Separator';
 
 const testSearch: IndexMediaData[] = [
   {
@@ -160,13 +161,17 @@ const getIconByType = (mediaType: MediaType): JSX.Element | null => {
       return null;
   }
 };
-
-const SearchResults = (): JSX.Element => {
+interface SearchProps {
+  searchValue: string;
+}
+const SearchResults = ({ searchValue }: SearchProps): JSX.Element => {
   return (
     <div className=" bg-white border-3 flex flex-col gap-0.5 border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
       {testSearch.map((im: IndexMediaData) => (
         <SearchRow indexMedia={im} />
       ))}
+      <Separator margin={false} />
+      <LastSearchRow searchValue={searchValue} />
     </div>
   );
 };
@@ -178,12 +183,25 @@ interface SearchRowProps {
 const SearchRow = ({ indexMedia }: SearchRowProps): JSX.Element => (
   <div
     key={indexMedia.id}
-    className="flex flex-row gap-2 items-center px-1 py-0.5 font-medium hover:bg-amber-50"
+    className="flex flex-row gap-2 items-center px-1 py-0.5 font-medium hover:bg-amber-50 hover:text-cyan-950"
   >
     {getIconByType(indexMedia.mediaType)}
     <div>
       {indexMedia.name}
       <span className="font-light pl-1">({indexMedia.year})</span>
+    </div>
+  </div>
+);
+
+const LastSearchRow = ({ searchValue }: SearchProps): JSX.Element => (
+  <div
+    key="last-search"
+    className="flex flex-row gap-2 items-center px-1 py-0.5 font-medium hover:bg-blue-50 hover:text-cyan-950"
+  >
+    <div>
+      <span className="font-light pl-1">
+        Search for "<span className="font-semibold">{searchValue}</span>"
+      </span>
     </div>
   </div>
 );
@@ -202,7 +220,7 @@ const SearchField = (): JSX.Element => {
       {searchField.field}
       {searchField.value && (
         <div className="absolute translate-y-7 -translate-x-2">
-          <SearchResults />
+          <SearchResults searchValue={searchField.value} />
         </div>
       )}
     </div>
