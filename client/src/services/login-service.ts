@@ -1,18 +1,19 @@
 import { LoginData, UserSessionData } from '../../../shared/types/models';
 import axios, { AxiosResponse } from 'axios';
+import { apiPaths } from '../utils/url-helper';
 
 export const doLogin = async (
   loginData: LoginData
 ): Promise<UserSessionData> => {
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
-    '/api/auth/login',
+    apiPaths.auth.login(),
     loginData
   );
   return data;
 };
 
 export const doLogout = async (): Promise<AxiosResponse> => {
-  return await axios.post('/api/auth/logout');
+  return await axios.post(apiPaths.auth.logout());
 };
 
 export const verifySession = async (
@@ -22,7 +23,7 @@ export const verifySession = async (
     return Promise.resolve(null);
   }
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
-    `/api/auth/sessions/verify`,
+    apiPaths.auth.sessions.verify(),
     session
   );
   return data;

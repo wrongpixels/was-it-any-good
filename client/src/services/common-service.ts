@@ -1,9 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-export const getById = async <T>(
-  endpoint: string,
-  id: string | number = ''
-): Promise<T> => {
-  const response: AxiosResponse<T> = await axios.get(`/api/${endpoint}/${id}`);
-  return response.data;
+export const getFromAPI = async <T>(url: string): Promise<T> => {
+  const { data }: AxiosResponse<T> = await axios.get(url);
+  return data;
 };

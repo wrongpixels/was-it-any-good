@@ -5,8 +5,7 @@ import { MediaType } from '../../../../shared/types/media';
 import MediaPoster from '../Poster/MediaPoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
-import { PathMatch, useMatch } from 'react-router-dom';
-import { buildMediaURL } from '../../services/media-service';
+import { useParams } from 'react-router-dom';
 import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
@@ -31,10 +30,8 @@ const MediaEntry = ({
   tmdb = false,
   mediaType,
 }: MediaEntryProps): JSX.Element | null => {
-  const match: PathMatch<'id'> | null = useMatch(
-    `${buildMediaURL(mediaType, tmdb)}/:id`
-  );
-  const mediaId: string | undefined = match?.params.id;
+  const { id: mediaId } = useParams<{ id: string }>();
+
   const {
     data: media,
     isLoading,

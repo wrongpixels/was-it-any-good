@@ -1,74 +1,43 @@
-import axios, { AxiosResponse } from 'axios';
 import { MediaResponse } from '../../../shared/types/models';
 import { MediaType } from '../../../shared/types/media';
+import { apiPaths } from '../utils/url-helper';
+import { BASE_IMDB_URL, BASE_TMDB_URL } from '../constants/url-constants';
+import { getFromAPI } from './common-service';
 
-const BASE_API_URL: string = '/api';
-const BASE_TMDB_URL: string = 'https://www.themoviedb.org';
-const BASE_IMDB_URL: string = 'https://www.imdb.com/title';
-
-//We don't catch errors here, TanStack will handle them
-export const getMediaById = async (
+export const getMediaById = (
   id: string,
   mediaType: MediaType
 ): Promise<MediaResponse> => {
-  const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
-    buildAPIMediaURL(mediaType, id)
-  );
-  return response.data;
+  const path = getMediaPath(mediaType);
+  return getFromAPI<MediaResponse>(path.byId(id));
 };
 
-export const getMediaByTMDBId = async (
+export const getMediaByTMDBId = (
   id: string,
   mediaType: MediaType
 ): Promise<MediaResponse> => {
-  const response: AxiosResponse<MediaResponse> = await axios.get<MediaResponse>(
-    buildAPIMediaURL(mediaType, id, '/tmdb/')
-  );
-  return response.data;
+  const path = getMediaPath(mediaType);
+  return getFromAPI<MediaResponse>(path.byTMDBId(id));
 };
 
-const getMediaApiURL = (mediaType: MediaType): string => {
+const getMediaPath = (mediaType: MediaType) => {
   switch (mediaType) {
     case MediaType.Film:
-      return `${BASE_API_URL}/films`;
+      return apiPaths.films;
     case MediaType.Show:
-      return `${BASE_API_URL}/shows`;
-    case MediaType.Game:
-      return `${BASE_API_URL}/games`;
+      return apiPaths.shows;
     default:
       throw new Error(`Unsupported media type: ${mediaType}`);
   }
 };
-const buildAPIMediaURL = (
-  mediaType: MediaType,
-  id: string,
-  path: string = '/'
-): string => `${getMediaApiURL(mediaType)}${path}${id}`;
-
-const getMediaURL = (mediaType: MediaType, tmdb: boolean = false): string => {
-  const path: string = tmdb ? '/tmdb' : '';
-  switch (mediaType) {
-    case MediaType.Film:
-      return `${path}/film`;
-    case MediaType.Show:
-      return `${path}/show`;
-    case MediaType.Game:
-      return `${path}/game`;
-    default:
-      throw new Error(`Unsupported media type: ${mediaType}`);
-  }
-};
-
-export const buildMediaURL = (
-  mediaType: MediaType,
-  tmdb: boolean = false
-): string => getMediaURL(mediaType, tmdb);
 
 export const buildTMDBorIMDBUrl = (
   mediaType: MediaType,
   tmdb: boolean,
-  id: string | undefined
+  id?: string
 ): string => {
+  if (!id) return '';
+
   if (!tmdb) {
     return `${BASE_IMDB_URL}/${id}`;
   }

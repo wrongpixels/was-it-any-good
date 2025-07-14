@@ -1,7 +1,6 @@
 import { PersonResponse } from '../../../shared/types/models';
-import { getById } from './common-service';
-
-const PEOPLE_API: string = 'people';
+import { apiPaths } from '../utils/url-helper';
+import { getFromAPI } from './common-service';
 
 export const getPersonById = (id: string): Promise<PersonResponse> =>
-  getById<PersonResponse>(PEOPLE_API, id);
+  getFromAPI<PersonResponse>(apiPaths.people.byId(id));

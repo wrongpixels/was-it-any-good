@@ -5,29 +5,27 @@ import {
   RatingData,
   CreateRatingResponse,
 } from '../../../shared/types/models';
-import { getById } from './common-service';
+import { getFromAPI } from './common-service';
+import { apiPaths } from '../utils/url-helper';
 
 export const getRatingByMediaId = ({
   mediaId,
   mediaType,
 }: CheckRating): Promise<RatingData> => {
-  return getById<RatingData>(
-    `ratings/match/${mediaType.toLowerCase()}`,
-    mediaId
-  );
+  return getFromAPI<RatingData>(apiPaths.ratings.matchById(mediaType, mediaId));
 };
 
 export const voteMedia = async (
   rating: CreateRating
 ): Promise<CreateRatingResponse> => {
   const { data }: AxiosResponse<CreateRatingResponse> = await axios.post(
-    `/api/ratings`,
+    apiPaths.ratings.base,
     rating
   );
   return data;
 };
 
 export const unvoteMedia = async (ratingId: number): Promise<AxiosResponse> => {
-  const { data } = await axios.delete(`/api/ratings/${ratingId}`);
+  const { data } = await axios.delete(apiPaths.ratings.byId(ratingId));
   return data;
 };
