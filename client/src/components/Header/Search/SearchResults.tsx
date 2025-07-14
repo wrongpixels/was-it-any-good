@@ -8,56 +8,62 @@ import SearchRow from './rows/SearchRow';
 
 interface SearchResultsProps {
   searchValue: string;
+  searchResults: IndexMediaData[] | undefined;
   onClose: () => void;
 }
 
 const SearchResults = ({
   searchValue,
   onClose,
+  searchResults = [],
 }: SearchResultsProps): JSX.Element | null => {
-  const testSearch: IndexMediaData[] = [];
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const totalItems = testSearch.length + 1;
+  const totalItems = searchResults.length === 0 ? 1 : searchResults.length + 1;
   const { activeIndex, ref } = useListNavigation({
     maxIndex: totalItems,
     onEsc: onClose,
   });
 
   let posterToShow: IndexMediaData | null = null;
-  if (activeIndex > 0 && activeIndex <= testSearch.length) {
-    posterToShow = testSearch[activeIndex - 1];
-  } else if (hoveredIndex !== null && hoveredIndex > 0) {
-    posterToShow = testSearch[hoveredIndex - 1];
+  if (hoveredIndex !== null && hoveredIndex > 0) {
+    posterToShow = searchResults[hoveredIndex - 1];
+  } else if (activeIndex > 0 && activeIndex <= searchResults.length) {
+    posterToShow = searchResults[activeIndex - 1];
   }
-
   return (
-    <div className="flex flex-row gap-2 items-center" ref={ref}>
+    <div className="flex flex-row gap-2 relative" ref={ref}>
       <div className="bg-white border-3 flex flex-col border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
         <FirstSearchRow
           searchValue={searchValue}
           isSelected={activeIndex === 0}
           onHover={(isHovering) => setHoveredIndex(isHovering ? 0 : null)}
         />
-        <Separator margin={false} />
-        {testSearch.map((mediaItem, index) => {
-          const itemIndex = index + 1;
-          return (
-            <SearchRow
-              key={mediaItem.id}
-              indexMedia={mediaItem}
-              isSelected={itemIndex === activeIndex}
-              onHover={(isHovering) => {
-                setHoveredIndex((prev) =>
-                  isHovering ? itemIndex : prev === itemIndex ? null : prev
-                );
-              }}
-            />
-          );
-        })}
+        {searchResults?.length > 0 && (
+          <div>
+            <Separator margin={false} />
+            {searchResults.map((mediaItem, index) => {
+              const itemIndex = index + 1;
+              return (
+                <SearchRow
+                  key={mediaItem.id}
+                  indexMedia={mediaItem}
+                  isSelected={itemIndex === activeIndex}
+                  onHover={(isHovering) => {
+                    setHoveredIndex((prev) =>
+                      isHovering ? itemIndex : prev === itemIndex ? null : prev
+                    );
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
-      <span>
-        <SearchPoster imageSrc={posterToShow?.image ?? null} />
-      </span>
+      <div className="absolute left-full ml-2 min-h-50 h-full flex items-center ">
+        <div className="flex-shrink-0">
+          <SearchPoster imageSrc={posterToShow?.image ?? null} />
+        </div>
+      </div>
     </div>
   );
 };

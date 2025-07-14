@@ -10,7 +10,7 @@ const SearchPoster = ({ imageSrc }: SearchPosterProps): JSX.Element | null => {
     <div className="bg-white border-5 border-white rounded-sm shadow-sm ring-1 ring-gray-300">
       <img
         src={imageSrc}
-        className="h-40 w-auto object-contain rounded-md"
+        className="h-50 w-auto object-cover rounded-md"
         alt=""
       />
     </div>

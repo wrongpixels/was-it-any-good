@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
       ],
       limit: 15,
     });
-    res.json({ matches });
+    res.json(Array.from(matches.values()));
   } catch (error) {
     next(error);
   }
