@@ -2,7 +2,10 @@ import { JSX } from 'react';
 import { SeasonResponse, ShowResponse } from '../../../../shared/types/models';
 import EntrySection from '../EntrySection';
 import SeasonPoster from '../Poster/SeasonPoster';
-import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
+import {
+  ScrollData,
+  useVerticalScroll,
+} from '../../hooks/use-verticall-scroll';
 import { isSpecialSeason } from '../../utils/seasons-setter';
 import Separator from '../common/Separator';
 

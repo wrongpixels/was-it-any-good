@@ -1,6 +1,9 @@
 import { JSX } from 'react';
 import { CreditResponse, MergedCredits } from '../../../../shared/types/models';
-import { ScrollData, useVerticalScroll } from '../../hooks/scroller';
+import {
+  ScrollData,
+  useVerticalScroll,
+} from '../../hooks/use-verticall-scroll';
 import { isMerged } from '../../utils/credits-merger';
 import { Link } from 'react-router-dom';
 
