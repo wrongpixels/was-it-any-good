@@ -10,12 +10,18 @@ router.get('/', async (req, res, next) => {
     if (!suggestion) {
       throw new CustomError('Search field cannot be empty', 400);
     }
+    const searchTerm: string = suggestion.trim();
     const matches: IndexMedia[] = await IndexMedia.findAll({
       where: {
         name: {
-          [Op.iLike]: `%${suggestion.trim()}%`,
+          [Op.iLike]: `${searchTerm.length > 2 ? '%' : ''}${searchTerm}%`,
         },
       },
+      order: [
+        ['popularity', 'DESC'],
+        ['name', 'ASC'],
+      ],
+      limit: 15,
     });
     res.json({ matches });
   } catch (error) {

@@ -177,16 +177,41 @@ const SearchResults = ({ searchValue }: SearchProps): JSX.Element | null => {
     return null;
   }
   return (
-    <div className=" bg-white border-3 flex flex-col gap-0.5 border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
-      <FirstSearchRow searchValue={searchValue} selected={activeIndex === 0} />
-      <Separator margin={false} />
-      {testSearch.map((im: IndexMediaData, i: number) => (
-        <SearchRow
-          key={im.id}
-          indexMedia={im}
-          selected={i + 1 === activeIndex}
+    <div className="flex flex-row gap-2 items-center">
+      <div className=" bg-white border-3 flex flex-col gap-0.5 border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
+        <FirstSearchRow
+          searchValue={searchValue}
+          selected={activeIndex === 0}
         />
-      ))}
+        <Separator margin={false} />
+        {testSearch.map((im: IndexMediaData, i: number) => (
+          <SearchRow
+            key={im.id}
+            indexMedia={im}
+            selected={i + 1 === activeIndex}
+          />
+        ))}
+      </div>
+      {activeIndex > 0 && (
+        <span>
+          <SearchPoster imageSrc={testSearch[activeIndex - 1].image} />
+        </span>
+      )}
+    </div>
+  );
+};
+
+interface SearchPosterProps {
+  imageSrc: string;
+}
+
+const SearchPoster = ({ imageSrc }: SearchPosterProps): JSX.Element | null => {
+  if (!imageSrc) {
+    return null;
+  }
+  return (
+    <div className=" bg-white border-5 border-white rounded-sm shadow-sm ring-1 ring-gray-300 right-0">
+      <img src={imageSrc} className="h-40 w-auto object-contain rounded-md" />
     </div>
   );
 };
@@ -212,36 +237,21 @@ const SelectedLine = ({ active }: OptionalProps): JSX.Element | null => {
   );
 };
 
+const selectedRowStyle = (selected: boolean) =>
+  selected ? 'bg-amber-50 hover:text-cyan-900' : '';
+
 const SearchRow = ({
   indexMedia,
-  selected = true,
+  selected = false,
 }: SearchRowProps): JSX.Element => (
-  <div className="flex flex-row gap-2 items-center px-1.5 py-0.5 relative font-medium rounded-lg hover:bg-amber-50 hover:text-cyan-900">
+  <div
+    className={`flex flex-row gap-2 items-center px-1.5 py-0.5 relative font-medium rounded-lg hover:bg-amber-50 hover:text-cyan-900 ${selectedRowStyle(selected)}`}
+  >
     <SelectedLine active={selected} />
     {getIconByType(indexMedia.mediaType)}
     <div>
       {indexMedia.name}
       <span className="font-light pl-1">({indexMedia.year})</span>
-    </div>
-  </div>
-);
-
-const FirstSearchRow = ({
-  searchValue,
-  selected,
-}: SearchProps): JSX.Element => (
-  <div
-    key="last-search"
-    className="flex flex-row items-center font-medium hover:bg-blue-50 hover:text-cyan-850 relative"
-  >
-    <span className="ml-1">
-      <SelectedLine active={selected} />
-      <SearchIcon />
-    </span>
-    <div>
-      <span className="font-light pl-1">
-        Search for "<span className="font-semibold">{searchValue}</span>"
-      </span>
     </div>
   </div>
 );
@@ -267,4 +277,27 @@ const SearchField = (): JSX.Element => {
     </div>
   );
 };
+
+const selectedFirstRowStyle = (selected: boolean) =>
+  selected ? 'bg-blue-50 hover:text-cyan-850' : '';
+const FirstSearchRow = ({
+  searchValue,
+  selected = false,
+}: SearchProps): JSX.Element => (
+  <div
+    key="last-search"
+    className={`flex flex-row items-center font-medium hover:bg-blue-50 hover:text-cyan-850 relative ${selectedFirstRowStyle(selected)}`}
+  >
+    <span className="ml-1">
+      <SelectedLine active={selected} />
+      <SearchIcon />
+    </span>
+    <div>
+      <span className="font-light pl-1">
+        Search for "<span className="font-semibold">{searchValue}</span>"
+      </span>
+    </div>
+  </div>
+);
+
 export default SearchField;
