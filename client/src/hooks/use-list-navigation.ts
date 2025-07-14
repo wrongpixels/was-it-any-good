@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface ListNavProps {
   maxIndex: number;
@@ -10,6 +10,7 @@ interface ListNavProps {
 interface ListNavValues {
   activeIndex: number;
   setIndex: (value: React.SetStateAction<number>) => void;
+  ref: React.RefObject<HTMLDivElement | null>;
 }
 
 const useListNavigation = ({
@@ -24,17 +25,22 @@ const useListNavigation = ({
   const moveDown = (): void =>
     setIndex((prevIndex) => {
       const newIndex: number = prevIndex + 1 > maxIndex ? 0 : prevIndex + 1;
-      console.log(maxIndex, newIndex, maxIndex);
       return newIndex;
     });
   const moveUp = (): void =>
     setIndex((prevIndex: number) => {
       const newIndex: number = prevIndex - 1 < 0 ? maxIndex : prevIndex - 1;
-      console.log(maxIndex, newIndex, maxIndex);
       return newIndex;
     });
+  const ref: React.RefObject<HTMLDivElement | null> =
+    useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const clickOutside = (e: MouseEvent) => {
+      if (e.target instanceof Node && !ref.current?.contains(e.target)) {
+        onEsc?.();
+      }
+    };
     const keyDown = (e: KeyboardEvent) => {
       switch (e.key) {
         case 'ArrowUp':
@@ -60,9 +66,13 @@ const useListNavigation = ({
       }
     };
     document.addEventListener('keydown', keyDown);
-    return () => document.removeEventListener('keydown', keyDown);
+    document.addEventListener('mousedown', clickOutside);
+    return () => {
+      document.removeEventListener('keydown', keyDown);
+      document.removeEventListener('mousedown', clickOutside);
+    };
   }, [maxIndex, onEnter, onEsc, onMove, onNormalKey]);
-  return { activeIndex: index, setIndex };
+  return { activeIndex: index, setIndex, ref };
 };
 
 export default useListNavigation;
