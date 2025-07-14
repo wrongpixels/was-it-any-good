@@ -1,6 +1,7 @@
 import { MediaType } from '../../../shared/types/media';
 import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
+import { IndexMediaData } from '../../../shared/types/models';
 
 export const apiPaths = {
   films: {
@@ -85,6 +86,11 @@ export const buildRouterMediaLink = (
       throw new Error(`Unsupported media type: ${mediaType}`);
   }
 };
+
+export const urlFromIndexMedia = (im: IndexMediaData): string =>
+  im.addedToMedia && im.mediaId
+    ? buildRouterMediaLink(im.mediaType, im.mediaId)
+    : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
 
 export const buildOwnUrl = (path: string = ''): string =>
   `${window.location.origin}${path}`;

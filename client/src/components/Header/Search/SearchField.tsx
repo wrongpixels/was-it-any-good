@@ -12,9 +12,6 @@ const SearchField = (): JSX.Element => {
     extraClassNames: 'pl-7',
   });
   const { data: suggestions } = useSuggestionsQuery(searchField.value);
-  if (suggestions) {
-    console.log(suggestions);
-  }
 
   useEffect(() => {
     if (searchField.value) {
@@ -34,6 +31,7 @@ const SearchField = (): JSX.Element => {
             searchResults={suggestions}
             searchValue={searchField.value}
             onClose={() => setDropdownVisible(false)}
+            cleanField={searchField.reset}
           />
         </div>
       )}

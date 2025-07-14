@@ -6,6 +6,8 @@ interface ListNavProps {
   onEsc?: () => void;
   onMove?: () => void;
   onNormalKey?: () => void;
+  onClick?: () => void;
+  onClickOut?: () => void;
 }
 interface ListNavValues {
   activeIndex: number;
@@ -19,6 +21,8 @@ const useListNavigation = ({
   onMove,
   onNormalKey,
   onEsc,
+  onClick,
+  onClickOut,
 }: ListNavProps): ListNavValues => {
   const [index, setIndex] = useState(0);
 
@@ -38,7 +42,9 @@ const useListNavigation = ({
   useEffect(() => {
     const clickOutside = (e: MouseEvent) => {
       if (e.target instanceof Node && !ref.current?.contains(e.target)) {
-        onEsc?.();
+        onClickOut?.();
+      } else {
+        onClick?.();
       }
     };
     const keyDown = (e: KeyboardEvent) => {
@@ -60,6 +66,8 @@ const useListNavigation = ({
         case 'Enter':
           onEnter?.();
           e.preventDefault();
+          document.activeElement instanceof HTMLElement &&
+            document.activeElement.blur();
           break;
         default:
           onNormalKey?.();
