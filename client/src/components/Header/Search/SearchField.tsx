@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useState } from 'react';
 import { useInputField } from '../../../hooks/use-inputfield';
 import SearchIcon from './Icons/SearchIcon';
 import { IndexMediaData } from '../../../../../shared/types/models';
@@ -7,6 +7,7 @@ import { MediaType } from '../../../../../shared/types/media';
 import FilmIcon from './Icons/FilmIcon';
 import ShowIcon from './Icons/ShowIcon';
 import Separator from '../../common/Separator';
+import useListNavigation from '../../../hooks/use-markdown';
 
 const testSearch: IndexMediaData[] = [
   {
@@ -163,28 +164,60 @@ const getIconByType = (mediaType: MediaType): JSX.Element | null => {
 };
 interface SearchProps {
   searchValue: string;
+  selected?: boolean;
 }
-const SearchResults = ({ searchValue }: SearchProps): JSX.Element => {
+const SearchResults = ({ searchValue }: SearchProps): JSX.Element | null => {
+  const [active, setActive] = useState(true);
+  const { activeIndex } = useListNavigation({
+    maxIndex: testSearch.length || 0,
+    onEsc: () => setActive(false),
+    onNormalKey: () => setActive(true),
+  });
+  if (!active) {
+    return null;
+  }
   return (
     <div className=" bg-white border-3 flex flex-col gap-0.5 border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
-      {testSearch.map((im: IndexMediaData) => (
-        <SearchRow indexMedia={im} />
-      ))}
+      <FirstSearchRow searchValue={searchValue} selected={activeIndex === 0} />
       <Separator margin={false} />
-      <LastSearchRow searchValue={searchValue} />
+      {testSearch.map((im: IndexMediaData, i: number) => (
+        <SearchRow
+          key={im.id}
+          indexMedia={im}
+          selected={i + 1 === activeIndex}
+        />
+      ))}
     </div>
   );
 };
 
 interface SearchRowProps {
   indexMedia: IndexMediaData;
+  selected?: boolean;
 }
 
-const SearchRow = ({ indexMedia }: SearchRowProps): JSX.Element => (
-  <div
-    key={indexMedia.id}
-    className="flex flex-row gap-2 items-center px-1.5 py-0.5 font-medium rounded-lg hover:bg-amber-50 hover:text-cyan-900"
-  >
+interface OptionalProps {
+  active?: boolean;
+}
+
+const SelectedLine = ({ active }: OptionalProps): JSX.Element | null => {
+  if (!active) {
+    return null;
+  }
+  return (
+    <div
+      className="absolute inset-y-0 -left-0.5 bg-current text-starblue"
+      style={{ width: 3 }}
+    />
+  );
+};
+
+const SearchRow = ({
+  indexMedia,
+  selected = true,
+}: SearchRowProps): JSX.Element => (
+  <div className="flex flex-row gap-2 items-center px-1.5 py-0.5 relative font-medium rounded-lg hover:bg-amber-50 hover:text-cyan-900">
+    <SelectedLine active={selected} />
     {getIconByType(indexMedia.mediaType)}
     <div>
       {indexMedia.name}
@@ -193,11 +226,18 @@ const SearchRow = ({ indexMedia }: SearchRowProps): JSX.Element => (
   </div>
 );
 
-const LastSearchRow = ({ searchValue }: SearchProps): JSX.Element => (
+const FirstSearchRow = ({
+  searchValue,
+  selected,
+}: SearchProps): JSX.Element => (
   <div
     key="last-search"
-    className="flex flex-row gap-2 items-center px-1.5 py-0.5 font-medium hover:bg-blue-50 hover:text-cyan-850"
+    className="flex flex-row items-center font-medium hover:bg-blue-50 hover:text-cyan-850 relative"
   >
+    <span className="ml-1">
+      <SelectedLine active={selected} />
+      <SearchIcon />
+    </span>
     <div>
       <span className="font-light pl-1">
         Search for "<span className="font-semibold">{searchValue}</span>"
@@ -212,10 +252,11 @@ const SearchField = (): JSX.Element => {
     placeholder: 'Films, shows...',
     extraClassNames: 'pl-7',
   });
+
   return (
     <div className="flex gap-2">
       <span className="absolute text-gray-400 ml-0.5 mt-0.5 items-center">
-        <SearchIcon />
+        <SearchIcon active={!!searchField.value} />
       </span>
       {searchField.field}
       {searchField.value && (
