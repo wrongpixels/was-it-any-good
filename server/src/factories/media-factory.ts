@@ -98,6 +98,9 @@ export const validateCountry = (code: string): CountryCode => {
 };
 
 export const validateCountries = (codes: string[]): CountryCode[] => {
+  if (!codes || codes.length === 0) {
+    return ['UNKNOWN'];
+  }
   return codes.map((c: string) => validateCountry(c));
 };
 

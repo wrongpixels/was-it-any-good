@@ -17,10 +17,8 @@ router.get('', async (_req, res, next) => {
       res.json(null);
       return;
     }
-    const shows: ShowResponse[] = showEntries.map((s: Show) =>
-      s.get({ plain: true })
-    );
-    res.json(shows);
+    const showResponses: ShowResponse[] = Array.from(showEntries.values());
+    res.json(showResponses);
   } catch (error) {
     next(error);
   }

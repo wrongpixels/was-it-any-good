@@ -5,12 +5,15 @@ import useHoverChecker from '../../../../hooks/use-hover-checker';
 import SelectedLine from '../../../common/SelectedLine';
 import FilmIcon from '../icons/FilmIcon';
 import ShowIcon from '../icons/ShowIcon';
+import { Link } from 'react-router-dom';
 
 interface SearchRowProps {
   indexMedia: IndexMediaData;
   isSelected: boolean;
   onHover: (isHovering: boolean) => void;
 }
+
+const buildUrl = (im: IndexMediaData): string =>
 
 const SearchRow = ({
   indexMedia,
@@ -30,12 +33,13 @@ const SearchRow = ({
       ref={ref}
       className={`flex flex-row gap-2 items-center px-1.5 py-0.5 relative font-medium rounded-lg ${isActive ? 'bg-amber-50 text-cyan-900' : ''}`}
     >
+      <Link to="" >
       <SelectedLine active={isSelected} />
       {getIconByType(indexMedia.mediaType)}
       <div>
         {indexMedia.name}
         <span className="font-light pl-1">({indexMedia.year})</span>
-      </div>
+      </div></Link>
     </div>
   );
 };

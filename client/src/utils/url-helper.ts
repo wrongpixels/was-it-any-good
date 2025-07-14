@@ -42,6 +42,49 @@ export const apiPaths = {
       `${apiPaths.suggestions.base}?${new URLSearchParams({ query: input })}`,
   },
 };
+export const routerPaths = {
+  films: {
+    base: '/film',
+    byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
+    byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
+  },
+  shows: {
+    base: '/show',
+    byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
+    byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
+  },
+  people: {
+    base: '/person',
+    byId: (id: number | string) => `${routerPaths.people.base}/${id}`,
+  },
+  users: {
+    base: '/user',
+    byId: (id: number | string) => `${routerPaths.users.base}/${id}`,
+  },
+};
+
+export const buildRouterMediaLink = (
+  mediaType: MediaType,
+  id?: number | string,
+  useTMDB?: boolean
+): string => {
+  switch (mediaType) {
+    case MediaType.Film:
+      return !id
+        ? routerPaths.films.base
+        : useTMDB
+          ? routerPaths.films.byTMDBId(id)
+          : routerPaths.films.byId(id);
+    case MediaType.Show:
+      return !id
+        ? routerPaths.shows.base
+        : useTMDB
+          ? routerPaths.shows.byTMDBId(id)
+          : routerPaths.shows.byId(id);
+    default:
+      throw new Error(`Unsupported media type: ${mediaType}`);
+  }
+};
 
 export const buildOwnUrl = (path: string = ''): string =>
   `${window.location.origin}${path}`;

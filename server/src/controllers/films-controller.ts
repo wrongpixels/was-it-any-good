@@ -9,6 +9,20 @@ import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 const router: Router = express.Router();
 
+router.get('/', async (_req, res, next) => {
+  try {
+    const filmEntires: Film[] = await Film.findAll({});
+    if (!filmEntires) {
+      res.json(null);
+      return;
+    }
+    const filmResponses: FilmResponse[] = Array.from(filmEntires.values());
+    res.json(filmResponses);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;

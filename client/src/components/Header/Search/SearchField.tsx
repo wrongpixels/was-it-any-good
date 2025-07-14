@@ -1,8 +1,8 @@
 import { JSX, useEffect, useState } from 'react';
 import { useInputField } from '../../../hooks/use-inputfield';
-import SearchIcon from './icons/SearchIcon';
 import SearchResults from './SearchResults';
 import { useSuggestionsQuery } from '../../../queries/suggestions-queries';
+import SearchIcon from './icons/SearchIcon';
 
 const SearchField = (): JSX.Element => {
   const [isDropdownVisible, setDropdownVisible] = useState(true);
