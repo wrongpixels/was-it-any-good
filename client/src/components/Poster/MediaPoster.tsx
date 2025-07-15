@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
-import StarRating from '../Rating/StarRating';
+import Rating from '../Rating/Rating';
 import {
   calculateAverage,
   calculateShowAverage,
@@ -27,7 +27,7 @@ const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
           loading="lazy"
         />
         <div className="text-center">
-          <StarRating rating={average} media={media} valid={true} />
+          <Rating rating={average} media={media} valid={true} />
         </div>
       </div>
     </div>

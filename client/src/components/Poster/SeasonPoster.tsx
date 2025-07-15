@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { SeasonResponse } from '../../../../shared/types/models';
-import StarRating from '../Rating/StarRating';
+import Rating from '../Rating/Rating';
 import { calculateAverage } from '../../utils/ratings-helper';
 
 interface SeasonPosterProps {
@@ -25,7 +25,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         loading="lazy"
       />
       <div>
-        <StarRating rating={average} media={media} valid={true} />
+        <Rating rating={average} media={media} valid={true} />
       </div>
     </div>
   );

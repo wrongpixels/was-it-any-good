@@ -21,7 +21,7 @@ export const apiPaths = {
   ratings: {
     base: `${API_BASE}/ratings`,
     matchById: (mediaType: MediaType, id: number) =>
-      `${apiPaths.ratings.base}/match/${mediaType.toLowerCase()}/${id}}`,
+      `${apiPaths.ratings.base}/match/${mediaType.toLowerCase()}/${id}`,
     byId: (id: number | string) => `${apiPaths.ratings.base}/${id}`,
   },
   users: {
@@ -34,7 +34,7 @@ export const apiPaths = {
     logout: () => `${apiPaths.auth.base}/logout`,
     sessions: {
       base: () => `${apiPaths.auth.base}/sessions`,
-      verify: () => `${apiPaths.auth.sessions.base}/verify`,
+      verify: () => `${apiPaths.auth.sessions.base()}/verify`,
     },
   },
   suggestions: {

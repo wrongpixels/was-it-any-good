@@ -1,79 +1,155 @@
-import { JSX } from 'react';
-import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
+import HoverMessage from '../notifications/HoverMessage';
 import { MediaType } from '../../../../shared/types/media';
-import StarIcons from './StarIcons';
-import ExternalLogo from './ExternalLogo';
+import { UserVote } from '../../../../shared/types/common';
+import StarList from './StarList';
+import {
+  DEF_STAR_WIDTH,
+  RATING_COLORS,
+} from '../../constants/ratings-constants';
+import { JSX } from 'react';
+import { useRating } from '../../hooks/use-rating';
+import { useRatingInteraction } from '../../hooks/use-rating-interaction';
+import DisplayRating from './DisplayRating';
 
-interface PropsStarRating {
-  media: MediaResponse | SeasonResponse;
-  rating: number;
-  valid?: boolean;
+interface StarRatingProps {
+  readonly starWidth?: number;
+  readonly defaultRating?: number;
+  readonly mediaId: number;
+  readonly mediaType: MediaType;
+  readonly showId?: number;
+  readonly interactive?: boolean;
 }
 
 const StarRating = ({
-  rating,
-  valid = true,
-  media,
-}: PropsStarRating): JSX.Element | null => {
-  if (isNaN(rating)) {
-    return null;
-  }
-  const isSeason: boolean =
-    media.mediaType === MediaType.Season && media.showId !== undefined;
-  const starWidth = isSeason ? 23 : 26;
-  return (
-    <div className="flex flex-col items-center mt-1 ">
-      <div className={`relative ${isSeason ? 'h-6' : 'h-7'}`}>
-        <div className="text-gray-300">
-          <StarIcons
-            starWidth={starWidth}
-            defaultRating={rating}
-            mediaId={media.id}
-            mediaType={media.mediaType}
-            showId={
-              media.mediaType === MediaType.Season ? media.showId : undefined
-            }
-          />
-        </div>
-        <div
-          className="absolute top-0 left-0 overflow-hidden"
-          style={{ width: `${rating * 10}%` }}
-        ></div>
-      </div>
+  starWidth = DEF_STAR_WIDTH,
+  defaultRating = 0,
+  mediaId,
+  mediaType,
+  showId,
+  interactive = true,
+}: StarRatingProps): JSX.Element => {
+  const { userRating, handleVote, handleUnvote } = useRating(
+    mediaId,
+    mediaType
+  );
+  const {
+    hoverRating,
+    isHovering,
+    justVoted,
+    handleMouseMove,
+    handleClick,
+    handleMouseLeave,
+    notification,
+  } = useRatingInteraction(
+    userRating?.userScore,
+    (rating) => handleVote(rating, showId),
+    handleUnvote,
+    mediaType,
+    starWidth
+  );
 
-      {valid && rating > 0 ? (
-        <div className="flex items-center justify-center gap-6">
-          {!isSeason && (
-            <div className="w-6">
-              <ExternalLogo
-                media={media}
-                mediaType={media.mediaType}
-                tmdb={true}
-              />
-            </div>
-          )}
-          <span
-            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
+  if (!interactive) {
+    return (
+      <DisplayRating
+        rating={userRating?.userScore || defaultRating}
+        starWidth={starWidth}
+      />
+    );
+  }
+
+  const getStarColor = (): string => {
+    if (isHovering) {
+      const isUnvoteAction: boolean =
+        hoverRating === UserVote.Unvote ||
+        hoverRating === userRating?.userScore;
+      return isUnvoteAction ? RATING_COLORS.delete : RATING_COLORS.hover;
+    }
+    return userRating ? RATING_COLORS.selected : RATING_COLORS.default;
+  };
+
+  const calculateDisplayRating = (): UserVote => {
+    if (!isHovering) {
+      return userRating && userRating.userScore !== UserVote.None
+        ? userRating.userScore
+        : defaultRating;
+    }
+    if (
+      userRating &&
+      userRating.userScore !== UserVote.None &&
+      hoverRating === UserVote.Unvote
+    ) {
+      return userRating.userScore;
+    }
+    return hoverRating !== UserVote.None ? hoverRating : 1;
+  };
+
+  const displayRating: UserVote = calculateDisplayRating();
+  const widthPercentage: string = `${displayRating * 10}%`;
+
+  return (
+    <div className="flex flex-col items-center mt-1">
+      <div
+        ref={notification.ref}
+        className={`relative ${mediaType === MediaType.Season ? 'h-6' : 'h-7'} cursor-pointer flex`}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+      >
+        <div className="w-4" />
+        <div className="relative">
+          <div className="text-gray-300">
+            <StarList
+              width={starWidth}
+              justVoted={false}
+              defaultRating={defaultRating}
+              userRating={userRating?.userScore}
+            />
+          </div>
+          <div
+            className="absolute top-0 left-0 overflow-hidden"
+            style={{ width: widthPercentage }}
           >
-            {rating}
-          </span>
-          {!isSeason && (
-            <div className="w-6 opacity-80">
-              <ExternalLogo
-                media={media}
-                mediaType={media.mediaType}
-                tmdb={false}
+            <div className={getStarColor()}>
+              <StarList
+                width={starWidth}
+                justVoted={justVoted}
+                defaultRating={defaultRating}
+                userRating={userRating?.userScore}
               />
             </div>
+          </div>
+        </div>
+        <div className="w-4" />
+      </div>
+      <div>{notification.field}</div>
+      {isHovering && (
+        <HoverMessage
+          message={getHoverMessage(
+            isHovering,
+            hoverRating,
+            userRating?.userScore
           )}
-        </div>
-      ) : (
-        <div className="text-sm text-gray-500 text-center pt-2 pb-1 italic">
-          Not enough ratings
-        </div>
+        />
       )}
     </div>
   );
+};
+
+const getHoverMessage = (
+  isHovering: boolean,
+  hoverRating: UserVote,
+  userRating: UserVote = 0
+): string => {
+  if (isHovering && hoverRating !== UserVote.None) {
+    if (
+      userRating !== UserVote.None &&
+      (userRating === hoverRating || hoverRating === UserVote.Unvote)
+    ) {
+      return 'Unvote';
+    }
+    return hoverRating.toString();
+  }
+  return '';
 };
 
 export default StarRating;
