@@ -65,7 +65,7 @@ export const useLoginForm = (): LoginFormValues => {
   };
 
   const loginNotification = (): JSX.Element => (
-    <div className="absolute left-1/2 -translate-x-1/2 top-7 min-w-40">
+    <div className="absolute left-1/2 -translate-x-1/2 top-8 min-w-40">
       {loginAlert.field}
     </div>
   );

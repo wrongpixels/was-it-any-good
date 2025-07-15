@@ -14,7 +14,7 @@ const HeaderLogin = (): JSX.Element => {
   } = useLoginForm();
   if (session) {
     return (
-      <div className="absolute right-20 text-amber-100 font-normal">
+      <div className="flex gap-2 items-center text-amber-100 font-normal">
         <div className="flex items-center gap-2 text-sm">
           {session.username}
           <Button size="xs" variant="primary" onClick={handleLogout}>
@@ -31,12 +31,12 @@ const HeaderLogin = (): JSX.Element => {
         <form onSubmit={submitLogin} className="flex gap-2 ">
           <InputField
             {...userInput.getProps()}
-            className="w-30"
+            className="w-20"
             labelClassName="text-gray-200"
           />
           <InputField
             {...passwordInput.getProps()}
-            className="w-30"
+            className="w-20"
             labelClassName="text-gray-200"
           />
           <Button size="xs" type="submit" variant="toolbar">
