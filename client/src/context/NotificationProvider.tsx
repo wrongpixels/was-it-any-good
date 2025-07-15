@@ -13,78 +13,84 @@ import {
 } from '../types/notification-types';
 import NotificationAlert, {
   DEF_NOTIFICATION,
-} from '../components/notifications/Notification';
+} from '../components/notifications/Notification'; // Adjust path to your component file
 import { DEF_OFFSET, offset } from '../../../shared/types/common';
-
-type NotificationData = NotificationProps & { id: number };
 
 export interface NotificationContextValues {
   show: (props: NotificationProps) => void;
   setNotification: (props: SendNotificationProps) => void;
   setError: (props: SendNotificationProps) => void;
-  anchorRef: RefObject<HTMLDivElement | null>;
+  anchorRef?: RefObject<HTMLDivElement | null>; // Optional to match provider value
 }
 
 const NotificationContext = createContext<
   NotificationContextValues | undefined
 >(undefined);
 
-let notificationId = 0;
-
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [activeNotification, setActiveNotification] =
-    useState<NotificationData | null>(null);
+    useState<NotificationProps | null>(null);
 
-  const setNotification = (props: SendNotificationProps) =>
-    setGeneric(
-      props.message,
-      false,
-      props.duration,
-      props.offset,
-      props.anchorRef
-    );
+  const setGeneric = useCallback(
+    (
+      message: string,
+      isError: boolean,
+      duration: number = DEF_NOTIFICATION.duration,
+      offset: offset = DEF_OFFSET,
+      anchorRef?: RefObject<HTMLDivElement | null>
+    ): void => {
+      show({
+        message,
+        isError,
+        duration: Math.min(10000, Math.max(500, duration)),
+        offset,
+        anchorRef,
+      });
+    },
+    []
+  );
 
-  const setError = (props: SendNotificationProps) =>
-    setGeneric(
-      props.message,
-      true,
-      props.duration,
-      props.offset,
-      props.anchorRef
-    );
+  const setNotification = useCallback(
+    (props: SendNotificationProps) =>
+      setGeneric(
+        props.message,
+        false,
+        props.duration,
+        props.offset,
+        props.anchorRef
+      ),
+    [setGeneric]
+  );
 
-  const setGeneric = (
-    message: string,
-    isError: boolean,
-    duration: number = DEF_NOTIFICATION.duration,
-    offset: offset = DEF_OFFSET,
-    anchorRef?: RefObject<HTMLElement | null>
-  ): void => {
-    show({
-      message,
-      isError,
-      duration: Math.min(10000, Math.max(500, duration)),
-      offset,
-      anchorRef,
-    });
-  };
+  const setError = useCallback(
+    (props: SendNotificationProps) =>
+      setGeneric(
+        props.message,
+        true,
+        props.duration,
+        props.offset,
+        props.anchorRef
+      ),
+    [setGeneric]
+  );
 
   const show = useCallback((props: NotificationProps) => {
-    setActiveNotification({ ...props, id: ++notificationId });
+    setActiveNotification(props);
   }, []);
 
+  const handleComplete = useCallback(() => {
+    setActiveNotification(null);
+    activeNotification?.onComplete?.();
+  }, [activeNotification]);
+
   return (
-    <NotificationContext.Provider value={{ show, setError, setNotification }}>
+    <NotificationContext.Provider value={{ show, setNotification, setError }}>
       {children}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999]">
         {activeNotification && (
           <NotificationAlert
-            key={activeNotification.id}
             {...activeNotification}
-            onComplete={() => {
-              setActiveNotification(null);
-              activeNotification.onComplete?.();
-            }}
+            onComplete={handleComplete}
           />
         )}
       </div>
@@ -100,20 +106,21 @@ export const useNotificationContext = () => {
     );
   }
 
-  const anchorRef = useRef<HTMLDivElement>(null);
-
+  const anchorRef = useRef<HTMLDivElement | null>(null);
   const setNotification = useCallback(
-    (props: Omit<SendNotificationProps, 'anchorRef'>) => {
-      context.setNotification({ ...props, anchorRef });
+    (props: SendNotificationProps) => {
+      const finalAnchorRef = props.anchorRef || anchorRef;
+      context.setNotification({ ...props, anchorRef: finalAnchorRef });
     },
-    [context]
+    [context, anchorRef]
   );
 
   const setError = useCallback(
-    (props: Omit<SendNotificationProps, 'anchorRef'>) => {
-      context.setError({ ...props, anchorRef });
+    (props: SendNotificationProps) => {
+      const finalAnchorRef = props.anchorRef || anchorRef;
+      context.setError({ ...props, anchorRef: finalAnchorRef });
     },
-    [context]
+    [context, anchorRef]
   );
 
   return {

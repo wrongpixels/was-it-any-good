@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState, useMemo, useRef } from 'react';
+import { JSX, useEffect, useState, useMemo, useRef, memo } from 'react';
 import {
   DEF_NOTIFICATION_DURATION,
   DEF_NOTIFICATION_OUT_TIME,
@@ -26,7 +26,7 @@ const NotificationAlert = ({
   message,
   isError = false,
   onComplete,
-  duration,
+  duration = DEF_NOTIFICATION_DURATION,
   anchorRef,
   offset,
   ...props
@@ -34,7 +34,6 @@ const NotificationAlert = ({
   const [status, setStatus] = useState<NotiStatus>(NotiStatus.Expired);
   const notificationRef = useRef<HTMLDivElement>(null);
 
-  // Effect 1: Manages the animation lifecycle by changing `status`. This is isolated and correct.
   useEffect(() => {
     if (!message) {
       setStatus(NotiStatus.Expired);
@@ -43,10 +42,9 @@ const NotificationAlert = ({
     let animationFrame1: number, animationFrame2: number;
     let timeoutToFadeout: number, timeoutToStop: number;
 
-    setStatus(NotiStatus.Started); // 1. Render the element, but keep it invisible (opacity-0).
+    setStatus(NotiStatus.Started);
     animationFrame1 = requestAnimationFrame(() => {
       animationFrame2 = requestAnimationFrame(() => {
-        // 3. Now, make it visible, triggering the CSS transition.
         setStatus(NotiStatus.Running);
       });
     });
@@ -68,8 +66,6 @@ const NotificationAlert = ({
     };
   }, [message, duration, onComplete]);
 
-  // Effect 2: Manages positioning by directly manipulating the DOM.
-  // This DOES NOT cause re-renders.
   useEffect(() => {
     const notificationEl = notificationRef.current;
     if (!notificationEl || status === NotiStatus.Expired) return;
@@ -91,8 +87,6 @@ const NotificationAlert = ({
       }
     };
 
-    // 2. Position the element while it's still invisible.
-    // If there's an anchor, track it continuously.
     if (anchorRef?.current) {
       let frameId: number;
       const updateLoop = () => {
@@ -102,12 +96,10 @@ const NotificationAlert = ({
       frameId = requestAnimationFrame(updateLoop);
       return () => cancelAnimationFrame(frameId);
     } else {
-      // Otherwise, just position it once.
       calculateAndSetPosition();
     }
   }, [status, message, anchorRef, offset]);
 
-  // This is now safe. It only runs when `status` changes, which is never during position updates.
   const animationClasses = useMemo((): string => {
     switch (status) {
       case NotiStatus.Started:
@@ -132,8 +124,6 @@ const NotificationAlert = ({
       className={`font-bold shadow-md ${animationClasses} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
         border-3 rounded-md px-2 mt-2 py-1 z-[9999]`}
-      // The style is static and only sets the positioning context.
-      // Top/Left are now controlled outside of React's render cycle.
       style={{ position: 'fixed' }}
     >
       <span className="w-fit whitespace-pre-line">{message}</span>
@@ -141,4 +131,4 @@ const NotificationAlert = ({
   );
 };
 
-export default NotificationAlert;
+export default memo(NotificationAlert);
