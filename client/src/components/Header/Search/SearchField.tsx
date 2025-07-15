@@ -3,13 +3,13 @@ import { useInputField } from '../../../hooks/use-inputfield';
 import SearchResults from './SearchResults';
 import { useSuggestionsQuery } from '../../../queries/suggestions-queries';
 import SearchIcon from './icons/SearchIcon';
+import { InputField } from '../../common/InputField';
 
 const SearchField = (): JSX.Element => {
   const [isDropdownVisible, setDropdownVisible] = useState(true);
   const searchField = useInputField({
     name: 'search',
     placeholder: 'Films, shows...',
-    extraClassNames: 'pl-7',
   });
   const { data: suggestions } = useSuggestionsQuery(searchField.value);
 
@@ -24,7 +24,7 @@ const SearchField = (): JSX.Element => {
       <span className="absolute text-gray-400 ml-0.5 mt-0.5 items-center">
         <SearchIcon active={!!searchField.value} />
       </span>
-      {searchField.field}
+      <InputField {...searchField.getProps()} className="pl-7" />
       {searchField.value && isDropdownVisible && (
         <div className="absolute translate-y-7 -translate-x-2.5">
           <SearchResults
