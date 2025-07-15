@@ -2,6 +2,7 @@ import { JSX } from 'react';
 import Button from '../common/Button';
 import { useLoginForm } from '../../hooks/use-login-form';
 import { InputField } from '../common/InputField';
+import NotificationAlert from '../notifications/Notification';
 
 const HeaderLogin = (): JSX.Element => {
   const {
@@ -21,7 +22,7 @@ const HeaderLogin = (): JSX.Element => {
             Log out
           </Button>
         </div>
-        {loginNotification()}
+        <NotificationAlert {...loginNotification.getProps()} />
       </div>
     );
   }
@@ -44,7 +45,7 @@ const HeaderLogin = (): JSX.Element => {
           </Button>
         </form>
       </div>
-      {loginNotification()}
+      <NotificationAlert {...loginNotification.getProps()} />
     </div>
   );
 };

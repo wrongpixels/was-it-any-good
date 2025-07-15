@@ -9,7 +9,7 @@ export const InputField = ({
   label,
   labelClassName,
   className,
-  ...rest
+  ...props
 }: InputFieldProps): JSX.Element | null => {
   if (!name) {
     return null;
@@ -30,7 +30,7 @@ export const InputField = ({
           'pl-1 py-0.5 pr-1 rounded bg-white text-gray-800 text-sm',
           className
         )}
-        {...rest}
+        {...props}
       />
     </div>
   );

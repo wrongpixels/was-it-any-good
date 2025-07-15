@@ -9,6 +9,7 @@ import { PADDING_ADJUSTER } from '../constants/ratings-constants';
 import { numToVote } from '../utils/ratings-helper';
 import { useNotification } from './use-notification';
 import { useAuth } from './use-auth';
+import { useNotificationContext } from '../context/NotificationProvider';
 
 export const useRatingInteraction = (
   userRating: UserVote | undefined,
@@ -34,6 +35,7 @@ export const useRatingInteraction = (
     React.Dispatch<React.SetStateAction<boolean>>,
   ] = useState<boolean>(false);
   const notification = useNotification();
+  const { show } = useNotificationContext();
   const { session } = useAuth();
 
   const calculateNewRating = (x: number, width: number): UserVote => {
@@ -68,6 +70,12 @@ export const useRatingInteraction = (
       return;
     }
     if (!session || session.expired || !session.userId) {
+      show({
+        message: 'You have to login to vote!',
+        isError: false,
+        duration: DEF_NOTIFICATION_DURATION,
+        anchorRef: notification.anchorRef,
+      });
       notification.setNotification(
         'You have to login to vote!',
         DEF_NOTIFICATION_DURATION,

@@ -1,9 +1,9 @@
-import { JSX, useEffect, useState, useCallback, CSSProperties } from 'react';
-import { offset } from '../../../../shared/types/common';
+import { JSX, useEffect, useState, useMemo, useRef } from 'react';
 import {
   DEF_NOTIFICATION_DURATION,
   DEF_NOTIFICATION_OUT_TIME,
 } from '../../constants/notification-constants';
+import { NotificationProps } from '../../types/notification-types';
 
 enum NotiStatus {
   Idle,
@@ -11,15 +11,6 @@ enum NotiStatus {
   Running,
   Expiring,
   Expired,
-}
-
-interface NotificationProps {
-  message: string;
-  isError?: boolean;
-  onComplete?: VoidFunction;
-  duration: number;
-  ref?: React.RefObject<HTMLDivElement | null>;
-  offset?: offset;
 }
 
 export const DEF_NOTIFICATION: NotificationProps = {
@@ -31,64 +22,31 @@ export const DEF_NOTIFICATION: NotificationProps = {
 const classColors = (isError: boolean): string =>
   isError ? 'text-red-400 bg-red-100' : 'text-notigreen bg-notigreenbg';
 
-const Notification = ({
+const NotificationAlert = ({
   message,
   isError = false,
   onComplete,
   duration,
-  ref,
+  anchorRef,
   offset,
+  ...props
 }: NotificationProps): JSX.Element | null => {
   const [status, setStatus] = useState<NotiStatus>(NotiStatus.Expired);
+  const notificationRef = useRef<HTMLDivElement>(null);
 
-  const [, forceUpdate] = useState({});
-
-  useEffect(() => {
-    // If we received a reference, we force re-render every animation frame
-    // to make it stay in place
-    if (!message || status === NotiStatus.Expired || !rect) {
-      return;
-    }
-
-    //we request animation frames to force the re-render
-    const updateFrame = () => {
-      forceUpdate({});
-      frameId = requestAnimationFrame(updateFrame);
-    };
-    let frameId = requestAnimationFrame(updateFrame);
-
-    return () => cancelAnimationFrame(frameId);
-  }, [message, status]);
-
-  const classAnimation = useCallback((): string => {
-    switch (status) {
-      case NotiStatus.Started:
-        return 'transform translate-y-0 opacity-0 scale-90';
-      case NotiStatus.Running:
-        return 'transform transition-all duration-200 ease-in-out translate-y-0 opacity-100 scale-100';
-      case NotiStatus.Expiring:
-        return 'transform transition-all duration-500 ease-in-out translate-y-4 opacity-0 scale-103';
-      default:
-        return 'opacity-0';
-    }
-  }, [status]);
-
+  // Effect 1: Manages the animation lifecycle by changing `status`. This is isolated and correct.
   useEffect(() => {
     if (!message) {
       setStatus(NotiStatus.Expired);
       return;
     }
+    let animationFrame1: number, animationFrame2: number;
+    let timeoutToFadeout: number, timeoutToStop: number;
 
-    let animationFrame1: number;
-    let animationFrame2: number;
-    let timeoutToFadeout: number;
-    let timeoutToStop: number;
-
-    setStatus(NotiStatus.Started);
-
-    //We nest 2 animation frame requests here to force the animation trigger on render
+    setStatus(NotiStatus.Started); // 1. Render the element, but keep it invisible (opacity-0).
     animationFrame1 = requestAnimationFrame(() => {
       animationFrame2 = requestAnimationFrame(() => {
+        // 3. Now, make it visible, triggering the CSS transition.
         setStatus(NotiStatus.Running);
       });
     });
@@ -103,42 +61,84 @@ const Notification = ({
     }, duration + DEF_NOTIFICATION_OUT_TIME);
 
     return () => {
-      //to clean the animation
       cancelAnimationFrame(animationFrame1);
       cancelAnimationFrame(animationFrame2);
       clearTimeout(timeoutToFadeout);
       clearTimeout(timeoutToStop);
     };
-  }, [message, onComplete]);
+  }, [message, duration, onComplete]);
 
-  if (!message || status === NotiStatus.Expired) {
+  // Effect 2: Manages positioning by directly manipulating the DOM.
+  // This DOES NOT cause re-renders.
+  useEffect(() => {
+    const notificationEl = notificationRef.current;
+    if (!notificationEl || status === NotiStatus.Expired) return;
+
+    const calculateAndSetPosition = () => {
+      const rect = anchorRef?.current?.getBoundingClientRect();
+      if (rect) {
+        const top = rect.bottom + 4 - (offset?.y || 0);
+        const left = rect.left + rect.width / 2 + (offset?.x || 0);
+        notificationEl.style.top = `${top}px`;
+        notificationEl.style.left = `${left}px`;
+        notificationEl.style.transform = 'translateX(-50%)';
+      } else {
+        const topOffset = offset?.y ? `${offset.y}px` : '0px';
+        const leftOffset = offset?.x ? `${offset.x}px` : '0px';
+        notificationEl.style.top = `calc(10% - ${topOffset})`;
+        notificationEl.style.left = `calc(50% + ${leftOffset})`;
+        notificationEl.style.transform = 'translateX(-50%)';
+      }
+    };
+
+    // 2. Position the element while it's still invisible.
+    // If there's an anchor, track it continuously.
+    if (anchorRef?.current) {
+      let frameId: number;
+      const updateLoop = () => {
+        calculateAndSetPosition();
+        frameId = requestAnimationFrame(updateLoop);
+      };
+      frameId = requestAnimationFrame(updateLoop);
+      return () => cancelAnimationFrame(frameId);
+    } else {
+      // Otherwise, just position it once.
+      calculateAndSetPosition();
+    }
+  }, [status, message, anchorRef, offset]);
+
+  // This is now safe. It only runs when `status` changes, which is never during position updates.
+  const animationClasses = useMemo((): string => {
+    switch (status) {
+      case NotiStatus.Started:
+        return 'transform translate-y-0 opacity-0 scale-90';
+      case NotiStatus.Running:
+        return 'transform transition-all duration-200 ease-in-out translate-y-0 opacity-100 scale-100';
+      case NotiStatus.Expiring:
+        return 'transform transition-all duration-500 ease-in-out translate-y-4 opacity-0 scale-103';
+      default:
+        return 'opacity-0';
+    }
+  }, [status]);
+
+  if (status === NotiStatus.Expired) {
     return null;
   }
-  const rect: DOMRect | undefined = ref?.current?.getBoundingClientRect();
-  if (rect && offset) {
-    rect.x += offset.x;
-    rect.y -= offset.y;
-  }
-  const positionStyles: CSSProperties = rect
-    ? {
-        position: 'fixed' as const,
-        left: `${rect.left + rect.width / 2}px`,
-        //We place it at the bottom of the reference rect by default
-        top: rect.bottom + 4,
-        transform: 'translateX(-50%)' as const,
-      }
-    : {};
 
   return (
     <div
-      className={`font-bold shadow-md ${classAnimation()} ${classColors(isError)} 
+      {...props}
+      ref={notificationRef}
+      className={`font-bold shadow-md ${animationClasses} ${classColors(isError)} 
         text-center leading-tight text-sm flex justify-center 
         border-3 rounded-md px-2 mt-2 py-1 z-[9999]`}
-      style={positionStyles}
+      // The style is static and only sets the positioning context.
+      // Top/Left are now controlled outside of React's render cycle.
+      style={{ position: 'fixed' }}
     >
       <span className="w-fit whitespace-pre-line">{message}</span>
     </div>
   );
 };
 
-export default Notification;
+export default NotificationAlert;

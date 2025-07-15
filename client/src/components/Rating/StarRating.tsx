@@ -9,6 +9,7 @@ import {
 import { JSX } from 'react';
 import { useRating } from '../../hooks/use-rating';
 import { useRatingInteraction } from '../../hooks/use-rating-interaction';
+import NotificationAlert from '../notifications/Notification';
 
 interface StarRatingProps {
   readonly starWidth?: number;
@@ -77,7 +78,7 @@ const StarRating = ({
   return (
     <div className="flex flex-col items-center mt-1">
       <div
-        ref={notification.ref}
+        ref={notification.anchorRef}
         className={`relative ${mediaType === MediaType.Season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -109,7 +110,9 @@ const StarRating = ({
         </div>
         <div className="w-4" />
       </div>
-      <div>{notification.field}</div>
+      <div>
+        <NotificationAlert {...notification.getProps()} />
+      </div>
       {isHovering && (
         <HoverMessage
           message={getHoverMessage(

@@ -1,23 +1,14 @@
-import { JSX, useMemo, useRef, useState } from 'react';
-import Notification, {
-  DEF_NOTIFICATION,
-} from '../components/notifications/Notification';
+import { useRef, useState } from 'react';
+import { DEF_NOTIFICATION } from '../components/notifications/Notification';
 import { DEF_OFFSET, offset } from '../../../shared/types/common';
-export interface UseNotificationValues {
-  setNotification: (
-    message: string,
-    duration?: number,
-    offset?: offset
-  ) => void;
-  setError: (message: string, duration?: number, offset?: offset) => void;
-  clear: VoidFunction;
-  field: JSX.Element;
-  ref: React.RefObject<HTMLDivElement | null>;
-}
+import {
+  NotificationProps,
+  UseNotificationValues,
+} from '../types/notification-types';
 
 export const useNotification = (): UseNotificationValues => {
   const [value, setValue] = useState(DEF_NOTIFICATION);
-  //we create and return a reference so the Component can place it and we can then read its rect
+
   const anchorRef = useRef<HTMLDivElement>(null);
 
   const setGeneric = (
@@ -27,9 +18,9 @@ export const useNotification = (): UseNotificationValues => {
     offset: offset = DEF_OFFSET
   ): void => {
     const constrainedDuration = Math.min(10000, Math.max(500, duration));
-
     const rect: DOMRect | undefined =
       anchorRef?.current?.getBoundingClientRect();
+
     if (rect && offset) {
       if (offset.x) {
         rect.x += offset.x;
@@ -43,7 +34,7 @@ export const useNotification = (): UseNotificationValues => {
       message,
       isError,
       duration: constrainedDuration,
-      ref: anchorRef,
+      anchorRef: anchorRef,
       offset,
     });
   };
@@ -62,25 +53,20 @@ export const useNotification = (): UseNotificationValues => {
 
   const clear = () => setValue(DEF_NOTIFICATION);
 
-  const field: JSX.Element = useMemo(
-    () => (
-      <Notification
-        message={value.message}
-        isError={value.isError}
-        onComplete={clear}
-        duration={value.duration}
-        ref={value.ref}
-        offset={value.offset}
-      />
-    ),
-    [value.message, value.isError, value.duration, value.ref, value.offset]
-  );
+  const getNotificationProps = (): NotificationProps => ({
+    message: value.message,
+    isError: value.isError || false,
+    duration: value.duration,
+    onComplete: clear,
+    anchorRef: value.anchorRef,
+    offset: value.offset,
+  });
 
   return {
     setError,
     setNotification,
     clear,
-    field,
-    ref: anchorRef,
+    getProps: getNotificationProps,
+    anchorRef,
   };
 };
