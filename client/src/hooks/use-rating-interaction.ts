@@ -69,6 +69,7 @@ export const useRatingInteraction = (
     if (!session || session.expired || !session.userId) {
       notification.setError({
         message: 'You have to login to vote!',
+        offset: LOW_NOTIFICATION,
         anchorRef: notification.anchorRef,
       });
 
@@ -86,6 +87,7 @@ export const useRatingInteraction = (
     } else if (hoverRating) {
       notification.setNotification({
         message: `Voted ${mediaType}\nwith a ${hoverRating}!`,
+        offset: LOW_NOTIFICATION,
         anchorRef: notification.anchorRef,
       });
       handleVote(hoverRating);

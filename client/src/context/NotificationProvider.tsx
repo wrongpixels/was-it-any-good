@@ -11,10 +11,9 @@ import {
   NotificationProps,
   SendNotificationProps,
 } from '../types/notification-types';
-import NotificationAlert, {
-  DEF_NOTIFICATION,
-} from '../components/notifications/Notification'; // Adjust path to your component file
+import NotificationAlert from '../components/notifications/Notification'; // Adjust path to your component file
 import { DEF_OFFSET, offset } from '../../../shared/types/common';
+import { DEF_NOTIFICATION } from '../constants/notification-constants';
 
 export interface NotificationContextValues {
   show: (props: NotificationProps) => void;

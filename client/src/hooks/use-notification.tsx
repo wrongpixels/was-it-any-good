@@ -1,10 +1,10 @@
 import { useRef, useState } from 'react';
-import { DEF_NOTIFICATION } from '../components/notifications/Notification';
 import { DEF_OFFSET, offset } from '../../../shared/types/common';
 import {
   NotificationProps,
   UseNotificationValues,
 } from '../types/notification-types';
+import { DEF_NOTIFICATION } from '../constants/notification-constants';
 
 export const useNotification = (): UseNotificationValues => {
   const [value, setValue] = useState(DEF_NOTIFICATION);

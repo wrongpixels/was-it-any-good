@@ -13,12 +13,6 @@ enum NotiStatus {
   Expired,
 }
 
-export const DEF_NOTIFICATION: NotificationProps = {
-  message: '',
-  isError: false,
-  duration: DEF_NOTIFICATION_DURATION,
-};
-
 const classColors = (isError: boolean): string =>
   isError ? 'text-red-400 bg-red-100' : 'text-notigreen bg-notigreenbg';
 
@@ -73,7 +67,7 @@ const NotificationAlert = ({
     const calculateAndSetPosition = () => {
       const rect = anchorRef?.current?.getBoundingClientRect();
       if (rect) {
-        const top = rect.bottom + 24 - (offset?.y || 0);
+        const top = rect.bottom - (offset?.y || 0);
         const left = rect.left + rect.width / 2 + (offset?.x || 0);
         notificationEl.style.top = `${top}px`;
         notificationEl.style.left = `${left}px`;

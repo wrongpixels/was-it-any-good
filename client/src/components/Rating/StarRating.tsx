@@ -77,7 +77,6 @@ const StarRating = ({
   return (
     <div className="flex flex-col items-center mt-1">
       <div
-        ref={notification.anchorRef}
         className={`relative ${mediaType === MediaType.Season ? 'h-6' : 'h-7'} cursor-pointer flex`}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -85,7 +84,7 @@ const StarRating = ({
       >
         <div className="w-4" />
         <div className="relative">
-          <div className="text-gray-300">
+          <div className="text-gray-300" ref={notification.anchorRef}>
             <StarList
               width={starWidth}
               justVoted={false}
@@ -107,7 +106,7 @@ const StarRating = ({
             </div>
           </div>
         </div>
-        <div className="w-4" ref={notification.anchorRef} />
+        <div className="w-4" />
       </div>
       {isHovering && (
         <HoverMessage
