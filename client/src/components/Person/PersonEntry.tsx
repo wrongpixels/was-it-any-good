@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
-import Poster from '../Poster/Poster';
+import BasicPoster from '../Poster/BasicPoster';
 import Title from '../Title';
 import { setTitle } from '../../utils/page-info-setter';
 
@@ -31,7 +31,7 @@ const PersonEntry = (): JSX.Element | null => {
         country={person.country}
       />
       <div className="pt-3">
-        <Poster title={person.name} src={person.image} alt={person.name} />
+        <BasicPoster title={person.name} src={person.image} alt={person.name} />
         {person.roles?.length}
       </div>
     </div>

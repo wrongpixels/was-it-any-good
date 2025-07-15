@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import EntrySection from '../EntrySection';
 import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
-import MediaPoster from '../Poster/MediaPoster';
+import MediaEntryPoster from '../Poster/MediaEntryPoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
 import { useParams } from 'react-router-dom';
@@ -110,7 +110,7 @@ const MediaEntry = ({
           </div>
         </div>
         <div className="w-50">
-          <MediaPoster media={media} />
+          <MediaEntryPoster media={media} />
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}

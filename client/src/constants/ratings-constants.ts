@@ -1,6 +1,5 @@
-//Star icons add around 1 extra pixel to their display size, so we
-//correct it for a snappier hover effect
-export const PADDING_ADJUSTER: number = 5;
+//A correction for a snappier hover effect on stars
+export const PADDING_ADJUSTER: number = 4;
 export const DEF_STAR_WIDTH: number = 26;
 export const DEF_MINI_STAR_WIDTH: number = 23;
 

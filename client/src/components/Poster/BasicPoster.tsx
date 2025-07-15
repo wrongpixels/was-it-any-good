@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 
-interface PosterPorps {
+interface BasicPosterProps {
   src: string;
   alt: string;
   title?: string;
 }
 
-const Poster = (props: PosterPorps): JSX.Element => {
+const BasicPoster = (props: BasicPosterProps): JSX.Element => {
   return (
     <div className="inline-block bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
       <img
@@ -18,4 +18,4 @@ const Poster = (props: PosterPorps): JSX.Element => {
   );
 };
 
-export default Poster;
+export default BasicPoster;

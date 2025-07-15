@@ -1,17 +1,17 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
-import Rating from '../Rating/Rating';
+import PosterRating from './PosterRating';
 import {
   calculateAverage,
   calculateShowAverage,
 } from '../../utils/ratings-helper';
 import { MediaType } from '../../../../shared/types/media';
 
-interface MediaPosterProps {
+interface MediaEntryPosterProps {
   media: MediaResponse;
 }
 
-const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
+const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
   const average: number =
     media.mediaType === MediaType.Show
       ? calculateShowAverage(media)
@@ -27,11 +27,11 @@ const MediaPoster = ({ media }: MediaPosterProps): JSX.Element => {
           loading="lazy"
         />
         <div className="text-center">
-          <Rating rating={average} media={media} valid={true} />
+          <PosterRating rating={average} media={media} valid={true} />
         </div>
       </div>
     </div>
   );
 };
 
-export default MediaPoster;
+export default MediaEntryPoster;

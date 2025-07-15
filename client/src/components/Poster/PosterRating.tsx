@@ -1,24 +1,24 @@
 import { JSX } from 'react';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
-import StarRating from './StarRating';
-import ExternalLogo from './ExternalLogo';
+import StarRating from '../Rating/StarRating';
+import ExternalLogo from '../Rating/ExternalLogo';
 import {
   DEF_MINI_STAR_WIDTH,
   DEF_STAR_WIDTH,
 } from '../../constants/ratings-constants';
 
-interface RatingProps {
+interface PosterRatingProps {
   media: MediaResponse | SeasonResponse;
   rating: number;
   valid?: boolean;
 }
 
-const Rating = ({
+const PosterRating = ({
   rating,
   valid = true,
   media,
-}: RatingProps): JSX.Element | null => {
+}: PosterRatingProps): JSX.Element | null => {
   if (isNaN(rating)) {
     return null;
   }
@@ -80,4 +80,4 @@ const Rating = ({
   );
 };
 
-export default Rating;
+export default PosterRating;

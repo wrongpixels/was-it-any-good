@@ -9,7 +9,6 @@ import {
 import { JSX } from 'react';
 import { useRating } from '../../hooks/use-rating';
 import { useRatingInteraction } from '../../hooks/use-rating-interaction';
-import DisplayRating from './DisplayRating';
 
 interface StarRatingProps {
   readonly starWidth?: number;
@@ -17,7 +16,6 @@ interface StarRatingProps {
   readonly mediaId: number;
   readonly mediaType: MediaType;
   readonly showId?: number;
-  readonly interactive?: boolean;
 }
 
 const StarRating = ({
@@ -26,7 +24,6 @@ const StarRating = ({
   mediaId,
   mediaType,
   showId,
-  interactive = true,
 }: StarRatingProps): JSX.Element => {
   const { userRating, handleVote, handleUnvote } = useRating(
     mediaId,
@@ -47,15 +44,6 @@ const StarRating = ({
     mediaType,
     starWidth
   );
-
-  if (!interactive) {
-    return (
-      <DisplayRating
-        rating={userRating?.userScore || defaultRating}
-        starWidth={starWidth}
-      />
-    );
-  }
 
   const getStarColor = (): string => {
     if (isHovering) {
