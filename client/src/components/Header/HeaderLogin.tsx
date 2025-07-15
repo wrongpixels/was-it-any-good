@@ -2,17 +2,10 @@ import { JSX } from 'react';
 import Button from '../common/Button';
 import { useLoginForm } from '../../hooks/use-login-form';
 import { InputField } from '../common/InputField';
-import NotificationAlert from '../notifications/Notification';
 
 const HeaderLogin = (): JSX.Element => {
-  const {
-    session,
-    handleLogout,
-    submitLogin,
-    loginNotification,
-    passwordInput,
-    userInput,
-  } = useLoginForm();
+  const { session, handleLogout, submitLogin, passwordInput, userInput } =
+    useLoginForm();
   if (session) {
     return (
       <div className="flex gap-2 items-center text-amber-100 font-normal">
@@ -22,7 +15,6 @@ const HeaderLogin = (): JSX.Element => {
             Log out
           </Button>
         </div>
-        <NotificationAlert {...loginNotification.getProps()} />
       </div>
     );
   }
@@ -45,7 +37,6 @@ const HeaderLogin = (): JSX.Element => {
           </Button>
         </form>
       </div>
-      <NotificationAlert {...loginNotification.getProps()} />
     </div>
   );
 };

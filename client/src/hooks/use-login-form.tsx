@@ -4,9 +4,7 @@ import { AuthContextValues } from '../context/AuthProvider';
 import { formatToAPIError } from '../utils/error-handler';
 import { useAuth } from './use-auth';
 import { useInputField } from './use-inputfield';
-import { useNotification } from './use-notification';
 import { InputFieldHookValues } from '../types/input-field-types';
-import { UseNotificationValues } from '../types/notification-types';
 import { useNotificationContext } from '../context/NotificationProvider';
 
 interface LoginFormValues {
@@ -15,13 +13,11 @@ interface LoginFormValues {
   passwordInput: InputFieldHookValues;
   submitLogin: (e: React.FormEvent<HTMLFormElement>) => void;
   handleLogout: () => void;
-  loginNotification: UseNotificationValues;
 }
 
 export const useLoginForm = (): LoginFormValues => {
   const { session, login, logout }: AuthContextValues = useAuth();
-  const loginNotification: UseNotificationValues = useNotification();
-  const newNotification = useNotificationContext();
+  const loginNotification = useNotificationContext();
   const userInput: InputFieldHookValues = useInputField({
     label: 'User',
     name: 'username',
@@ -39,32 +35,37 @@ export const useLoginForm = (): LoginFormValues => {
       password: passwordInput.value,
     };
     if (!loginData.username && !loginData.password) {
-      loginNotification.setError(`User and Password are required!`);
-      newNotification.show({ message: 'Test', isError: false, duration: 2000 });
+      loginNotification.setError({
+        message: 'User and Password are required!',
+      });
       return;
     }
     if (!loginData.username || !loginData.password) {
-      loginNotification.setError(
-        `${loginData.username ? 'Username' : 'Password'} cannot be empty`
-      );
-      newNotification.show({ message: 'Test', isError: false, duration: 2000 });
-
+      loginNotification.setError({
+        message: `${loginData.username ? 'Username' : 'Password'} cannot be empty`,
+      });
       return;
     }
     login(loginData, {
       onError: (error: Error) => {
         const apiError: APIError = formatToAPIError(error);
-        loginNotification.setError(apiError.message);
+        loginNotification.setError({
+          message: apiError.message,
+        });
       },
       onSuccess: (data: UserSessionData) => {
-        loginNotification.setNotification(`Welcome back, ${data.username}!`);
+        loginNotification.setNotification({
+          message: `Welcome back, ${data.username}!`,
+        });
       },
     });
   };
 
   const handleLogout = () => {
     if (session) {
-      loginNotification.setNotification(`See you soon, ${session?.username}!`);
+      loginNotification.setNotification({
+        message: `See you soon, ${session?.username}!`,
+      });
     }
     logout();
   };
@@ -74,6 +75,5 @@ export const useLoginForm = (): LoginFormValues => {
     passwordInput,
     submitLogin,
     handleLogout,
-    loginNotification,
   };
 };

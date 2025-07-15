@@ -9,6 +9,15 @@ export interface NotificationProps {
   anchorRef?: React.RefObject<HTMLDivElement | null>;
 }
 
+export interface SendNotificationProps {
+  message: string;
+  isError?: boolean;
+  duration?: number;
+  onComplete?: VoidFunction;
+  offset?: offset;
+  anchorRef?: React.RefObject<HTMLDivElement | null>;
+}
+
 export interface UseNotificationValues {
   setNotification: (
     message: string,

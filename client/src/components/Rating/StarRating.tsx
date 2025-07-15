@@ -9,7 +9,6 @@ import {
 import { JSX } from 'react';
 import { useRating } from '../../hooks/use-rating';
 import { useRatingInteraction } from '../../hooks/use-rating-interaction';
-import NotificationAlert from '../notifications/Notification';
 
 interface StarRatingProps {
   readonly starWidth?: number;
@@ -108,10 +107,7 @@ const StarRating = ({
             </div>
           </div>
         </div>
-        <div className="w-4" />
-      </div>
-      <div>
-        <NotificationAlert {...notification.getProps()} />
+        <div className="w-4" ref={notification.anchorRef} />
       </div>
       {isHovering && (
         <HoverMessage

@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
-import {
-  DEF_NOTIFICATION_DURATION,
-  LOW_NOTIFICATION,
-} from '../constants/notification-constants';
+import { LOW_NOTIFICATION } from '../constants/notification-constants';
 import { PADDING_ADJUSTER } from '../constants/ratings-constants';
 import { numToVote } from '../utils/ratings-helper';
-import { useNotification } from './use-notification';
 import { useAuth } from './use-auth';
-import { useNotificationContext } from '../context/NotificationProvider';
+import {
+  NotificationContextValues,
+  useNotificationContext,
+} from '../context/NotificationProvider';
 
 export const useRatingInteraction = (
   userRating: UserVote | undefined,
@@ -34,8 +33,7 @@ export const useRatingInteraction = (
     boolean,
     React.Dispatch<React.SetStateAction<boolean>>,
   ] = useState<boolean>(false);
-  const notification = useNotification();
-  const { show } = useNotificationContext();
+  const notification: NotificationContextValues = useNotificationContext();
   const { session } = useAuth();
 
   const calculateNewRating = (x: number, width: number): UserVote => {
@@ -49,7 +47,6 @@ export const useRatingInteraction = (
         ? UserVote.Unvote
         : UserVote.One;
     }
-
     return numToVote(rating);
   };
 
@@ -70,34 +67,27 @@ export const useRatingInteraction = (
       return;
     }
     if (!session || session.expired || !session.userId) {
-      show({
+      notification.setError({
         message: 'You have to login to vote!',
-        isError: false,
-        duration: DEF_NOTIFICATION_DURATION,
         anchorRef: notification.anchorRef,
       });
-      notification.setNotification(
-        'You have to login to vote!',
-        DEF_NOTIFICATION_DURATION,
-        LOW_NOTIFICATION
-      );
+
       return;
     }
     if (hoverRating === UserVote.Unvote || userRating === hoverRating) {
       if (userRating) {
-        notification.setNotification(
-          `Unvoted ${mediaType}`,
-          DEF_NOTIFICATION_DURATION,
-          LOW_NOTIFICATION
-        );
+        notification.setNotification({
+          message: `Unvoted ${mediaType}`,
+          offset: LOW_NOTIFICATION,
+          anchorRef: notification.anchorRef,
+        });
         handleUnvote();
       }
     } else if (hoverRating) {
-      notification.setNotification(
-        `Voted ${mediaType}\nwith a ${hoverRating}!`,
-        DEF_NOTIFICATION_DURATION,
-        LOW_NOTIFICATION
-      );
+      notification.setNotification({
+        message: `Voted ${mediaType}\nwith a ${hoverRating}!`,
+        anchorRef: notification.anchorRef,
+      });
       handleVote(hoverRating);
       setJustVoted(true);
       setTimeout(() => setJustVoted(false), 200);

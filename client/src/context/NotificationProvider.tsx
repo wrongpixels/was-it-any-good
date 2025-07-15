@@ -4,71 +4,122 @@ import {
   createContext,
   useContext,
   ReactNode,
+  RefObject,
+  useRef,
 } from 'react';
-import { NotificationProps } from '../types/notification-types';
-import NotificationAlert from '../components/notifications/Notification';
+import {
+  NotificationProps,
+  SendNotificationProps,
+} from '../types/notification-types';
+import NotificationAlert, {
+  DEF_NOTIFICATION,
+} from '../components/notifications/Notification';
+import { DEF_OFFSET, offset } from '../../../shared/types/common';
 
-// Define the shape of a single notification in our state
-// We add a unique ID to track it
 type NotificationData = NotificationProps & { id: number };
 
-// Define what the context will provide: a function to show a notification
-interface NotificationContextType {
-  show: (props: Omit<NotificationData, 'id'>) => void;
+export interface NotificationContextValues {
+  show: (props: NotificationProps) => void;
+  setNotification: (props: SendNotificationProps) => void;
+  setError: (props: SendNotificationProps) => void;
+  anchorRef: RefObject<HTMLDivElement | null>;
 }
 
-const NotificationContext = createContext<NotificationContextType | undefined>(
-  undefined
-);
+const NotificationContext = createContext<
+  NotificationContextValues | undefined
+>(undefined);
 
 let notificationId = 0;
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
-  const [notifications, setNotifications] = useState<NotificationData[]>([]);
+  const [activeNotification, setActiveNotification] =
+    useState<NotificationData | null>(null);
 
-  // Function to remove a notification by its ID
-  const remove = useCallback((id: number) => {
-    setNotifications((current) => current.filter((n) => n.id !== id));
-  }, []);
+  const setNotification = (props: SendNotificationProps) =>
+    setGeneric(
+      props.message,
+      false,
+      props.duration,
+      props.offset,
+      props.anchorRef
+    );
 
-  // Function to add a new notification
-  const show = useCallback((props: Omit<NotificationData, 'id'>) => {
-    const newId = notificationId++;
-    setNotifications((current) => [...current, { ...props, id: newId }]);
+  const setError = (props: SendNotificationProps) =>
+    setGeneric(
+      props.message,
+      true,
+      props.duration,
+      props.offset,
+      props.anchorRef
+    );
+
+  const setGeneric = (
+    message: string,
+    isError: boolean,
+    duration: number = DEF_NOTIFICATION.duration,
+    offset: offset = DEF_OFFSET,
+    anchorRef?: RefObject<HTMLElement | null>
+  ): void => {
+    show({
+      message,
+      isError,
+      duration: Math.min(10000, Math.max(500, duration)),
+      offset,
+      anchorRef,
+    });
+  };
+
+  const show = useCallback((props: NotificationProps) => {
+    setActiveNotification({ ...props, id: ++notificationId });
   }, []);
 
   return (
-    <NotificationContext.Provider value={{ show }}>
+    <NotificationContext.Provider value={{ show, setError, setNotification }}>
       {children}
-      {/* 
-        This is the container where all notifications will be rendered,
-        completely separate from the rest of your app's component tree.
-      */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999]">
-        {notifications.map((noti) => (
+        {activeNotification && (
           <NotificationAlert
-            key={noti.id}
-            {...noti}
-            // We hijack onComplete to remove the notification from state
+            key={activeNotification.id}
+            {...activeNotification}
             onComplete={() => {
-              remove(noti.id);
-              // Call the original onComplete if it was provided
-              noti.onComplete?.();
+              setActiveNotification(null);
+              activeNotification.onComplete?.();
             }}
           />
-        ))}
+        )}
       </div>
     </NotificationContext.Provider>
   );
 };
 
-// The hook that other components will use
-export const useNotificationContext = (): NotificationContextType => {
+export const useNotificationContext = () => {
   const context = useContext(NotificationContext);
   if (!context) {
     throw new Error(
-      'useNotification must be used within a NotificationProvider'
+      'useNotificationContext must be used within a NotificationProvider'
     );
   }
-  return context;
+
+  const anchorRef = useRef<HTMLDivElement>(null);
+
+  const setNotification = useCallback(
+    (props: Omit<SendNotificationProps, 'anchorRef'>) => {
+      context.setNotification({ ...props, anchorRef });
+    },
+    [context]
+  );
+
+  const setError = useCallback(
+    (props: Omit<SendNotificationProps, 'anchorRef'>) => {
+      context.setError({ ...props, anchorRef });
+    },
+    [context]
+  );
+
+  return {
+    ...context,
+    setNotification,
+    setError,
+    anchorRef,
+  };
 };

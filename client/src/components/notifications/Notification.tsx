@@ -77,7 +77,7 @@ const NotificationAlert = ({
     const calculateAndSetPosition = () => {
       const rect = anchorRef?.current?.getBoundingClientRect();
       if (rect) {
-        const top = rect.bottom + 4 - (offset?.y || 0);
+        const top = rect.bottom + 24 - (offset?.y || 0);
         const left = rect.left + rect.width / 2 + (offset?.x || 0);
         notificationEl.style.top = `${top}px`;
         notificationEl.style.left = `${left}px`;
@@ -85,7 +85,7 @@ const NotificationAlert = ({
       } else {
         const topOffset = offset?.y ? `${offset.y}px` : '0px';
         const leftOffset = offset?.x ? `${offset.x}px` : '0px';
-        notificationEl.style.top = `calc(10% - ${topOffset})`;
+        notificationEl.style.top = `calc(40px + ${topOffset})`;
         notificationEl.style.left = `calc(50% + ${leftOffset})`;
         notificationEl.style.transform = 'translateX(-50%)';
       }
