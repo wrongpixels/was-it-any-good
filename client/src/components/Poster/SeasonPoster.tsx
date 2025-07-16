@@ -2,6 +2,7 @@ import { JSX } from 'react';
 import { SeasonResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
 import { calculateAverage } from '../../utils/ratings-helper';
+import LazyImage from '../common/LazyImage';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
@@ -17,12 +18,11 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
           {media.name}
         </div>
       </div>
-      <img
+      <LazyImage
         src={media.image}
         alt={media.name}
         title={media.name}
         className="rounded shadow ring-1 ring-gray-300"
-        loading="lazy"
       />
       <div>
         <PosterRating rating={average} media={media} valid={true} />
