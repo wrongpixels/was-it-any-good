@@ -11,7 +11,9 @@ const SearchField = (): JSX.Element => {
     name: 'search',
     placeholder: 'Films, shows...',
   });
-  const { data: suggestions } = useSuggestionsQuery(searchField.value);
+  const { data: suggestions, isLoading } = useSuggestionsQuery(
+    searchField.value
+  );
 
   useEffect(() => {
     if (searchField.value) {
@@ -29,6 +31,7 @@ const SearchField = (): JSX.Element => {
         <div className="absolute translate-y-7 -translate-x-2.5">
           <SearchResults
             searchResults={suggestions}
+            isLoading={isLoading}
             searchValue={searchField.value}
             onClose={() => setDropdownVisible(false)}
             cleanField={searchField.reset}

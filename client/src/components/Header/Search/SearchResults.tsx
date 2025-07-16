@@ -1,15 +1,16 @@
-import { JSX, useState } from 'react';
+import { JSX } from 'react';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import useListNavigation from '../../../hooks/use-list-navigation';
 import Separator from '../../common/Separator';
 import SearchPoster from './components/SearchPoster';
 import FirstSearchRow from './rows/FirstSearchRow';
 import SearchRow from './rows/SearchRow';
-import { useNavigate } from 'react-router-dom';
 import { urlFromIndexMedia } from '../../../utils/url-helper';
+import LoadingSearchRow from './rows/LoadingSearchRow';
 
 interface SearchResultsProps {
   searchValue: string;
+  isLoading: boolean;
   searchResults: IndexMediaData[] | undefined;
   onClose: () => void;
   cleanField: VoidFunction;
@@ -17,34 +18,33 @@ interface SearchResultsProps {
 
 const SearchResults = ({
   searchValue,
+  isLoading,
   onClose,
   cleanField,
   searchResults = [],
 }: SearchResultsProps): JSX.Element | null => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const navigate = useNavigate();
   const totalItems = searchResults.length === 0 ? 1 : searchResults.length + 1;
-  const { activeIndex, ref } = useListNavigation({
-    maxIndex: totalItems,
-    onEsc: onClose,
-    onClick: () => navigateToHover(),
-    onClickOut: onClose,
-    onEnter: () => navigateToActive(),
-  });
-  const navigateToHover = (): void => {
-    handleNavigate(hoveredIndex);
-  };
-  const navigateToActive = (): void => {
-    handleNavigate(activeIndex);
-  };
-  const handleNavigate = (targetIndex: number | null): void => {
-    if (targetIndex && targetIndex > 0) {
-      navigate(urlFromIndexMedia(searchResults[targetIndex - 1]));
-      cleanField();
-    }
-    onClose();
-  };
+  const { activeIndex, hoveredIndex, setHoveredIndex, navigateTo, ref } =
+    useListNavigation({
+      maxIndex: totalItems,
+      onEsc: onClose,
+      onClick: () => navigateToHoverResult(),
+      onEnter: () => navigateToActiveResult(),
+      onClickOut: onClose,
+      onNavigate: cleanField,
+    });
 
+  const navigateToHoverResult = (): void => {
+    navigateToResult(hoveredIndex);
+  };
+  const navigateToActiveResult = (): void => {
+    navigateToResult(activeIndex);
+  };
+  const navigateToResult = (targetIndex: number | null): void => {
+    if (targetIndex && targetIndex > 0) {
+      navigateTo(urlFromIndexMedia(searchResults[targetIndex - 1]));
+    }
+  };
   let posterToShow: IndexMediaData | null = null;
   if (hoveredIndex !== null && hoveredIndex > 0) {
     posterToShow = searchResults[hoveredIndex - 1];
@@ -59,7 +59,8 @@ const SearchResults = ({
           isSelected={activeIndex === 0}
           onHover={(isHovering) => setHoveredIndex(isHovering ? 0 : null)}
         />
-        {searchResults?.length > 0 && (
+        <LoadingSearchRow condition={isLoading} />
+        {!isLoading && searchResults?.length > 0 && (
           <div>
             <Separator margin={false} />
             {searchResults.map((mediaItem, index) => {

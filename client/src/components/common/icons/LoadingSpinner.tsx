@@ -1,10 +1,16 @@
-const LoadingSpinner = () => {
+import { OptClassNameProps } from '../../../types/common-props-types';
+import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
+
+const LoadingSpinner = (props: OptClassNameProps) => {
   return (
     <svg
       viewBox="0 0 16 16"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
-      className="animate-spin"
+      className={mergeClassnames(
+        'text-starblue animate-spin w-4',
+        props.className
+      )}
     >
       <g fill="currentColor" fillRule="evenodd" clipRule="evenodd">
         <path

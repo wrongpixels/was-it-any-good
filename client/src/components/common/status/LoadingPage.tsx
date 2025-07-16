@@ -8,9 +8,7 @@ const LoadingPage = ({ text }: OptStringProps) => {
   setTitle(displayString);
   return (
     <div className="flex flex-row gap-2 justify-center w-full font-medium text-xl items-center whitespace-pre-line">
-      <div className="w-4 text-starblue">
-        <LoadingSpinner />
-      </div>
+      <LoadingSpinner />
       {displayString}
     </div>
   );
