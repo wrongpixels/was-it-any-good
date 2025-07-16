@@ -1,4 +1,9 @@
 import { ClassNameValue } from 'tailwind-merge';
+import { MediaType } from '../../../shared/types/media';
+
+export interface MediaTypeProps {
+  mediaType: MediaType;
+}
 
 export interface OptStringProps {
   text?: string;

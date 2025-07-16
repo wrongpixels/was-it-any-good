@@ -1,5 +1,8 @@
 import StarList from './StarList';
-import { DEF_STAR_WIDTH } from '../../constants/ratings-constants';
+import {
+  DEF_STAR_WIDTH,
+  RATING_COLORS,
+} from '../../constants/ratings-constants';
 import { JSX } from 'react';
 
 interface DisplayRatingProps {
@@ -27,7 +30,7 @@ const DisplayRating = ({
           className="absolute top-0 left-0 overflow-hidden"
           style={{ width: widthPercentage }}
         >
-          <div className="text-yellow-400">
+          <div className={RATING_COLORS.default}>
             <StarList
               width={starWidth}
               justVoted={false}

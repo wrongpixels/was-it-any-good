@@ -1,11 +1,7 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
-import {
-  calculateAverage,
-  calculateShowAverage,
-} from '../../utils/ratings-helper';
-import { MediaType } from '../../../../shared/types/media';
+import { getMediaAverageRating } from '../../utils/ratings-helper';
 import LazyImage from '../common/LazyImage';
 
 interface MediaEntryPosterProps {
@@ -13,10 +9,7 @@ interface MediaEntryPosterProps {
 }
 
 const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
-  const average: number =
-    media.mediaType === MediaType.Show
-      ? calculateShowAverage(media)
-      : calculateAverage(media);
+  const average: number = getMediaAverageRating(media);
   return (
     <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
       <LazyImage

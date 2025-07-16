@@ -1,5 +1,6 @@
 import { UserVote } from '../../../shared/types/common';
 import {
+  IndexMediaData,
   MediaResponse,
   SeasonResponse,
   ShowResponse,
@@ -143,12 +144,29 @@ export const numToVote = (num: number): UserVote => {
   return Math.max(-1, Math.min(num, 10));
 };
 
+export const isIndexMedia = (
+  media: MediaResponse | SeasonResponse | IndexMediaData
+): media is IndexMediaData => 'addedToMedia' in media;
+
+export const isShow = (
+  media: MediaResponse | SeasonResponse | IndexMediaData
+): media is ShowResponse => 'seasonCount' in media;
+
+export const getMediaAverageRating = (
+  media: MediaResponse | SeasonResponse | IndexMediaData
+): number => {
+  if (isShow(media)) {
+    return calculateShowAverage(media);
+  }
+  return calculateAverage(media);
+};
+
 export const getMediaCurrentRating = (
-  media: MediaResponse | SeasonResponse
+  media: MediaResponse | SeasonResponse | IndexMediaData
 ): number => (media.rating > 0 ? media.rating : media.baseRating);
 
 export const calculateAverage = (
-  media: MediaResponse | SeasonResponse
+  media: MediaResponse | SeasonResponse | IndexMediaData
 ): number => {
   const globalAverage: number = getMediaCurrentRating(media);
   return Math.round(globalAverage * 10) / 10;

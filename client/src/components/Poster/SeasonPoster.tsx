@@ -1,15 +1,15 @@
 import { JSX } from 'react';
 import { SeasonResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
-import { calculateAverage } from '../../utils/ratings-helper';
 import LazyImage from '../common/LazyImage';
+import { getMediaAverageRating } from '../../utils/ratings-helper';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
 }
 
 const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
-  const average: number = calculateAverage(media);
+  const average: number = getMediaAverageRating(media);
 
   return (
     <div className="text-center bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">

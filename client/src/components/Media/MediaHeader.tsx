@@ -23,7 +23,11 @@ const MediaHeader = ({ media }: MediaHeaderProps) => {
             </span>
           </div>
         )}
-        <span>{media.genres && <GenreSection genres={media.genres} />}</span>
+        <div>
+          {media.genres && (
+            <GenreSection mediaType={media.mediaType} genres={media.genres} />
+          )}
+        </div>
       </div>
     </div>
   );

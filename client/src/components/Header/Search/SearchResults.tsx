@@ -45,15 +45,15 @@ const SearchResults = ({
       navigateTo(urlFromIndexMedia(searchResults[targetIndex - 1]));
     }
   };
-  let posterToShow: IndexMediaData | null = null;
+  let mediaToShow: IndexMediaData | null = null;
   if (hoveredIndex !== null && hoveredIndex > 0) {
-    posterToShow = searchResults[hoveredIndex - 1];
+    mediaToShow = searchResults[hoveredIndex - 1];
   } else if (activeIndex > 0 && activeIndex <= searchResults.length) {
-    posterToShow = searchResults[activeIndex - 1];
+    mediaToShow = searchResults[activeIndex - 1];
   }
   return (
     <div className="flex flex-row gap-2 relative" ref={ref}>
-      <div className="bg-white border-3 flex flex-col border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500">
+      <div className="bg-white border-3 flex flex-col border-white rounded-lg ring-1 ring-gray-300 shadow-lg cursor-pointer text-[15px] text-gray-500 w-max">
         <FirstSearchRow
           searchValue={searchValue}
           isSelected={activeIndex === 0}
@@ -83,7 +83,7 @@ const SearchResults = ({
       </div>
       <div className="absolute left-full ml-2 min-h-50 h-full flex items-center ">
         <div className="flex-shrink-0">
-          <SearchPoster imageSrc={posterToShow?.image ?? null} />
+          <SearchPoster media={mediaToShow} />
         </div>
       </div>
     </div>
