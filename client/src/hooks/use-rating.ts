@@ -10,7 +10,7 @@ import { useAuth } from './use-auth';
 
 export const useRating = (mediaId: number, mediaType: MediaType) => {
   const { session } = useAuth();
-  const { data: userRating } = useRatingByMedia({
+  const { data: userRating, isLoading } = useRatingByMedia({
     mediaId,
     mediaType,
     userId: session?.userId,
@@ -34,5 +34,5 @@ export const useRating = (mediaId: number, mediaType: MediaType) => {
     }
   };
 
-  return { userRating, handleVote, handleUnvote };
+  return { userRating, handleVote, handleUnvote, isLoading };
 };

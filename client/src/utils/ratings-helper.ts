@@ -198,7 +198,7 @@ export const calculateShowAverage = (media: ShowResponse): number => {
     ) / validSeasons.length;
   //if the show itself has not been voted, we return the seasons
   if (globalAverage === 0 && seasonsAverage) {
-    return seasonsAverage;
+    return Math.round(seasonsAverage * 10) / 10;
   }
 
   //We round the result to only 1 decimal

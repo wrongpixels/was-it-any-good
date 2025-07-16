@@ -1,6 +1,6 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
-import { Media, Show } from '..';
+import { Media, Rating, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
 
 class Season extends Media<
@@ -13,6 +13,14 @@ class Season extends Media<
   declare episodeCount: number;
 
   static associate() {
+    Season.hasMany(Rating, {
+      foreignKey: 'mediaId',
+      as: 'ratings',
+      scope: {
+        mediaType: MediaType.Season,
+      },
+      constraints: false,
+    });
     this.belongsTo(Show, {
       foreignKey: 'showId',
       as: 'show',

@@ -1,12 +1,13 @@
 //import type { Request, Response } from 'express';
-import express, { Router } from 'express';
+import express, { Request, Router } from 'express';
 import CustomError from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
-import { Transaction } from 'sequelize';
+import { Includeable, Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
+import { getUserRatingInclude } from '../constants/scope-attributes';
 const router: Router = express.Router();
 
 router.get('/', async (_req, res, next) => {
@@ -23,10 +24,14 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const filmEntry: Film | null = await Film.scope('withCredits').findByPk(id);
+    const include: Includeable[] = getUserRatingInclude(req.activeUser?.id);
+    const filmEntry: Film | null = await Film.scope('withCredits').findByPk(
+      id,
+      { include }
+    );
     if (!filmEntry) {
       res.json(null);
       return;

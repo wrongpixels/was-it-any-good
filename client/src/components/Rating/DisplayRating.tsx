@@ -4,8 +4,10 @@ import {
   RATING_COLORS,
 } from '../../constants/ratings-constants';
 import { JSX } from 'react';
+import { OptClassNameProps } from '../../types/common-props-types';
+import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
-interface DisplayRatingProps {
+interface DisplayRatingProps extends OptClassNameProps {
   readonly rating: number;
   readonly starWidth?: number;
 }
@@ -13,11 +15,12 @@ interface DisplayRatingProps {
 const DisplayRating = ({
   rating,
   starWidth = DEF_STAR_WIDTH,
+  ...props
 }: DisplayRatingProps): JSX.Element => {
   const widthPercentage: string = `${rating * 10}%`;
 
   return (
-    <div className="flex">
+    <div className={`${mergeClassnames('flex', props.className)}`}>
       <div className="relative">
         <div className="text-gray-300">
           <StarList

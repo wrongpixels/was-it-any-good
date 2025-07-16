@@ -83,9 +83,8 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
   };
 
   const logout = () => {
-    logoutMutation.mutate(undefined, {
-      onSettled: () => logoutClientSide(queryClient),
-    });
+    logoutMutation.mutate(undefined);
+    logoutClientSide(queryClient);
   };
 
   useEffect(() => {

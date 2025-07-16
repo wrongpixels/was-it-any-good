@@ -1,4 +1,9 @@
-import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
+import {
+  DataTypes,
+  Includeable,
+  InferAttributes,
+  InferCreationAttributes,
+} from 'sequelize';
 import {
   FilmParental,
   ShowParental,
@@ -54,29 +59,32 @@ Show.init(
     underscored: true,
     hooks: Show.hooks(),
     scopes: {
-      withSeasons: {
-        include: {
-          association: 'seasons',
-          attributes: [
-            'id',
-            'index',
-            'name',
-            'originalName',
-            'description',
-            'image',
-            'voteCount',
-            'rating',
-            'baseRating',
-            'tmdbId',
-            'imdbId',
-            'showId',
-            'releaseDate',
-            'episodeCount',
-            'mediaType',
-            'updatedAt',
-          ],
-        },
-        order: [['seasons', 'index', 'ASC']],
+      withSeasons(include?: Includeable[]) {
+        return {
+          include: {
+            association: 'seasons',
+            attributes: [
+              'id',
+              'index',
+              'name',
+              'originalName',
+              'description',
+              'image',
+              'voteCount',
+              'rating',
+              'baseRating',
+              'tmdbId',
+              'imdbId',
+              'showId',
+              'releaseDate',
+              'episodeCount',
+              'mediaType',
+              'updatedAt',
+            ],
+            include,
+          },
+          order: [['seasons', 'index', 'ASC']],
+        };
       },
       withCredits: Show.creditsScope(MediaType.Show),
     },

@@ -1,12 +1,13 @@
 //import type { Request, Response } from 'express';
-import express, { Router } from 'express';
+import express, { Request, Router } from 'express';
 import { Show } from '../models';
 import CustomError from '../util/customError';
 import { buildShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db';
-import { Transaction } from 'sequelize';
+import { Includeable, Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
+import { getUserRatingInclude } from '../constants/scope-attributes';
 
 const router: Router = express.Router();
 
@@ -24,13 +25,14 @@ router.get('', async (_req, res, next) => {
   }
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
+    const include: Includeable[] = getUserRatingInclude(req.activeUser?.id);
     const showEntry: Show | null = await Show.scope([
-      'withSeasons',
+      { method: ['withSeasons', include] },
       'withCredits',
-    ]).findByPk(id);
+    ]).findByPk(id, { include });
     if (!showEntry) {
       res.json(null);
       return;

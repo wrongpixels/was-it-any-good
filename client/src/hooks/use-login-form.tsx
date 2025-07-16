@@ -6,6 +6,8 @@ import { useAuth } from './use-auth';
 import { useInputField } from './use-inputfield';
 import { InputFieldHookValues } from '../types/input-field-types';
 import { useNotificationContext } from '../context/NotificationProvider';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 interface LoginFormValues {
   session: UserSessionData | null;
@@ -17,6 +19,8 @@ interface LoginFormValues {
 
 export const useLoginForm = (): LoginFormValues => {
   const { session, login, logout }: AuthContextValues = useAuth();
+  const queryClient: QueryClient = useQueryClient();
+  const navigate: NavigateFunction = useNavigate();
   const loginNotification = useNotificationContext();
   const userInput: InputFieldHookValues = useInputField({
     label: 'User',
@@ -53,7 +57,7 @@ export const useLoginForm = (): LoginFormValues => {
           message: apiError.message,
         });
       },
-      onSuccess: (data: UserSessionData) => {
+      onSuccess: async (data: UserSessionData) => {
         loginNotification.setNotification({
           message: `Welcome back, ${data.username}!`,
         });
@@ -61,7 +65,7 @@ export const useLoginForm = (): LoginFormValues => {
     });
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (session) {
       loginNotification.setNotification({
         message: `See you soon, ${session?.username}!`,
