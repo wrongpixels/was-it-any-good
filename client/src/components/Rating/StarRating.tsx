@@ -9,26 +9,32 @@ import {
 import { JSX } from 'react';
 import { useRating } from '../../hooks/use-rating';
 import { useRatingInteraction } from '../../hooks/use-rating-interaction';
-import DisplayRating from './DisplayRating';
+import {
+  MediaResponse,
+  RatingData,
+  SeasonResponse,
+} from '../../../../shared/types/models';
 
 interface StarRatingProps {
   readonly starWidth?: number;
   readonly defaultRating?: number;
-  readonly mediaId: number;
-  readonly mediaType: MediaType;
+  readonly media: MediaResponse | SeasonResponse;
   readonly showId?: number;
 }
 
 const StarRating = ({
   starWidth = DEF_STAR_WIDTH,
   defaultRating = 0,
-  mediaId,
-  mediaType,
+  media,
   showId,
 }: StarRatingProps): JSX.Element => {
-  const { userRating, handleVote, handleUnvote, isLoading } = useRating(
+  const { mediaType, ratings, id: mediaId } = media;
+  const userRating: RatingData | null = ratings?.[0] ?? null;
+  <consol className="l"></consol>;
+  const { handleVote, handleUnvote } = useRating(
     mediaId,
-    mediaType
+    mediaType,
+    userRating
   );
   const {
     hoverRating,
@@ -45,9 +51,6 @@ const StarRating = ({
     mediaType,
     starWidth
   );
-  if (isLoading) {
-    return <DisplayRating rating={0} className="mt-1" />;
-  }
 
   const getStarColor = (): string => {
     if (isHovering) {

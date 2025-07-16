@@ -1,20 +1,16 @@
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
-import { CreateRating } from '../../../shared/types/models';
+import { CreateRating, RatingData } from '../../../shared/types/models';
 import {
   useVoteMutation,
   useUnvoteMutation,
 } from '../mutations/rating-mutations';
-import { useRatingByMedia } from '../queries/ratings-queries';
-import { useAuth } from './use-auth';
 
-export const useRating = (mediaId: number, mediaType: MediaType) => {
-  const { session } = useAuth();
-  const { data: userRating, isLoading } = useRatingByMedia({
-    mediaId,
-    mediaType,
-    userId: session?.userId,
-  });
+export const useRating = (
+  mediaId: number,
+  mediaType: MediaType,
+  userRating: RatingData | null
+) => {
   const voteMutation = useVoteMutation();
   const unVoteMutation = useUnvoteMutation();
 
@@ -34,5 +30,5 @@ export const useRating = (mediaId: number, mediaType: MediaType) => {
     }
   };
 
-  return { userRating, handleVote, handleUnvote, isLoading };
+  return { handleVote, handleUnvote };
 };

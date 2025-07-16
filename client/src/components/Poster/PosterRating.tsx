@@ -19,7 +19,7 @@ const PosterRating = ({
   valid = true,
   media,
 }: PosterRatingProps): JSX.Element | null => {
-  if (isNaN(rating)) {
+  if (isNaN(rating) || !media) {
     return null;
   }
   const isSeason: boolean =
@@ -32,8 +32,7 @@ const PosterRating = ({
           <StarRating
             starWidth={starWidth}
             defaultRating={rating}
-            mediaId={media.id}
-            mediaType={media.mediaType}
+            media={media}
             showId={
               media.mediaType === MediaType.Season ? media.showId : undefined
             }
