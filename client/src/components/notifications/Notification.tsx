@@ -71,13 +71,11 @@ const NotificationAlert = ({
         const left = rect.left + rect.width / 2 + (offset?.x || 0);
         notificationEl.style.top = `${top}px`;
         notificationEl.style.left = `${left}px`;
-        notificationEl.style.transform = 'translateX(-50%)';
       } else {
         const topOffset = offset?.y ? `${offset.y}px` : '0px';
         const leftOffset = offset?.x ? `${offset.x}px` : '0px';
         notificationEl.style.top = `calc(40px + ${topOffset})`;
         notificationEl.style.left = `calc(50% + ${leftOffset})`;
-        notificationEl.style.transform = 'translateX(-50%)';
       }
     };
 
@@ -97,11 +95,11 @@ const NotificationAlert = ({
   const animationClasses = useMemo((): string => {
     switch (status) {
       case NotiStatus.Started:
-        return 'transform translate-y-0 opacity-0 scale-90';
+        return 'transform translate-y-3 opacity-0 scale-90 scale-x-70';
       case NotiStatus.Running:
-        return 'transform transition-all duration-200 ease-in-out translate-y-0 opacity-100 scale-100';
+        return 'transform transition-all duration-150 ease-in translate-y-0 opacity-100 scale-100';
       case NotiStatus.Expiring:
-        return 'transform transition-all duration-500 ease-in-out translate-y-4 opacity-0 scale-103';
+        return 'transform transition-all duration-500 ease-out translate-y-5 opacity-0 scale-103';
       default:
         return 'opacity-0';
     }
@@ -116,7 +114,7 @@ const NotificationAlert = ({
       {...props}
       ref={notificationRef}
       className={`font-bold shadow-md ${animationClasses} ${classColors(isError)} 
-        text-center leading-tight text-sm flex justify-center 
+        -translate-x-1/2 text-center leading-tight text-sm flex justify-center 
         border-3 rounded-md px-2 mt-2 py-1 z-[9999]`}
       style={{ position: 'fixed' }}
     >

@@ -20,6 +20,8 @@ import {
 } from '../../../../shared/defaults/media-defaults';
 import CrewEntrySection from '../CrewEntrySection';
 import CastEntrySection from '../CasEntrySection';
+import LoadingPage from '../common/status/LoadingPage';
+import ErrorPage from '../common/status/ErrorPage';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -50,18 +52,12 @@ const MediaEntry = ({
       </div>
     );
   }
-
-  if (isLoading || isError) {
-    setTitle(`${isLoading ? `Loading ${mediaType}...` : 'Error'}`);
-    if (isError) {
-      console.log(error);
-    }
+  if (isLoading) {
+    return <LoadingPage text={mediaType} />;
+  }
+  if (isError) {
     return (
-      <div className="flex justify-center w-full font-medium text-xl  whitespace-pre-line">
-        {isLoading
-          ? `Loading ${mediaType}...`
-          : `There was an error loading the ${mediaType}!\n(${error?.message})`}
-      </div>
+      <ErrorPage context={`loading the ${mediaType}`} error={error.message} />
     );
   }
   if (!media) {
