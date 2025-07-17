@@ -21,6 +21,14 @@ class Season extends Media<
       },
       constraints: false,
     });
+    Season.hasOne(Rating, {
+      foreignKey: 'mediaId',
+      as: 'userRating',
+      scope: {
+        mediaType: MediaType.Season,
+      },
+      constraints: false,
+    });
     this.belongsTo(Show, {
       foreignKey: 'showId',
       as: 'show',

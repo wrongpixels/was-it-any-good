@@ -2,6 +2,7 @@ import { UserVote } from '../../../shared/types/common';
 import {
   IndexMediaData,
   MediaResponse,
+  RatingData,
   SeasonResponse,
   ShowResponse,
 } from '../../../shared/types/models';
@@ -52,46 +53,55 @@ export const addVoteToMedia = (
     media.voteCount,
     oldRating
   ),
+  userRating: updateUserRating(media.userRating, newRating),
 });
 
 export const addVoteToSeason = (
   media: SeasonResponse,
-  newRating: number,
-  oldRating?: number
+  newRating: number
 ): SeasonResponse => ({
   ...media,
   ...recalculateRating(
     newRating,
     getMediaCurrentRating(media),
     media.voteCount,
-    oldRating
+    media.userRating?.userScore
   ),
+  userRating: updateUserRating(media.userRating, newRating),
 });
 
+const updateUserRating = (
+  rating: RatingData | null | undefined,
+  newScore: number
+): RatingData | null => {
+  if (!rating) {
+    return null;
+  }
+  return { ...rating, userScore: newScore };
+};
+
 export const removeVoteFromSeason = (
-  media: SeasonResponse,
-  oldRating: number
+  media: SeasonResponse
 ): SeasonResponse => ({
   ...media,
   ...recalculateRating(
     0,
     getMediaCurrentRating(media),
     media.voteCount,
-    oldRating
+    media.userRating?.userScore
   ),
+  userRating: null,
 });
 
-export const removeVoteFromMedia = (
-  media: MediaResponse,
-  oldRating: number
-): MediaResponse => ({
+export const removeVoteFromMedia = (media: MediaResponse): MediaResponse => ({
   ...media,
   ...recalculateRating(
     0,
     getMediaCurrentRating(media),
     media.voteCount,
-    oldRating
+    media.userRating?.userScore
   ),
+  userRating: null,
 });
 
 export const recalculateRating = (

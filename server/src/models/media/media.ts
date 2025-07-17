@@ -201,6 +201,14 @@ class Media<
       },
       constraints: false,
     });
+    this.hasOne(Rating, {
+      foreignKey: 'mediaId',
+      as: 'userRating',
+      scope: {
+        mediaType,
+      },
+      constraints: false,
+    });
   }
 
   async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {

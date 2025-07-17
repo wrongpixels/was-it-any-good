@@ -141,7 +141,7 @@ export interface SeasonResponse extends BaseResponse {
   episodeCount: number
   showId: number
   mediaType: MediaType.Season
-  ratings?: RatingData[]
+  userRating?: RatingData | null
 }
 
 export interface BaseMediaResponse extends BaseResponse {
@@ -149,7 +149,7 @@ export interface BaseMediaResponse extends BaseResponse {
   country: CountryCode[]
   status: string
   runtime: number | null
-  ratings?: RatingData[]
+  userRating?: RatingData | null
   cast?: CreditResponse[]
   crew?: CreditResponse[]
   genres?: GenreResponse[]

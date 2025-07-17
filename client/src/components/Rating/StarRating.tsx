@@ -9,11 +9,7 @@ import {
 import { JSX } from 'react';
 import { useRating } from '../../hooks/use-rating';
 import { useRatingInteraction } from '../../hooks/use-rating-interaction';
-import {
-  MediaResponse,
-  RatingData,
-  SeasonResponse,
-} from '../../../../shared/types/models';
+import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 
 interface StarRatingProps {
   readonly starWidth?: number;
@@ -28,8 +24,7 @@ const StarRating = ({
   media,
   showId,
 }: StarRatingProps): JSX.Element => {
-  const { mediaType, ratings, id: mediaId } = media;
-  const userRating: RatingData | null = ratings?.[0] ?? null;
+  const { mediaType, userRating = null, id: mediaId } = media;
   const { handleVote, handleUnvote } = useRating(
     mediaId,
     mediaType,

@@ -33,8 +33,6 @@ export const useVoteMutation = () => {
         queryClient,
         rating,
       });
-      queryManager.setRating(rating);
-
       if (!queryManager.media) {
         return;
       }
@@ -43,8 +41,7 @@ export const useVoteMutation = () => {
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = addVoteToSeason(
             queryManager.seasonMedia,
-            rating.userScore,
-            queryManager.rating?.userScore
+            rating.userScore
           );
           console.log('mutating season');
           console.log(rating);
@@ -54,21 +51,12 @@ export const useVoteMutation = () => {
         console.log(rating.userScore);
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
-          rating.userScore,
-          queryManager.rating?.userScore
+          rating.userScore
         );
         queryManager.setMedia(updatedMedia);
       }
-      return {
-        previousRating: rating,
-        queryKey: queryManager.ratingQueryKey,
-      };
     },
-    onError: (_err, _rating, context) => {
-      if (context?.queryKey) {
-        queryClient.setQueryData(context.queryKey, context.previousRating);
-      }
-    },
+    onError: (_err, _rating) => {},
     onSuccess: (ratingResponse: CreateRatingResponse) => {
       //the server returns the media's updated average rating and voteCount alongside the rating data
       //this avoids invalidating the entire media query as only voteCount and rating changed.
@@ -78,8 +66,6 @@ export const useVoteMutation = () => {
         queryClient,
         rating,
       });
-      queryManager.setRating(rating);
-
       if (!queryManager.media) {
         //if the cache is empty, we invalidate to refetch fresh data.
         console.log('Invalidation');
@@ -120,23 +106,19 @@ export const useUnvoteMutation = () => {
         queryClient,
         rating,
       });
-      queryManager.setRating(null);
-
-      if (!queryManager.media || !queryManager.rating) {
+      if (!queryManager.media) {
         return;
       }
       if (queryManager.isSeason) {
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = removeVoteFromSeason(
-            queryManager.seasonMedia,
-            queryManager.rating.userScore
+            queryManager.seasonMedia
           );
           queryManager.setSeason(updatedSeason);
         }
       } else {
         const updatedMedia: MediaResponse = removeVoteFromMedia(
-          queryManager.media,
-          queryManager.rating.userScore
+          queryManager.media
         );
         queryManager.setMedia(updatedMedia);
       }

@@ -8,6 +8,7 @@ import { Includeable, Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 import { getUserRatingInclude } from '../constants/scope-attributes';
+import { MediaType } from '../../../shared/types/media';
 const router: Router = express.Router();
 
 router.get('/', async (_req, res, next) => {
@@ -27,7 +28,10 @@ router.get('/', async (_req, res, next) => {
 router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const include: Includeable[] = getUserRatingInclude(req.activeUser?.id);
+    const include: Includeable[] = getUserRatingInclude(
+      MediaType.Film,
+      req.activeUser?.id
+    );
     const filmEntry: Film | null = await Film.scope('withCredits').findByPk(
       id,
       { include }

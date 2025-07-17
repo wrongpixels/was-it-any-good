@@ -8,6 +8,7 @@ import { Includeable, Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 import { getUserRatingInclude } from '../constants/scope-attributes';
+import { MediaType } from '../../../shared/types/media';
 
 const router: Router = express.Router();
 
@@ -28,9 +29,17 @@ router.get('', async (_req, res, next) => {
 router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const include: Includeable[] = getUserRatingInclude(req.activeUser?.id);
+    const include: Includeable[] = getUserRatingInclude(
+      MediaType.Show,
+      req.activeUser?.id
+    );
     const showEntry: Show | null = await Show.scope([
-      { method: ['withSeasons', include] },
+      {
+        method: [
+          'withSeasons',
+          getUserRatingInclude(MediaType.Season, req.activeUser?.id),
+        ],
+      },
       'withCredits',
     ]).findByPk(id, { include });
     if (!showEntry) {

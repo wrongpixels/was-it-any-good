@@ -1,5 +1,5 @@
 import { FindAttributeOptions, Includeable } from 'sequelize';
-import { Rating } from '../models';
+import { MediaType } from '../../../shared/types/media';
 
 export const BRIEF_MEDIA_ATTRIBUTES: FindAttributeOptions = [
   'id',
@@ -10,16 +10,16 @@ export const BRIEF_MEDIA_ATTRIBUTES: FindAttributeOptions = [
   'mediaType',
 ];
 
-export const getUserRatingInclude = (userId?: number): Includeable[] => {
-  if (!userId) {
-    return [];
-  }
+export const getUserRatingInclude = (
+  mediaType: MediaType,
+  userId?: number
+): Includeable[] => {
   return [
     {
-      model: Rating,
-      as: 'ratings',
+      association: 'userRating',
       where: {
-        userId,
+        userId: 1,
+        mediaType,
       },
       required: false,
     },
