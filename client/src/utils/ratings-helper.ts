@@ -43,17 +43,16 @@ export const getTmdbMediaKey = (
 
 export const addVoteToMedia = (
   media: MediaResponse,
-  newRating: number,
-  oldRating?: number
+  newRating: number
 ): MediaResponse => ({
   ...media,
   ...recalculateRating(
     newRating,
     getMediaCurrentRating(media),
     media.voteCount,
-    oldRating
+    media.userRating?.userScore
   ),
-  userRating: updateUserRating(media.userRating, newRating),
+  userRating: updateUserRating(media.userRating, newRating, media),
 });
 
 export const addVoteToSeason = (
@@ -67,15 +66,24 @@ export const addVoteToSeason = (
     media.voteCount,
     media.userRating?.userScore
   ),
-  userRating: updateUserRating(media.userRating, newRating),
+  userRating: updateUserRating(media.userRating, newRating, media),
 });
 
 const updateUserRating = (
   rating: RatingData | null | undefined,
-  newScore: number
+  newScore: number,
+  media: SeasonResponse | MediaResponse
 ): RatingData | null => {
+  //if no rating yet, we create a temporary one until the server returns the
+  //real one
   if (!rating) {
-    return null;
+    rating = {
+      id: -1,
+      userId: -1,
+      userScore: newScore,
+      mediaId: media.id,
+      mediaType: media.mediaType,
+    };
   }
   return { ...rating, userScore: newScore };
 };
@@ -140,10 +148,11 @@ export const recalculateRating = (
       voteCount: totalVotes,
     };
   }
-  console.log('here ', currentRating);
+  console.log('previous rating ', currentRating);
   const totalSum = currentRating * totalVotes;
   const newTotalVotes = firstVote ? 1 : totalVotes + 1;
-  console.log(totalSum, firstVote, newTotalVotes, totalVotes);
+  // console.log(totalSum, firstVote, newTotalVotes, totalVotes);
+  console.log('Votes are ', newTotalVotes);
 
   return {
     rating: (totalSum + userRating) / newTotalVotes,

@@ -57,6 +57,7 @@ const MediaEntry = ({
   if (isFetching || isLoginPending) {
     return <LoadingPage text={mediaType} />;
   }
+  console.log('User vote is ', media?.userRating?.userScore);
   if (isError) {
     return (
       <ErrorPage context={`loading the ${mediaType}`} error={error.message} />

@@ -81,6 +81,7 @@ export const useVoteMutation = () => {
           const updatedSeason: SeasonResponse = {
             ...queryManager.seasonMedia,
             ...ratingStats,
+            userRating: rating,
           };
           queryManager.setSeason(updatedSeason);
           console.log('success in season');
@@ -90,6 +91,7 @@ export const useVoteMutation = () => {
         const updatedMedia: MediaResponse = {
           ...queryManager.media,
           ...ratingStats,
+          userRating: rating,
         };
         queryManager.setMedia(updatedMedia);
         console.log(ratingStats);
