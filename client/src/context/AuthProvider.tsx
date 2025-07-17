@@ -7,7 +7,7 @@ import {
 import { UserSessionData, LoginData } from '../../../shared/types/models';
 import {
   tryLoadUserData,
-  saveUserSession,
+  saveLocalUserSession,
   logoutClientSide,
 } from '../utils/session-handler';
 import { setAxiosToken } from '../utils/axios-config';
@@ -18,6 +18,10 @@ import {
 import { SESSION_QUERY_KEY } from '../constants/session-constants';
 import { AxiosResponse } from 'axios';
 import { verifySession } from '../services/login-service';
+import {
+  SetActiveSessionValues,
+  useSetActiveSession,
+} from '../hooks/use-set-active-session';
 
 export interface AuthContextValues {
   session: UserSessionData | null;
@@ -49,6 +53,14 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
 
   //We load any existing session into the context before verifying it's valid so the UI doesn't flicker
   //verifySession does return the session from the server itself or null if invalid, so it'll set the real session
+
+  if (
+    unverifiedSession?.token &&
+    unverifiedSession.userId &&
+    unverifiedSession.id
+  ) {
+    queryClient.setQueryData(SESSION_QUERY_KEY, unverifiedSession);
+  }
   const { data: session, isFetching: isLoadingSession } = useQuery({
     queryKey: SESSION_QUERY_KEY,
     queryFn: async () => {
@@ -73,12 +85,11 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
       onError?: (error: Error) => void;
     }
   ) => {
+    const { setSession }: SetActiveSessionValues = useSetActiveSession();
     loginMutation.mutate(data, {
       onSuccess: (newSession: UserSessionData) => {
-        saveUserSession(newSession);
-        queryClient.setQueryData(SESSION_QUERY_KEY, newSession);
+        setSession(newSession);
         options?.onSuccess?.(newSession);
-        setAxiosToken(newSession?.token || null);
       },
       onError: (error: Error) => {
         options?.onError?.(error);

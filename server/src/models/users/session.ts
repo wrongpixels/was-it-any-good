@@ -27,11 +27,10 @@ class Session extends Model<
 
   //10 days limit
   isExpired(): boolean {
-    const currentDate: Date = new Date();
     if (
       this.expired ||
       this.token === '' ||
-      currentDate.getTime() - this.createdAt.getTime() > 864000000
+      isSessionDateExpired(this.createdAt)
     ) {
       return true;
     }

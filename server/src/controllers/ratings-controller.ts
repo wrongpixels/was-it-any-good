@@ -12,7 +12,7 @@ import CustomError from '../util/customError';
 import { Media, Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
 import { MediaType } from '../../../shared/types/media';
-import { stringToMediaType } from '../../../shared/helpers/media-helpers';
+import { stringToMediaType } from '../../../shared/helpers/media-helper';
 
 const router: Router = express.Router();
 
