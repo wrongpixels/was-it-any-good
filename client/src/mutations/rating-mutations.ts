@@ -29,6 +29,7 @@ export const useVoteMutation = () => {
     mutationKey: ['vote'],
     mutationFn: (rating: CreateRating) => voteMedia(rating),
     onMutate: (rating: CreateRating) => {
+      //we do an optimistic update calculating what the new average should be
       const queryManager: MediaQueryManager = createRatingQueryManager({
         queryClient,
         rating,
@@ -36,7 +37,7 @@ export const useVoteMutation = () => {
       if (!queryManager.media) {
         return;
       }
-
+      //we update the values directly in the queryClient cache
       if (queryManager.isSeason) {
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = addVoteToSeason(
@@ -58,8 +59,8 @@ export const useVoteMutation = () => {
     },
     onError: (_err, _rating) => {},
     onSuccess: (ratingResponse: CreateRatingResponse) => {
-      //the server returns the media's updated average rating and voteCount alongside the rating data
-      //this avoids invalidating the entire media query as only voteCount and rating changed.
+      //the server returns the new userRating data with updated media average rating and voteCount
+      //Instead of invalidating the entire media query, que replace the fields in the cache
       const { ratingStats, ...ratingData } = ratingResponse;
       const rating: RatingData = ratingData;
       const queryManager: MediaQueryManager = createRatingQueryManager({
@@ -76,7 +77,7 @@ export const useVoteMutation = () => {
       if (queryManager.isSeason) {
         console.log(ratingResponse);
 
-        //we replace cached media's voteCount and rating with the server values
+        //we replace the optimistic data onMutate with the actual server values
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = {
             ...queryManager.seasonMedia,
