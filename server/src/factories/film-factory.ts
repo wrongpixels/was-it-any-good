@@ -1,4 +1,4 @@
-import { getYearNum } from '../../../shared/src/helpers/format-helper';
+import { getYearNum } from '../../../shared/helpers/format-helper';
 import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { DEF_FILM } from '../constants/media-defaults';

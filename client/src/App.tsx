@@ -6,7 +6,6 @@ import Header from './components/Header/Header';
 import PersonEntry from './components/Person/PersonEntry';
 import NotFound from './components/NotFound';
 import { useAuth } from './hooks/use-auth';
-import LoadingPage from './components/common/status/LoadingPage';
 import SigningInPage from './components/common/status/SigningInPage';
 
 const App = (): JSX.Element => (

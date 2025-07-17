@@ -16,7 +16,7 @@ import {
 import { TMDBIndexShow } from '../schemas/tmdb-index-media-schemas';
 import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
-import { getYearNum } from '../../../shared/src/helpers/format-helper';
+import { getYearNum } from '../../../shared/helpers/format-helper';
 
 export const createShow = (tmdb: TMDBShowData): ShowData => ({
   ...DEF_SHOW,

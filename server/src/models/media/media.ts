@@ -27,7 +27,7 @@ import { sequelize } from '../../util/db';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 import { addIndexMedia } from '../../services/index-media-service';
-import { getYearNum } from '../../../../shared/src/helpers/format-helper';
+import { getYearNum } from '../../../../shared/helpers/format-helper';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,

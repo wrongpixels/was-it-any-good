@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { CountryCode } from '../../../shared/types/countries';
 import MediaFlags from './MediaFlags';
-import { getYear } from '../../../shared/src/helpers/format-helper';
+import { getYear } from '../../../shared/helpers/format-helper';
 
 interface TitleProps {
   title: string;
