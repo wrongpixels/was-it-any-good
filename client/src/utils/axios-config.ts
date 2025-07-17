@@ -27,5 +27,7 @@ export const setAxiosToken = (token: string | null): void => {
 };
 
 export const removeAxiosToken = () => {
+  console.log('removed axios token');
+
   delete axios.defaults.headers.common['Authorization'];
 };

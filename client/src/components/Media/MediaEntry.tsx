@@ -22,6 +22,8 @@ import CrewEntrySection from '../CrewEntrySection';
 import CastEntrySection from '../CasEntrySection';
 import LoadingPage from '../common/status/LoadingPage';
 import ErrorPage from '../common/status/ErrorPage';
+import { useAuth } from '../../hooks/use-auth';
+import { AuthContextValues } from '../../context/AuthProvider';
 
 interface MediaEntryProps {
   mediaType: MediaType;
@@ -33,10 +35,10 @@ const MediaEntry = ({
   mediaType,
 }: MediaEntryProps): JSX.Element | null => {
   const { id: mediaId } = useParams<{ id: string }>();
-
+  const { isLoginPending }: AuthContextValues = useAuth();
   const {
     data: media,
-    isLoading,
+    isFetching,
     isError,
     error,
   } = tmdb
@@ -52,7 +54,7 @@ const MediaEntry = ({
       </div>
     );
   }
-  if (isLoading) {
+  if (isFetching || isLoginPending) {
     return <LoadingPage text={mediaType} />;
   }
   if (isError) {

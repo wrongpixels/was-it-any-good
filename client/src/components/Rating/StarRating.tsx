@@ -30,7 +30,6 @@ const StarRating = ({
 }: StarRatingProps): JSX.Element => {
   const { mediaType, ratings, id: mediaId } = media;
   const userRating: RatingData | null = ratings?.[0] ?? null;
-  console.log(userRating, media);
   const { handleVote, handleUnvote } = useRating(
     mediaId,
     mediaType,

@@ -7,6 +7,7 @@ import {
 } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { User } from '..';
+import { isDateExpired } from '../../../../shared/helpers/auth-helper';
 
 class Session extends Model<
   InferAttributes<Session>,
@@ -27,11 +28,7 @@ class Session extends Model<
 
   //10 days limit
   isExpired(): boolean {
-    if (
-      this.expired ||
-      this.token === '' ||
-      isSessionDateExpired(this.createdAt)
-    ) {
+    if (this.expired || this.token === '' || isDateExpired(this.createdAt)) {
       return true;
     }
     return false;

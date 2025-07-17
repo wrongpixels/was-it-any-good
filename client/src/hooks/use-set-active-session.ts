@@ -21,6 +21,7 @@ export const useSetActiveSession = (): SetActiveSessionValues => {
       return null;
     }
     saveLocalUserSession(session);
+    queryClient.resetQueries();
     queryClient.setQueryData(SESSION_QUERY_KEY, session);
     return session;
   };
