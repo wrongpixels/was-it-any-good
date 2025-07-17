@@ -18,7 +18,7 @@ export const getUserRatingInclude = (
     {
       association: 'userRating',
       where: {
-        userId: 1,
+        userId,
         mediaType,
       },
       required: false,

@@ -47,6 +47,10 @@ Content-Type: application/json
  "showId": 34
 }
 
+###LOGOUT
+POST http://localhost:6060/api/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6ImFkbWluIiwiaWQiOjEsImlzQWRtaW4iOnRydWUsImlzQWN0aXZlIjp0cnVlLCJsYXN0QWN0aXZlIjoiMjAyNS0wNy0xN1QyMDo1NTo1OS4xMTlaIiwiaWF0IjoxNzUyNzg1NzU5fQ.mQRz5gacigGmxDgiIl7mwitxKZT--Kkje8SgjWR7BQM
+
 ###LOGIN
 POST http://localhost:6060/api/auth/login
 Content-Type: application/json

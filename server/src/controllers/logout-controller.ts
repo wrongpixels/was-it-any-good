@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.activeUser?.isValid) {
-      res.status(200);
+      res.status(200).end();
       return;
     }
     await logoutUser(req.activeUser.id);

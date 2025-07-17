@@ -3,7 +3,6 @@ import { MediaType } from '../../../shared/types/media';
 import {
   CreateRating,
   MediaResponse,
-  RatingData,
   SeasonResponse,
   ShowResponse,
 } from '../../../shared/types/models';
