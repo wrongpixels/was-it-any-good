@@ -1,12 +1,23 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MediaEntry from './components/Media/MediaEntry';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
 import PersonEntry from './components/Person/PersonEntry';
 import NotFound from './components/NotFound';
+import { useAuth } from './hooks/use-auth';
+import LoadingPage from './components/common/status/LoadingPage';
 
 const App = (): JSX.Element => {
+  const auth = useAuth();
+
+  useEffect(() => {
+    console.log(auth.isLoadingSession, auth.isLoginPending);
+  }, [auth.isLoadingSession, auth.session]);
+  if (auth.isLoadingSession) {
+    return <LoadingPage />;
+  }
+
   return (
     <div className="w-full">
       <Router>

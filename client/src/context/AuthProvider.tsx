@@ -49,9 +49,12 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
 
   //We load any existing session into the context before verifying it's valid so the UI doesn't flicker
   //verifySession does return the session from the server itself or null if invalid, so it'll set the real session
-  const { data: session, isLoading: isLoadingSession } = useQuery({
+  const { data: session, isFetching: isLoadingSession } = useQuery({
     queryKey: SESSION_QUERY_KEY,
-    queryFn: () => verifySession(unverifiedSession),
+    queryFn: async () => {
+      const sessionData = await verifySession(unverifiedSession);
+      return sessionData;
+    },
     initialData: unverifiedSession,
     enabled: !!unverifiedSession,
     gcTime: Infinity,
@@ -75,6 +78,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
         saveUserSession(newSession);
         queryClient.setQueryData(SESSION_QUERY_KEY, newSession);
         options?.onSuccess?.(newSession);
+        setAxiosToken(newSession?.token || null);
       },
       onError: (error: Error) => {
         options?.onError?.(error);
@@ -89,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
 
   useEffect(() => {
     setAxiosToken(session?.token || null);
+    console.log('session loaded ?', session !== null);
   }, [session]);
 
   const value: AuthContextValues = {

@@ -19,6 +19,7 @@ export const setupAxiosInterceptors = (queryClient: QueryClient): void => {
 
 export const setAxiosToken = (token: string | null): void => {
   if (token) {
+    console.log('Axios token set');
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   } else {
     removeAxiosToken();
