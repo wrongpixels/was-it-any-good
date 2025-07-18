@@ -29,6 +29,8 @@ class IndexMedia extends Model<
   declare voteCount: number;
   declare popularity: number;
   declare mediaType: MediaType;
+  declare film?: Film;
+  declare show?: Show;
 
   static associate() {
     this.belongsTo(Film, {
@@ -36,7 +38,7 @@ class IndexMedia extends Model<
       constraints: false,
       as: 'film',
       scope: {
-        mediatype: MediaType.Film,
+        mediaType: MediaType.Film,
       },
     });
     this.belongsTo(Show, {
@@ -44,7 +46,7 @@ class IndexMedia extends Model<
       constraints: false,
       as: 'show',
       scope: {
-        mediatype: MediaType.Show,
+        mediaType: MediaType.Show,
       },
     });
   }

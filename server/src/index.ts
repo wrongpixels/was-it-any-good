@@ -31,7 +31,7 @@ app.use('/api/auth/logout', logoutRouter);
 app.use('/api/auth/sessions', sessionsRouter);
 app.use('/api/ratings', ratingsRouter);
 app.use('/api/people', peopleRouter);
-app.use('/api/media-index', mediaIndexRouter);
+app.use('/api/index-media', mediaIndexRouter);
 app.use('/api/suggest', suggestionsRouter);
 
 app.use(errorHandler);

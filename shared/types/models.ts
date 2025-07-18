@@ -28,6 +28,7 @@ export interface CreateIndexMedia {
 
 export interface IndexMediaData extends CreateIndexMedia {
   id: number
+  media?: MediaResponse
 }
 
 export interface RatingData {
