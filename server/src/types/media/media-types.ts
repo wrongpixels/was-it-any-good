@@ -1,14 +1,13 @@
 import { CountryCode } from '../../../../shared/types/countries';
-import { CreateGenreData, GameplayGenre } from '../genres/genre-types';
+import { CreateGenreData } from '../genres/genre-types';
 import {
   FilmParental,
-  GameParental,
   ParentalGuide,
   ShowParental,
 } from '../parental/parental-types';
 import { Image } from '../../../../shared/types/common';
 import { ActiveUser } from '../../../../shared/types/models';
-import { Transaction } from 'sequelize';
+import { FindOptions, ScopeOptions, Transaction } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 
 export interface BirthDate {
@@ -16,13 +15,17 @@ export interface BirthDate {
   isUnknown: boolean;
 }
 
-export interface FindByValues {
+export interface MediaQueryValues {
   mediaId: number | string;
   mediaType: MediaType;
   isTmdbId?: boolean;
   unscoped?: boolean;
   activeUser?: ActiveUser;
   transaction?: Transaction;
+}
+export interface MediaQueryOptions {
+  findOptions: FindOptions;
+  scopeOptions: (string | ScopeOptions)[];
 }
 
 export enum SubMediaType {
@@ -129,15 +132,14 @@ export interface ShowData extends MediaData {
   seasonCount: number;
   seasons: SeasonData[];
 }
-
+/*
 export interface GameData extends MediaData {
-  mediaType: MediaType.Game;
   subMedia: SubMediaType.Chapter | SubMediaType.DLC;
   parentalGuide: GameParental;
   dlcIds: number[];
   chapterIds: number[];
   gamePlayGenres: GameplayGenre[];
-}
+} */
 
 // Sub-media types
 export interface SubMediaData extends MediaData {
@@ -152,7 +154,7 @@ export interface SeasonData extends SubMediaData {
   mediaType: MediaType.Season;
   subType: SubMediaType.Season;
 }
-
+/*
 export interface DLCData extends SubMediaData {
   mediaType: MediaType.Game;
   subType: SubMediaType.DLC;
@@ -162,7 +164,7 @@ export interface ChapterData extends SubMediaData {
   mediaType: MediaType.Game;
   subType: SubMediaType.Chapter;
 }
-
+*/
 // Creation
 export interface TMDBData {
   tmdbId: number;
@@ -204,6 +206,7 @@ export type DefaultShow = Omit<
   | 'genres'
   | 'seasonIds'
 >;
+/*
 export type DefaultGame = Omit<
   GameData,
   | 'name'
@@ -214,11 +217,12 @@ export type DefaultGame = Omit<
   | 'gamePlayGenres'
   | 'chapterIds'
   | 'dlcIds'
->;
+>; */
 export type DefaultSeason = Omit<
   SeasonData,
   'originalName' | 'tmdbId' | 'description'
 >;
+/*
 export type DefaultDLC = Omit<
   DLCData,
   'originalName' | 'description' | 'genres'
@@ -227,3 +231,4 @@ export type DefaultChapter = Omit<
   ChapterData,
   'originalName' | 'description' | 'genres'
 >;
+*/

@@ -1,4 +1,3 @@
-import { Transaction } from 'sequelize';
 import { createShow } from '../factories/show-factory';
 import {
   TMDBCreditsData,
@@ -11,22 +10,29 @@ import {
   TMDBShowInfoData,
   TMDBShowInfoSchema,
 } from '../schemas/tmdb-show-schema';
-import { SeasonData, ShowData } from '../types/media/media-types';
+import {
+  MediaQueryValues,
+  SeasonData,
+  ShowData,
+} from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import { Show } from '../models';
-import { buildCreditsAndGetEntry, trimCredits } from './media-service';
+import { buildCreditsAndGenres, trimCredits } from './media-service';
 import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
 
 export const buildShowEntry = async (
-  tmdbId: string,
-  transaction: Transaction
+  params: MediaQueryValues
 ): Promise<Show | null> => {
-  const showData: ShowData = await fetchTMDBShow(tmdbId);
-  const showEntry: Show | null = await Show.create(buildShow(showData), {
-    transaction,
-  });
+  const showData: ShowData = await fetchTMDBShow(params.mediaId);
+  const { scopeOptions, findOptions } = Show.buildMediaQueryOptions(params);
+  const showEntry: Show | null = await Show.scope(scopeOptions).create(
+    buildShow(showData),
+    {
+      transaction: params.transaction,
+    }
+  );
   if (!showEntry) {
     throw new CustomError('Show could not be created', 400);
   }
@@ -34,16 +40,19 @@ export const buildShowEntry = async (
 
   const seasonEntries: (Season | null)[] = await Promise.all(
     showData.seasons.map((s: SeasonData) =>
-      Season.create(buildSeason(s, showEntry), { transaction })
+      Season.create(buildSeason(s, showEntry), {
+        transaction: params.transaction,
+      })
     )
   );
   if (!seasonEntries || seasonEntries.length <= 0) {
     //throw new CustomError(`Seasons for Show ${showId} could not be created`, 400 );
   }
-  return await buildCreditsAndGetEntry(showEntry, showData, transaction);
+  await buildCreditsAndGenres(showEntry, showData, params.transaction);
+  return showEntry.reload(findOptions);
 };
 
-export const fetchTMDBShow = async (id: string): Promise<ShowData> => {
+export const fetchTMDBShow = async (id: string | number): Promise<ShowData> => {
   const showRes = await tmdbAPI.get(`/tv/${id}`);
   const creditsRes = await tmdbAPI.get(`/tv/${id}/credits`);
   const externalIdsRes = await tmdbAPI.get(`/tv/${id}/external_ids`);

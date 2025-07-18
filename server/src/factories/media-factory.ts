@@ -37,7 +37,6 @@ import {
 import { DEF_IMAGE_PERSON } from '../../../shared/defaults/media-defaults';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { createIndexForFilmBulk } from './film-factory';
-import { MediaType } from '../../../shared/types/media';
 
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
@@ -64,8 +63,8 @@ export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
   countries: validateCountries(tmdb.origin_country),
   description: tmdb.overview,
   genres: mapTMDBGenres(
-    tmdb.genres,
-    isShow(tmdb) ? MediaType.Show : MediaType.Film
+    tmdb.genres
+    //    isShow(tmdb) ? MediaType.Show : MediaType.Film
   ),
   cast: createCast(tmdb.credits.cast),
   crew: getCrew(tmdb),

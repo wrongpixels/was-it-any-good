@@ -4,10 +4,10 @@ import CustomError from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
-import { Includeable, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
-import { getUserRatingInclude } from '../constants/scope-attributes';
+import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
 const router: Router = express.Router();
 
@@ -28,14 +28,11 @@ router.get('/', async (_req, res, next) => {
 router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const include: Includeable[] = getUserRatingInclude(
-      MediaType.Film,
-      req.activeUser
-    );
-    const filmEntry: Film | null = await Film.scope('withCredits').findByPk(
-      id,
-      { include }
-    );
+    const filmEntry: Film | null = await Film.findBy({
+      mediaId: id,
+      activeUser: req.activeUser,
+    });
+
     if (!filmEntry) {
       res.json(null);
       return;
@@ -47,17 +44,21 @@ router.get('/:id', async (req: Request, res, next) => {
   }
 });
 
-router.get('/tmdb/:id', async (req, res, next) => {
+router.get('/tmdb/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    let filmEntry: Film | null = await Film.scope('withCredits').findOne({
-      where: { tmdbId: id.toString() },
-    });
+    const mediaValues: MediaQueryValues = {
+      mediaId: id,
+      mediaType: MediaType.Film,
+      activeUser: req.activeUser,
+      isTmdbId: true,
+    };
+    let filmEntry: Film | null = await Film.findBy(mediaValues);
 
     if (!filmEntry) {
       const transaction: Transaction = await sequelize.transaction();
       try {
-        filmEntry = await buildFilmEntry(id, transaction);
+        filmEntry = await buildFilmEntry({ ...mediaValues, transaction });
         await transaction.commit();
       } catch (error) {
         //we always rollback if something fails

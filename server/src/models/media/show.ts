@@ -10,8 +10,9 @@ import {
 } from '../../types/parental/parental-types';
 import { sequelize } from '../../util/db';
 
-import { Media, Season } from '..';
+import { Film, Media, Season } from '..';
 import { MediaType } from '../../../../shared/types/media';
+import { MediaQueryValues } from '../../types/media/media-types';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
@@ -19,6 +20,18 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare lastAirDate: string | null;
   declare episodeCount: number;
   declare seasonCount: number;
+
+  static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
+    const mediaType = MediaType.Show;
+    const media: Show | Film | Season | null = await this.findMediaBy({
+      ...params,
+      mediaType,
+    });
+    if (media?.mediaType !== mediaType) {
+      return null;
+    }
+    return media;
+  }
 
   static associate() {
     this.doAssociate(MediaType.Show);

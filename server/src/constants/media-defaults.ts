@@ -16,16 +16,9 @@ import {
   DefaultFilm,
   SubMediaType,
   DefaultShow,
-  DefaultGame,
   DefaultSeason,
-  DefaultDLC,
-  DefaultChapter,
 } from '../types/media/media-types';
-import {
-  FilmParental,
-  ShowParental,
-  GameParental,
-} from '../types/parental/parental-types';
+import { FilmParental, ShowParental } from '../types/parental/parental-types';
 export interface AirDate {
   date: string | null;
   isUnknown: boolean;
@@ -143,13 +136,6 @@ export const DEF_SHOW: DefaultShow = {
   subMedia: SubMediaType.Season,
 };
 
-export const DEF_GAME: DefaultGame = {
-  ...DEF_MEDIA,
-  parentalGuide: GameParental.UNKNOWN,
-  mediaType: MediaType.Game,
-  subMedia: SubMediaType.DLC,
-};
-
 export const DEF_SEASON: DefaultSeason = {
   ...DEF_SHOW,
   mediaType: MediaType.Season,
@@ -159,7 +145,7 @@ export const DEF_SEASON: DefaultSeason = {
   subType: SubMediaType.Season,
   genres: [],
 };
-
+/*
 export const DEF_DLC = (index: number): DefaultDLC => ({
   ...DEF_GAME,
   name: `DLC ${index + 1}`,
@@ -175,3 +161,4 @@ export const DEF_CHAPTER = (index: number): DefaultChapter => ({
   subType: SubMediaType.Chapter,
   index,
 });
+*/

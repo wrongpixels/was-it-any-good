@@ -1,7 +1,8 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
-import { Media, Rating, Show } from '..';
+import { Film, Media, Rating, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
+import { MediaQueryValues } from '../../types/media/media-types';
 
 class Season extends Media<
   InferAttributes<Season>,
@@ -33,6 +34,17 @@ class Season extends Media<
       foreignKey: 'showId',
       as: 'show',
     });
+  }
+  static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
+    const mediaType = MediaType.Season;
+    const media: Show | Film | Season | null = await this.findMediaBy({
+      ...params,
+      mediaType,
+    });
+    if (media?.mediaType !== mediaType) {
+      return null;
+    }
+    return media;
   }
 }
 

@@ -1,4 +1,3 @@
-import { Transaction } from 'sequelize';
 import { createFilm } from '../factories/film-factory';
 import Film, { CreateFilm } from '../models/media/film';
 import {
@@ -10,27 +9,33 @@ import {
   TMDBCreditsData,
   TMDBCreditsSchema,
 } from '../schemas/tmdb-media-schema';
-import { FilmData } from '../types/media/media-types';
+import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
-import { buildCreditsAndGetEntry, trimCredits } from './media-service';
+import { buildCreditsAndGenres, trimCredits } from './media-service';
 
 export const buildFilmEntry = async (
-  tmdbId: string,
-  transaction: Transaction
+  params: MediaQueryValues
 ): Promise<Film | null> => {
-  const filmData: FilmData = await fetchTMDBFilm(tmdbId);
-  const filmEntry: Film | null = await Film.create(buildFilm(filmData), {
-    transaction,
-  });
+  const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
+  const { scopeOptions, findOptions } = Film.buildMediaQueryOptions(params);
+  const filmEntry: Film | null = await Film.scope(scopeOptions).create(
+    buildFilm(filmData),
+    {
+      transaction: params.transaction,
+    }
+  );
   if (!filmEntry) {
     throw new CustomError('Film could not be created', 400);
   }
   console.log('Created film!');
-  return await buildCreditsAndGetEntry(filmEntry, filmData, transaction);
+  await buildCreditsAndGenres(filmEntry, filmData, params.transaction);
+  return await filmEntry.reload(findOptions);
 };
 
-export const fetchTMDBFilm = async (tmdbId: string): Promise<FilmData> => {
+export const fetchTMDBFilm = async (
+  tmdbId: string | number
+): Promise<FilmData> => {
   const filmRes = await tmdbAPI.get(`/movie/${tmdbId}`);
   const creditsRes = await tmdbAPI.get(`/movie/${tmdbId}/credits`);
 

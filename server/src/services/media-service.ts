@@ -12,28 +12,14 @@ import {
   TMDBCreditsData,
   TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
-import CustomError from '../util/customError';
 import { MediaType } from '../../../shared/types/media';
 import { CreateMediaGenre } from '../../../shared/types/models';
 
-//Overrides to ensure type safety
-export function buildCreditsAndGetEntry(
-  media: Film,
-  mediaData: MediaData,
-  transaction: Transaction
-): Promise<Film | null>;
-
-export function buildCreditsAndGetEntry(
-  media: Show,
-  mediaData: MediaData,
-  transaction: Transaction
-): Promise<Show | null>;
-
-export async function buildCreditsAndGetEntry(
+export const buildCreditsAndGenres = async (
   media: Film | Show,
   mediaData: MediaData,
-  transaction: Transaction
-): Promise<Film | Show | null> {
+  transaction?: Transaction
+): Promise<MediaRole[] | null> => {
   console.log('\n\nSTARTING PROCESS\n\n');
   const mediaId: number = media.id;
 
@@ -47,55 +33,19 @@ export async function buildCreditsAndGetEntry(
     //throw new CustomError('Error creating genres', 400);
   }
 
-  const credits: MediaRole[] | null = await buildCredits(
+  const credits: MediaRole[] | null = await buildCastAndCrew(
     mediaData,
     mediaId,
     transaction
   );
-  if (!credits) {
-    //throw new CustomError('Error creating credits', 400);
-  }
-  const finalMediaEntry: Film | Show | null = await getFinalEntry(
-    mediaData,
-    mediaId,
-    transaction
-  );
-
-  if (!finalMediaEntry) {
-    throw new CustomError(
-      `Error gathering just created ${mediaData.mediaType}`,
-      400
-    );
-  }
   console.log('\n\nENDED PROCESS\n\n');
-
-  return finalMediaEntry;
-}
-
-//We need to do this to avoid 'mode.scope' ambiguity
-const getFinalEntry = async (
-  mediaData: MediaData,
-  mediaId: number,
-  transaction: Transaction
-): Promise<Film | Show | null> => {
-  switch (mediaData.mediaType) {
-    case MediaType.Film:
-      return await Film.unscoped()
-        .scope('withCredits')
-        .findByPk(mediaId, { transaction });
-    case MediaType.Show:
-      return await Show.unscoped()
-        .scope(['withSeasons', 'withCredits'])
-        .findByPk(mediaId, { transaction });
-    default:
-      return null;
-  }
+  return credits;
 };
 
-export const buildCredits = async (
+export const buildCastAndCrew = async (
   mediaData: MediaData,
   mediaId: number,
-  transaction: Transaction
+  transaction?: Transaction
 ): Promise<MediaRole[] | null> => {
   const cast: MediaRole[] | null = await buildPeople(
     mediaData.cast,
@@ -117,7 +67,7 @@ const buildPeople = async (
   mediaPeople: MediaPerson[],
   mediaId: number,
   mediaType: MediaType,
-  transaction: Transaction
+  transaction?: Transaction
 ): Promise<MediaRole[] | null> => {
   const people: Person[] | null = await bulkCreatePeople(
     mediaPeople,
@@ -140,7 +90,7 @@ export const buildGenres = async (
   mediaData: MediaData,
   mediaId: number,
   mediaType: MediaType,
-  transaction: Transaction
+  transaction?: Transaction
 ): Promise<MediaGenre[] | null> => {
   await Genre.bulkCreate(mediaData.genres, {
     ignoreDuplicates: true,
@@ -180,7 +130,7 @@ const mediaPersonToCreatePerson = (mediaPerson: MediaPerson): CreatePerson => ({
 
 const bulkCreatePeople = async (
   mediaPeople: MediaPerson[],
-  transaction: Transaction
+  transaction?: Transaction
 ): Promise<Person[] | null> => {
   const peopleMap = new Map<number, CreatePerson>();
   mediaPeople.forEach((mp: MediaPerson) => {
@@ -217,7 +167,7 @@ export const bulkCreateMediaRoles = async (
   people: Person[],
   mediaId: number,
   mediaType: MediaType,
-  transaction: Transaction
+  transaction?: Transaction
 ): Promise<MediaRole[] | null> => {
   const tmdbIdToIdMap = new Map<number, number>();
   people.forEach((p) => {
