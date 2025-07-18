@@ -68,10 +68,10 @@ export const useVoteMutation = () => {
         rating,
       });
       if (!queryManager.media) {
-        //if the cache is empty, we invalidate to refetch fresh data.
+        //if the cache is empty, we refetch fresh data.
         console.log('Invalidation');
         console.log(rating);
-        queryManager.invalidateMedia();
+        queryManager.refetchMedia();
         return;
       }
       if (queryManager.isSeason) {

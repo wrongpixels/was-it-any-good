@@ -16,7 +16,7 @@ export interface MediaQueryManager {
   isSeason: boolean;
   setMedia: (media: MediaResponse) => void;
   setSeason: (media: SeasonResponse) => void;
-  invalidateMedia: VoidFunction;
+  refetchMedia: VoidFunction;
 }
 
 interface RatingQueryValues {
@@ -80,8 +80,8 @@ export const createMediaQueryManager = ({
     const updatedMedia: ShowResponse = addOrReplaceSeason(season, media);
     setMedia(updatedMedia);
   };
-  const invalidateMedia = () =>
-    queryClient.invalidateQueries({
+  const refetchMedia = () =>
+    queryClient.refetchQueries({
       queryKey: [mediaQueryKey, tmdbMediaQueryKey],
     });
 
@@ -92,6 +92,6 @@ export const createMediaQueryManager = ({
     mediaQueryKey,
     seasonMedia,
     isSeason,
-    invalidateMedia,
+    refetchMedia,
   };
 };
