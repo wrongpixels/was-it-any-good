@@ -24,7 +24,6 @@ import {
   AuthorData,
   StudioData,
   TMDBData,
-  MediaType,
 } from '../types/media/media-types';
 import { mapTMDBGenres } from '../services/genre-mapper';
 import { createCreators, createIndexForShowBulk } from './show-factory';
@@ -38,6 +37,7 @@ import {
 import { DEF_IMAGE_PERSON } from '../../../shared/defaults/media-defaults';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { createIndexForFilmBulk } from './film-factory';
+import { MediaType } from '../../../shared/types/media';
 
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,

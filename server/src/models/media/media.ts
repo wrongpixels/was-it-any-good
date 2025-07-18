@@ -9,6 +9,9 @@ import {
   FindOptions,
   Op,
   Transaction,
+  Includeable,
+  WhereOptions,
+  ScopeOptions,
 } from 'sequelize';
 import {
   Film,
@@ -17,7 +20,6 @@ import {
   MediaGenre,
   MediaRole,
   Rating,
-  Season,
   Show,
 } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
@@ -28,10 +30,13 @@ import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 import { addIndexMedia } from '../../services/index-media-service';
 import { getYearNum } from '../../../../shared/helpers/format-helper';
+import { FindByValues } from '../../types/media/media-types';
+import { getUserRatingInclude } from '../../constants/scope-attributes';
+import CustomError from '../../util/customError';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare indexId?: CreationOptional<number | null>;
@@ -250,21 +255,48 @@ class Media<
       voteCount: finalVoteCount,
     };
   }
+  //a shared function to get media entries by either internal id or tmdbId
+  //scopes for credits and the active user rating are included if provided
 
-  static async findByType(
-    id: number,
-    mediaType: MediaType,
-    transaction?: Transaction
-  ) {
+  static async findBy({
+    mediaId,
+    mediaType,
+    isTmdbId,
+    unscoped,
+    transaction,
+    activeUser,
+  }: FindByValues): Promise<Film | Show | null> {
+    if (!mediaId) {
+      throw new CustomError('A media ID must be provided', 400);
+    }
+
+    const where: WhereOptions = isTmdbId
+      ? { tmdbId: mediaId }
+      : { id: mediaId };
+
+    const include: Includeable[] = getUserRatingInclude(mediaType, activeUser);
+
+    const scopeOptions: (string | ScopeOptions)[] = unscoped
+      ? []
+      : ['withCredits'];
+
+    if (mediaType === MediaType.Show) {
+      scopeOptions.push({
+        method: [
+          'withSeasons',
+          getUserRatingInclude(MediaType.Season, activeUser),
+        ],
+      });
+    }
+    const findOptions: FindOptions = { where, include, transaction };
+
     switch (mediaType) {
-      case MediaType.Season:
-        return await Season.findByPk(id, { transaction });
-      case MediaType.Show:
-        return await Show.findByPk(id, { transaction });
       case MediaType.Film:
-        return await Film.findByPk(id, { transaction });
+        return Film.scope(scopeOptions).findOne(findOptions);
+      case MediaType.Show:
+        return Show.scope(scopeOptions).findOne(findOptions);
       default:
-        return null;
+        throw new CustomError(`Invalid media type: ${mediaType}`, 400);
     }
   }
 
@@ -273,7 +305,7 @@ class Media<
     mediaType: MediaType,
     transaction?: Transaction
   ): Promise<RatingStats> {
-    const media = await this.findByType(id, mediaType, transaction);
+    const media = await this.findBy({ mediaId: id, mediaType });
 
     if (!media) {
       return DEF_RATING_STATS;

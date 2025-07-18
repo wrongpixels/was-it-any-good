@@ -3,6 +3,7 @@ import {
   DEF_IMAGE_PERSON,
 } from '../../../shared/defaults/media-defaults';
 import { CountryCode } from '../../../shared/types/countries';
+import { MediaType } from '../../../shared/types/media';
 import {
   BirthDate,
   IndividualData,
@@ -12,7 +13,6 @@ import {
   RoleData,
   RoleType,
   DefaultMedia,
-  MediaType,
   DefaultFilm,
   SubMediaType,
   DefaultShow,

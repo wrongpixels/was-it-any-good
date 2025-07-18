@@ -71,6 +71,7 @@ export async function buildCreditsAndGetEntry(
 
   return finalMediaEntry;
 }
+
 //We need to do this to avoid 'mode.scope' ambiguity
 const getFinalEntry = async (
   mediaData: MediaData,

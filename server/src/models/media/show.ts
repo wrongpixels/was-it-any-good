@@ -9,8 +9,9 @@ import {
   ShowParental,
 } from '../../types/parental/parental-types';
 import { sequelize } from '../../util/db';
-import { MediaType } from '../../types/media/media-types';
+
 import { Media, Season } from '..';
+import { MediaType } from '../../../../shared/types/media';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;

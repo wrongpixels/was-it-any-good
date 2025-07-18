@@ -7,8 +7,8 @@ import {
 } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
-import { MediaType } from '../../types/media/media-types';
 import { BRIEF_MEDIA_ATTRIBUTES } from '../../constants/scope-attributes';
+import { MediaType } from '../../../../shared/types/media';
 
 class Person extends Model<
   InferAttributes<Person>,

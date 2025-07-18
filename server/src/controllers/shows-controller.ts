@@ -29,39 +29,37 @@ router.get('', async (_req, res, next) => {
 router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const include: Includeable[] = getUserRatingInclude(
-      MediaType.Show,
-      req.activeUser?.id
-    );
-    const showEntry: Show | null = await Show.scope([
-      {
-        method: [
-          'withSeasons',
-          getUserRatingInclude(MediaType.Season, req.activeUser?.id),
-        ],
-      },
-      'withCredits',
-    ]).findByPk(id, { include });
-    if (!showEntry) {
-      res.json(null);
-      return;
-    }
+
+    const showEntry: Media | null = await Show.findBy({
+      mediaId: id,
+      mediaType: MediaType.Show,
+    });
     const show: ShowResponse = showEntry.get({ plain: true });
     res.json(show);
   } catch (error) {
     next(error);
   }
 });
-router.get('/tmdb/:id', async (req, res, next) => {
+router.get('/tmdb/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
+    const include: Includeable[] = getUserRatingInclude(
+      MediaType.Show,
+      req.activeUser
+    );
     let showEntry: Show | null = await Show.scope([
-      'withSeasons',
+      {
+        method: [
+          'withSeasons',
+          getUserRatingInclude(MediaType.Season, req.activeUser),
+        ],
+      },
       'withCredits',
     ]).findOne({
       where: {
         tmdbId: id,
       },
+      include,
     });
     if (!showEntry) {
       const transaction: Transaction = await sequelize.transaction();

@@ -7,18 +7,22 @@ import {
   ShowParental,
 } from '../parental/parental-types';
 import { Image } from '../../../../shared/types/common';
+import { ActiveUser } from '../../../../shared/types/models';
+import { Transaction } from 'sequelize';
+import { MediaType } from '../../../../shared/types/media';
 
 export interface BirthDate {
   year: number;
   isUnknown: boolean;
 }
 
-// Enums
-export enum MediaType {
-  Film = 'Film',
-  Show = 'Show',
-  Game = 'Game',
-  Season = 'Season',
+export interface FindByValues {
+  mediaId: number | string;
+  mediaType: MediaType;
+  isTmdbId?: boolean;
+  unscoped?: boolean;
+  activeUser?: ActiveUser;
+  transaction?: Transaction;
 }
 
 export enum SubMediaType {

@@ -1,9 +1,9 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
 import { FilmParental } from '../../types/parental/parental-types';
-import { MediaType } from '../../types/media/media-types';
 
 import { Media } from '..';
+import { MediaType } from '../../../../shared/types/media';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare mediaType: MediaType.Film;

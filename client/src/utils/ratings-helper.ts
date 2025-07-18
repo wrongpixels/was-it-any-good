@@ -119,7 +119,16 @@ export const recalculateRating = (
   previousRating: number = 0
 ): NewMediaRating => {
   console.log(1);
-  console.log(userRating, currentRating, previousRating, totalVotes);
+  console.log(
+    'User voted a',
+    userRating,
+    '\ncurrent rating is',
+    currentRating,
+    '\nprevious rating was rating is',
+    previousRating,
+    '\ntotal votes are',
+    totalVotes
+  );
   const firstVote: boolean = totalVotes === 0;
 
   if (userRating === 0 && previousRating > 0) {

@@ -30,7 +30,7 @@ router.get('/:id', async (req: Request, res, next) => {
     const id: string = req.params.id;
     const include: Includeable[] = getUserRatingInclude(
       MediaType.Film,
-      req.activeUser?.id
+      req.activeUser
     );
     const filmEntry: Film | null = await Film.scope('withCredits').findByPk(
       id,
