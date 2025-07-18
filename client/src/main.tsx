@@ -7,7 +7,14 @@ import AuthProvider from './context/AuthProvider.tsx';
 import { setupAxiosInterceptors } from './utils/axios-config.ts';
 import { NotificationProvider } from './context/NotificationProvider.tsx';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 setupAxiosInterceptors(queryClient);
 
 declare global {

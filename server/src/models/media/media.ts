@@ -279,6 +279,8 @@ class Media<
         return Film.scope(scopeOptions).findOne(combinedFindOptions);
       case MediaType.Show:
         return Show.scope(scopeOptions).findOne(combinedFindOptions);
+      case MediaType.Season:
+        return Season.scope(scopeOptions).findOne(combinedFindOptions);
       default:
         throw new CustomError(`Invalid media type: ${params.mediaType}`, 400);
     }
@@ -289,7 +291,11 @@ class Media<
     mediaType: MediaType,
     transaction?: Transaction
   ): Promise<RatingStats> {
-    const media = await this.findMediaBy({ mediaId: id, mediaType });
+    const media = await this.findMediaBy({
+      mediaId: id,
+      mediaType,
+      unscoped: true,
+    });
 
     if (!media) {
       return DEF_RATING_STATS;

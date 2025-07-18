@@ -37,14 +37,14 @@ export const buildShowEntry = async (
     throw new CustomError('Show could not be created', 400);
   }
   console.log('Created show!');
-
-  const seasonEntries: (Season | null)[] = await Promise.all(
-    showData.seasons.map((s: SeasonData) =>
-      Season.create(buildSeason(s, showEntry), {
-        transaction: params.transaction,
-      })
-    )
+  const seasons: CreateSeason[] = showData.seasons.map((s: SeasonData) =>
+    buildSeason(s, showEntry)
   );
+  const seasonEntries = await Season.bulkCreate(seasons, {
+    ignoreDuplicates: true,
+    transaction: params.transaction,
+  });
+
   if (!seasonEntries || seasonEntries.length <= 0) {
     //throw new CustomError(`Seasons for Show ${showId} could not be created`, 400 );
   }

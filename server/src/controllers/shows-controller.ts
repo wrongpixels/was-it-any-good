@@ -69,6 +69,8 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
         }
         throw error;
       }
+    } else {
+      console.log('Found show first try');
     }
     if (!showEntry) {
       res.json(null);
