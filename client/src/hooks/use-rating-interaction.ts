@@ -91,11 +91,11 @@ export const useRatingInteraction = (
         handleVoteAnimation();
       }
     } else if (hoverRating) {
-      notification.setNotification({
+      /*notification.setNotification({
         message: `Voted ${mediaType}\nwith a ${hoverRating}!`,
         offset: LOW_NOTIFICATION,
         anchorRef: notification.anchorRef,
-      });
+      });*/
       handleVote(hoverRating);
       handleVoteAnimation();
     }

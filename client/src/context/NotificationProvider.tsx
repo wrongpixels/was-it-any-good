@@ -108,7 +108,7 @@ export const useNotificationContext = () => {
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const setNotification = useCallback(
     (props: SendNotificationProps) => {
-      const finalAnchorRef = props.anchorRef || anchorRef;
+      const finalAnchorRef = props.anchorRef;
       context.setNotification({ ...props, anchorRef: finalAnchorRef });
     },
     [context, anchorRef]
@@ -116,7 +116,7 @@ export const useNotificationContext = () => {
 
   const setError = useCallback(
     (props: SendNotificationProps) => {
-      const finalAnchorRef = props.anchorRef || anchorRef;
+      const finalAnchorRef = props.anchorRef;
       context.setError({ ...props, anchorRef: finalAnchorRef });
     },
     [context, anchorRef]
