@@ -10,7 +10,7 @@ export const saveLocalUserSession = (sessionData: UserSessionData) => {
 
 export const logoutClientSide = (queryClient: QueryClient) => {
   eraseLocalUserSession();
-  queryClient.resetQueries();
+  queryClient.removeQueries();
 };
 
 export const eraseLocalUserSession = () => {

@@ -6,6 +6,7 @@ import { InputField } from '../common/InputField';
 const HeaderLogin = (): JSX.Element => {
   const { session, handleLogout, submitLogin, passwordInput, userInput } =
     useLoginForm();
+
   if (session) {
     return (
       <div className="flex gap-2 items-center text-amber-100 font-normal">
