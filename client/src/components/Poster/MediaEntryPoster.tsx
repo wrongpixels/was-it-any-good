@@ -10,6 +10,7 @@ interface MediaEntryPosterProps {
 
 const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
+
   return (
     <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
       <LazyImage

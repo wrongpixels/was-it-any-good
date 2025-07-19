@@ -2,7 +2,6 @@ import StarIcon from './StarIcon';
 import {
   RATING_DELAYS,
   RATING_DURATIONS,
-  RATING_SCALES,
 } from '../../constants/ratings-constants';
 import { UserVote } from '../../../../shared/types/common';
 import { JSX } from 'react';

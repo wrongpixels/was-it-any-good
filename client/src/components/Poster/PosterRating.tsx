@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
 import StarRating from '../Rating/StarRating';
@@ -22,6 +22,9 @@ const PosterRating = ({
   if (isNaN(rating) || !media) {
     return null;
   }
+  useEffect(() => {
+    console.log(rating, 'changed');
+  }, [rating]);
   const isSeason: boolean =
     media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
@@ -56,7 +59,7 @@ const PosterRating = ({
             </div>
           )}
           <span
-            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
+            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 animate-bounce`}
           >
             {rating}
           </span>

@@ -9,7 +9,8 @@ import {
 export const useRating = (
   mediaId: number,
   mediaType: MediaType,
-  userRating: RatingData | null
+  userRating: RatingData | null,
+  onVote?: () => void
 ) => {
   const voteMutation = useVoteMutation();
   const unVoteMutation = useUnvoteMutation();
@@ -22,11 +23,13 @@ export const useRating = (
       showId,
     };
     voteMutation.mutate(ratingData);
+    onVote?.();
   };
 
   const handleUnvote = (): void => {
     if (userRating) {
       unVoteMutation.mutate(userRating);
+      onVote?.();
     }
   };
 
