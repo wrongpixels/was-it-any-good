@@ -20,13 +20,13 @@ export interface AnimPlayParams {
   options?: AnimOptions;
 }
 
-export interface Animation {
+export interface Anim {
   animationClass: ClassValue;
   loop: AnimLoop;
 }
 
 interface AnimEngineValues {
-  activeAnimations: Map<AnimKey, Animation>;
+  activeAnimations: Map<AnimKey, Anim>;
   play: (params: AnimPlayParams) => void;
   stop: (key: AnimKey) => void;
 }
@@ -34,13 +34,13 @@ interface AnimEngineValues {
 export const AnimationContext = createContext<AnimEngineValues | null>(null);
 
 export const AnimationProvider = ({ children }: PropsWithChildren) => {
-  const [activeAnimations, setActiveAnimations] = useState<
-    Map<AnimKey, Animation>
-  >(new Map());
+  const [activeAnimations, setActiveAnimations] = useState<Map<AnimKey, Anim>>(
+    new Map()
+  );
 
   const play = ({ key, animationClass, options = {} }: AnimPlayParams) => {
     const loop: AnimLoop = options.loop === false ? 1 : (options.loop ?? 1);
-    const animation: Animation = { animationClass, loop };
+    const animation: Anim = { animationClass, loop };
 
     setActiveAnimations((prev) => {
       const newMap = new Map(prev);

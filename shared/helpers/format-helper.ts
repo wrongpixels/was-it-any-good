@@ -17,3 +17,6 @@ export const getYearNum = (
   const year: number = date.getFullYear()
   return isNaN(year) ? null : year
 }
+
+export const isNumber = (value?: unknown): value is number =>
+  typeof value === 'number' && !isNaN(value)
