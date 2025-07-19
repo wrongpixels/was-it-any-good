@@ -56,6 +56,9 @@ const StarRating = ({
     return userRating ? RATING_COLORS.selected : RATING_COLORS.default;
   };
 
+  const getVoteStarColor = (): string =>
+    userRating?.userScore ? RATING_COLORS.selected : RATING_COLORS.delete;
+
   const calculateDisplayRating = (): UserVote => {
     if (!isHovering) {
       return userRating && userRating.userScore !== UserVote.None
@@ -100,11 +103,24 @@ const StarRating = ({
             <div className={getStarColor()}>
               <StarList
                 width={starWidth}
-                justVoted={justVoted}
+                justVoted={false}
                 defaultRating={defaultRating}
                 userRating={userRating?.userScore}
               />
             </div>
+            {justVoted && (
+              <div
+                className={`absolute top-0 left-0 overflow-hidden ${getVoteStarColor()}`}
+              >
+                <StarList
+                  width={starWidth}
+                  justVoted={true}
+                  defaultRating={defaultRating}
+                  userRating={userRating?.userScore || defaultRating}
+                />
+                {''}
+              </div>
+            )}
           </div>
         </div>
         <div className="w-4" />

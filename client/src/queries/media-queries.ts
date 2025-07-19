@@ -5,7 +5,6 @@ import { mergeCredits } from '../utils/credits-merger';
 import { MediaType } from '../../../shared/types/media';
 import { useEffect } from 'react';
 import { getActiveMediaKey } from '../utils/ratings-helper';
-import { data } from 'react-router-dom';
 
 const transformCredits = (data: MediaResponse): MediaResponse => {
   if (!data.crew) {
@@ -83,19 +82,7 @@ export const useMediaByTMDBQuery = (
     },
     enabled: !!id,
   });
-
-  return idQuery;
-  //we create a copy for id urls
-
-  useEffect(() => {
-    const media = query.data;
-    if (media?.id) {
-      queryClient.setQueryData(
-        getActiveMediaKey(mediaType, media.id, false),
-        media
-      );
-    }
-  }, [query.data, mediaType, tmdbId, queryClient]);
-
-  return query;
+  //we return the 1st query with the 2nd query's data so isLoading etc is linked to
+  //the query doing the fetch process.
+  return { ...query, data: idQuery.data };
 };

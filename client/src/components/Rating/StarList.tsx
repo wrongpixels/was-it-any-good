@@ -21,9 +21,7 @@ const StarList = ({
 }: StarListProps): JSX.Element => {
   const getStarClassname = (i: number): string => {
     if (justVoted && i < userRating / 2) {
-      return `transition-all ${RATING_SCALES[i]} ${RATING_DELAYS[i]} ${RATING_DURATIONS[i]} ${
-        userRating ? 'text-yellow-400' : 'text-blue-400'
-      }`;
+      return `animate-ping [animation-iteration-count:1] transition-all ${RATING_DELAYS[i]} ${RATING_DURATIONS[i]}`;
     }
     return '';
   };

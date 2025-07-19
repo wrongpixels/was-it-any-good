@@ -50,6 +50,11 @@ export const useRatingInteraction = (
     return numToVote(rating);
   };
 
+  const handleVoteAnimation = () => {
+    setJustVoted(true);
+    setTimeout(() => setJustVoted(false), 400);
+  };
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>): void => {
     const container: EventTarget & HTMLDivElement = e.currentTarget;
     const { left, width }: DOMRect = container.getBoundingClientRect();
@@ -83,6 +88,7 @@ export const useRatingInteraction = (
           anchorRef: notification.anchorRef,
         });
         handleUnvote();
+        handleVoteAnimation();
       }
     } else if (hoverRating) {
       notification.setNotification({
@@ -91,8 +97,7 @@ export const useRatingInteraction = (
         anchorRef: notification.anchorRef,
       });
       handleVote(hoverRating);
-      setJustVoted(true);
-      setTimeout(() => setJustVoted(false), 200);
+      handleVoteAnimation();
     }
     setIsHovering(false);
     setNeedToLeave(true);
