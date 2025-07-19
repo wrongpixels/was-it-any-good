@@ -6,6 +6,36 @@
   --color-hoverblue: #7c9edd;
   --color-notigreen: #289e63;
   --color-notigreenbg: #dbece2;
+  --animate-d-ping: d-ping 0.8s ease-out;
+  @keyframes d-ping {
+    0% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(2);
+      opacity: 0;
+    }
+  }
+  --animate-bounce-once: bounce-once 1.3s ease-in-out;
+  @keyframes bounce-once {
+    0% {
+      transform: translateY(0);
+    }
+    10% {
+      transform: translateY(-10%);
+    }
+    20% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-5%);
+    }
+    40%,
+    100% {
+      transform: translateY(0);
+    }
+  }
 }
 
 :root {

@@ -15,7 +15,6 @@ interface StarRatingProps {
   readonly starWidth?: number;
   readonly defaultRating?: number;
   readonly media: MediaResponse | SeasonResponse;
-  readonly onVote?: () => void;
   readonly showId?: number;
 }
 
@@ -24,14 +23,12 @@ const StarRating = ({
   defaultRating = 0,
   media,
   showId,
-  onVote,
 }: StarRatingProps): JSX.Element => {
   const { mediaType, userRating = null, id: mediaId } = media;
   const { handleVote, handleUnvote } = useRating(
     mediaId,
     mediaType,
-    userRating,
-    onVote
+    userRating
   );
   const {
     hoverRating,

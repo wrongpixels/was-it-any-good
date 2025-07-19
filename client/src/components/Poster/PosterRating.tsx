@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
 import StarRating from '../Rating/StarRating';
@@ -7,6 +7,7 @@ import {
   DEF_MINI_STAR_WIDTH,
   DEF_STAR_WIDTH,
 } from '../../constants/ratings-constants';
+import { AnimatedDiv } from '../common/AnimatedDiv';
 
 interface PosterRatingProps {
   media: MediaResponse | SeasonResponse;
@@ -22,9 +23,7 @@ const PosterRating = ({
   if (isNaN(rating) || !media) {
     return null;
   }
-  useEffect(() => {
-    console.log(rating, 'changed');
-  }, [rating]);
+
   const isSeason: boolean =
     media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
@@ -58,11 +57,12 @@ const PosterRating = ({
               />
             </div>
           )}
-          <span
-            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 animate-bounce`}
+          <AnimatedDiv
+            animKey={`${media.mediaType}-score-${media.id}`}
+            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
           >
             {rating}
-          </span>
+          </AnimatedDiv>
           {!isSeason && (
             <div className="w-6 opacity-80">
               <ExternalLogo

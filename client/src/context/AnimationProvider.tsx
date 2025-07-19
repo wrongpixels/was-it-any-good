@@ -27,8 +27,8 @@ export interface Anim {
 
 interface AnimEngineValues {
   activeAnimations: Map<AnimKey, Anim>;
-  play: (params: AnimPlayParams) => void;
-  stop: (key: AnimKey) => void;
+  playAnim: (params: AnimPlayParams) => void;
+  stopAnim: (key: AnimKey) => void;
 }
 
 export const AnimationContext = createContext<AnimEngineValues | null>(null);
@@ -38,27 +38,36 @@ export const AnimationProvider = ({ children }: PropsWithChildren) => {
     new Map()
   );
 
-  const play = ({ key, animationClass, options = {} }: AnimPlayParams) => {
+  const playAnim = ({ key, animationClass, options = {} }: AnimPlayParams) => {
     const loop: AnimLoop = options.loop === false ? 1 : (options.loop ?? 1);
     const animation: Anim = { animationClass, loop };
+    console.log('Playing', key);
 
+    stopAnim(key);
     setActiveAnimations((prev) => {
       const newMap = new Map(prev);
       newMap.set(key, animation);
+      console.log('Playing', key, 'active:', newMap.size);
+
       return newMap;
     });
   };
 
-  const stop = (key: AnimKey) => {
+  const stopAnim = (key: AnimKey) => {
     setActiveAnimations((prev) => {
+      if (!prev.has(key)) {
+        return prev;
+      }
       const newMap = new Map(prev);
       newMap.delete(key);
+      console.log('stopping', key, 'active:', prev.size);
+
       return newMap;
     });
   };
 
   const value = useMemo(
-    () => ({ activeAnimations, play, stop }),
+    () => ({ activeAnimations, playAnim, stopAnim }),
     [activeAnimations]
   );
 
@@ -69,10 +78,15 @@ export const AnimationProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export const useAnimation = () => {
+interface AnimValues extends Omit<AnimEngineValues, 'activeAnimations'> {}
+
+export const useAnimation = (): AnimValues => {
   const context = useContext(AnimationContext);
   if (!context) {
     throw new Error('useAnimation must be used within an AnimationProvider');
   }
-  return { play: context.play, stop: context.stop };
+  return {
+    playAnim: context.playAnim,
+    stopAnim: context.stopAnim,
+  };
 };
