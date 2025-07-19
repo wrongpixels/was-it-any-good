@@ -84,7 +84,8 @@ export const createMediaQueryManager = ({
     getTmdbMediaKey(isSeason ? MediaType.Show : mediaType, media?.tmdbId);
     console.log(media);
     queryClient.refetchQueries({
-      queryKey: [mediaQueryKey],
+      queryKey: [mediaQueryKey, tmdbMediaQueryKey],
+      type: 'all',
     });
     console.log(tmdbMediaQueryKey, mediaQueryKey, media);
   };

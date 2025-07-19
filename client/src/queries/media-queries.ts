@@ -5,6 +5,7 @@ import { mergeCredits } from '../utils/credits-merger';
 import { MediaType } from '../../../shared/types/media';
 import { useEffect } from 'react';
 import { getActiveMediaKey } from '../utils/ratings-helper';
+import { data } from 'react-router-dom';
 
 const transformCredits = (data: MediaResponse): MediaResponse => {
   if (!data.crew) {
@@ -22,6 +23,7 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
 
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, id, false),
+    gcTime: Infinity,
     enabled: !!id && !isNaN(Number(id)),
     select: (data) => (data ? transformCredits(data) : null),
     queryFn: () => getMediaById(id, mediaType),
@@ -51,9 +53,38 @@ export const useMediaByTMDBQuery = (
     enabled: !!tmdbId && !isNaN(Number(tmdbId)),
     queryFn: async () => {
       const data = await getMediaByTMDBId(tmdbId, mediaType);
-      return data ? transformCredits(data) : null;
+      const media: MediaResponse | null = data ? transformCredits(data) : null;
+      if (media?.id) {
+        //we set now the cache for the next query
+        queryClient.setQueryData(
+          getActiveMediaKey(mediaType, media.id, false),
+          media
+        );
+      }
+      return media;
     },
   });
+
+  //a second query triggers when we have the media and its id that we set before.
+  //this will return the content of the first query directly, without fetching.
+  //we can now get the same data from id and tmdbid keys in any component, which becomes
+  //and observer in both queries, avoiding tanstack cleaning them.
+
+  const id = query.data?.id;
+  const queryKey = getActiveMediaKey(mediaType, id || 0, false);
+  const idQuery = useQuery({
+    queryKey,
+    queryFn: () => {
+      //this placeholder query is empty but useless, so we remove it
+      queryClient.removeQueries({
+        queryKey: getActiveMediaKey(mediaType, 0, false),
+      });
+      return query.data;
+    },
+    enabled: !!id,
+  });
+
+  return idQuery;
   //we create a copy for id urls
 
   useEffect(() => {
