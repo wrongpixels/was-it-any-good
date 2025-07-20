@@ -5,7 +5,7 @@ import BasicPoster from '../Poster/BasicPoster';
 import Title from '../Title';
 import { setTitle } from '../../utils/page-info-setter';
 
-const PersonEntry = (): JSX.Element | null => {
+const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
   const personId: string | undefined = match?.params.id;
   const { data: person, isError, isLoading, error } = usePersonQuery(personId);
@@ -38,4 +38,4 @@ const PersonEntry = (): JSX.Element | null => {
   );
 };
 
-export default PersonEntry;
+export default PersonPage;

@@ -6,6 +6,7 @@
   --color-hoverblue: #7c9edd;
   --color-notigreen: #289e63;
   --color-notigreenbg: #dbece2;
+
   --animate-d-ping: d-ping 0.8s ease-out;
   @keyframes d-ping {
     0% {

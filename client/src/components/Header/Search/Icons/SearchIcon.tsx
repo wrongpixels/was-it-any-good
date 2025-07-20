@@ -1,16 +1,22 @@
-interface SearchIconProps {
-  active?: boolean;
+import { OptBoolProps } from '../../../../types/common-props-types';
+interface SearchIconProps extends OptBoolProps {
+  sizePadding?: number;
 }
 
-const SearchIcon = ({ active = false }: SearchIconProps) => {
-  if (active) {
+const SearchIcon = ({
+  className,
+  sizePadding = 0,
+  condition = false,
+}: SearchIconProps) => {
+  if (condition) {
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        width={22}
-        height={22}
+        width={22 + sizePadding}
+        height={22 + sizePadding}
+        className={className}
       >
         <path
           fillRule="evenodd"
@@ -25,8 +31,9 @@ const SearchIcon = ({ active = false }: SearchIconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
-      width={23}
-      height={23}
+      width={23 + sizePadding}
+      height={23 + sizePadding}
+      className={className}
     >
       <path
         fillRule="evenodd"

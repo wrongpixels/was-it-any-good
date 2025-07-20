@@ -25,15 +25,15 @@ import ErrorPage from '../common/status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
 
-interface MediaEntryProps {
+interface MediaPage {
   mediaType: MediaType;
   tmdb?: boolean;
 }
 
-const MediaEntry = ({
+const MediaPage = ({
   tmdb = false,
   mediaType,
-}: MediaEntryProps): JSX.Element | null => {
+}: MediaPage): JSX.Element | null => {
   const { id: mediaId } = useParams<{ id: string }>();
   const { isLoginPending }: AuthContextValues = useAuth();
   const {
@@ -57,7 +57,6 @@ const MediaEntry = ({
   if (isFetching || isLoginPending) {
     return <LoadingPage text={mediaType} />;
   }
-  console.log('User vote is ', media?.userRating?.userScore);
   if (isError) {
     return (
       <ErrorPage context={`loading the ${mediaType}`} error={error.message} />
@@ -120,4 +119,4 @@ const MediaEntry = ({
   );
 };
 
-export default MediaEntry;
+export default MediaPage;

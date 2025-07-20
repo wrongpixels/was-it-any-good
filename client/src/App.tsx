@@ -1,12 +1,13 @@
 import { JSX } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import MediaEntry from './components/Media/MediaEntry';
+import MediaPage from './components/Media/MediaPage';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
-import PersonEntry from './components/Person/PersonEntry';
+import PersonPage from './components/Person/PersonPage';
 import NotFound from './components/NotFound';
 import { useAuth } from './hooks/use-auth';
 import SigningInPage from './components/common/status/SigningInPage';
+import SearchPage from './components/Search/SearchPage';
 
 const App = (): JSX.Element => (
   <div className="w-full">
@@ -30,27 +31,28 @@ const AppBody = (): JSX.Element => {
   return (
     <Routes>
       <Route path="/" element={null} />
+      <Route path="/search" element={<SearchPage />} />
       <Route
         path="/film/:id"
-        element={<MediaEntry key="local-id" mediaType={MediaType.Film} />}
+        element={<MediaPage key="local-id" mediaType={MediaType.Film} />}
       />
       <Route
         path="/show/:id"
-        element={<MediaEntry key="local-id" mediaType={MediaType.Show} />}
+        element={<MediaPage key="local-id" mediaType={MediaType.Show} />}
       />
       <Route
         path="/tmdb/film/:id"
         element={
-          <MediaEntry key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
+          <MediaPage key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
         }
       />
       <Route
         path="/tmdb/show/:id"
         element={
-          <MediaEntry key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
+          <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
         }
       />
-      <Route path="/person/:id" element={<PersonEntry />} />
+      <Route path="/person/:id" element={<PersonPage />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
