@@ -27,7 +27,7 @@ const SelectedLine = ({
   console.log(realOffset);
 
   return (
-    <span className="absolute inset-0 flex items-center">
+    <span className="absolute inset-0 flex items-center pointer-events-none">
       <div
         {...props}
         className={mergeClassnames(

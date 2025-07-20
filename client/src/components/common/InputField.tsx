@@ -27,7 +27,7 @@ export const InputField = ({
       <input
         id={name}
         className={mergeClassnames(
-          'pl-1 py-0.5 pr-1 rounded bg-white text-gray-800 text-sm',
+          'pl-1 py-0.5 pr-1 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue',
           className
         )}
         {...props}

@@ -62,6 +62,10 @@ export const routerPaths = {
     base: '/user',
     byId: (id: number | string) => `${routerPaths.users.base}/${id}`,
   },
+  search: {
+    base: `/search?`,
+    byTerm: (term: number | string) => `${routerPaths.search.base}q=${term}`,
+  },
 };
 
 export const buildRouterMediaLink = (

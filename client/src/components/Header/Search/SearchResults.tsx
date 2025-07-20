@@ -5,7 +5,7 @@ import Separator from '../../common/Separator';
 import SearchPoster from './components/SearchPoster';
 import FirstSearchRow from './rows/FirstSearchRow';
 import SearchRow from './rows/SearchRow';
-import { urlFromIndexMedia } from '../../../utils/url-helper';
+import { routerPaths, urlFromIndexMedia } from '../../../utils/url-helper';
 import LoadingSearchRow from './rows/LoadingSearchRow';
 
 interface SearchResultsProps {
@@ -43,6 +43,8 @@ const SearchResults = ({
   const navigateToResult = (targetIndex: number | null): void => {
     if (targetIndex && targetIndex > 0) {
       navigateTo(urlFromIndexMedia(searchResults[targetIndex - 1]));
+    } else if (targetIndex === 0) {
+      navigateTo(routerPaths.search.byTerm(searchValue));
     }
   };
   let mediaToShow: IndexMediaData | null = null;

@@ -27,7 +27,7 @@ const SearchField = (): JSX.Element => {
         condition={!!searchField.value}
         className="absolute text-gray-400 ml-0.5 mt-0.5"
       />
-      <InputField {...searchField.getProps()} className="pl-7" />
+      <InputField {...searchField.getProps()} className="pl-7 ring-0" />
       {searchField.value && isDropdownVisible && (
         <div className="absolute translate-y-7 -translate-x-2.5">
           <SearchResults
