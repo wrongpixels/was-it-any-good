@@ -27,7 +27,7 @@ export const AnimatedDiv = ({
     throw new Error('AnimatedDiv must be used within an AnimationProvider');
   }
 
-  //it's a nested div, so if we want to remove pointer-events it has to be done in the parent.
+  //it's a nested div, so to remove pointer-events we have to alter the parent.
   const parentClassName: string = `relative pointer-events-${pointerEvents}`;
   const { activeAnimations, stopAnim: stop } = context;
   const divRef = useRef<HTMLDivElement | null>(null);
@@ -72,7 +72,7 @@ export const AnimatedDiv = ({
       <div
         {...props}
         ref={divRef}
-        className={mergeClassnames(className, 'animationClass')}
+        className={mergeClassnames(className, animationClass)}
         style={inlineStyles}
       >
         {children}

@@ -58,6 +58,7 @@ const PosterRating = ({
             </div>
           )}
           <AnimatedDiv
+            pointerEvents="none"
             animKey={`${media.mediaType}-score-${media.id}`}
             className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 cursor-default `}
           >
