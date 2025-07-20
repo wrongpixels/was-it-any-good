@@ -41,7 +41,7 @@ const StarRating = ({
   } = useRatingInteraction(
     userRating?.userScore,
     (rating) => handleVote(rating, showId),
-    handleUnvote,
+    () => handleUnvote(showId),
     mediaType,
     starWidth
   );

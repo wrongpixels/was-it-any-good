@@ -2,10 +2,9 @@ import { JSX } from 'react';
 import { OptStringProps } from '../../../types/common-props-types';
 import { setTitle } from '../../../utils/page-info-setter';
 import LoadingSpinner from '../icons/LoadingSpinner';
-import { ClassNameValue } from 'tailwind-merge';
 
 interface SpinnerPageProps extends OptStringProps {
-  spinnerColor?: ClassNameValue;
+  spinnerColor?: string;
 }
 
 const SpinnerPage = ({

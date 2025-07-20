@@ -28,7 +28,7 @@ export const useRating = (
     onVote?.();
     playAnim({
       key: `${mediaType}-score-${mediaId}`,
-      animationClass: 'animate-bounce-once',
+      animationClass: 'animate',
     });
     if (showId)
       playAnim({

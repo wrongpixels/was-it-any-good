@@ -18,7 +18,7 @@ const GenreSection = ({
   }
   return (
     <div className="flex items-center text-gray-400 gap-2">
-      <IconForMediaType mediaType={mediaType} />
+      <IconForMediaType mediaType={mediaType} className="text-gray-600" />
       <span className="text-sm">
         {genres.map((g: GenreResponse, i: number) => (
           <React.Fragment key={g.id}>

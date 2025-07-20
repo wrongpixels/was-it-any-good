@@ -6,12 +6,13 @@ import { MediaTypeProps } from '../../../../types/common-props-types';
 
 const IconForMediaType = ({
   mediaType,
+  ...props
 }: MediaTypeProps): JSX.Element | null => {
   switch (mediaType) {
     case MediaType.Film:
-      return <FilmIcon />;
+      return <FilmIcon className={props.className} title="Film" />;
     case MediaType.Show:
-      return <ShowIcon />;
+      return <ShowIcon className={props.className} title="TV Show" />;
     default:
       return null;
   }

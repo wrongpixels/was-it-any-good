@@ -5,7 +5,6 @@ import {
   useMemo,
   PropsWithChildren,
 } from 'react';
-import { ClassValue } from 'clsx';
 
 export type AnimKey = number | string;
 export type AnimLoop = boolean | number;
@@ -16,12 +15,12 @@ export interface AnimOptions {
 
 export interface AnimPlayParams {
   key: AnimKey;
-  animationClass: ClassValue;
+  animationClass: string;
   options?: AnimOptions;
 }
 
 export interface Anim {
-  animationClass: ClassValue;
+  animationClass: string;
   loop: AnimLoop;
 }
 

@@ -13,7 +13,7 @@ import {
 export const useRatingInteraction = (
   userRating: UserVote | undefined,
   handleVote: (rating: UserVote) => void,
-  handleUnvote: () => void,
+  handleUnvote: (showId?: number) => void,
   mediaType: MediaType,
   starWidth: number
 ) => {

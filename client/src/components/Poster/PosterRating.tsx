@@ -59,7 +59,7 @@ const PosterRating = ({
           )}
           <AnimatedDiv
             animKey={`${media.mediaType}-score-${media.id}`}
-            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10`}
+            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 cursor-default`}
           >
             {rating}
           </AnimatedDiv>
