@@ -36,6 +36,25 @@
       transform: translateY(0);
     }
   }
+  --animate-shake: animate-shake 1.3s ease-in-out;
+  @keyframes animate-shake {
+    0% {
+      transform: translateX(0);
+    }
+    10% {
+      transform: translateX(5%);
+    }
+    20% {
+      transform: translateX(0);
+    }
+    30% {
+      transform: translateX(-10%);
+    }
+    40%,
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
 
 :root {

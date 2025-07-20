@@ -3,6 +3,7 @@ import { GenreResponse } from '../../../../shared/types/models';
 import React from 'react';
 import { MediaType } from '../../../../shared/types/media';
 import IconForMediaType from '../Header/Search/icons/IconForMediaType';
+import SelectedLine from '../common/SelectedLine';
 
 interface GenreSectionProps {
   genres: GenreResponse[];
@@ -17,7 +18,8 @@ const GenreSection = ({
     return null;
   }
   return (
-    <div className="flex items-center text-gray-400 gap-2">
+    <div className="flex items-center text-gray-400 gap-2 relative ml-1 pl-2">
+      <SelectedLine condition={true} />
       <IconForMediaType mediaType={mediaType} className="text-gray-600" />
       <span className="text-sm">
         {genres.map((g: GenreResponse, i: number) => (
