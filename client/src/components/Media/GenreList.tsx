@@ -19,7 +19,7 @@ const GenreSection = ({
   }
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1 pl-2">
-      <SelectedLine condition={true} />
+      <SelectedLine height={3} />
       <IconForMediaType mediaType={mediaType} className="text-gray-600" />
       <span className="text-sm">
         {genres.map((g: GenreResponse, i: number) => (

@@ -28,7 +28,7 @@ const FirstSearchRow = ({
       key="last-search"
       className={`flex flex-row min-w-50 items-center font-medium relative px-1.5 py-0.5 rounded-lg ${isActive ? 'bg-blue-50 text-cyan-850' : ''}`}
     >
-      <SelectedLine condition={isSelected} />
+      <SelectedLine condition={isSelected} offsetX={-0.5} height={5} />
       <span className="ml-1">
         <SearchIcon />
       </span>

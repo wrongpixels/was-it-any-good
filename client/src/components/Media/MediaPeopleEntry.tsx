@@ -44,7 +44,7 @@ const MediaPeopleEntry = ({
             <Link
               to={`/person/${c.person.id}`}
               key={c.person.id}
-              className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1 transition-all duration-100 ease-out hover:-translate-y-1"
+              className="flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1 transition-all duration-50 ease-out hover:-translate-y-1"
             >
               <img
                 src={c.person.image}

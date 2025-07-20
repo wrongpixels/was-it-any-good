@@ -47,7 +47,7 @@ const PosterRating = ({
       </div>
 
       {valid && rating > 0 ? (
-        <div className="flex items-center justify-center gap-6">
+        <div className="flex items-center justify-center gap-6 ">
           {!isSeason && (
             <div className="w-6">
               <ExternalLogo
@@ -59,12 +59,12 @@ const PosterRating = ({
           )}
           <AnimatedDiv
             animKey={`${media.mediaType}-score-${media.id}`}
-            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 cursor-default`}
+            className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 cursor-default `}
           >
             {rating}
           </AnimatedDiv>
           {!isSeason && (
-            <div className="w-6 opacity-80">
+            <div className="w-6 opacity-80 ">
               <ExternalLogo
                 media={media}
                 mediaType={media.mediaType}

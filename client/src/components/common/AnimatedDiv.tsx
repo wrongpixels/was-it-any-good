@@ -13,17 +13,22 @@ import { isNumber } from '../../../../shared/helpers/format-helper';
 
 interface AnimatedDivProps extends React.HTMLAttributes<HTMLDivElement> {
   animKey: AnimKey;
+  pointerEvents?: 'none' | 'auto';
 }
 export const AnimatedDiv = ({
   animKey,
   children,
   className,
+  pointerEvents = 'auto',
   ...props
 }: AnimatedDivProps) => {
   const context = useContext(AnimationContext);
   if (!context) {
     throw new Error('AnimatedDiv must be used within an AnimationProvider');
   }
+
+  //it's a nested div, so if we want to remove pointer-events it has to be done in the parent.
+  const parentClassName: string = `relative pointer-events-${pointerEvents}`;
   const { activeAnimations, stopAnim: stop } = context;
   const divRef = useRef<HTMLDivElement | null>(null);
   const animation: Anim | undefined = activeAnimations.get(animKey);
@@ -63,11 +68,11 @@ export const AnimatedDiv = ({
     !!animation && animationClass.toString().includes('animate-d-');
 
   return (
-    <div className="relative">
+    <div className={parentClassName}>
       <div
         {...props}
         ref={divRef}
-        className={mergeClassnames(className, animationClass)}
+        className={mergeClassnames(className, 'animationClass')}
         style={inlineStyles}
       >
         {children}

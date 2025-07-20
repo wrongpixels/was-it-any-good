@@ -32,19 +32,23 @@ const AppBody = (): JSX.Element => {
       <Route path="/" element={null} />
       <Route
         path="/film/:id"
-        element={<MediaEntry mediaType={MediaType.Film} />}
+        element={<MediaEntry key="local-id" mediaType={MediaType.Film} />}
       />
       <Route
         path="/show/:id"
-        element={<MediaEntry mediaType={MediaType.Show} />}
+        element={<MediaEntry key="local-id" mediaType={MediaType.Show} />}
       />
       <Route
         path="/tmdb/film/:id"
-        element={<MediaEntry mediaType={MediaType.Film} tmdb={true} />}
+        element={
+          <MediaEntry key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
+        }
       />
       <Route
         path="/tmdb/show/:id"
-        element={<MediaEntry mediaType={MediaType.Show} tmdb={true} />}
+        element={
+          <MediaEntry key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
+        }
       />
       <Route path="/person/:id" element={<PersonEntry />} />
       <Route path="*" element={<NotFound />} />

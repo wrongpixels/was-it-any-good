@@ -5,30 +5,38 @@ import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 interface SelectedLineProps extends OptBoolProps {
   width?: number | string;
   height?: number | string;
+  offsetX?: number;
 }
 
+const translateTo = (value: number) =>
+  `${value >= 0 ? '' : '-'}ml-${Math.abs(value)}`;
+
 const SelectedLine = ({
-  condition,
+  condition = true,
   className,
   width = 3,
   height = 'full',
+  offsetX,
   ...props
 }: SelectedLineProps): JSX.Element | null => {
   if (!condition) {
     return null;
   }
-  const realHeight = `h-${height}`;
+  const realHeight: string = `h-${height}`;
+  const realOffset: string = offsetX ? translateTo(offsetX) : '';
+  console.log(realOffset);
+
   return (
-    <div className="absolute inset-0 flex items-center">
+    <span className="absolute inset-0 flex items-center">
       <div
         {...props}
         className={mergeClassnames(
-          `rounded-md bg-current text-starblue ${realHeight}`,
-          className
+          `rounded-md bg-current text-starblue`,
+          `${className} ${realOffset} ${realHeight}`
         )}
         style={{ width: width }}
       />
-    </div>
+    </span>
   );
 };
 
