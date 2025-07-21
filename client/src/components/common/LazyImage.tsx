@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 import LoadingSpinner from './icons/LoadingSpinner';
 
-enum AspectRatio {
+export enum AspectRatio {
   square = 'aspect-square',
   video = 'aspect-video',
   picture = 'aspect-[4/3]',

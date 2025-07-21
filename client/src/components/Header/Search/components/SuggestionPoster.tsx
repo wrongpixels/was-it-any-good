@@ -5,28 +5,34 @@ import DisplayRating from '../../../Rating/DisplayRating';
 import { IndexMediaData } from '../../../../../../shared/types/models';
 import { getMediaAverageRating } from '../../../../utils/ratings-helper';
 import { styles } from '../../../../constants/tailwind-styles';
+import { Link } from 'react-router-dom';
+import { urlFromIndexMedia } from '../../../../utils/url-helper';
 
-interface SearchPosterProps {
+interface SuggestionPoster {
   media?: IndexMediaData | null;
 }
 
-const SearchPoster = ({ media }: SearchPosterProps): JSX.Element | null => {
+const SuggestionPoster = ({ media }: SuggestionPoster): JSX.Element | null => {
   if (!media) {
     return null;
   }
   const average: number = getMediaAverageRating(media);
 
   return (
-    <div className={`${styles.poster.search}`}>
+    <Link
+      to={urlFromIndexMedia(media)}
+      className={`${styles.poster.suggestions}`}
+    >
       <LazyImage
         src={media.image}
-        alt=""
+        title={media.name}
+        alt={media.name}
         className={`${styles.shadow.subtle} ring-1 ring-gray-200`}
       />
       <div className="h-5 m-1">
         <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
       </div>
-    </div>
+    </Link>
   );
 };
-export default SearchPoster;
+export default SuggestionPoster;

@@ -10,10 +10,10 @@ import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 
 const App = (): JSX.Element => (
-  <div className="w-full">
+  <div className="w-full min-h-screen flex flex-col">
     <Router>
       <Header />
-      <div className="min-h-screen flex justify-center bg-gray-200 p-4 box-border">
+      <div className="flex-1 flex justify-center bg-gray-200 p-4 box-border">
         <div className="p-4 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
           <AppBody />
         </div>

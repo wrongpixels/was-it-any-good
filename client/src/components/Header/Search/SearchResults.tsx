@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import useListNavigation from '../../../hooks/use-list-navigation';
 import Separator from '../../common/Separator';
-import SearchPoster from './components/SearchPoster';
+import SuggestionPoster from './components/SuggestionPoster';
 import FirstSearchRow from './rows/FirstSearchRow';
 import SearchRow from './rows/SearchRow';
 import { routerPaths, urlFromIndexMedia } from '../../../utils/url-helper';
@@ -85,7 +85,7 @@ const SearchResults = ({
       </div>
       <div className="absolute left-full ml-2 min-h-60 h-full flex items-center ">
         <div className="flex-shrink-0">
-          <SearchPoster media={mediaToShow} />
+          <SuggestionPoster media={mediaToShow} />
         </div>
       </div>
     </div>

@@ -11,7 +11,7 @@ import SearchIcon from '../Header/Search/icons/SearchIcon';
 import { useSuggestionsQuery } from '../../queries/suggestions-queries';
 import SpinnerPage from '../common/status/SpinnerPage';
 import { routerPaths } from '../../utils/url-helper';
-import SearchPageResults from './SeargPageResults';
+import SearchPageResults from './SearchPageResults';
 import Separator from '../common/Separator';
 
 const SearchPage = (): JSX.Element | null => {
