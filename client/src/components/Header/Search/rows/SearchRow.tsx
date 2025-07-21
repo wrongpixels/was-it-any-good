@@ -26,16 +26,17 @@ const SearchRow = ({
   return (
     <div
       ref={ref}
-      className={`flex flex-row gap-2 items-center px-1.5 py-0.5  relative font-medium rounded-lg ${
+      className={`flex flex-row gap-1 items-center align-middle px-1.5 py-0.5 relative font-medium rounded-lg ${
         isActive ? 'bg-amber-50 text-cyan-900' : 'text-gray-500'
       }`}
     >
       <SelectedLine condition={isSelected} offsetX={-0.3} height={4} />
-      <IconForMediaType mediaType={indexMedia.mediaType} />
-      <div>
-        {indexMedia.name}
-        <span className="font-light pl-1">({indexMedia.year})</span>
-      </div>
+      <IconForMediaType
+        mediaType={indexMedia.mediaType}
+        className={`pr-1 ${isActive ? 'text-amber-600' : 'text-starblue'}`}
+      />
+      {indexMedia.name}
+      <span className="font-light">({indexMedia.year})</span>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const LazyImage = ({
       <img
         {...props}
         loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-cover rounded-sm"
         onLoad={() => setIsLoading(false)}
       />
     </div>

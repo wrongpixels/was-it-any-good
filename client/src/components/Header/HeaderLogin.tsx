@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import Button from '../common/Button';
 import { useLoginForm } from '../../hooks/use-login-form';
 import { InputField } from '../common/InputField';
-import { twStyles } from '../../constants/tw-styles';
+import { styles } from '../../constants/tailwind-styles';
 
 const HeaderLogin = (): JSX.Element => {
   const { session, handleLogout, submitLogin, passwordInput, userInput } =
@@ -26,12 +26,12 @@ const HeaderLogin = (): JSX.Element => {
         <form onSubmit={submitLogin} className="flex gap-2">
           <InputField
             {...userInput.getProps()}
-            className={`w-20 ${twStyles.inputField.header}`}
+            className={`w-20 ${styles.inputField.header}`}
             labelClassName="text-gray-200"
           />
           <InputField
             {...passwordInput.getProps()}
-            className="w-20 py-1 ring-0 hover:ring-1 ring-amber-200"
+            className={`w-20 ${styles.inputField.header}`}
             labelClassName="text-gray-200"
           />
           <Button size="xs" type="submit" variant="toolbar">

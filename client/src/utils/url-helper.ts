@@ -102,6 +102,19 @@ export const buildOwnUrl = (path: string = ''): string =>
 export const buildPathUrl = (path: string = ''): string =>
   `${window.location.pathname}${path}`;
 
+export const mediaTypeToDisplayName = (mediaType: MediaType) => {
+  switch (mediaType) {
+    case MediaType.Film:
+      return 'Film';
+    case MediaType.Show:
+      return 'TV Show';
+    case MediaType.Season:
+      return 'TV Season';
+    default:
+      return '';
+  }
+};
+
 export const buildTMDBUrl = (
   mediaType: MediaType,
   path: string = ''

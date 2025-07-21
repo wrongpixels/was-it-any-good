@@ -24,6 +24,7 @@ import LoadingPage from '../common/status/LoadingPage';
 import ErrorPage from '../common/status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
+import { mediaTypeToDisplayName } from '../../utils/url-helper';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -65,7 +66,7 @@ const MediaPage = ({
   if (!media) {
     return <MediaMissing mediaId={mediaId} mediaType={mediaType} tmdb={tmdb} />;
   }
-  setTitle(`${media.name} (${mediaType})`);
+  setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
 
   return (
     <div>

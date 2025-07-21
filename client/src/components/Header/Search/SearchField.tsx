@@ -4,6 +4,7 @@ import SearchResults from './SearchResults';
 import { useSuggestionsQuery } from '../../../queries/suggestions-queries';
 import SearchIcon from './icons/SearchIcon';
 import { InputField } from '../../common/InputField';
+import { styles } from '../../../constants/tailwind-styles';
 
 const SearchField = (): JSX.Element => {
   const [isDropdownVisible, setDropdownVisible] = useState(true);
@@ -29,7 +30,7 @@ const SearchField = (): JSX.Element => {
       />
       <InputField
         {...searchField.getProps()}
-        className="pl-7 ring-0 hover:ring-1 ring-amber-200 py-1 focus:ring-2 focus:ring-sky-300"
+        className={`pl-7 ${styles.inputField.header}`}
       />
       {searchField.value && isDropdownVisible && (
         <div className="absolute translate-y-8 -translate-x-2.5">
