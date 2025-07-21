@@ -10,6 +10,8 @@ export const TMDBIndexFilmSchema = TMDBFilmSchema.pick({
   title: true,
   popularity: true,
   origin_country: true,
+}).extend({
+  media_type: z.string().optional(),
 });
 
 export const TMDBIndexShowSchema = TMDBShowSchema.pick({
@@ -20,11 +22,28 @@ export const TMDBIndexShowSchema = TMDBShowSchema.pick({
   name: true,
   popularity: true,
   origin_country: true,
+}).extend({
+  media_type: z.string().optional(),
+});
+
+export const TMDBIndexPersonSchema = z.object({
+  id: z.number(),
+  media_type: z.string().optional(),
+  name: z.string(),
+  profile_path: z.string().optional(),
 });
 
 export type TMDBIndexFilm = z.infer<typeof TMDBIndexFilmSchema>;
 export type TMDBIndexShow = z.infer<typeof TMDBIndexShowSchema>;
+
+export type TMDBIndexMedia = TMDBIndexFilm | TMDBIndexShow;
+
 export const TMDBIndexFilmArraySchema = z.array(TMDBIndexFilmSchema);
 export const TMDBIndexShowArraySchema = z.array(TMDBIndexShowSchema);
 
-export type TMDBIndexMedia = TMDBIndexFilm | TMDBIndexShow;
+export const TMDBMultiSearchResultSchema = z.array(
+  z.discriminatedUnion('media_type', [
+    TMDBIndexFilmSchema.extend({ media_type: z.literal('movie') }),
+    TMDBIndexShowSchema.extend({ media_type: z.literal('tv') }),
+  ])
+);

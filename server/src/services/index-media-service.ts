@@ -55,7 +55,7 @@ export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
   await fs.writeFile(
     path.join(
       DB_PATH,
-      `popular-${mediaType === MediaType.Film ? 'films' : 'shows'}-db.json`
+      `popular-${mediaType === MediaType.Film ? 'films' : 'shows'}-db2.json`
     ),
     JSON.stringify(media, null, 2)
   );
