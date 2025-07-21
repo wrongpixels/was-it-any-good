@@ -8,9 +8,6 @@ interface SelectedLineProps extends OptBoolProps {
   offsetX?: number;
 }
 
-const translateTo = (value: number) =>
-  `${value >= 0 ? '' : '-'}ml-${Math.abs(value)}`;
-
 const SelectedLine = ({
   condition = true,
   className,
@@ -22,19 +19,20 @@ const SelectedLine = ({
   if (!condition) {
     return null;
   }
-  const realHeight: string = `h-${height}`;
-  const realOffset: string = offsetX ? translateTo(offsetX) : '';
-  console.log(realOffset);
 
   return (
     <span className="absolute inset-0 flex items-center pointer-events-none">
       <div
         {...props}
         className={mergeClassnames(
-          `rounded-md bg-current text-starblue`,
-          `${className} ${realOffset} ${realHeight}`
+          'rounded-md bg-current text-starblue',
+          `h-${height}`,
+          className
         )}
-        style={{ width: width }}
+        style={{
+          width,
+          transform: offsetX ? `translateX(${offsetX * 0.25}rem)` : 'none',
+        }}
       />
     </span>
   );

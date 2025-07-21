@@ -25,11 +25,14 @@ const SearchField = (): JSX.Element => {
     <div className="flex gap-2">
       <SearchIcon
         condition={!!searchField.value}
-        className="absolute text-gray-400 ml-0.5 mt-0.5"
+        className="absolute text-gray-400 ml-0.5 my-0.5"
       />
-      <InputField {...searchField.getProps()} className="pl-7 ring-0" />
+      <InputField
+        {...searchField.getProps()}
+        className="pl-7 ring-0 hover:ring-1 ring-amber-200 py-1 focus:ring-2 focus:ring-sky-300"
+      />
       {searchField.value && isDropdownVisible && (
-        <div className="absolute translate-y-7 -translate-x-2.5">
+        <div className="absolute translate-y-8 -translate-x-2.5">
           <SearchResults
             searchResults={suggestions}
             isLoading={isLoading}

@@ -1,5 +1,33 @@
 @import 'tailwindcss';
 
+@layer base {
+  .base-input {
+    --ring-color: theme('colors.cyan.400');
+    --ring-width: 1px;
+    --ring-color-hover: theme('colors.amber.300');
+    --ring-width-focus: 2px;
+    --ring-color-focus: theme(
+      'colors.sky.500'
+    ); /* Assuming 'starblue' is sky-500 */
+    --padding-y: theme('spacing.1'); /* 0.125rem */
+    --padding-x: theme('spacing.1'); /* 0.25rem */
+  }
+
+  /* 
+    This is your reusable variation.
+    It ONLY changes the variables. No other CSS properties.
+    This is clean, readable, and has zero specificity conflicts.
+  */
+  .small-inputfield {
+    --ring-width: 0px;
+    --ring-color-hover: theme('colors.amber.200');
+    --ring-width-hover: 1px; /* We can even introduce new variables for the variant */
+    --ring-color-focus: theme('colors.sky.300');
+    --padding-y: theme('spacing.1'); /* 0.25rem */
+    --padding-x: 0px;
+  }
+}
+
 @theme {
   --color-staryellow: #ccd45d;
   --color-starblue: #5d82c7;

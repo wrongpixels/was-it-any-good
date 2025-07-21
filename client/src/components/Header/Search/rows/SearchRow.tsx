@@ -30,7 +30,7 @@ const SearchRow = ({
         isActive ? 'bg-amber-50 text-cyan-900' : 'text-gray-500'
       }`}
     >
-      <SelectedLine condition={isSelected} offsetX={-0.5} />
+      <SelectedLine condition={isSelected} offsetX={-0.3} height={4} />
       <IconForMediaType mediaType={indexMedia.mediaType} />
       <div>
         {indexMedia.name}

@@ -83,7 +83,7 @@ const SearchResults = ({
           </div>
         )}
       </div>
-      <div className="absolute left-full ml-2 min-h-50 h-full flex items-center ">
+      <div className="absolute left-full ml-2 min-h-60 h-full flex items-center ">
         <div className="flex-shrink-0">
           <SearchPoster media={mediaToShow} />
         </div>

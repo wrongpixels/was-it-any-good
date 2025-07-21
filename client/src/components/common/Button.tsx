@@ -20,7 +20,7 @@ const colors = (variant: string): string => {
 const sizes = (size: string): string => {
   switch (size) {
     case 'xs':
-      return 'text-xs h-6 min-h-6 flex items-center'; // Fixed height for XS
+      return 'text-xs h-7 min-h-7 flex items-center'; // Fixed height for XS
     case 'sm':
       return 'text-sm h-8 min-h-8 flex items-center';
     case 'lg':
