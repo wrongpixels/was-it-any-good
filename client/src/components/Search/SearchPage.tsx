@@ -48,7 +48,9 @@ const SearchPage = (): JSX.Element | null => {
       </div>
       <span className="pt-5">
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
-        <SearchPageResults results={suggestions} />
+        {suggestions && searchTerm && (
+          <SearchPageResults results={suggestions} term={searchTerm} />
+        )}
       </span>
     </div>
   );

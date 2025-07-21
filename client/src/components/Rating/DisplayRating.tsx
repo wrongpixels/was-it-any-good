@@ -20,7 +20,10 @@ const DisplayRating = ({
   const widthPercentage: string = `${rating * 10}%`;
 
   return (
-    <div className={`${mergeClassnames('flex', props.className)}`}>
+    <div
+      title={rating.toString()}
+      className={`${mergeClassnames('flex', props.className)}`}
+    >
       <div className="relative">
         <div className="text-gray-300">
           <StarList

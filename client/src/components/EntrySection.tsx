@@ -13,7 +13,7 @@ const EntrySection = ({ title, content }: EntryProps): JSX.Element | null => {
   return (
     <div className="mt-2 space-y-2">
       <h2 className="block text-xl font-bold">{title}</h2>
-      <p className="text-gray-700 text-sm leading-relaxed text-justify">
+      <p className="text-gray-500 text-sm leading-relaxed text-justify">
         {content}
       </p>
     </div>
