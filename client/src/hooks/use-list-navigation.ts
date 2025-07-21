@@ -41,12 +41,12 @@ const useListNavigation = ({
 
   const moveDown = (): void =>
     setIndex((prevIndex) => {
-      const newIndex: number = prevIndex + 1 > maxIndex ? 0 : prevIndex + 1;
+      const newIndex: number = prevIndex + 1 > maxIndex - 1 ? 0 : prevIndex + 1;
       return newIndex;
     });
   const moveUp = (): void =>
     setIndex((prevIndex: number) => {
-      const newIndex: number = prevIndex - 1 < 0 ? maxIndex : prevIndex - 1;
+      const newIndex: number = prevIndex - 1 < 0 ? maxIndex - 1 : prevIndex - 1;
       return newIndex;
     });
   const ref: React.RefObject<HTMLDivElement | null> =

@@ -11,6 +11,8 @@ import SearchIcon from '../Header/Search/icons/SearchIcon';
 import { useSuggestionsQuery } from '../../queries/suggestions-queries';
 import SpinnerPage from '../common/status/SpinnerPage';
 import { routerPaths } from '../../utils/url-helper';
+import SearchPageResults from './SeargPageResults';
+import Separator from '../common/Separator';
 
 const SearchPage = (): JSX.Element | null => {
   const navigateTo = useNavigate();
@@ -45,12 +47,8 @@ const SearchPage = (): JSX.Element | null => {
         </form>
       </div>
       <span className="pt-5">
-        {!!suggestions && (
-          <span className="font-medium">
-            {suggestions.length || 'No'} results!
-          </span>
-        )}
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
+        <SearchPageResults results={suggestions} />
       </span>
     </div>
   );
