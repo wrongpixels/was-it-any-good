@@ -8,6 +8,7 @@ import {
   TMDBIndexShow,
   TMDBIndexShowArraySchema,
 } from '../schemas/tmdb-index-media-schemas';
+import { CreateIndexMedia } from '../../../shared/types/models';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -55,10 +56,10 @@ router.get('/:media', async (req: Request, res, next) => {
         break;
       }
     }
-
-    const movieResults = createIndexForFilmBulk(films);
-    const showResults = createIndexForShowBulk(shows);
-    const indexMedia = [...movieResults, ...showResults];
+    const indexMedia: CreateIndexMedia[] = [
+      ...createIndexForFilmBulk(films),
+      ...createIndexForShowBulk(shows),
+    ];
 
     res.json(indexMedia);
   } catch (error) {
