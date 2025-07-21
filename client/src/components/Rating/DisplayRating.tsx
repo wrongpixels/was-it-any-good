@@ -21,7 +21,7 @@ const DisplayRating = ({
 
   return (
     <div
-      title={rating.toString()}
+      title={`Rating: ${rating.toString()}`}
       className={`${mergeClassnames('flex', props.className)}`}
     >
       <div className="relative">

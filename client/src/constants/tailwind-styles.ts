@@ -8,6 +8,8 @@
 export const styles = {
   animations: {
     upOnHover: 'transition-all duration-40 ease-out hover:-translate-y-1',
+    upOnHoverShort:
+      'transition-all duration-40 ease-out hover:-translate-y-0.5',
   },
   shadow: {
     subtle: 'shadow-sm shadow-black/10',

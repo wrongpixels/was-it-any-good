@@ -41,6 +41,7 @@ import { createIndexForFilmBulk } from './film-factory';
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
   baseRating: Number(tmdb.vote_average),
+  country: validateCountries(tmdb.origin_country),
   rating: 0,
   popularity: tmdb.popularity,
   voteCount: tmdb.vote_average > 0 ? 1 : 0,
@@ -59,8 +60,8 @@ export const createIndexForMediaBulk = (
 
 export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
   ...createTMDBIndexBase(tmdb),
-  imdbId: tmdb.imdb_id,
   countries: validateCountries(tmdb.origin_country),
+  imdbId: tmdb.imdb_id,
   description: tmdb.overview,
   genres: mapTMDBGenres(
     tmdb.genres

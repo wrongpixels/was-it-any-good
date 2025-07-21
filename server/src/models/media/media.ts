@@ -40,7 +40,7 @@ import CustomError from '../../util/customError';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare indexId?: CreationOptional<number | null>;
@@ -312,6 +312,7 @@ class Media<
         mediaType: this.mediaType,
         mediaId: this.id,
         addedToMedia: true,
+        country: this.country,
         name: this.name,
         image: this.image,
         rating: this.rating,

@@ -9,6 +9,7 @@ import ratingsRouter from './ratings-controller';
 import peopleRouter from './people-controller';
 import mediaIndexRouter from './index-media-controller';
 import suggestionsRouter from './suggestions-controller';
+import searchRouter from './search-controller';
 
 export {
   filmsRouter,
@@ -22,4 +23,5 @@ export {
   peopleRouter,
   mediaIndexRouter,
   suggestionsRouter,
+  searchRouter,
 };

@@ -9,6 +9,7 @@ export const TMDBIndexFilmSchema = TMDBFilmSchema.pick({
   vote_average: true,
   title: true,
   popularity: true,
+  origin_country: true,
 });
 
 export const TMDBIndexShowSchema = TMDBShowSchema.pick({
@@ -18,6 +19,7 @@ export const TMDBIndexShowSchema = TMDBShowSchema.pick({
   vote_average: true,
   name: true,
   popularity: true,
+  origin_country: true,
 });
 
 export type TMDBIndexFilm = z.infer<typeof TMDBIndexFilmSchema>;

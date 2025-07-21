@@ -10,8 +10,6 @@ import {
 } from '../../utils/url-helper';
 import LazyImage, { AspectRatio } from '../common/LazyImage';
 import DisplayRating from '../Rating/DisplayRating';
-import Country from '../../../../shared/types/countries';
-import MediaFlags from '../MediaFlags';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -27,7 +25,7 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search} flex flex-row overflow-ellipsis ${styles.animations.upOnHover}`}
+      className={`${styles.poster.search} flex flex-row overflow-ellipsis ${styles.animations.upOnHoverShort}`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <LazyImage
@@ -42,6 +40,7 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
           <span className="font-semibold text-gray-400">{mediaDisplay}</span>
           <>({media.year})</>
         </div>
+        {/* Space for add to list etc*/}
         <div className="grow" />
         <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
       </div>

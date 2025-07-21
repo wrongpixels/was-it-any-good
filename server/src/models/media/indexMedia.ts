@@ -8,6 +8,7 @@ import {
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
 import { Film, Show } from '..';
+import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 
 //stores TMDB media metadata and maps TMDB ids to internal media ids (if they exist).
 //used for search results and checking if TMDB entries are already in our database.
@@ -26,6 +27,7 @@ class IndexMedia extends Model<
   declare rating: number;
   declare year: number | null;
   declare baseRating: number;
+  declare country: CountryCode[];
   declare voteCount: number;
   declare popularity: number;
   declare mediaType: MediaType;
@@ -100,6 +102,26 @@ IndexMedia.init(
     },
     name: {
       type: DataTypes.STRING,
+    },
+    country: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: false,
+      validate: {
+        isValidCountryArray(value: string[]) {
+          if (!Array.isArray(value)) {
+            throw new Error('Must be an array');
+          }
+          const invalidCountries = value.filter(
+            (country) => !isCountryCode(country)
+          );
+
+          if (invalidCountries.length > 0) {
+            throw new Error(
+              `Invalid country codes found: ${invalidCountries.join(', ')}`
+            );
+          }
+        },
+      },
     },
     year: {
       type: DataTypes.INTEGER,

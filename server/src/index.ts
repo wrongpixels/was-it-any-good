@@ -14,6 +14,7 @@ import {
   peopleRouter,
   mediaIndexRouter,
   suggestionsRouter,
+  searchRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -33,6 +34,7 @@ app.use('/api/ratings', ratingsRouter);
 app.use('/api/people', peopleRouter);
 app.use('/api/index-media', mediaIndexRouter);
 app.use('/api/suggest', suggestionsRouter);
+app.use('/api/search', searchRouter);
 
 app.use(errorHandler);
 
