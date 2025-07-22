@@ -6,6 +6,7 @@ import { MediaTypeProps } from '../../types/common-props-types';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import { Link } from 'react-router-dom';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
+import { styles } from '../../constants/tailwind-styles';
 
 interface CountryFlagsProps extends MediaTypeProps {
   countryCodes: CountryCode[];
@@ -57,7 +58,7 @@ const CountryFlags = ({ countryCodes, mediaType }: CountryFlagsProps) => {
             alt={`${c.name} flag`}
             title={c.name}
             variant={ImageVariant.inline}
-            className="w-6 h-4 ring-1 ring-gray-300 shadow-xs"
+            className={`w-6 h-4 ring-1 ring-gray-300 shadow-xs ${styles.animations.zoomOnHover}`}
           />
         </Link>
       ))}

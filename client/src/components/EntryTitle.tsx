@@ -2,7 +2,7 @@ import { JSX, PropsWithChildren } from 'react';
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
 import { getYear } from '../../../shared/helpers/format-helper';
-import CountryFlags from './Media/MediaFlags';
+import CountryFlags from './Media/MediaCountryFlags';
 
 interface EntryTitleProps extends PropsWithChildren {
   title: string | undefined;

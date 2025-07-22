@@ -6,6 +6,7 @@ import IconForMediaType from '../Header/Search/icons/IconForMediaType';
 import { Link } from 'react-router-dom';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import { routerPaths } from '../../utils/url-helper';
+import { styles } from '../../constants/tailwind-styles';
 
 interface GenreSectionProps {
   genres: GenreResponse[];
@@ -36,8 +37,8 @@ const GenreSection = ({
 
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1">
-      <Link to={mediaIconUrl}>
-        <IconForMediaType mediaType={mediaType} className="text-gray-600" />
+      <Link to={mediaIconUrl} className={`${styles.animations.zoomOnHover}`}>
+        <IconForMediaType mediaType={mediaType} className={'text-gray-600'} />
       </Link>
       <div className="text-sm">
         {genres.map((g: GenreResponse, i: number) => (
@@ -45,7 +46,8 @@ const GenreSection = ({
             {i > 0 && ' | '}
             <Link
               to={genreLinkMap.get(g.id) || routerPaths.search.base}
-              className="hover:underline cursor-pointer"
+              className={'hover:underline cursor-pointer'}
+              title={g.name}
             >
               {g.name}
             </Link>
