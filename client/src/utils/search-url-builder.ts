@@ -1,13 +1,45 @@
 import { CountryCode } from '../../../shared/types/countries';
+import { MediaType } from '../../../shared/types/media';
 import { routerPaths } from './url-helper';
+
+export const mediaTypesToSearchTypes = (
+  mediaTypes: MediaType[] | undefined | null
+): (SearchType | null)[] | undefined => {
+  if (!mediaTypes) {
+    return undefined;
+  }
+  const searchTypes: SearchType[] = [];
+  mediaTypes.forEach((m: MediaType) => {
+    const searchType: SearchType | null | undefined = mediaTypeToSearchType(m);
+    if (searchType) {
+      searchTypes.push(searchType);
+    }
+  });
+  return searchTypes;
+};
+
+export const mediaTypeToSearchType = (
+  mediaType: MediaType | undefined
+): SearchType | null | undefined => {
+  switch (mediaType) {
+    case MediaType.Film:
+      return 'film';
+    case MediaType.Show:
+      return 'show';
+    case MediaType.Season:
+      return 'season';
+    default:
+      return null;
+  }
+};
+
+export type SearchType = 'show' | 'film' | 'person' | 'season';
+type OrderByType = 'popularity' | 'title' | 'year';
+type SortByType = 'desc' | 'asc';
 
 //To build our search queries in an easy chain-like way (…byTerm(…).byGenres(…).toString(…))
 //undefined params are skipped so we can use the chain completely adapting to user filters
 //toString() must be called to end the chain with the valid url!
-
-type SearchType = 'show' | 'film' | 'person';
-type OrderByType = 'popularity' | 'title' | 'year';
-type SortByType = 'desc' | 'asc';
 
 class SearchUrlBuilder {
   private searchParams: URLSearchParams;
@@ -49,11 +81,23 @@ class SearchUrlBuilder {
   byTerm(value: string | number | null) {
     return this.addParam(value, 'q');
   }
-  byType(value?: SearchType[]) {
+  byType(value?: SearchType) {
+    return this.addParam(value, 'm');
+  }
+  byTypes(value?: SearchType[]) {
     return this.addParams(value, 'm');
+  }
+  byMediaType(value?: MediaType) {
+    return this.addParam(mediaTypeToSearchType(value), 'm');
+  }
+  byMediaTypes(value?: MediaType[]) {
+    return this.addParams(mediaTypesToSearchTypes(value), 'm');
   }
   byCountry(value?: CountryCode) {
     return this.addParam(value, 'c');
+  }
+  byGenre(value?: string) {
+    return this.addParam(value, 'g');
   }
   byGenres(value?: string[]) {
     return this.addParams(value, 'g');
