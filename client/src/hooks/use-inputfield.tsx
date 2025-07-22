@@ -31,6 +31,7 @@ export const useInputField = ({
 
   return {
     value,
+    setValue,
     reset,
     getProps,
   };

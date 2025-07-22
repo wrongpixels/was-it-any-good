@@ -26,6 +26,7 @@ export interface InputFieldProps
 
 export interface InputFieldHookValues {
   value: string;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
   reset: VoidFunction;
   getProps: () => InputFieldProps;
 }
