@@ -1,6 +1,6 @@
 import { MediaResponse } from '../../../../shared/types/models';
-import GenreSection from './GenreList';
-import Title from '../Title';
+import GenreSection from './GenreSection';
+import MediaTitle from './MediaTitle';
 
 interface MediaHeaderProps {
   media: MediaResponse;
@@ -8,21 +8,14 @@ interface MediaHeaderProps {
 
 const MediaHeader = ({ media }: MediaHeaderProps) => {
   return (
-    <div>
-      <Title
-        title={media.name}
-        date={media.releaseDate}
-        country={media.country}
-        originalTitle={media.originalName}
-      />
-      <div>
-        <div>
-          {media.genres && (
-            <GenreSection mediaType={media.mediaType} genres={media.genres} />
-          )}
-        </div>
-      </div>
-    </div>
+    <>
+      <MediaTitle media={media} />
+      <>
+        {media.genres && (
+          <GenreSection mediaType={media.mediaType} genres={media.genres} />
+        )}
+      </>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ export interface OptClassNameProps {
 }
 
 export interface MediaTypeProps extends OptClassNameProps {
-  mediaType: MediaType;
+  mediaType?: MediaType;
 }
 
 export interface OptStringProps extends OptClassNameProps {

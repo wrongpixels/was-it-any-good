@@ -96,7 +96,7 @@ class SearchUrlBuilder {
   byCountry(value?: CountryCode) {
     return this.addParam(value, 'c');
   }
-  byGenre(value?: string) {
+  byGenre(value?: number) {
     return this.addParam(value, 'g');
   }
   byGenres(value?: string[]) {

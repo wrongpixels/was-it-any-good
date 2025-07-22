@@ -2,8 +2,8 @@ import { JSX } from 'react';
 import { PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import BasicPoster from '../Poster/BasicPoster';
-import Title from '../Title';
 import { setTitle } from '../../utils/page-info-setter';
+import EntryTitle from '../EntryTitle';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -25,7 +25,7 @@ const PersonPage = (): JSX.Element | null => {
   setTitle(person.name);
   return (
     <div>
-      <Title
+      <EntryTitle
         title={person.name}
         date={person.birthDate}
         country={person.country}
