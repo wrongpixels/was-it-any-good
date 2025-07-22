@@ -9,19 +9,44 @@ export enum AspectRatio {
   poster = 'aspect-[2/3]',
 }
 
+export enum ImageVariant {
+  default = 'default',
+  inline = 'inline',
+}
+
 interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   aspect?: AspectRatio;
+  variant?: ImageVariant;
 }
 
 const LazyImage = ({
   className,
   aspect = AspectRatio.poster,
+  variant = ImageVariant.default,
   ...props
 }: ImageProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
+  if (variant === ImageVariant.inline) {
+    return (
+      <div className="relative flex items-center">
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+            <LoadingSpinner className="w-4" />
+          </div>
+        )}
+        <img
+          {...props}
+          loading="lazy"
+          className={mergeClassnames('rounded-xs', className)}
+          onLoad={() => setIsLoading(false)}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className={mergeClassnames('relative w-full', aspect, className)}>
+    <div className={mergeClassnames('relative w-full', aspect)}>
       {isLoading && (
         <div className="absolute inset-0 flex items-center overflow-hidden justify-center bg-gray-100">
           <LoadingSpinner className="w-8" />
@@ -30,7 +55,10 @@ const LazyImage = ({
       <img
         {...props}
         loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover rounded-sm"
+        className={mergeClassnames(
+          'absolute inset-0 w-full h-full object-cover rounded-sm',
+          className
+        )}
         onLoad={() => setIsLoading(false)}
       />
     </div>

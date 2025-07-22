@@ -20,6 +20,7 @@ const GenreSection = ({
     return null;
   }
   const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
+  const mediaIconUrl: string = searchUrl.byMediaType(mediaType).toString();
   const genreLinkMap = useMemo(() => {
     const map = new Map<number, string>();
     genres.forEach((g: GenreResponse) => {
@@ -35,7 +36,9 @@ const GenreSection = ({
 
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1">
-      <IconForMediaType mediaType={mediaType} className="text-gray-600" />
+      <Link to={mediaIconUrl}>
+        <IconForMediaType mediaType={mediaType} className="text-gray-600" />
+      </Link>
       <div className="text-sm">
         {genres.map((g: GenreResponse, i: number) => (
           <React.Fragment key={g.id}>

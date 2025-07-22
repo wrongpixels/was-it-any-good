@@ -5,7 +5,7 @@ import { FLAG_URL } from '../../constants/url-constants';
 import { MediaTypeProps } from '../../types/common-props-types';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import { Link } from 'react-router-dom';
-import LazyImage from '../common/LazyImage';
+import LazyImage, { ImageVariant } from '../common/LazyImage';
 
 interface CountryFlagsProps extends MediaTypeProps {
   countryCodes: CountryCode[];
@@ -56,7 +56,8 @@ const CountryFlags = ({ countryCodes, mediaType }: CountryFlagsProps) => {
             src={c.image}
             alt={`${c.name} flag`}
             title={c.name}
-            className="w-6 h-4 border border-neutral-200 shadow-xs"
+            variant={ImageVariant.inline}
+            className="w-6 h-4 ring-1 ring-gray-300 shadow-xs"
           />
         </Link>
       ))}
