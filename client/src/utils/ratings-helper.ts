@@ -22,7 +22,7 @@ export const getActiveMediaKey = (
   mediaType: string,
   mediaId: string | number,
   tmdb?: boolean
-) => {
+): string[] => {
   const isTmdb: boolean =
     tmdb === undefined
       ? buildPathUrl().includes(`tmdb/${mediaType.toLowerCase()}/${mediaId}`)
@@ -39,7 +39,7 @@ export const getMediaKey = (mediaType: string, mediaId: string | number) => [
 export const getTmdbMediaKey = (
   mediaType: string,
   tmdbId: string | number = -1
-) => ['tmdbMedia', mediaType, String(tmdbId)];
+): string[] => ['tmdbMedia', mediaType, String(tmdbId)];
 
 export const addVoteToMedia = (
   media: MediaResponse,

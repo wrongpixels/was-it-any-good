@@ -63,8 +63,9 @@ export const routerPaths = {
     byId: (id: number | string) => `${routerPaths.users.base}/${id}`,
   },
   search: {
-    base: `/search?`,
-    byTerm: (term: number | string) => `${routerPaths.search.base}q=${term}`,
+    base: `/search`,
+    byQuery: (query: string) => `${routerPaths.search.base}?${query}`,
+    byTerm: (term: number | string) => `${routerPaths.search.base}?q=${term}`,
   },
 };
 
@@ -113,6 +114,38 @@ export const mediaTypeToDisplayName = (mediaType: MediaType) => {
     default:
       return '';
   }
+};
+
+//Normalizes media type search parameters (m=...) into unified values ('film' or 'show'),
+//handling various user inputs like 'movies', 'tv-shows', 'series' etc.
+export const normalizeMediaSearchParams = (rawParams: string[]): string[] => {
+  const resultParams: string[] = [];
+  const addToParams = (p: string) => {
+    if (!resultParams.includes(p)) {
+      resultParams.push(p);
+    }
+  };
+  rawParams.forEach((p: string) => {
+    switch (p) {
+      case 'film':
+      case 'films':
+      case 'movie':
+      case 'movies':
+        addToParams('film');
+        break;
+      case 'show':
+      case 'shows':
+      case 'tv':
+      case 'tvshow':
+      case 'tv-show':
+      case 'tv-shows':
+      case 'series':
+        addToParams('show');
+        break;
+    }
+  });
+
+  return resultParams;
 };
 
 export const buildTMDBUrl = (

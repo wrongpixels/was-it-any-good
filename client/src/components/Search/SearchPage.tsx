@@ -10,13 +10,19 @@ import { setPageInfo } from '../../utils/page-info-setter';
 import SearchIcon from '../Header/Search/icons/SearchIcon';
 import { useSuggestionsQuery } from '../../queries/suggestions-queries';
 import SpinnerPage from '../common/status/SpinnerPage';
-import { routerPaths } from '../../utils/url-helper';
+import {
+  normalizeMediaSearchParams,
+  routerPaths,
+} from '../../utils/url-helper';
 import SearchPageResults from './SearchPageResults';
 
 const SearchPage = (): JSX.Element | null => {
   const navigateTo = useNavigate();
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const searchTerm: string | null = parameters.get('q');
+  const mediaTypeFilters: string[] = normalizeMediaSearchParams(
+    parameters.getAll('m')
+  );
   const searchField = useInputField({
     name: 'search',
     initialValue: searchTerm || undefined,
