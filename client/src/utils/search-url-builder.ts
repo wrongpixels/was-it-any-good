@@ -32,8 +32,14 @@ export const mediaTypeToSearchType = (
       return null;
   }
 };
+const SEARCH_TYPES = {
+  show: 'show',
+  film: 'film',
+  person: 'person',
+  season: 'season',
+};
 
-export type SearchType = 'show' | 'film' | 'person' | 'season';
+export type SearchType = (typeof SEARCH_TYPES)[keyof typeof SEARCH_TYPES];
 type OrderByType = 'popularity' | 'title' | 'year';
 type SortByType = 'desc' | 'asc';
 
@@ -56,6 +62,11 @@ class SearchUrlBuilder {
     append: boolean = false
   ): this {
     if (param) {
+      if (key === 'm') {
+        if (!Object.values(SEARCH_TYPES).includes(param.toString())) {
+          return this;
+        }
+      }
       append
         ? this.searchParams.append(key, param.toString())
         : this.searchParams.set(key, param.toString());
@@ -81,10 +92,10 @@ class SearchUrlBuilder {
   byTerm(value: string | number | null) {
     return this.addParam(value, 'q');
   }
-  byType(value?: SearchType) {
+  byType(value?: string) {
     return this.addParam(value, 'm');
   }
-  byTypes(value?: SearchType[]) {
+  byTypes(value?: string[]) {
     return this.addParams(value, 'm');
   }
   byMediaType(value?: MediaType) {

@@ -86,7 +86,7 @@ const StarRating = ({
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
       >
-        <div className="w-4" />
+        <span className="w-4" />
         <div className="relative">
           <div className="text-gray-300" ref={notification.anchorRef}>
             <StarList

@@ -50,7 +50,7 @@ const CountryFlags = ({ countryCodes, mediaType }: CountryFlagsProps) => {
   }
 
   return (
-    <span className="inline-flex items-center gap-1 pt-1">
+    <span className="inline-flex items-center gap-2 pt-1">
       {showCountries.map((c: CountryValues) => (
         <Link key={c.name} to={c.searchUrl}>
           <LazyImage

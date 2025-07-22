@@ -19,7 +19,8 @@ const SearchPageResults = ({
       <div className="flex flex-col items-center">
         {!!results && (
           <span className="text-xl font-medium">
-            {results.length || 'No'} results for "{term}"
+            {results.length || 'No'} results for "
+            {<span className="italic text-gray-500 font-normal">{term}</span>}"
           </span>
         )}
         <div className="pb-5" />
