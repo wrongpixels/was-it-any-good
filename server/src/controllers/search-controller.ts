@@ -18,6 +18,10 @@ import { TmdbSearchType } from '../../../shared/types/search';
 
 const router: Router = express.Router();
 
+//we convert our own query style into TMDB's and return the results, adding any
+//entry we don't have to out lightweight IndexMedia table, so it can appear in
+//suggestions and quick searches without calling TMDB's API
+
 router.get('/', async (req: Request, res, next) => {
   try {
     const searchTerm: string | undefined = req.query.q?.toString().trim() || '';
