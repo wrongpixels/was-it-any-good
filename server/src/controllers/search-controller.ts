@@ -9,27 +9,38 @@ import {
   TMDBIndexShowArraySchema,
 } from '../schemas/tmdb-index-media-schemas';
 import { CreateIndexMedia } from '../../../shared/types/models';
+import {
+  arrayToTMDBSearchTypes,
+  extractQuery,
+} from '../services/search-service';
+import { TmdbSearchType } from '../../../shared/types/search';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
 
-router.get('/:media', async (req: Request, res, next) => {
+router.get('/', async (req: Request, res, next) => {
   try {
-    const queryType: string = req.params.media;
-    const query: string | undefined = req.query.q?.toString() || '';
+    const searchTerm: string | undefined = req.query.q?.toString().trim() || '';
+    const searchTypeString: string[] = extractQuery(req.query.m);
+    if (searchTypeString.length < 1) {
+      res.json(null);
+      return;
+    }
+    const searchType: TmdbSearchType =
+      arrayToTMDBSearchTypes(searchTypeString)[0];
 
-    if (!query) {
+    if (!searchTerm) {
       res.json({ error: 'no query' });
       return;
     }
 
     const { data } = await tmdbAPI.get(
-      `/search/${queryType}?query=${query}&page=1`
+      `/search/${searchType}?query=${searchTerm}&page=1`
     );
     let films: TMDBIndexFilm[] = [];
     let shows: TMDBIndexShow[] = [];
 
-    switch (queryType) {
+    switch (searchType) {
       case 'movie': {
         films = TMDBIndexFilmArraySchema.parse(data.results);
         break;
