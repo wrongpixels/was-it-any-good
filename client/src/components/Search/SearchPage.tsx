@@ -39,12 +39,22 @@ const SearchPage = (): JSX.Element | null => {
   const toggleParam = (param: ParamStructure) => {
     typeFilters.toggleParam(param);
     console.log('refresh', param);
-    navigateTo(searchUrl.byTypes(typeFilters.getAppliedParams()).toString());
+    handleSearch(searchTerm);
+  };
+
+  const handleSearch = (newSearch: string | null) => {
+    console.log('searching', newSearch);
+    navigateTo(
+      searchUrl.byTerm(newSearch).byTypes(typeFilters.getApplied()).toString()
+    );
   };
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <SearchInputField text={searchTerm || undefined} />
+      <SearchInputField
+        text={searchTerm || undefined}
+        handleSearch={handleSearch}
+      />
       <div className="flex flex-row items-center gap-1">
         <span className="text-gray-400 pr-2">Filter by</span>
         {typeFilters.params.map((param: ParamStructure) => (

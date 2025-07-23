@@ -25,7 +25,7 @@ class ParamManager {
     this.params = newActiveParams;
   }
 
-  public getAppliedParams(): string[] {
+  public getApplied(): string[] {
     return this.params
       .filter((p: ParamStructure) => p.applied)
       .map((f: ParamStructure) => f.name);
