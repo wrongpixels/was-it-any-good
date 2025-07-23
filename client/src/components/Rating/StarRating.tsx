@@ -62,7 +62,7 @@ const StarRating = ({
           >
             <div className={display.starsColor}>
               <StarList
-                interactive={state.status !== 'locked'}
+                interactive={!state.isLocked}
                 width={starWidth}
                 justVoted={false}
                 defaultRating={defaultRating}
@@ -85,9 +85,7 @@ const StarRating = ({
         </div>
         <div className="w-4" />
       </div>
-      {state.status === 'hovering' && (
-        <HoverMessage message={display.hoverMessage} />
-      )}
+      {state.isHovering && <HoverMessage message={display.hoverMessage} />}
     </div>
   );
 };

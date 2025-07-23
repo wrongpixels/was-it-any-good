@@ -84,6 +84,7 @@ export const useRatingInteractions = (
     }
     setStatus('locked');
   };
+  console.log(status);
 
   const handleMouseLeave = (): void => {
     setHoverScore(UserVote.None);
@@ -93,7 +94,8 @@ export const useRatingInteractions = (
   return {
     state: {
       hoverRating: hoverScore,
-      status,
+      isHovering: status === 'hovering',
+      isLocked: status === 'locked',
       justVoted,
     },
     handlers: {
