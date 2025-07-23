@@ -1,47 +1,13 @@
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
+import {
+  isValidSearchType,
+  mediaTypesToSearchTypes,
+  mediaTypeToSearchType,
+  OrderByType,
+  SortByType,
+} from '../../../shared/types/search';
 import { routerPaths } from './url-helper';
-
-export const mediaTypesToSearchTypes = (
-  mediaTypes: MediaType[] | undefined | null
-): (SearchType | null)[] | undefined => {
-  if (!mediaTypes) {
-    return undefined;
-  }
-  const searchTypes: SearchType[] = [];
-  mediaTypes.forEach((m: MediaType) => {
-    const searchType: SearchType | null | undefined = mediaTypeToSearchType(m);
-    if (searchType) {
-      searchTypes.push(searchType);
-    }
-  });
-  return searchTypes;
-};
-
-export const mediaTypeToSearchType = (
-  mediaType: MediaType | undefined
-): SearchType | null | undefined => {
-  switch (mediaType) {
-    case MediaType.Film:
-      return 'film';
-    case MediaType.Show:
-      return 'show';
-    case MediaType.Season:
-      return 'season';
-    default:
-      return null;
-  }
-};
-const SEARCH_TYPES = {
-  show: 'show',
-  film: 'film',
-  person: 'person',
-  season: 'season',
-};
-
-export type SearchType = (typeof SEARCH_TYPES)[keyof typeof SEARCH_TYPES];
-type OrderByType = 'popularity' | 'title' | 'year';
-type SortByType = 'desc' | 'asc';
 
 //To build our search queries in an easy chain-like way (…byTerm(…).byGenres(…).toString(…))
 //undefined params are skipped so we can use the chain completely adapting to user filters
@@ -63,7 +29,7 @@ class SearchUrlBuilder {
   ): this {
     if (param) {
       if (key === 'm') {
-        if (!Object.values(SEARCH_TYPES).includes(param.toString())) {
+        if (!isValidSearchType(param.toString())) {
           return this;
         }
       }

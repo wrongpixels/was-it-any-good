@@ -84,8 +84,6 @@ export const useRatingInteractions = (
     }
     setStatus('locked');
   };
-  console.log(status);
-
   const handleMouseLeave = (): void => {
     setHoverScore(UserVote.None);
     setStatus('idle');

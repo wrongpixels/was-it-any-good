@@ -8,6 +8,7 @@
 export const styles = {
   animations: {
     zoomOnHover: 'transition-all duration-70 ease-out hover:scale-107',
+    zoomLessOnHover: 'transition-all duration-70 ease-out hover:scale-103',
     zoomMoreOnHover: 'transition-all duration-70 ease-out hover:scale-115',
     upOnHover: 'transition-all duration-40 ease-out hover:-translate-y-1',
     upOnHoverShort:
@@ -26,5 +27,8 @@ export const styles = {
       'bg-white border-6 border-white min-w-42 min-h-58 rounded-sm shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search:
       'bg-white border-6 border-white rounded-sm shadow-md ring-1 ring-gray-300',
+  },
+  buttons: {
+    dark: 'bg-cyan-800 hover:bg-cyan-600',
   },
 };
