@@ -35,9 +35,6 @@ const PosterRating = ({
             starWidth={starWidth}
             defaultRating={rating}
             media={media}
-            showId={
-              media.mediaType === MediaType.Season ? media.showId : undefined
-            }
           />
         </div>
         <div

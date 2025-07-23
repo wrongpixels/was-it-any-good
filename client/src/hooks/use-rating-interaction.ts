@@ -1,27 +1,33 @@
 import { useState } from 'react';
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
-import { LOW_NOTIFICATION } from '../constants/notification-constants';
 import { PADDING_ADJUSTER } from '../constants/ratings-constants';
 import { numToVote } from '../utils/ratings-helper';
 import { useAuth } from './use-auth';
-import {
-  NotificationContextValues,
-  useNotificationContext,
-} from '../context/NotificationProvider';
+import { MediaResponse, SeasonResponse } from '../../../shared/types/models';
+import { useRatingMutations } from './use-rating-mutations';
+import { getRatingDisplayValues } from '../utils/rating-display-values';
 
-export const useRatingInteraction = (
-  userRating: UserVote | undefined,
-  handleVote: (rating: UserVote) => void,
-  handleUnvote: (showId?: number) => void,
-  mediaType: MediaType,
-  starWidth: number
+type InteractionStatus = 'idle' | 'hovering' | 'locked';
+
+export const useRatingInteractions = (
+  media: MediaResponse | SeasonResponse,
+  starWidth: number,
+  sendPosterNotification: (message: string) => void,
+  defaultRating: number
 ) => {
-  const [hoverRating, setHoverRating] = useState<UserVote>(UserVote.None);
-  const [isHovering, setIsHovering] = useState(false);
-  const [needToLeave, setNeedToLeave] = useState(false);
+  const { id: mediaId, mediaType, userRating = null } = media;
+  const showId: number | undefined =
+    mediaType === MediaType.Season ? media.showId : undefined;
+
+  const { handleVote, handleUnvote } = useRatingMutations(
+    mediaId,
+    mediaType,
+    userRating
+  );
+  const [hoverScore, setHoverScore] = useState<UserVote>(UserVote.None);
+  const [status, setStatus] = useState<InteractionStatus>('idle');
   const [justVoted, setJustVoted] = useState(false);
-  const notification: NotificationContextValues = useNotificationContext();
   const { session } = useAuth();
 
   const calculateNewRating = (x: number, width: number): UserVote => {
@@ -31,7 +37,7 @@ export const useRatingInteraction = (
     const rating: number = Math.round((adjustedX / starsWidth) * 10);
 
     if (rating <= 0) {
-      return userRating !== undefined && userRating !== UserVote.None
+      return userRating?.userScore !== UserVote.None
         ? UserVote.Unvote
         : UserVote.One;
     }
@@ -48,63 +54,58 @@ export const useRatingInteraction = (
     const { left, width }: DOMRect = container.getBoundingClientRect();
     const x: number = e.clientX - left;
     const newRating: UserVote = calculateNewRating(x, width);
-    if (needToLeave) {
+    if (status === 'locked') {
       return;
     }
-    setHoverRating(newRating);
-    setIsHovering(true);
+    setHoverScore(newRating);
+    setStatus('hovering');
   };
 
   const handleClick = (): void => {
-    if (needToLeave) {
+    if (status === 'locked') {
       return;
     }
     if (!session || session.expired || !session.userId) {
-      notification.setError({
-        message: 'You have to login to vote!',
-        offset: LOW_NOTIFICATION,
-        anchorRef: notification.anchorRef,
-      });
-
+      sendPosterNotification('You have to login to vote!');
       return;
     }
-    if (hoverRating === UserVote.Unvote || userRating === hoverRating) {
+    if (
+      hoverScore === UserVote.Unvote ||
+      userRating?.userScore === hoverScore
+    ) {
       if (userRating) {
-        notification.setNotification({
-          message: `Unvoted ${mediaType}`,
-          offset: LOW_NOTIFICATION,
-          anchorRef: notification.anchorRef,
-        });
-        handleUnvote();
+        sendPosterNotification(`Unvoted ${mediaType}`);
+        handleUnvote(showId);
         handleVoteAnimation();
       }
-    } else if (hoverRating) {
-      /*notification.setNotification({
-        message: `Voted ${mediaType}\nwith a ${hoverRating}!`,
-        offset: LOW_NOTIFICATION,
-        anchorRef: notification.anchorRef,
-      });*/
-      handleVote(hoverRating);
+    } else if (hoverScore) {
+      handleVote(hoverScore, showId);
       handleVoteAnimation();
     }
-    setIsHovering(false);
-    setNeedToLeave(true);
+    setStatus('locked');
   };
 
   const handleMouseLeave = (): void => {
-    setHoverRating(UserVote.None);
-    setIsHovering(false);
-    setNeedToLeave(false);
+    setHoverScore(UserVote.None);
+    setStatus('idle');
   };
 
   return {
-    hoverRating,
-    isHovering,
-    justVoted,
-    needToLeave,
-    handleMouseMove,
-    handleClick,
-    handleMouseLeave,
-    notification,
+    state: {
+      hoverRating: hoverScore,
+      status,
+      justVoted,
+    },
+    handlers: {
+      handleMouseMove,
+      handleClick,
+      handleMouseLeave,
+    },
+    display: getRatingDisplayValues({
+      hoverScore,
+      currentScore: userRating?.userScore,
+      defaultRating,
+      isHovering: status === 'hovering',
+    }),
   };
 };

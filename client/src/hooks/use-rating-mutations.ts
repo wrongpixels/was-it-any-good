@@ -7,7 +7,7 @@ import {
   useUnvoteMutation,
 } from '../mutations/rating-mutations';
 
-export const useRating = (
+export const useRatingMutations = (
   mediaId: number,
   mediaType: MediaType,
   userRating: RatingData | null,
