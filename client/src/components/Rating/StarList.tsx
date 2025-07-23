@@ -11,11 +11,13 @@ interface StarListProps {
   readonly justVoted: boolean;
   readonly defaultRating: number;
   readonly userRating?: UserVote;
+  readonly interactive?: boolean;
 }
 
 const StarList = ({
   width,
   justVoted,
+  interactive,
   userRating = 0,
 }: StarListProps): JSX.Element => {
   const getStarClassname = (i: number): string => {
@@ -29,7 +31,7 @@ const StarList = ({
     <div className={`inline-flex whitespace-nowrap`}>
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={getStarClassname(i)}>
-          <StarIcon width={width} />
+          <StarIcon width={width} interactive={interactive && !justVoted} />
         </span>
       ))}
     </div>

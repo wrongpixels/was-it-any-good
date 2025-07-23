@@ -8,6 +8,7 @@
 export const styles = {
   animations: {
     zoomOnHover: 'transition-all duration-70 ease-out hover:scale-107',
+    zoomMoreOnHover: 'transition-all duration-70 ease-out hover:scale-115',
     upOnHover: 'transition-all duration-40 ease-out hover:-translate-y-1',
     upOnHoverShort:
       'transition-all duration-40 ease-out hover:-translate-y-0.5',

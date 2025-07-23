@@ -20,7 +20,7 @@ const SearchPageResults = ({
         {!!results && (
           <span className="text-xl font-medium">
             {results.length || 'No'} results for "
-            {<span className="italic text-gray-500 font-normal">{term}</span>}"
+            {<span className="italic text-gray-500 font-normal">{term}</span>}"!
           </span>
         )}
         <div className="pb-5" />

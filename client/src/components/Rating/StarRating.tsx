@@ -34,6 +34,7 @@ const StarRating = ({
     hoverRating,
     isHovering,
     justVoted,
+    needToLeave,
     handleMouseMove,
     handleClick,
     handleMouseLeave,
@@ -102,6 +103,7 @@ const StarRating = ({
           >
             <div className={getStarColor()}>
               <StarList
+                interactive={!needToLeave}
                 width={starWidth}
                 justVoted={false}
                 defaultRating={defaultRating}

@@ -1,14 +1,17 @@
 import { JSX } from 'react';
+import { styles } from '../../constants/tailwind-styles';
 
 interface StarIconProps {
   readonly width: number;
+  readonly interactive?: boolean;
 }
-const StarIcon = ({ width }: StarIconProps): JSX.Element => (
+const StarIcon = ({ width, interactive }: StarIconProps): JSX.Element => (
   <svg
     width={width}
     height={width}
     viewBox="0 0 24 24"
-    className="fill-current"
+    className={`fill-current max-w-${width} ${interactive ? styles.animations.zoomMoreOnHover : ''}`}
+    style={{ maxWidth: `${width}px` }}
   >
     <path
       fillRule="evenodd"

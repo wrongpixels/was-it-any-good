@@ -17,22 +17,10 @@ export const useRatingInteraction = (
   mediaType: MediaType,
   starWidth: number
 ) => {
-  const [hoverRating, setHoverRating]: [
-    UserVote,
-    React.Dispatch<React.SetStateAction<UserVote>>,
-  ] = useState<UserVote>(UserVote.None);
-  const [isHovering, setIsHovering]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
-  ] = useState<boolean>(false);
-  const [needToLeave, setNeedToLeave]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
-  ] = useState<boolean>(false);
-  const [justVoted, setJustVoted]: [
-    boolean,
-    React.Dispatch<React.SetStateAction<boolean>>,
-  ] = useState<boolean>(false);
+  const [hoverRating, setHoverRating] = useState<UserVote>(UserVote.None);
+  const [isHovering, setIsHovering] = useState(false);
+  const [needToLeave, setNeedToLeave] = useState(false);
+  const [justVoted, setJustVoted] = useState(false);
   const notification: NotificationContextValues = useNotificationContext();
   const { session } = useAuth();
 
@@ -113,6 +101,7 @@ export const useRatingInteraction = (
     hoverRating,
     isHovering,
     justVoted,
+    needToLeave,
     handleMouseMove,
     handleClick,
     handleMouseLeave,
