@@ -68,7 +68,6 @@ const MediaPage = ({
   }
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
   const show = isShow(media);
-
   return (
     <div>
       <div className="flex flex-row gap-8">

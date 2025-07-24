@@ -22,14 +22,15 @@ const Synopsis = ({
   if (!title || !content) {
     return null;
   }
+  const isShow: boolean = mediaType === MediaType.Show;
   const displayEpisodes: boolean =
-    mediaType === MediaType.Show &&
-    episodeCount !== undefined &&
-    episodeCount > 0;
-  const startYear: string | null = getYearString(startDate) || null;
-  const endYear: string = getYearString(endDate) || '?';
+    isShow && episodeCount !== undefined && episodeCount > 0;
+  const startYear: string | null = isShow
+    ? getYearString(startDate) || null
+    : null;
+  const endYear: string = isShow ? getYearString(endDate) || '?' : '';
   const displayDate: boolean = startYear !== null;
-  const displayAny: boolean = displayDate || displayEpisodes;
+  const displayAny: boolean = isShow && (displayDate || displayEpisodes);
 
   return (
     <div className="mt-2 space-y-2">
