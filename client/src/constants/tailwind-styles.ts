@@ -1,10 +1,12 @@
-// Tailwind 4 recommends React Components or CSS components for style reuse, but none is ideal:
-// - React component nesting is not flexible and its impractical for simple styling
-// - CSS components individual values are always overriden when combined with classNames
-// - Either hardcode CSS to imitate tw classes or increased bundle size using @apply directives
+// Tailwind's official style reuse patterns (React Components or CSS Components) is not ideal:
+// - Nesting React components is inflexible and impractical for simple styling.
+// - CSS components have 2 major shortcomings:
+//   1. Unpredictable: They are always overridden by utility classNames.
+//   2. You must either write raw CSS (abandoning Tailwind's classes) or use @apply
+//    (making the final build bigger).
 
-// This approach provides a simple way to reuse Tailwind classNames in a predictable way,
-// making them easy to use, combine and extend.
+// This approach uses JS objects + tailwind-merge to easily reuse and combine with Tailwind
+// classes in a predicable way ('last one wins'), solving all of the above.
 
 const transitions = {
   baseZoom: 'transition-all duration-70 ease-out',

@@ -10,6 +10,7 @@ import SearchUrlBuilder from '../../utils/search-url-builder';
 import { Link } from 'react-router-dom';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { styles } from '../../constants/tailwind-styles';
+import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
 interface CountryFlagWrapperProps extends PropsWithChildren {
   to: string;
@@ -66,6 +67,7 @@ const CountryFlags = ({
   countryCodes,
   useLink = true,
   mediaType,
+  className,
 }: CountryFlagsProps) => {
   if (!countryCodes) {
     return null;
@@ -80,7 +82,12 @@ const CountryFlags = ({
   }
 
   return (
-    <span className={'inline-flex items-center gap-2 pt-1'}>
+    <span
+      className={mergeClassnames(
+        'inline-flex items-center gap-2 pt-1',
+        className
+      )}
+    >
       {showCountries.map((c: CountryValues) => (
         <CountryFlagWrapper key={c.name} to={c.searchUrl} useLink={useLink}>
           <CountryFlagIcon country={c} useLink={useLink} />
