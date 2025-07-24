@@ -33,7 +33,7 @@ export const styles = {
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search:
-      'bg-white border-6 border-white rounded-sm shadow-md ring-1 ring-gray-300',
+      'bg-white border-6 border-white rounded-sm shadow-md ring-1 ring-gray-300 h-45 w-full',
   },
   buttons: {
     dark: 'bg-cyan-800 hover:bg-cyan-600',

@@ -8,6 +8,7 @@ import {
   DEF_STAR_WIDTH,
 } from '../../constants/ratings-constants';
 import { AnimatedDiv } from '../common/AnimatedDiv';
+import { styles } from '../../constants/tailwind-styles';
 
 interface PosterRatingProps {
   media: MediaResponse | SeasonResponse;
@@ -46,7 +47,7 @@ const PosterRating = ({
       {valid && rating > 0 ? (
         <div className="flex items-center justify-center gap-6 ">
           {!isSeason && (
-            <div className="w-6">
+            <div className={`w-6 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
                 media={media}
                 mediaType={media.mediaType}
@@ -71,7 +72,7 @@ const PosterRating = ({
             <meta itemProp="ratingCount" content={media.voteCount.toString()} />
           </span>
           {!isSeason && (
-            <div className="w-6 opacity-80 ">
+            <div className={`w-6 opacity-80 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
                 media={media}
                 mediaType={media.mediaType}

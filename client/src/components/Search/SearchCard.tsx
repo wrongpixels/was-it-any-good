@@ -26,31 +26,31 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search} justify-center flex flex-row overflow-ellipsis ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+      className={`${styles.poster.search} flex flex-row gap-2.5 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <LazyImage
-        aspect={AspectRatio.poster}
-        src={media.image}
-        alt={media.name}
-        className={`${styles.shadow.subtle} h-full w-auto`}
-      />
-      <div className="flex flex-col w-full my-2  text-gray-600">
-        <span className="pl-2 w-full">
-          <span className="text-gray-600 leading-5">{media.name}</span>
-          <span className="font-light text-sm pt-1 flex flex-row gap-1 items-center">
-            <span className="font-semibold text-gray-400">{mediaDisplay}</span>(
-            {media.year})
-            <CountryFlags
-              className="mb-1"
-              countryCodes={[media.country[0]]}
-              useLink={false}
-            />
-          </span>
+      <span className="w-50">
+        <LazyImage
+          aspect={AspectRatio.poster}
+          src={media.image}
+          alt={media.name}
+          className={`${styles.shadow.subtle} h-42`}
+        />
+      </span>
+      <div className="flex flex-col w-full my-2 text-gray-600">
+        <span className="text-gray-600 leading-5">{media.name}</span>
+        <span className="font-light text-sm pt-1 flex flex-row gap-1 items-center">
+          <span className="font-semibold text-gray-400">{mediaDisplay}</span>(
+          {media.year})
+          <CountryFlags
+            className="mb-1 ml-1"
+            countryCodes={media.country ? [media.country[0]] : []}
+            useLink={false}
+          />
           {/* Space for add to list etc*/}
         </span>
         <div className="grow" />
-        <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500">
+        <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500 pr-1">
           {average}
           <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
         </span>
