@@ -1,4 +1,4 @@
-import { SearchType, TmdbSearchType } from '../../../shared/types/search';
+import { SearchType, TMDBSearchType } from '../../../shared/types/search';
 
 export const extractQuery = (param: string | unknown | undefined): string[] => {
   return Array.isArray(param)
@@ -6,12 +6,12 @@ export const extractQuery = (param: string | unknown | undefined): string[] => {
         .map(String)
         .filter((item): item is string => typeof item === 'string')
     : typeof param === 'string'
-    ? [param]
-    : [];
+      ? [param]
+      : [];
 };
 
 export const arrayToTMDBSearchTypes = (array: string[]) => {
-  const tmdbSearchTypes: TmdbSearchType[] = [];
+  const tmdbSearchTypes: TMDBSearchType[] = [];
 
   if (array.includes(SearchType.Film)) {
     tmdbSearchTypes.push('movie');

@@ -1,15 +1,41 @@
-import { useMemo } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import Country, { CountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { FLAG_URL } from '../../constants/url-constants';
-import { MediaTypeProps } from '../../types/common-props-types';
+import {
+  MediaTypeProps,
+  OptClassNameProps,
+} from '../../types/common-props-types';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import { Link } from 'react-router-dom';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { styles } from '../../constants/tailwind-styles';
 
+interface CountryFlagWrapperProps extends PropsWithChildren {
+  to: string;
+  useLink: boolean;
+}
+
+//a wrapper to avoid rendering Links inside Links when needed (as in Search Cards)
+const CountryFlagWrapper: React.FC<CountryFlagWrapperProps> = ({
+  to,
+  children,
+  useLink,
+}) => {
+  if (useLink) {
+    return <Link to={to}>{children}</Link>;
+  }
+  return <span>{children}</span>;
+};
+
 interface CountryFlagsProps extends MediaTypeProps {
   countryCodes: CountryCode[];
+  useLink?: boolean;
+}
+
+interface CountryFlagIconProps extends OptClassNameProps {
+  country: CountryValues;
+  useLink?: boolean;
 }
 
 interface CountryValues {
@@ -36,12 +62,16 @@ const buildCountries = (
   return countries;
 };
 
-const CountryFlags = ({ countryCodes, mediaType }: CountryFlagsProps) => {
+const CountryFlags = ({
+  countryCodes,
+  useLink = true,
+  mediaType,
+}: CountryFlagsProps) => {
   if (!countryCodes) {
     return null;
   }
   const showCountries: CountryValues[] = useMemo(
-    () => buildCountries(countryCodes.slice(0, 3), mediaType),
+    () => buildCountries(countryCodes.slice(0, 3).concat('ES'), mediaType),
     [countryCodes, mediaType]
   );
 
@@ -50,20 +80,24 @@ const CountryFlags = ({ countryCodes, mediaType }: CountryFlagsProps) => {
   }
 
   return (
-    <span className="inline-flex items-center gap-2 pt-1">
+    <span className={'inline-flex items-center gap-2 pt-1'}>
       {showCountries.map((c: CountryValues) => (
-        <Link key={c.name} to={c.searchUrl}>
-          <LazyImage
-            src={c.image}
-            alt={`${c.name} flag`}
-            title={c.name}
-            variant={ImageVariant.inline}
-            className={`w-6 h-4 ring-1 ring-gray-300 shadow-xs ${styles.animations.zoomOnHover}`}
-          />
-        </Link>
+        <CountryFlagWrapper key={c.name} to={c.searchUrl} useLink={useLink}>
+          <CountryFlagIcon country={c} useLink={useLink} />
+        </CountryFlagWrapper>
       ))}
     </span>
   );
 };
+
+const CountryFlagIcon = ({ country, useLink }: CountryFlagIconProps) => (
+  <LazyImage
+    src={country.image}
+    alt={`${country.name} flag`}
+    title={country.name}
+    variant={ImageVariant.inline}
+    className={`w-6 h-4 ring-1 ring-gray-300 shadow-xs ${useLink ? styles.animations.zoomOnHover : ''}`}
+  />
+);
 
 export default CountryFlags;

@@ -3,11 +3,14 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { setPageInfo } from '../../utils/page-info-setter';
 import { useSuggestionsQuery } from '../../queries/suggestions-queries';
 import SpinnerPage from '../common/status/SpinnerPage';
-import { normalizeMediaSearchParams } from '../../utils/url-helper';
+import {
+  getURLAfterDomain,
+  normalizeMediaSearchParams,
+} from '../../utils/url-helper';
 import SearchPageResults from './SearchPageResults';
 import Button from '../common/Button';
 import SearchUrlBuilder from '../../utils/search-url-builder';
@@ -41,6 +44,17 @@ const SearchPage = (): JSX.Element | null => {
     console.log('refresh', param);
     handleSearch(searchTerm);
   };
+
+  //on first render, we check for invalid params to match them or remove them.
+  useEffect(() => {
+    const currentUrl: string = searchUrl
+      .byTerm(searchTerm)
+      .byTypes(typeFilters.getApplied())
+      .toString();
+    if (currentUrl !== getURLAfterDomain()) {
+      navigateTo(currentUrl);
+    }
+  }, []);
 
   const handleSearch = (newSearch: string | null) => {
     console.log('searching', newSearch);

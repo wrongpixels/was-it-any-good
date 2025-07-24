@@ -12,7 +12,7 @@ interface SearchInputFieldProps extends OptStringProps {
 const SearchInputField = memo(
   ({ text: searchTerm, handleSearch }: SearchInputFieldProps) => {
     const searchField = useInputField({
-      name: 'search',
+      name: 'main-search',
       initialValue: searchTerm || undefined,
       placeholder: 'Search on WIAG and TMDB',
     });

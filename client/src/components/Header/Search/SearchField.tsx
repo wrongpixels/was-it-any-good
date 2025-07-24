@@ -9,7 +9,7 @@ import { styles } from '../../../constants/tailwind-styles';
 const SearchField = (): JSX.Element => {
   const [isDropdownVisible, setDropdownVisible] = useState(true);
   const searchField = useInputField({
-    name: 'search',
+    name: 'mini-search',
     placeholder: 'Films, shows...',
   });
   const { data: suggestions, isLoading } = useSuggestionsQuery(

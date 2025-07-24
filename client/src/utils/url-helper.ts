@@ -2,6 +2,7 @@ import { MediaType } from '../../../shared/types/media';
 import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
 import { IndexMediaData } from '../../../shared/types/models';
+import { SearchType } from '../../../shared/types/search';
 
 export const apiPaths = {
   films: {
@@ -97,6 +98,9 @@ export const urlFromIndexMedia = (im: IndexMediaData): string =>
     ? buildRouterMediaLink(im.mediaType, im.mediaId)
     : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
 
+export const getURLAfterDomain = () =>
+  window.location.href.substring(window.location.origin.length);
+
 export const buildOwnUrl = (path: string = ''): string =>
   `${window.location.origin}${path}`;
 
@@ -118,9 +122,11 @@ export const mediaTypeToDisplayName = (mediaType: MediaType) => {
 
 //Normalizes media type search parameters (m=...) into unified values ('film' or 'show'),
 //handling various user inputs like 'movies', 'tv-shows', 'series' etc.
-export const normalizeMediaSearchParams = (rawParams: string[]): string[] => {
-  const resultParams: string[] = [];
-  const addToParams = (p: string) => {
+export const normalizeMediaSearchParams = (
+  rawParams: string[]
+): SearchType[] => {
+  const resultParams: SearchType[] = [];
+  const addToParams = (p: SearchType) => {
     if (!resultParams.includes(p)) {
       resultParams.push(p);
     }
@@ -131,7 +137,7 @@ export const normalizeMediaSearchParams = (rawParams: string[]): string[] => {
       case 'films':
       case 'movie':
       case 'movies':
-        addToParams('film');
+        addToParams(SearchType.Film);
         break;
       case 'show':
       case 'shows':
@@ -140,7 +146,25 @@ export const normalizeMediaSearchParams = (rawParams: string[]): string[] => {
       case 'tv-show':
       case 'tv-shows':
       case 'series':
-        addToParams('show');
+        addToParams(SearchType.Show);
+        break;
+      case 'person':
+      case 'people':
+      case 'actor':
+      case 'actors':
+      case 'director':
+      case 'directors':
+      case 'writer':
+      case 'writers':
+        addToParams(SearchType.Person);
+        break;
+      case 'season':
+      case 'seasons':
+      case 'tvseason':
+      case 'tv-season':
+      case 'tvseasons':
+      case 'tv-seasons':
+        addToParams(SearchType.Season);
         break;
     }
   });

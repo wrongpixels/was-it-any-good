@@ -13,7 +13,7 @@ import {
   arrayToTMDBSearchTypes,
   extractQuery,
 } from '../services/search-service';
-import { TmdbSearchType } from '../../../shared/types/search';
+import { TMDBSearchType } from '../../../shared/types/search';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
-    const searchType: TmdbSearchType =
+    const searchType: TMDBSearchType =
       arrayToTMDBSearchTypes(searchTypeString)[0];
 
     if (!searchTerm) {
