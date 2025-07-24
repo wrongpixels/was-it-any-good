@@ -1,10 +1,21 @@
-export const getYear = (dateString: string | null | undefined): string => {
-  if (!dateString) {
+export const getYearParenthesis = (
+  dateString: string | null | undefined,
+): string => {
+  const year: string = getYearString(dateString)
+  if (!year) {
     return ''
   }
-  const date: Date = new Date(dateString)
-  const year: number = date.getFullYear()
-  return isNaN(year) ? '' : `(${year})`
+  return `(${year})`
+}
+
+export const getYearString = (
+  dateString: string | null | undefined,
+): string => {
+  const year: number | null = getYearNum(dateString)
+  if (!year) {
+    return ''
+  }
+  return year.toString()
 }
 
 export const getYearNum = (

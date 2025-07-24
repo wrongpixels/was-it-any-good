@@ -66,6 +66,8 @@
   --color-notigreen: #289e63;
   --color-notigreenbg: #dbece2;
 
+  --text-regular: 0.907rem;
+
   --animate-d-ping: d-ping 0.8s ease-out;
   @keyframes d-ping {
     0% {

@@ -1,5 +1,4 @@
 import { JSX } from 'react';
-import EntrySection from '../EntrySection';
 import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
 import MediaEntryPoster from '../Poster/MediaEntryPoster';
@@ -16,7 +15,6 @@ import {
   UNKNOWN_CAST,
   UNKNOWN_CREW,
   DEF_CREW_TV,
-  DEF_SYNOPSIS,
 } from '../../../../shared/defaults/media-defaults';
 import CrewEntrySection from '../CrewEntrySection';
 import CastEntrySection from '../CasEntrySection';
@@ -25,6 +23,8 @@ import ErrorPage from '../common/status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
 import { mediaTypeToDisplayName } from '../../utils/url-helper';
+import Synopsis from './Synopsis';
+import { isShow } from '../../utils/ratings-helper';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -67,16 +67,23 @@ const MediaPage = ({
     return <MediaMissing mediaId={mediaId} mediaType={mediaType} tmdb={tmdb} />;
   }
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
+  const show = isShow(media);
 
   return (
     <div>
       <div className="flex flex-row gap-8">
         <div className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
-          <EntrySection
-            title="Synopsis"
-            content={media.description || DEF_SYNOPSIS}
-          />
+          {
+            <Synopsis
+              title="Synopsis"
+              content={media.description}
+              mediaType={mediaType}
+              episodeCount={show ? media.episodeCount : undefined}
+              startDate={media.releaseDate || undefined}
+              endDate={show ? media.lastAirDate || undefined : undefined}
+            />
+          }
           <div className="border-t border-gray-200 mt-3">
             {media.mediaType === MediaType.Film ? (
               <CrewEntrySection

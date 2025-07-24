@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 
-interface EntryProps {
+export interface EntryProps {
   title: string;
   content?: string;
 }

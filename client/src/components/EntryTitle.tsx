@@ -1,7 +1,7 @@
 import { JSX, PropsWithChildren } from 'react';
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
-import { getYear } from '../../../shared/helpers/format-helper';
+import { getYearParenthesis } from '../../../shared/helpers/format-helper';
 import CountryFlags from './Media/MediaCountryFlags';
 
 interface EntryTitleProps extends PropsWithChildren {
@@ -26,7 +26,9 @@ const EntryTitle = ({
         <h2 className="text-3xl flex items-center gap-2 ">
           <span className="font-bold">{title}</span>
           {date && (
-            <span className="text-gray-400 font-regular">{getYear(date)}</span>
+            <span className="text-gray-400 font-regular">
+              {getYearParenthesis(date)}
+            </span>
           )}
           {country && (
             <CountryFlags countryCodes={country} mediaType={mediaType} />
