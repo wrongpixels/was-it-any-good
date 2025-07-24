@@ -1,4 +1,5 @@
 import {
+  replace,
   SetURLSearchParams,
   useNavigate,
   useSearchParams,
@@ -20,6 +21,11 @@ import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
 import { styles } from '../../constants/tailwind-styles';
 import { capitalize } from '../../utils/common-format-helper';
 
+//SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
+//when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
+//users can edit the url to get the same results and no API call takes place until Search form is submitted
+//or the searchTerm in the url changes.
+
 const SearchPage = (): JSX.Element | null => {
   const navigateTo = useNavigate();
   const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
@@ -30,9 +36,10 @@ const SearchPage = (): JSX.Element | null => {
     normalizeMediaSearchParams(parameters.getAll('m'))
   );
 
+  /*
   const genreFilters: string[] = parameters.getAll('g');
   const orderFilter: string = parameters.get('orderBy') || '';
-  const sortFilter: string = parameters.get('sortBy') || '';
+  const sortFilter: string = parameters.get('sortBy') || '';*/
 
   const { data: suggestions, isLoading } = useSuggestionsQuery(
     searchTerm || ''
@@ -45,21 +52,25 @@ const SearchPage = (): JSX.Element | null => {
     handleSearch(searchTerm);
   };
 
-  //on first render, we check for invalid params to match them or remove them.
+  //on first render, we remove invalid and unmatched parameters.
   useEffect(() => {
     const currentUrl: string = searchUrl
       .byTerm(searchTerm)
       .byTypes(typeFilters.getApplied())
       .toString();
     if (currentUrl !== getURLAfterDomain()) {
-      navigateTo(currentUrl);
+      navigateTo(currentUrl), { replace: true };
     }
   }, []);
 
   const handleSearch = (newSearch: string | null) => {
-    console.log('searching', newSearch);
+    console.log('searching', newSearch, searchTerm);
+    if (newSearch !== searchTerm) {
+      console.log('Adding to history');
+    }
     navigateTo(
-      searchUrl.byTerm(newSearch).byTypes(typeFilters.getApplied()).toString()
+      searchUrl.byTerm(newSearch).byTypes(typeFilters.getApplied()).toString(),
+      { replace: newSearch === searchTerm }
     );
   };
 

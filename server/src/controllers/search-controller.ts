@@ -14,6 +14,7 @@ import {
   extractQuery,
 } from '../services/search-service';
 import { TMDBSearchType } from '../../../shared/types/search';
+import { IndexMedia } from '../models';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -75,7 +76,9 @@ router.get('/', async (req: Request, res, next) => {
       ...createIndexForFilmBulk(films),
       ...createIndexForShowBulk(shows),
     ];
-
+    await IndexMedia.bulkCreate(indexMedia, {
+      updateOnDuplicate: ['popularity', 'image', 'baseRating'],
+    });
     res.json(indexMedia);
   } catch (error) {
     next(error);
