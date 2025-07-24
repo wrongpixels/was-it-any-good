@@ -1,7 +1,10 @@
 import { JSX } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../shared/types/models';
-import { DEF_MINI_STAR_WIDTH } from '../../constants/ratings-constants';
+import {
+  DEF_MINI_STAR_WIDTH,
+  NO_RATINGS,
+} from '../../constants/ratings-constants';
 import { styles } from '../../constants/tailwind-styles';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import {
@@ -26,18 +29,18 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search} flex flex-row gap-2.5 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+      className={`${styles.poster.search} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <span className="w-50">
+      <span className="w-50 h-auto">
         <LazyImage
           aspect={AspectRatio.poster}
           src={media.image}
           alt={media.name}
-          className={`${styles.shadow.subtle} h-42`}
+          className={`${styles.shadow.subtle}`}
         />
       </span>
-      <div className="flex flex-col w-full my-2 text-gray-600">
+      <div className="flex flex-col w-full pl-3.5 my-2 text-gray-600">
         <span className="text-gray-600 leading-5">{media.name}</span>
         <span className="font-light text-sm pt-1 flex flex-row gap-1 items-center">
           <span className="font-semibold text-gray-400">{mediaDisplay}</span>(
@@ -51,7 +54,13 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
         </span>
         <div className="grow" />
         <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500 pr-1">
-          {average}
+          {average ? (
+            average
+          ) : (
+            <div className="text-sm font-normal text-gray-300 text-center pt-2 pb-1 italic">
+              {NO_RATINGS}
+            </div>
+          )}
           <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
         </span>
       </div>

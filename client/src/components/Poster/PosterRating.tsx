@@ -6,6 +6,7 @@ import ExternalLogo from '../Rating/ExternalLogo';
 import {
   DEF_MINI_STAR_WIDTH,
   DEF_STAR_WIDTH,
+  NO_RATINGS,
 } from '../../constants/ratings-constants';
 import { AnimatedDiv } from '../common/AnimatedDiv';
 import { styles } from '../../constants/tailwind-styles';
@@ -82,8 +83,8 @@ const PosterRating = ({
           )}
         </div>
       ) : (
-        <div className="text-sm text-gray-500 text-center pt-2 pb-1 italic">
-          Not enough ratings
+        <div className="text-sm text-gray-400 text-center pt-2 pb-1 italic">
+          {NO_RATINGS}
         </div>
       )}
     </div>
