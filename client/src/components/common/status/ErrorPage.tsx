@@ -12,9 +12,9 @@ const ErrorPage = ({ context, error }: ErrorPageProps) => {
 
   setTitle('Error!');
   return (
-    <div className="flex justify-center w-full font-medium text-xl  whitespace-pre-line">
+    <h1 className="flex justify-center w-full font-medium text-xl  whitespace-pre-line">
       {displayString}
-    </div>
+    </h1>
   );
 };
 export default ErrorPage;

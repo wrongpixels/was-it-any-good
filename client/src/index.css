@@ -1,30 +1,61 @@
 @import 'tailwindcss';
 
 @layer base {
-  .base-input {
-    --ring-color: theme('colors.cyan.400');
-    --ring-width: 1px;
-    --ring-color-hover: theme('colors.amber.300');
-    --ring-width-focus: 2px;
-    --ring-color-focus: theme(
-      'colors.sky.500'
-    ); /* Assuming 'starblue' is sky-500 */
-    --padding-y: theme('spacing.1'); /* 0.125rem */
-    --padding-x: theme('spacing.1'); /* 0.25rem */
+  body {
+    margin: 0;
+    color: #575757;
   }
 
-  /* 
-    This is your reusable variation.
-    It ONLY changes the variables. No other CSS properties.
-    This is clean, readable, and has zero specificity conflicts.
-  */
-  .small-inputfield {
-    --ring-width: 0px;
-    --ring-color-hover: theme('colors.amber.200');
-    --ring-width-hover: 1px; /* We can even introduce new variables for the variant */
-    --ring-color-focus: theme('colors.sky.300');
-    --padding-y: theme('spacing.1'); /* 0.25rem */
-    --padding-x: 0px;
+  h1 {
+    line-height: 1.1;
+  }
+
+  a {
+    font-weight: 500;
+    color: #5d82c7;
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: #7ea1e0;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  button:hover {
+    border-color: #646cff;
+  }
+
+  :root {
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root {
+      background-color: #ffffff;
+    }
+    a:hover {
+      color: #6d90cf;
+    }
   }
 }
 
@@ -86,64 +117,13 @@
   }
 }
 
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
-
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-a {
-  font-weight: 500;
-  color: #5d82c7;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #5980c7;
-}
-
-body {
-  margin: 0;
-  width: 100%;
-  min-height: 500px;
-  color: #575757;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-button:hover {
-  border-color: #646cff;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #ffffff;
-  }
-  a:hover {
+@layer components {
+  .test-red-bg {
     color: #6d90cf;
+    background-color: #ff1010;
+    padding-top: 20px;
+  }
+  .test-red-bg2 {
+    @apply text-3xl font-bold text-black;
   }
 }

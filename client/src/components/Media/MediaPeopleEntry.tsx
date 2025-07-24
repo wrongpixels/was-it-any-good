@@ -33,7 +33,7 @@ const MediaPeopleEntry = ({
         <div className="absolute right-0 pr-5 top-0 h-full w-6 bg-gradient-to-l from-gray-50 to-transparent z-1" />
       )}
       <div
-        className="flex overflow-x-auto p-1.5 space-x-2 scrollbar-hide "
+        className="flex overflow-x-auto p-1.5 space-x-2 scrollbar-hide"
         ref={reference}
       >
         {people

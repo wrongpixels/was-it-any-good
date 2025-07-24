@@ -71,7 +71,7 @@ const CountryFlags = ({
     return null;
   }
   const showCountries: CountryValues[] = useMemo(
-    () => buildCountries(countryCodes.slice(0, 3).concat('ES'), mediaType),
+    () => buildCountries(countryCodes.slice(0, 3), mediaType),
     [countryCodes, mediaType]
   );
 
