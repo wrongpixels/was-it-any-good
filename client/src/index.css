@@ -98,7 +98,7 @@
       transform: translateY(0);
     }
   }
-  --animate-shake: animate-shake 1.3s ease-in-out;
+  --animate-shake: animate-shake 0.4s ease-in-out;
   @keyframes animate-shake {
     0% {
       transform: translateX(0);
@@ -110,7 +110,7 @@
       transform: translateX(0);
     }
     30% {
-      transform: translateX(-10%);
+      transform: translateX(-3%);
     }
     40%,
     100% {

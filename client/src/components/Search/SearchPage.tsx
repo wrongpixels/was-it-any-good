@@ -15,10 +15,13 @@ import SearchPageResults from './SearchPageResults';
 import Button from '../common/Button';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import SearchInputField from './SearchInput';
-import { searchTypes } from '../../../../shared/types/search';
+import { SearchType, searchTypes } from '../../../../shared/types/search';
 import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
 import { styles } from '../../constants/tailwind-styles';
 import { capitalize } from '../../utils/common-format-helper';
+import { useNotificationContext } from '../../context/NotificationProvider';
+import { AnimatedDiv } from '../common/AnimatedDiv';
+import { useAnimEngine } from '../../context/AnimationProvider';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -27,14 +30,18 @@ import { capitalize } from '../../utils/common-format-helper';
 
 const SearchPage = (): JSX.Element | null => {
   const navigateTo = useNavigate();
+  const { setNotification, anchorRef } = useNotificationContext();
+  const { playAnim } = useAnimEngine();
   const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const searchTerm: string | null = parameters.get('q');
-  const typeFilters = new ParamManager(
-    searchTypes,
-    normalizeMediaSearchParams(parameters.getAll('m'))
+  const activeSearchTypeParams: string[] = normalizeMediaSearchParams(
+    parameters.getAll('m')
   );
-
+  if (activeSearchTypeParams.length === 0) {
+    activeSearchTypeParams.push(SearchType.Film, SearchType.Show);
+  }
+  const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
   /*
   const genreFilters: string[] = parameters.getAll('g');
   const orderFilter: string = parameters.get('orderBy') || '';
@@ -46,6 +53,17 @@ const SearchPage = (): JSX.Element | null => {
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
 
   const toggleParam = (param: ParamStructure) => {
+    if (param.applied && typeFilters.getApplied().length === 1) {
+      setNotification({
+        message: 'Choose at least one!',
+        anchorRef,
+      });
+      playAnim({
+        animationClass: 'animate-shake',
+        animKey: `search-param-${param.name}`,
+      });
+      return;
+    }
     typeFilters.toggleParam(param);
     console.log('refresh', param);
     handleSearch(searchTerm);
@@ -55,7 +73,7 @@ const SearchPage = (): JSX.Element | null => {
   useEffect(() => {
     const currentUrl: string = searchUrl
       .byTerm(searchTerm)
-      .byTypes(typeFilters.getApplied())
+      .byTypes(typeFilters.getAppliedNames())
       .toString();
     if (currentUrl !== getURLAfterDomain()) {
       navigateTo(currentUrl), { replace: true };
@@ -68,7 +86,10 @@ const SearchPage = (): JSX.Element | null => {
       console.log('Adding to history');
     }
     navigateTo(
-      searchUrl.byTerm(newSearch).byTypes(typeFilters.getApplied()).toString(),
+      searchUrl
+        .byTerm(newSearch)
+        .byTypes(typeFilters.getAppliedNames())
+        .toString(),
       { replace: newSearch === searchTerm }
     );
   };
@@ -79,17 +100,19 @@ const SearchPage = (): JSX.Element | null => {
         text={searchTerm || undefined}
         handleSearch={handleSearch}
       />
-      <div className="flex flex-row items-center gap-1">
-        <span className="text-gray-400 pr-2">Filter by</span>
+      <div className="flex flex-row items-center gap-1" ref={anchorRef}>
+        <span className="text-gray-400 pr-2">Look for</span>
         {typeFilters.params.map((param: ParamStructure) => (
-          <Button
-            key={param.name}
-            onClick={() => toggleParam(param)}
-            className={`h-8 flex flex-row gap-1 ${styles.animations.zoomLessOnHover} ${param.applied ? styles.buttons.dark : ''}`}
-          >
-            <span className="w-3">{`${param.applied ? '-' : '+'}`}</span>
-            {capitalize(param.name)}
-          </Button>
+          <AnimatedDiv animKey={`search-param-${param.name}`}>
+            <Button
+              key={param.name}
+              onClick={() => toggleParam(param)}
+              className={`h-8 flex flex-row gap-1 ${styles.animations.zoomLessOnHover} ${!param.applied ? styles.buttons.dark : ''}`}
+            >
+              <span className="">{`${!param.applied ? '☐' : '☑'}`}</span>
+              {capitalize(param.name)}
+            </Button>
+          </AnimatedDiv>
         ))}
       </div>
       <span className="pt-5">

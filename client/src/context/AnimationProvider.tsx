@@ -14,7 +14,7 @@ export interface AnimOptions {
 }
 
 export interface AnimPlayParams {
-  key: AnimKey;
+  animKey: AnimKey;
   animationClass: string;
   options?: AnimOptions;
 }
@@ -27,7 +27,7 @@ export interface Anim {
 interface AnimEngineValues {
   activeAnimations: Map<AnimKey, Anim>;
   playAnim: (params: AnimPlayParams) => void;
-  stopAnim: (key: AnimKey) => void;
+  stopAnim: (animKey: AnimKey) => void;
 }
 
 export const AnimationContext = createContext<AnimEngineValues | null>(null);
@@ -37,29 +37,33 @@ export const AnimationProvider = ({ children }: PropsWithChildren) => {
     new Map()
   );
 
-  const playAnim = ({ key, animationClass, options = {} }: AnimPlayParams) => {
+  const playAnim = ({
+    animKey,
+    animationClass,
+    options = {},
+  }: AnimPlayParams) => {
     const loop: AnimLoop = options.loop === false ? 1 : (options.loop ?? 1);
     const animation: Anim = { animationClass, loop };
-    console.log('Playing', key);
+    console.log('Playing', animKey);
 
-    stopAnim(key);
+    stopAnim(animKey);
     setActiveAnimations((prev) => {
       const newMap = new Map(prev);
-      newMap.set(key, animation);
-      console.log('Playing', key, 'active:', newMap.size);
+      newMap.set(animKey, animation);
+      console.log('Playing', animKey, 'active:', newMap.size);
 
       return newMap;
     });
   };
 
-  const stopAnim = (key: AnimKey) => {
+  const stopAnim = (animKey: AnimKey) => {
     setActiveAnimations((prev) => {
-      if (!prev.has(key)) {
+      if (!prev.has(animKey)) {
         return prev;
       }
       const newMap = new Map(prev);
-      newMap.delete(key);
-      console.log('stopping', key, 'active:', prev.size);
+      newMap.delete(animKey);
+      console.log('stopping', animKey, 'active:', prev.size);
 
       return newMap;
     });
@@ -79,7 +83,7 @@ export const AnimationProvider = ({ children }: PropsWithChildren) => {
 
 interface AnimValues extends Omit<AnimEngineValues, 'activeAnimations'> {}
 
-export const useAnimation = (): AnimValues => {
+export const useAnimEngine = (): AnimValues => {
   const context = useContext(AnimationContext);
   if (!context) {
     throw new Error('useAnimation must be used within an AnimationProvider');

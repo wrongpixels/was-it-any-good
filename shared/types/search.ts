@@ -1,48 +1,48 @@
-import { MediaType } from './media'
+import { MediaType } from './media';
 
 export const mediaTypesToSearchTypes = (
-  mediaTypes: MediaType[] | undefined | null,
+  mediaTypes: MediaType[] | undefined | null
 ): (SearchType | null)[] | undefined => {
   if (!mediaTypes) {
-    return undefined
+    return undefined;
   }
-  const validSearchTypes: SearchType[] = []
+  const validSearchTypes: SearchType[] = [];
   mediaTypes.forEach((m: MediaType) => {
-    const searchType: SearchType | null | undefined = mediaTypeToSearchType(m)
+    const searchType: SearchType | null | undefined = mediaTypeToSearchType(m);
     if (searchType) {
-      validSearchTypes.push(searchType)
+      validSearchTypes.push(searchType);
     }
-  })
-  return validSearchTypes
-}
+  });
+  return validSearchTypes;
+};
 export enum SearchType {
-  Film = 'film',
-  Show = 'show',
-  Season = 'season',
-  Person = 'person',
+  Film = 'films',
+  Show = 'shows',
+  // Season = 'season',
+  Person = 'people',
 }
 
-export type TMDBSearchType = 'movie' | 'tv' | 'person' | 'multi'
+export type TMDBSearchType = 'movie' | 'tv' | 'person' | 'multi';
 
-export const searchTypes: string[] = Object.values(SearchType)
+export const searchTypes: string[] = Object.values(SearchType);
 
 export const isValidSearchType = (value: string): boolean =>
-  searchTypes.includes(value)
+  searchTypes.includes(value);
 
 export const mediaTypeToSearchType = (
-  mediaType: MediaType | undefined,
+  mediaType: MediaType | undefined
 ): SearchType | null | undefined => {
   switch (mediaType) {
     case MediaType.Film:
-      return SearchType.Film
+      return SearchType.Film;
     case MediaType.Show:
-      return SearchType.Show
+      return SearchType.Show;
     case MediaType.Season:
-      return SearchType.Season
+      return null;
     default:
-      return null
+      return null;
   }
-}
+};
 
-export type OrderByType = 'popularity' | 'title' | 'year' | 'rating'
-export type SortByType = 'desc' | 'asc'
+export type OrderByType = 'popularity' | 'title' | 'year' | 'rating';
+export type SortByType = 'desc' | 'asc';
