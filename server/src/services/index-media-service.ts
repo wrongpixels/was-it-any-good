@@ -5,14 +5,15 @@ import { CreateIndexMedia } from '../../../shared/types/models';
 import IndexMedia from '../models/media/indexMedia';
 import { tmdbAPI } from '../util/config';
 import { createIndexForMediaBulk } from '../factories/media-factory';
+
+import jsonFilms from '../db/popular-films-db.json';
+import jsonShows from '../db/popular-shows-db.json';
 import {
   TMDBIndexFilm,
   TMDBIndexFilmArraySchema,
   TMDBIndexShow,
   TMDBIndexShowArraySchema,
 } from '../schemas/tmdb-index-media-schemas';
-import jsonFilms from '../db/popular-films-db.json';
-import jsonShows from '../db/popular-shows-db.json';
 
 const PAGES_TO_GATHER: number = 10;
 const DB_PATH: string = path.join(__dirname, '../db');
@@ -65,7 +66,8 @@ export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
 export const addIndexMedia = async (
   data: CreateIndexMedia
 ): Promise<IndexMedia | null> => {
-  const [indexEntry]: [IndexMedia, boolean | null] =
-    await IndexMedia.upsert(data);
+  const [indexEntry]: [IndexMedia, boolean | null] = await IndexMedia.upsert(
+    data
+  );
   return indexEntry;
 };

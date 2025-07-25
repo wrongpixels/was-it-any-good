@@ -4,6 +4,7 @@ import SearchIcon from '../Header/Search/icons/SearchIcon';
 import { useInputField } from '../../hooks/use-inputfield';
 import { OptStringProps } from '../../types/common-props-types';
 import Button from '../common/Button';
+import { AnimatedDiv } from '../common/AnimatedDiv';
 
 interface SearchInputFieldProps extends OptStringProps {
   handleSearch: (newSearch: string | null) => void;
@@ -37,13 +38,15 @@ const SearchInputField = memo(
             {...searchField.getProps()}
             className="border pl-7 text-base py-1.5 w-100 shadow-md shadow-black/5"
           />
-          <Button type={'submit'} className="pr-3 h-9">
-            <SearchIcon
-              className="text-gray-100 mt-0.5 -ml-2"
-              sizePadding={5}
-            />
-            Search
-          </Button>
+          <AnimatedDiv animKey={'search-main-button'}>
+            <Button type={'submit'} className="pr-3 h-9">
+              <SearchIcon
+                className="text-gray-100 mt-0.5 -ml-2"
+                sizePadding={5}
+              />
+              Search
+            </Button>
+          </AnimatedDiv>
         </form>
       </div>
     );

@@ -32,6 +32,13 @@ export interface IndexMediaData extends CreateIndexMedia {
   media?: MediaResponse;
 }
 
+export interface IndexMediaResponse {
+  page: number;
+  totalPages: number;
+  totalResults: number;
+  indexMedia: IndexMediaData[];
+}
+
 export interface RatingData {
   id: number;
   userId: number;

@@ -59,6 +59,9 @@ Content-Type: application/json
  "username": "admin",
  "password": "supersafe"
 }
+
+###GET SUGGESTIONS
+GET http://localhost:6060/api/suggest?query=fargo
 ###GET USERS
 GET http://localhost:6060/api/users
 
@@ -104,7 +107,7 @@ Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YjQyMjdmZmM0YTdmZGI1NmQ1MGE4Yjg4MzUzMjNiYyIsIm5iZiI6MTc0ODI3MjkzNi4xNzQsInN1YiI6IjY4MzQ4NzI4OTU4ODI2ZDNiMTQxNDY2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-Afevq-Bw6safixhyqetwcxUF2Kv0rNeQSkwTFLct-M
 
 ###GET QUERY TMDB
-GET https://api.themoviedb.org/3/search/multi?query=fargo&page=1&sort_by=popularity.asc
+GET https://api.themoviedb.org/3/search/multi?query=fun&page=1&sort_by=popularity.asc
 Accept: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3YjQyMjdmZmM0YTdmZGI1NmQ1MGE4Yjg4MzUzMjNiYyIsIm5iZiI6MTc0ODI3MjkzNi4xNzQsInN1YiI6IjY4MzQ4NzI4OTU4ODI2ZDNiMTQxNDY2NCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-Afevq-Bw6safixhyqetwcxUF2Kv0rNeQSkwTFLct-M
 

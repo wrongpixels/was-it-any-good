@@ -3,7 +3,7 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { setPageInfo } from '../../utils/page-info-setter';
 import SpinnerPage from '../common/status/SpinnerPage';
 import {
@@ -12,17 +12,15 @@ import {
   routerPaths,
 } from '../../utils/url-helper';
 import SearchPageResults from './SearchPageResults';
-import Button from '../common/Button';
 import SearchUrlBuilder from '../../utils/search-url-builder';
 import SearchInputField from './SearchInput';
 import { SearchType, searchTypes } from '../../../../shared/types/search';
 import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
-import { styles } from '../../constants/tailwind-styles';
 import { capitalize } from '../../utils/common-format-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
-import { AnimatedDiv } from '../common/AnimatedDiv';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
+import SearchParams from './SearchParams';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -41,24 +39,36 @@ const SearchPage = (): JSX.Element | null => {
     parameters.getAll('m')
   );
   const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
-  const buildSearchQuery = () =>
+  const buildSearchQuery = (newQuery?: string) =>
     searchUrl
-      .byTerm(searchTerm)
+      .byTerm(newQuery || searchTerm)
       .byTypes(typeFilters.getAppliedNames())
       .toString();
 
   const navigateToCurrentQuery = (replace: boolean = false) =>
     navigateTo(routerPaths.search.byQuery(buildSearchQuery()), { replace });
+  const navigateToNewQuery = (
+    newQuery: string | undefined,
+    replace: boolean = false
+  ) =>
+    navigateTo(routerPaths.search.byQuery(buildSearchQuery(newQuery)), {
+      replace,
+    });
 
   const currentQuery: string = buildSearchQuery();
 
-  const { data: searchResults, isLoading } = useSearchQuery(currentQuery || '');
+  const { data: searchResults, isLoading } = useSearchQuery(
+    currentQuery || '',
+    searchTerm
+  );
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
 
   //to fix unmatched query parameters on first render
-  if (!isQueryActiveInUrl(currentQuery)) {
-    navigateToCurrentQuery(true);
-  }
+  useEffect(() => {
+    if (searchTerm && !isQueryActiveInUrl(currentQuery)) {
+      navigateToCurrentQuery(true), [searchTerm];
+    }
+  });
 
   const toggleParam = (param: ParamStructure) => {
     let alertMessage: string = '';
@@ -86,31 +96,32 @@ const SearchPage = (): JSX.Element | null => {
   };
 
   const handleSearch = (newSearch: string | null) => {
-    console.log('searching', newSearch, searchTerm);
-    navigateToCurrentQuery(newSearch === searchTerm);
+    if (!newSearch) {
+      setNotification({
+        message: 'You are searching for\nliterally nothing!',
+        anchorRef,
+      });
+      playAnim({
+        animationClass: 'animate-shake',
+        animKey: 'search-main-button',
+      });
+      return;
+    }
+    navigateToNewQuery(newSearch || undefined, newSearch === searchTerm);
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 pt-5">
       <SearchInputField
         text={searchTerm || undefined}
         handleSearch={handleSearch}
       />
-      <div className="flex flex-row items-center gap-1" ref={anchorRef}>
-        <span className="text-gray-400 pr-2">Look for</span>
-        {typeFilters.params.map((param: ParamStructure) => (
-          <AnimatedDiv key={param.name} animKey={`search-param-${param.name}`}>
-            <Button
-              onClick={() => toggleParam(param)}
-              className={`h-8 flex flex-row gap-1 ${styles.animations.zoomLessOnHover} ${!param.applied ? styles.buttons.dark : ''}`}
-            >
-              <span className="">{`${!param.applied ? '☐' : '☑'}`}</span>
-              {capitalize(param.name)}
-            </Button>
-          </AnimatedDiv>
-        ))}
-      </div>
-      <span className="pt-5">
+      <SearchParams
+        ref={anchorRef}
+        toggleParam={toggleParam}
+        typeFilters={typeFilters}
+      />
+      <span className="pt-2">
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
         {searchResults && searchTerm && (
           <SearchPageResults results={searchResults} term={searchTerm} />

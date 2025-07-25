@@ -2,19 +2,25 @@ import express, { Request, Router } from 'express';
 import { tmdbAPI } from '../util/config';
 import { createIndexForFilmBulk } from '../factories/film-factory';
 import { createIndexForShowBulk } from '../factories/show-factory';
+
 import {
-  TMDBIndexFilm,
-  TMDBIndexFilmArraySchema,
-  TMDBIndexShow,
-  TMDBIndexShowArraySchema,
-} from '../schemas/tmdb-index-media-schemas';
-import { CreateIndexMedia } from '../../../shared/types/models';
+  CreateIndexMedia,
+  IndexMediaResponse,
+} from '../../../shared/types/models';
 import {
   arrayToTMDBSearchTypes,
   extractQuery,
 } from '../services/search-service';
 import { TMDBSearchType } from '../../../shared/types/search';
 import { IndexMedia } from '../models';
+import {
+  TMDBIndexFilm,
+  TMDBIndexFilmArraySchema,
+  TMDBIndexShow,
+  TMDBIndexShowArraySchema,
+  TMDBSearchResult,
+  TMDBSearchSchema,
+} from '../schemas/tmdb-index-media-schemas';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -40,27 +46,29 @@ router.get('/', async (req: Request, res, next) => {
       return;
     }
 
-    const { data } = await tmdbAPI.get(
+    const { data } = await tmdbAPI.get<unknown>(
       `/search/${searchType}?query=${searchTerm}&page=${searchPage}`
     );
+    const searchResult: TMDBSearchResult = TMDBSearchSchema.parse(data);
+
     let films: TMDBIndexFilm[] = [];
     let shows: TMDBIndexShow[] = [];
 
     switch (searchType) {
       case 'movie': {
-        films = TMDBIndexFilmArraySchema.parse(data.results);
+        films = TMDBIndexFilmArraySchema.parse(searchResult.results);
         break;
       }
       case 'tv': {
-        shows = TMDBIndexShowArraySchema.parse(data.results);
+        shows = TMDBIndexShowArraySchema.parse(searchResult.results);
         break;
       }
       case 'multi': {
-        const moviesArr = data.results.filter(
+        const moviesArr = searchResult.results.filter(
           (item: TMDBIndexFilm | TMDBIndexShow) =>
             item.media_type === 'movie' || !item.media_type
         );
-        const showsArr = data.results.filter(
+        const showsArr = searchResult.results.filter(
           (item: TMDBIndexFilm | TMDBIndexShow) =>
             item.media_type === 'tv' || !item.media_type
         );
@@ -77,10 +85,16 @@ router.get('/', async (req: Request, res, next) => {
       ...createIndexForFilmBulk(films),
       ...createIndexForShowBulk(shows),
     ];
-    await IndexMedia.bulkCreate(indexMedia, {
+    const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
       updateOnDuplicate: ['popularity', 'image', 'baseRating'],
     });
-    res.json(indexMedia);
+    const indexMediaResponse: IndexMediaResponse = {
+      indexMedia: Array.from(entries.values()),
+      totalPages: searchResult.total_pages,
+      page: searchResult.page,
+      totalResults: searchResult.total_results,
+    };
+    res.json(indexMediaResponse);
   } catch (error) {
     next(error);
   }

@@ -2,6 +2,15 @@ import { z } from 'zod';
 import { TMDBFilmSchema } from './tmdb-film-schema';
 import { TMDBShowSchema } from './tmdb-show-schema';
 
+export const TMDBSearchSchema = z.object({
+  page: z.number(),
+  results: z.array(z.any()),
+  total_pages: z.number(),
+  total_results: z.number(),
+});
+
+export type TMDBSearchResult = z.infer<typeof TMDBSearchSchema>;
+
 export const TMDBIndexFilmSchema = TMDBFilmSchema.pick({
   id: true,
   poster_path: true,

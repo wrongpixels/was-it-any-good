@@ -83,7 +83,7 @@ const PosterRating = ({
           )}
         </div>
       ) : (
-        <div className="text-sm text-gray-400 text-center pt-2 pb-1 italic">
+        <div className="text-sm text-gray-400 text-center pt-2 pb-2 italic">
           {NO_RATINGS}
         </div>
       )}

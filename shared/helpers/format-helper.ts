@@ -1,33 +1,33 @@
 export const getYearParenthesis = (
-  dateString: string | null | undefined,
+  dateString: string | null | undefined
 ): string => {
-  const year: string = getYearString(dateString)
-  if (!year) {
-    return ''
+  const year: string = getYearString(dateString);
+  if (!year || year === '') {
+    return '';
   }
-  return `(${year})`
-}
+  return `(${year})`;
+};
 
 export const getYearString = (
-  dateString: string | null | undefined,
+  dateString: string | null | undefined
 ): string => {
-  const year: number | null = getYearNum(dateString)
+  const year: number | null = getYearNum(dateString);
   if (!year) {
-    return ''
+    return '';
   }
-  return year.toString()
-}
+  return year.toString();
+};
 
 export const getYearNum = (
-  dateString: string | null | undefined,
+  dateString: string | null | undefined
 ): number | null => {
   if (!dateString) {
-    return null
+    return null;
   }
-  const date: Date = new Date(dateString)
-  const year: number = date.getFullYear()
-  return isNaN(year) ? null : year
-}
+  const date: Date = new Date(dateString);
+  const year: number = date.getFullYear();
+  return isNaN(year) ? null : year;
+};
 
 export const isNumber = (value?: unknown): value is number =>
-  typeof value === 'number' && !isNaN(value)
+  typeof value === 'number' && !isNaN(value);

@@ -5,6 +5,7 @@ import { MediaType } from '../../../shared/types/media';
 export interface OptClassNameProps {
   className?: string;
   title?: string;
+  ref?: React.Ref<HTMLDivElement>;
 }
 
 export interface MediaTypeProps extends OptClassNameProps {
