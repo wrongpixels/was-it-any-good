@@ -43,6 +43,11 @@ export const apiPaths = {
     byInput: (input: string) =>
       `${apiPaths.suggestions.base}?${new URLSearchParams({ query: input })}`,
   },
+  search: {
+    base: `${API_BASE}/search?`,
+    byInput: (input: string) =>
+      `${apiPaths.search.base}?${new URLSearchParams({ query: input })}`,
+  },
 };
 export const routerPaths = {
   films: {
@@ -148,7 +153,7 @@ export const normalizeMediaSearchParams = (
       case 'series':
         addToParams(SearchType.Show);
         break;
-      case 'person':
+      /*      case 'person':
       case 'people':
       case 'actor':
       case 'actors':
@@ -158,14 +163,14 @@ export const normalizeMediaSearchParams = (
       case 'writers':
         addToParams(SearchType.Person);
         break;
-      case 'season':
+     case 'season':
       case 'seasons':
       case 'tvseason':
       case 'tv-season':
       case 'tvseasons':
       case 'tv-seasons':
         addToParams(SearchType.Season);
-        break;
+        break; */
     }
   });
 

@@ -53,9 +53,17 @@ const SearchPage = (): JSX.Element | null => {
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
 
   const toggleParam = (param: ParamStructure) => {
+    let alertMessage: string = '';
     if (param.applied && typeFilters.getApplied().length === 1) {
+      alertMessage = 'Select at least one!';
+    }
+    if (param.name === SearchType.Person) {
+      alertMessage = `Search for ${capitalize(SearchType.Person)}\nnot implemented yet! 😔`;
+    }
+
+    if (alertMessage) {
       setNotification({
-        message: 'Choose at least one!',
+        message: alertMessage,
         anchorRef,
       });
       playAnim({
@@ -64,6 +72,7 @@ const SearchPage = (): JSX.Element | null => {
       });
       return;
     }
+
     typeFilters.toggleParam(param);
     console.log('refresh', param);
     handleSearch(searchTerm);

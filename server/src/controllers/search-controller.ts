@@ -26,6 +26,7 @@ const router: Router = express.Router();
 router.get('/', async (req: Request, res, next) => {
   try {
     const searchTerm: string | undefined = req.query.q?.toString().trim() || '';
+    const searchPage: string = req.query.page?.toString() ?? '1';
     const searchTypeString: string[] = extractQuery(req.query.m);
     if (searchTypeString.length < 1) {
       res.json(null);
@@ -40,7 +41,7 @@ router.get('/', async (req: Request, res, next) => {
     }
 
     const { data } = await tmdbAPI.get(
-      `/search/${searchType}?query=${searchTerm}&page=1`
+      `/search/${searchType}?query=${searchTerm}&page=${searchPage}`
     );
     let films: TMDBIndexFilm[] = [];
     let shows: TMDBIndexShow[] = [];
