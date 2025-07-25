@@ -44,9 +44,8 @@ export const apiPaths = {
       `${apiPaths.suggestions.base}?${new URLSearchParams({ query: input })}`,
   },
   search: {
-    base: `${API_BASE}/search?`,
-    byInput: (input: string) =>
-      `${apiPaths.search.base}?${new URLSearchParams({ query: input })}`,
+    base: `${API_BASE}/search`,
+    byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
 };
 export const routerPaths = {
@@ -103,6 +102,11 @@ export const urlFromIndexMedia = (im: IndexMediaData): string =>
     ? buildRouterMediaLink(im.mediaType, im.mediaId)
     : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
 
+export const isQueryActiveInUrl = (query: string): boolean => {
+  const searchURL: string = routerPaths.search.byQuery(query);
+  return searchURL === getURLAfterDomain();
+};
+
 export const getURLAfterDomain = () =>
   window.location.href.substring(window.location.origin.length);
 
@@ -127,6 +131,7 @@ export const mediaTypeToDisplayName = (mediaType: MediaType) => {
 
 //Normalizes media type search parameters (m=...) into unified values ('film' or 'show'),
 //handling various user inputs like 'movies', 'tv-shows', 'series' etc.
+//it also adds show and films by default if none is selected.
 export const normalizeMediaSearchParams = (
   rawParams: string[]
 ): SearchType[] => {
@@ -173,7 +178,9 @@ export const normalizeMediaSearchParams = (
         break; */
     }
   });
-
+  if (resultParams.length === 0) {
+    resultParams.push(SearchType.Film, SearchType.Show);
+  }
   return resultParams;
 };
 

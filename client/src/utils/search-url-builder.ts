@@ -7,7 +7,6 @@ import {
   OrderByType,
   SortByType,
 } from '../../../shared/types/search';
-import { routerPaths } from './url-helper';
 
 //To build our search queries in an easy chain-like way (…byTerm(…).byGenres(…).toString(…))
 //undefined params are skipped so we can use the chain completely adapting to user filters
@@ -15,11 +14,9 @@ import { routerPaths } from './url-helper';
 
 class SearchUrlBuilder {
   private searchParams: URLSearchParams;
-  private basePath: string;
 
-  constructor(path?: string) {
+  constructor() {
     this.searchParams = new URLSearchParams();
-    this.basePath = path ? path : routerPaths.search.base;
   }
 
   private addParam(
@@ -87,7 +84,7 @@ class SearchUrlBuilder {
   }
   toString() {
     const queryString = this.searchParams.toString();
-    return queryString ? `${this.basePath}?${queryString}` : this.basePath;
+    return queryString;
   }
 }
 

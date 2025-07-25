@@ -21,10 +21,9 @@ export enum SearchType {
   // Season = 'season',
   Person = 'people',
 }
+export const searchTypes: string[] = Object.values(SearchType);
 
 export type TMDBSearchType = 'movie' | 'tv' | 'person' | 'multi';
-
-export const searchTypes: string[] = Object.values(SearchType);
 
 export const isValidSearchType = (value: string): boolean =>
   searchTypes.includes(value);
