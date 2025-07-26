@@ -12,6 +12,7 @@ import {
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
+import { tmdbPaths } from '../util/url-helper';
 import { buildCreditsAndGenres, trimCredits } from './media-service';
 
 export const buildFilmEntry = async (
@@ -36,9 +37,10 @@ export const buildFilmEntry = async (
 export const fetchTMDBFilm = async (
   tmdbId: string | number
 ): Promise<FilmData> => {
-  const filmRes = await tmdbAPI.get(`/movie/${tmdbId}`);
-  const creditsRes = await tmdbAPI.get(`/movie/${tmdbId}/credits`);
-
+  const [filmRes, creditsRes] = await Promise.all([
+    tmdbAPI.get(tmdbPaths.films.byTMDBId(tmdbId)),
+    tmdbAPI.get(tmdbPaths.films.credits(tmdbId)),
+  ]);
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
     TMDBCreditsSchema.parse(creditsRes.data)

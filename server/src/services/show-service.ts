@@ -21,6 +21,7 @@ import { buildCreditsAndGenres, trimCredits } from './media-service';
 import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
+import { tmdbPaths } from '../util/url-helper';
 
 export const buildShowEntry = async (
   params: MediaQueryValues
@@ -52,10 +53,14 @@ export const buildShowEntry = async (
   return showEntry.reload(findOptions);
 };
 
-export const fetchTMDBShow = async (id: string | number): Promise<ShowData> => {
-  const showRes = await tmdbAPI.get(`/tv/${id}`);
-  const creditsRes = await tmdbAPI.get(`/tv/${id}/credits`);
-  const externalIdsRes = await tmdbAPI.get(`/tv/${id}/external_ids`);
+export const fetchTMDBShow = async (
+  tmdbId: string | number
+): Promise<ShowData> => {
+  const [showRes, creditsRes, externalIdsRes] = await Promise.all([
+    tmdbAPI.get(tmdbPaths.shows.byTMDBId(tmdbId)),
+    tmdbAPI.get(tmdbPaths.shows.credits(tmdbId)),
+    tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
+  ]);
   const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
     TMDBCreditsSchema.parse(creditsRes.data)

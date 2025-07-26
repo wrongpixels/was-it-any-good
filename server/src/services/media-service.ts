@@ -13,7 +13,8 @@ import {
   TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
 import { MediaType } from '../../../shared/types/media';
-import { CreateMediaGenre } from '../../../shared/types/models';
+import { CreateMediaGenre, PersonResponse } from '../../../shared/types/models';
+import { toPlainData } from '../util/model-helpers';
 
 export const buildCreditsAndGenres = async (
   media: Film | Show,
@@ -69,7 +70,7 @@ const buildPeople = async (
   mediaType: MediaType,
   transaction?: Transaction
 ): Promise<MediaRole[] | null> => {
-  const people: Person[] | null = await bulkCreatePeople(
+  const people: PersonResponse[] | null = await bulkCreatePeople(
     mediaPeople,
     transaction
   );
@@ -131,7 +132,7 @@ const mediaPersonToCreatePerson = (mediaPerson: MediaPerson): CreatePerson => ({
 const bulkCreatePeople = async (
   mediaPeople: MediaPerson[],
   transaction?: Transaction
-): Promise<Person[] | null> => {
+): Promise<PersonResponse[] | null> => {
   const peopleMap = new Map<number, CreatePerson>();
   mediaPeople.forEach((mp: MediaPerson) => {
     if (mp?.tmdbId) {
@@ -142,29 +143,19 @@ const bulkCreatePeople = async (
   if (peopleToCreate.length === 0) {
     return null;
   }
-  await Person.bulkCreate(peopleToCreate, {
+  const peopleEntries: Person[] = await Person.bulkCreate(peopleToCreate, {
     transaction,
     updateOnDuplicate: ['image'],
   });
-  const tmdbIdList: number[] = Array.from(peopleMap.keys());
-  const peopleEntries: Person[] = await Person.findAll({
-    transaction,
-    where: {
-      tmdbId: {
-        [Op.in]: tmdbIdList,
-      },
-    },
-    attributes: ['tmdbId', 'id'],
-  });
 
   if (peopleEntries.length > 0) {
-    return peopleEntries;
+    return toPlainData<Person>(peopleEntries);
   }
   return null;
 };
 export const bulkCreateMediaRoles = async (
   mediaPeople: MediaPerson[],
-  people: Person[],
+  people: PersonResponse[],
   mediaId: number,
   mediaType: MediaType,
   transaction?: Transaction
@@ -218,11 +209,14 @@ export const bulkCreateMediaRoles = async (
   );
   return mediaRoleEntries.length > 0 ? mediaRoleEntries : null;
 };
+const acceptedJobs: string[] = Object.values<string>(TMDBAcceptedJobs);
 
-export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => ({
-  ...credits,
-  cast: credits.cast.slice(0, 20),
-  crew: credits.crew.filter((crewMember: TMDBCrewData) =>
-    Object.values(TMDBAcceptedJobs).includes(crewMember.job as TMDBAcceptedJobs)
-  ),
-});
+export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => {
+  return {
+    ...credits,
+    cast: credits.cast.slice(0, 20),
+    crew: credits.crew.filter((crewMember: TMDBCrewData) =>
+      acceptedJobs.includes(crewMember.job)
+    ),
+  };
+};

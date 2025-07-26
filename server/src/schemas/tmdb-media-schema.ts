@@ -69,6 +69,10 @@ export enum TMDBAcceptedDepartments {
   Sound = 'Sound',
 }
 
+export const acceptedDepartments: string[] = Object.values<string>(
+  TMDBAcceptedDepartments
+);
+
 export enum TMDBAcceptedJobs {
   Screenplay = 'Screenplay',
   Director = 'Director',
@@ -77,3 +81,4 @@ export enum TMDBAcceptedJobs {
   ExecutiveProducer = 'Executive Producer',
   Creator = 'Creator',
 }
+export const acceptedJobs: string[] = Object.values<string>(TMDBAcceptedJobs);
