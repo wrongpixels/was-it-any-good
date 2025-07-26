@@ -24,7 +24,7 @@ import SearchParams from './SearchParams';
 
 interface SearchQueryOpts {
   newQuery?: string;
-  page?: number;
+  newPage?: number;
 }
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
@@ -39,21 +39,30 @@ const SearchPage = (): JSX.Element | null => {
   const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
 
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  const searchTerm: string | null = parameters.get('q');
-  const currentPage: string | null = parameters.get('page');
+  const currentPage: number = Number(parameters.get('page')) || 1;
   const activeSearchTypeParams: string[] = normalizeMediaSearchParams(
     parameters.getAll('m')
   );
+  const searchTerm: string | null = parameters.get('q');
+
   const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
-  const buildSearchQuery = ({ newQuery, page: newPage }: SearchQueryOpts) =>
-    searchUrl
+  const buildSearchQuery = ({ newQuery, newPage }: SearchQueryOpts) => {
+    console.log(newPage);
+    const url = searchUrl
       .byTerm(newQuery || searchTerm)
       .byTypes(typeFilters.getAppliedNames())
-      .toPage(newPage || (currentPage ?? 1))
+      .toPage(newPage)
       .toString();
 
-  const navigateToCurrentQuery = (replace: boolean = false) =>
-    navigateTo(routerPaths.search.byQuery(buildSearchQuery({})), { replace });
+    console.log(url);
+    return url;
+  };
+
+  const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
+    navigateTo(
+      routerPaths.search.byQuery(buildSearchQuery({ newPage: page })),
+      { replace }
+    );
   const navigateToNewQuery = (
     newQuery: string | undefined,
     replace: boolean = false
@@ -62,18 +71,37 @@ const SearchPage = (): JSX.Element | null => {
       replace,
     });
 
-  const currentQuery: string = buildSearchQuery({});
+  const currentQuery: string = buildSearchQuery({ newPage: currentPage ?? 1 });
 
   const { data: searchResults, isLoading } = useSearchQuery(
     currentQuery || '',
     searchTerm
   );
+  const navigatePage = (movement: number) => {
+    if (!searchResults) {
+      return;
+    }
+    const nextPosition: number = currentPage + movement;
+    const nextPage: number = Math.min(
+      Math.max(1, nextPosition),
+      searchResults.totalPages
+    );
+    navigateToCurrentQuery(false, nextPage);
+  };
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
 
   //to fix unmatched query parameters on first render
-  useEffect(() => {
+  /*useEffect(() => {
     if (searchTerm && !isQueryActiveInUrl(currentQuery)) {
+      console.log(currentQuery);
       navigateToCurrentQuery(true), [searchTerm];
+    }
+  });*/
+
+  useEffect(() => {
+    if (searchResults && searchResults.totalPages < Number(currentPage)) {
+      console.log(currentPage);
+      navigateToCurrentQuery(true, searchResults.totalPages), [searchResults];
     }
   });
 
@@ -131,7 +159,11 @@ const SearchPage = (): JSX.Element | null => {
       <span className="pt-2">
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
         {searchResults && searchTerm && (
-          <SearchPageResults results={searchResults} term={searchTerm} />
+          <SearchPageResults
+            results={searchResults}
+            term={searchTerm}
+            navigatePage={navigatePage}
+          />
         )}
       </span>
     </div>

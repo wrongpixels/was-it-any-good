@@ -11,6 +11,7 @@
 const transitions = {
   baseZoom: 'transition-all duration-70 ease-out',
   baseHover: 'transition-all duration-40 ease-out',
+  slowHover: 'transition-all duration-70 ease-out',
 };
 
 export const styles = {
@@ -20,6 +21,8 @@ export const styles = {
     zoomMoreOnHover: `${transitions.baseZoom} hover:scale-115`,
     upOnHover: `${transitions.baseHover} hover:-translate-y-1`,
     upOnHoverShort: `${transitions.baseHover} hover:-translate-y-0.5`,
+    buttonRight: `${transitions.slowHover} hover:scale-101 hover:translate-x-0.25`,
+    buttonLeft: `${transitions.slowHover} hover:scale-101 hover:-translate-x-0.25`,
   },
   shadow: {
     subtle: 'shadow-sm shadow-black/10',
