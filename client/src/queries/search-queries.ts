@@ -10,5 +10,11 @@ export const useSearchQuery = (
     queryKey: ['search', searchQuery],
     queryFn: () => getSearch(searchQuery),
     enabled: !!searchQuery && !!searchTerm,
+    select: (data: IndexMediaResponse) => {
+      data.indexMedia = data.indexMedia.sort(
+        (a, b) => b.popularity - a.popularity
+      );
+      return data;
+    },
   });
 };

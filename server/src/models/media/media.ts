@@ -223,7 +223,7 @@ class Media<
       constraints: false,
     });
   }
-
+  //A SQL approach using queries instead of 2 sequelize calls.
   static async refreshRatings(
     mediaId: number,
     mediaType: MediaType,
@@ -269,6 +269,8 @@ class Media<
     };
   }
 
+  //OLD UPDATE RATINGS, USING SEQUELIZE
+  /*
   async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {
     const mediaId: number = this.id;
     const mediaType: MediaType = this.mediaType;
@@ -307,7 +309,7 @@ class Media<
       rating: finalRating,
       voteCount: finalVoteCount,
     };
-  }
+  } */
 
   //a shared function to get media entries by either internal id or tmdbId
   //scopes for credits and the active user rating are included if provided
@@ -334,7 +336,7 @@ class Media<
         throw new CustomError(`Invalid media type: ${params.mediaType}`, 400);
     }
   }
-
+  /*
   static async updateRatingById(
     id: number,
     mediaType: MediaType,
@@ -351,7 +353,7 @@ class Media<
     }
 
     return await media.doUpdateRatings(transaction);
-  }
+  }*/
 
   public async syncIndex(): Promise<void> {
     try {
