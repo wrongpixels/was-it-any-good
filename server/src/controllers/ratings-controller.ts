@@ -18,7 +18,7 @@ const router: Router = express.Router();
 
 router.get('/', async (_req, res, next) => {
   try {
-    const allRatings: Rating[] = await Rating.findAll({});
+    const allRatings: RatingData[] = await Rating.findAll({ raw: true });
     res.json(allRatings);
   } catch (error) {
     next(error);
@@ -63,19 +63,19 @@ router.get(
       if (!mediaId || !mediaType) {
         throw new CustomError('Invalid media id', 400);
       }
-      const userRating: Rating | null = await Rating.findOne({
+      const userRating: RatingData | null = await Rating.findOne({
         where: {
           mediaId,
           mediaType,
           userId: req.activeUser.id,
         },
+        raw: true,
       });
       if (!userRating) {
         res.json(null);
         return;
       }
-      const ratingResponse: RatingData = userRating.get({ plain: true });
-      res.json(ratingResponse);
+      res.json(userRating);
     } catch (error) {
       next(error);
     }
@@ -88,24 +88,29 @@ router.delete('/:id', async (req: Request, res, next) => {
       throw new CustomError('Not logged in', 401);
     }
     const id: string = req.params.id;
+
+    //we find the rating first so we can return its data
     const rating: Rating | null = await Rating.findByPk(id);
     if (!rating) {
-      res.status(200).end();
+      res.status(204).end();
       return;
     }
+    //if userId doesn't match the one of the rating or not an admin, we stop here
     if (!isAuthorizedUser(req.activeUser, rating.userId)) {
       throw new CustomError('Unauthorized', 403);
     }
+    //the instance should remain in memory after removed from the db, but it's good practices.
+    const ratingData: RatingData = rating.get({ plain: true });
     await rating.destroy();
-    const ratingStats: RatingStats = await Media.updateRatingById(
-      rating.mediaId,
-      rating.mediaType
+    const ratingStats: RatingStats = await Media.refreshRatings(
+      ratingData.mediaId,
+      ratingData.mediaType
     );
     const ratingResponse: RemoveRatingResponse = {
-      ...rating,
+      ...ratingData,
       ratingStats,
     };
-    res.status(204).json(ratingResponse);
+    res.status(200).json(ratingResponse);
   } catch (error) {
     next(error);
   }
