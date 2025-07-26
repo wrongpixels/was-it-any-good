@@ -1,4 +1,4 @@
-import imageLinker from '../services/image-linker';
+import imageLinker from '../utils/image-linker';
 
 import { DEF_CREATOR, DEF_SEASON, DEF_SHOW } from '../constants/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';

@@ -10,7 +10,7 @@ import {
 import {
   arrayToTMDBSearchTypes,
   extractQuery,
-} from '../services/search-service';
+} from '../utils/search-helpers';
 import { TMDBSearchType } from '../../../shared/types/search';
 import { IndexMedia } from '../models';
 import {

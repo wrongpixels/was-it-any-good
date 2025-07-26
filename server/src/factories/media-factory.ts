@@ -1,4 +1,4 @@
-import imageLinker from '../services/image-linker';
+import imageLinker from '../utils/image-linker';
 import {
   TMDBAcceptedJobs,
   TMDBAcceptedDepartments,

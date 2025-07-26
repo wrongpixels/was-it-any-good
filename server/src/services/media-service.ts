@@ -1,6 +1,6 @@
 //Shared services for building TMDB Media
 
-import { Op, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 import { Film, MediaGenre, MediaRole, Show } from '../models';
 import Genre from '../models/genres/genre';
 import { CreateMediaRole } from '../models/people/mediaRole';
@@ -8,7 +8,7 @@ import Person, { CreatePerson } from '../models/people/person';
 //import { CreateGenreData } from '../types/genres/genre-types';
 import { AuthorType, MediaData, MediaPerson } from '../types/media/media-types';
 import {
-  TMDBAcceptedJobs,
+  acceptedJobs,
   TMDBCreditsData,
   TMDBCrewData,
 } from '../schemas/tmdb-media-schema';
@@ -93,20 +93,10 @@ export const buildGenres = async (
   mediaType: MediaType,
   transaction?: Transaction
 ): Promise<MediaGenre[] | null> => {
-  await Genre.bulkCreate(mediaData.genres, {
-    ignoreDuplicates: true,
+  //we bulk create with an empty updateOnDuplicate array to return existing entries too.
+  const genres: Genre[] = await Genre.bulkCreate(mediaData.genres, {
+    updateOnDuplicate: [],
     transaction,
-  });
-  const tmdbIds: number[] = mediaData.genres
-    .map((genre) => genre.tmdbId)
-    .filter((id): id is number => id !== undefined);
-  const genres: Genre[] = await Genre.findAll({
-    transaction,
-    where: {
-      tmdbId: {
-        [Op.in]: tmdbIds,
-      },
-    },
   });
 
   const createMediaGenres: CreateMediaGenre[] = genres.map((g: Genre) => ({
@@ -133,6 +123,7 @@ const bulkCreatePeople = async (
   mediaPeople: MediaPerson[],
   transaction?: Transaction
 ): Promise<PersonResponse[] | null> => {
+  //we need each person only once, so we create a map and avoid repetitions.
   const peopleMap = new Map<number, CreatePerson>();
   mediaPeople.forEach((mp: MediaPerson) => {
     if (mp?.tmdbId) {
@@ -143,11 +134,14 @@ const bulkCreatePeople = async (
   if (peopleToCreate.length === 0) {
     return null;
   }
+  //the bulk with updateOnDuplicate will return both the added and updated entries
+  //of all valid people involved in the media
   const peopleEntries: Person[] = await Person.bulkCreate(peopleToCreate, {
     transaction,
     updateOnDuplicate: ['image'],
   });
 
+  //we trim sequelize logic and return it to create the roles/jobs for each person
   if (peopleEntries.length > 0) {
     return toPlainData<Person>(peopleEntries);
   }
@@ -160,41 +154,52 @@ export const bulkCreateMediaRoles = async (
   mediaType: MediaType,
   transaction?: Transaction
 ): Promise<MediaRole[] | null> => {
-  const tmdbIdToIdMap = new Map<number, number>();
-  people.forEach((p) => {
-    if (p.tmdbId && p.id) {
-      tmdbIdToIdMap.set(p.tmdbId, p.id);
-    }
-  });
+  //we create a map to match the tmdbIds and ids of the elements in 'people' array.
+  //this allows us to get 'id' form 'tmdbId' without using 'find'
+  const tmdbIdToIdMap = new Map(
+    people.filter((p) => !!p.tmdbId && !!p.id).map((p) => [p.tmdbId, p.id])
+  );
+
+  //we take the original mediaPeople array to create MediaRoles/jobs for each person there.
   const mediaRolesMap = new Map<string, CreateMediaRole>();
   mediaPeople.forEach((mediaPerson: MediaPerson) => {
     if (!mediaPerson.tmdbId || !mediaPerson.type) {
       return;
     }
-    const personDbId = tmdbIdToIdMap.get(mediaPerson.tmdbId);
-    if (!personDbId) {
+    //we ensure we only create MediaRoles for people with a tmdbId matching a valid id.
+    const dbId = tmdbIdToIdMap.get(mediaPerson.tmdbId);
+    if (!dbId) {
       return;
     }
-    const key = `${personDbId}_${mediaId}_${mediaType}_${mediaPerson.type}`;
+    //a person can have multiple jobs in a movie/show, but not 2 of the same type, so if a
+    //role is present twice, we simply keep the last.
+    const key = `${dbId}_${mediaId}_${mediaType}_${mediaPerson.type}`;
     const createRole: CreateMediaRole = {
-      personId: personDbId,
+      personId: dbId,
       mediaId,
       mediaType,
       role: mediaPerson.type,
     };
-    mediaRolesMap.set(key, createRole);
-
+    //we consider Actor to be a single job with different character names.
+    //if a second Actor job is being created, we add the character to the existing ones
     if (
       mediaPerson.type === AuthorType.Actor &&
       'character' in mediaPerson &&
       mediaPerson.character
     ) {
-      createRole.characterName =
+      const actorRole: CreateMediaRole | undefined = mediaRolesMap.get(key);
+      const newCharacterName: string[] =
         mediaPerson.character && mediaPerson.character.length > 0
           ? mediaPerson.character
           : ['UNKNOWN'];
-      createRole.order = mediaPerson.order;
+      createRole.characterName = actorRole?.characterName
+        ? actorRole.characterName.concat(newCharacterName)
+        : newCharacterName;
+      createRole.order = actorRole?.order
+        ? Math.min(mediaPerson.order, actorRole.order)
+        : mediaPerson.order;
     }
+    mediaRolesMap.set(key, createRole);
   });
   const rolesToCreateInDb = Array.from(mediaRolesMap.values());
   if (rolesToCreateInDb.length === 0) {
@@ -209,8 +214,6 @@ export const bulkCreateMediaRoles = async (
   );
   return mediaRoleEntries.length > 0 ? mediaRoleEntries : null;
 };
-const acceptedJobs: string[] = Object.values<string>(TMDBAcceptedJobs);
-
 export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => {
   return {
     ...credits,
