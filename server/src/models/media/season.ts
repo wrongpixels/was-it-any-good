@@ -3,6 +3,10 @@ import { sequelize } from '../../util/db';
 import { Film, Media, Rating, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
+import {
+  RatingUpdateValues,
+  RatingUpdateOptions,
+} from '../../types/helper-types';
 
 class Season extends Media<
   InferAttributes<Season>,
@@ -35,6 +39,13 @@ class Season extends Media<
       as: 'show',
     });
   }
+  static async refreshRating(
+    values: RatingUpdateValues,
+    options: RatingUpdateOptions
+  ) {
+    return await this.update(values, options);
+  }
+
   static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
     const mediaType = MediaType.Season;
     const media: Show | Film | Season | null = await this.findMediaBy({

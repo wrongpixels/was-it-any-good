@@ -37,7 +37,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
     };
     const [ratingEntry, created]: [Rating, boolean | null] =
       await Rating.upsert(ratingData);
-    const ratingStats: RatingStats = await Media.updateRatingById(
+    const ratingStats: RatingStats = await Media.refreshRatings(
       ratingEntry.mediaId,
       ratingEntry.mediaType
     );

@@ -13,6 +13,10 @@ import { sequelize } from '../../util/db';
 import { Film, Media, Season } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
+import {
+  RatingUpdateOptions,
+  RatingUpdateValues,
+} from '../../types/helper-types';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
@@ -31,6 +35,12 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
       return null;
     }
     return media;
+  }
+  static async refreshRating(
+    values: RatingUpdateValues,
+    options: RatingUpdateOptions
+  ) {
+    return await this.update(values, options);
   }
 
   static associate() {

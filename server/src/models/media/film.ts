@@ -5,10 +5,21 @@ import { FilmParental } from '../../types/parental/parental-types';
 import { Media, Season, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
+import {
+  RatingUpdateValues,
+  RatingUpdateOptions,
+} from '../../types/helper-types';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare mediaType: MediaType.Film;
   declare parentalGuide: keyof typeof FilmParental | null;
+
+  static async refreshRating(
+    values: RatingUpdateValues,
+    options: RatingUpdateOptions
+  ) {
+    return await this.update(values, options);
+  }
 
   static associate() {
     this.doAssociate(MediaType.Film);

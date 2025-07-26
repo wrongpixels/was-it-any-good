@@ -88,7 +88,7 @@ export const useVerticalScroll = (multiplier: number = 1): ScrollData => {
       }
 
       const delta: number = e.deltaY * multiplier;
-      const direction: boolean = delta > 0;
+      // const direction: boolean = delta > 0;
       const currentScroll: number = element.scrollLeft;
       let potentialNewTarget: number = currentScroll + delta;
       potentialNewTarget = Math.max(0, Math.min(potentialNewTarget, maxScroll));

@@ -37,10 +37,14 @@ import {
 } from '../../types/media/media-types';
 import { getUserRatingInclude } from '../../constants/scope-attributes';
 import CustomError from '../../util/customError';
+import {
+  RatingUpdateOptions,
+  RatingUpdateValues,
+} from '../../types/helper-types';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare indexId?: CreationOptional<number | null>;
@@ -220,6 +224,51 @@ class Media<
     });
   }
 
+  static async refreshRatings(
+    mediaId: number,
+    mediaType: MediaType,
+    transaction?: Transaction
+  ): Promise<RatingStats> {
+    const model =
+      mediaType === MediaType.Show
+        ? Show
+        : mediaType === MediaType.Film
+          ? Film
+          : Season;
+    const ratingTableName: string = Rating.tableName;
+    const mediaTableName: string = model.tableName;
+
+    const totalSubqueryString: string = `(SELECT COALESCE(SUM(user_score), 0) FROM "${ratingTableName}" WHERE "media_id" = "${mediaTableName}"."id" AND "media_type" = '${mediaType}')`;
+    const countSubqueryString: string = `(SELECT COUNT(id) FROM "${ratingTableName}" WHERE "media_id" = "${mediaTableName}"."id" AND "media_type" = '${mediaType}')`;
+
+    const ratingExpressionString = `CASE WHEN "base_rating" > 0 THEN ("base_rating" + ${totalSubqueryString}) / (1 + ${countSubqueryString}) ELSE CASE WHEN (${countSubqueryString}) > 0 THEN (${totalSubqueryString}) / (${countSubqueryString}) ELSE 0 END END`;
+    const voteCountExpressionString = `CASE WHEN "base_rating" > 0 THEN 1 + ${countSubqueryString} ELSE ${countSubqueryString} END`;
+
+    const values: RatingUpdateValues = {
+      rating: sequelize.literal(ratingExpressionString),
+      voteCount: sequelize.literal(voteCountExpressionString),
+    };
+    const options: RatingUpdateOptions = {
+      where: { id: mediaId, mediaType },
+      returning: true,
+      transaction,
+    };
+
+    const [affectedCount, [updatedMedia]] = await model.refreshRating(
+      values,
+      options
+    );
+
+    if (affectedCount === 0 || !updatedMedia) {
+      return DEF_RATING_STATS;
+    }
+
+    return {
+      rating: updatedMedia.rating,
+      voteCount: updatedMedia.voteCount,
+    };
+  }
+
   async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {
     const mediaId: number = this.id;
     const mediaType: MediaType = this.mediaType;
@@ -301,7 +350,7 @@ class Media<
       return DEF_RATING_STATS;
     }
 
-    return media.doUpdateRatings(transaction);
+    return await media.doUpdateRatings(transaction);
   }
 
   public async syncIndex(): Promise<void> {

@@ -23,19 +23,19 @@ const EntryTitle = ({
   return (
     <>
       <div className="border-b border-gray-200 pb-3 mb-2">
-        <h2 className="text-3xl flex items-center gap-2 ">
-          <span className="font-bold">{title}</span>
-          {date && (
+        <h2 className="text-3xl">
+          <span className="inline-flex flex-wrap items-center gap-2">
+            <span className="font-bold">{title}</span>
             <span className="text-gray-400 font-regular">
-              {getYearParenthesis(date)}
+              {date && getYearParenthesis(date)}
             </span>
-          )}
-          {country && (
-            <CountryFlags countryCodes={country} mediaType={mediaType} />
-          )}
+            {country && (
+              <CountryFlags countryCodes={country} mediaType={mediaType} />
+            )}
+          </span>
         </h2>
         {subtitle && subtitle !== title && (
-          <h3 className=" text-gray-400 text-sm font-normal italic mt-1">
+          <h3 className="text-gray-400 text-sm font-normal italic mt-1">
             "{subtitle}"
           </h3>
         )}

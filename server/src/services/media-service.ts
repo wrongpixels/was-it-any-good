@@ -95,7 +95,7 @@ export const buildGenres = async (
 ): Promise<MediaGenre[] | null> => {
   //we bulk create with an empty updateOnDuplicate array to return existing entries too.
   const genres: Genre[] = await Genre.bulkCreate(mediaData.genres, {
-    updateOnDuplicate: [],
+    updateOnDuplicate: ['name'],
     transaction,
   });
 

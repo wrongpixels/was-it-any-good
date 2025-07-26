@@ -83,7 +83,9 @@ const PosterRating = ({
           )}
         </div>
       ) : (
-        <div className="text-sm text-gray-400 text-center pt-2 pb-2 italic">
+        <div
+          className={`text-sm text-gray-400 text-center ${!isSeason ? 'py-2 ' : 'pt-2 pb-1 '}italic`}
+        >
           {NO_RATINGS}
         </div>
       )}
