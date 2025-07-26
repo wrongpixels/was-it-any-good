@@ -22,6 +22,11 @@ import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
 
+interface SearchQueryOpts {
+  newQuery?: string;
+  page?: number;
+}
+
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
 //users can edit the url to get the same results and no API call takes place until Search form is submitted
@@ -35,27 +40,29 @@ const SearchPage = (): JSX.Element | null => {
 
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const searchTerm: string | null = parameters.get('q');
+  const currentPage: string | null = parameters.get('page');
   const activeSearchTypeParams: string[] = normalizeMediaSearchParams(
     parameters.getAll('m')
   );
   const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
-  const buildSearchQuery = (newQuery?: string) =>
+  const buildSearchQuery = ({ newQuery, page: newPage }: SearchQueryOpts) =>
     searchUrl
       .byTerm(newQuery || searchTerm)
       .byTypes(typeFilters.getAppliedNames())
+      .toPage(newPage || (currentPage ?? 1))
       .toString();
 
   const navigateToCurrentQuery = (replace: boolean = false) =>
-    navigateTo(routerPaths.search.byQuery(buildSearchQuery()), { replace });
+    navigateTo(routerPaths.search.byQuery(buildSearchQuery({})), { replace });
   const navigateToNewQuery = (
     newQuery: string | undefined,
     replace: boolean = false
   ) =>
-    navigateTo(routerPaths.search.byQuery(buildSearchQuery(newQuery)), {
+    navigateTo(routerPaths.search.byQuery(buildSearchQuery({ newQuery })), {
       replace,
     });
 
-  const currentQuery: string = buildSearchQuery();
+  const currentQuery: string = buildSearchQuery({});
 
   const { data: searchResults, isLoading } = useSearchQuery(
     currentQuery || '',

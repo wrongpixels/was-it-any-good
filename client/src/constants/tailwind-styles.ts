@@ -41,4 +41,7 @@ export const styles = {
   test: {
     redBg2: 'text-3xl font-bold text-black',
   },
+  disabled: {
+    regular: 'pointer-events-none opacity-50',
+  },
 };

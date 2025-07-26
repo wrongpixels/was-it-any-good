@@ -58,6 +58,13 @@ class SearchUrlBuilder {
   byType(value?: string) {
     return this.addParam(value, 'm');
   }
+  toPage(value: number = 1) {
+    if (!value || value < 1) {
+      //we completely skip blank pages or bellow 1
+      return this;
+    }
+    return this.addParam(value, 'page');
+  }
   byTypes(value?: string[]) {
     return this.addParams(value, 'm');
   }
