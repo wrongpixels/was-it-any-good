@@ -89,7 +89,7 @@ Season.init(
     underscored: true,
     timestamps: true,
     defaultScope: {
-      order: [['index', 'ASC']],
+      order: [['index', 'DESC']],
     },
   }
 );
