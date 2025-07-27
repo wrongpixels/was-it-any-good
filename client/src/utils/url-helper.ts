@@ -72,6 +72,10 @@ export const routerPaths = {
     byQuery: (query: string) => `${routerPaths.search.base}?${query}`,
     byTerm: (term: number | string) => `${routerPaths.search.base}?q=${term}`,
   },
+  sort: {
+    base: `/sort`,
+    byQuery: (query: string) => `${routerPaths.sort.base}/${query}`,
+  },
 };
 
 export const buildRouterMediaLink = (
