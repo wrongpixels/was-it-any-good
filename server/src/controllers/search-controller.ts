@@ -40,7 +40,7 @@ router.get('/', async (req: Request, res, next) => {
       arrayToTMDBSearchTypes(searchTypeString)[0];
 
     if (!searchTerm) {
-      res.json({ error: 'no query' });
+      res.json({ error: 'No query!' });
       return;
     }
 

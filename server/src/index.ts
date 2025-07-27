@@ -15,6 +15,7 @@ import {
   mediaIndexRouter,
   suggestionsRouter,
   searchRouter,
+  sortRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -35,6 +36,7 @@ app.use('/api/people', peopleRouter);
 app.use('/api/index-media', mediaIndexRouter);
 app.use('/api/suggest', suggestionsRouter);
 app.use('/api/search', searchRouter);
+app.use('/api/sort', sortRouter);
 
 app.use(errorHandler);
 
