@@ -59,6 +59,7 @@ class SearchUrlBuilder {
   }
 
   toPage(value: number | string = 1) {
+    console.log('value is', value);
     const numValue: number = Number(value);
     if (!numValue || numValue < 1 || Number.isNaN(numValue)) {
       return this;

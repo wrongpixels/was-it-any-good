@@ -39,7 +39,7 @@ const SearchPage = (): JSX.Element | null => {
   const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
 
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  const currentPage: number = Number(parameters.get('page')) || 1;
+  const currentPage: number = Number(parameters.get('page'));
   const activeSearchTypeParams: string[] = normalizeMediaSearchParams(
     parameters.getAll('m')
   );
@@ -71,7 +71,7 @@ const SearchPage = (): JSX.Element | null => {
       replace,
     });
 
-  const currentQuery: string = buildSearchQuery({ newPage: currentPage ?? 1 });
+  const currentQuery: string = buildSearchQuery({ newPage: currentPage });
 
   const { data: searchResults, isLoading } = useSearchQuery(
     currentQuery || '',
@@ -81,7 +81,7 @@ const SearchPage = (): JSX.Element | null => {
     if (!searchResults) {
       return;
     }
-    const nextPosition: number = currentPage + movement;
+    const nextPosition: number = (currentPage || 1) + movement;
     const nextPage: number = Math.min(
       Math.max(1, nextPosition),
       searchResults.totalPages
@@ -91,12 +91,12 @@ const SearchPage = (): JSX.Element | null => {
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
 
   //to fix unmatched query parameters on first render
-  /*useEffect(() => {
+  useEffect(() => {
     if (searchTerm && !isQueryActiveInUrl(currentQuery)) {
       console.log(currentQuery);
-      navigateToCurrentQuery(true), [searchTerm];
+      // navigateToCurrentQuery(true), [searchTerm];
     }
-  });*/
+  });
 
   useEffect(() => {
     if (searchResults && searchResults.totalPages < Number(currentPage)) {
