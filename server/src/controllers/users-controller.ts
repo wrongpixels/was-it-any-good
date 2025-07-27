@@ -11,11 +11,9 @@ router.get('/', async (req: Request, res, next) => {
     const options = req.activeUser?.isAdmin
       ? {}
       : { attributes: ['id', 'username', 'lastActive'] };
-    const users: User[] = await User.findAll(options);
-    const usersData: UserData[] = users.map(
-      (u: User): UserData => u.get({ plain: true })
-    );
-    res.json(usersData);
+    const users: UserData[] = await User.findAll({ ...options, raw: true });
+
+    res.json(users);
   } catch (error) {
     next(error);
   }
@@ -61,15 +59,15 @@ router.put(
 router.get('/:id', async (req, res, next) => {
   try {
     const id: string = req.params.id;
-    const user: User | null = await User.findByPk(id, {
+    const user: UserData | null = await User.findByPk(id, {
       attributes: ['id', 'username', 'lastActive'],
+      raw: true,
     });
     if (!user) {
       res.json(null);
       return;
     }
-    const userData: UserData = user.get({ plain: true });
-    res.json(userData);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -80,12 +78,11 @@ router.post('/', async (req, res, next) => {
     const createUserData: CreateUserData = await validateAndBuildUserData(
       req.body
     );
-    const newUser: User = await User.create(createUserData);
-    const responseUser: UserData = newUser.get({ plain: true });
-    if (!responseUser?.id) {
+    const newUser: UserData = await User.create(createUserData, { raw: true });
+    if (!newUser?.id) {
       throw new CustomError('There was an error creating the user', 400);
     }
-    res.status(201).json(responseUser);
+    res.status(201).json(newUser);
   } catch (error) {
     next(error);
   }

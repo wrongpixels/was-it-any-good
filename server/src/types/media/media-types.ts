@@ -18,6 +18,7 @@ export interface BirthDate {
 export interface MediaQueryValues {
   mediaId: number | string;
   mediaType: MediaType;
+  raw?: boolean;
   isTmdbId?: boolean;
   unscoped?: boolean;
   activeUser?: ActiveUser;

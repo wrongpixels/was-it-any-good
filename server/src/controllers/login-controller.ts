@@ -19,6 +19,7 @@ router.post('/', async (req: Request, res, next) => {
   try {
     const loginData: LoginData = validateLoginData(req.body);
     const currentSession: Session | null = await Session.findOne({
+      raw: true,
       where: {
         username: loginData.username,
       },
@@ -28,7 +29,10 @@ router.post('/', async (req: Request, res, next) => {
     });
     const user: User | null | undefined = currentSession
       ? currentSession.user
-      : await User.findOne({ where: { username: loginData.username } });
+      : await User.findOne({
+          where: { username: loginData.username },
+          raw: true,
+        });
 
     if (currentSession) {
       await logoutUser(currentSession.userId);
@@ -67,13 +71,14 @@ router.post('/', async (req: Request, res, next) => {
       token,
       expired: false,
     };
-    const session: Session = await Session.create(sessionData);
+    const session: UserSessionData = await Session.create(sessionData, {
+      raw: true,
+    });
     if (!session) {
       throw new CustomError('Session error', 401);
     }
     await user.update({ lastActive: new Date() });
-    const responseSession: UserSessionData = session.get({ plain: true });
-    res.status(201).json(responseSession);
+    res.status(201).json(session);
   } catch (error) {
     next(error);
   }

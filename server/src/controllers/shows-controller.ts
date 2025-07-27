@@ -14,13 +14,15 @@ const router: Router = express.Router();
 
 router.get('', async (_req, res, next) => {
   try {
-    const showEntries: Show[] = await Show.findAll({ order: [['id', 'ASC']] });
+    const showEntries: ShowResponse[] = await Show.findAll({
+      order: [['id', 'ASC']],
+      raw: true,
+    });
     if (!showEntries) {
       res.json(null);
       return;
     }
-    const showResponses: ShowResponse[] = Array.from(showEntries.values());
-    res.json(showResponses);
+    res.json(showEntries);
   } catch (error) {
     next(error);
   }
@@ -32,13 +34,13 @@ router.get('/:id', async (req: Request, res, next) => {
     const showEntry = await Show.findBy({
       mediaId: id,
       activeUser: req.activeUser,
+      raw: true,
     });
     if (!showEntry) {
       res.json(null);
       return;
     }
-    const show: ShowResponse = showEntry.get({ plain: true });
-    res.json(show);
+    res.json(showEntry);
   } catch (error) {
     next(error);
   }

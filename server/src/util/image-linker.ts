@@ -1,4 +1,4 @@
-import { TMDB_MEDIA_URL } from '../util/config';
+import { TMDB_MEDIA_URL } from './config';
 
 const AVATAR_URL: string = `${TMDB_MEDIA_URL}/w138_and_h175_face`;
 const POSTER_URL: string = `${TMDB_MEDIA_URL}/w220_and_h330_face`;

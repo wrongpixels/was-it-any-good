@@ -17,18 +17,17 @@ router.get('/:id', async (req: Request, res, next) => {
     if (Number.isNaN(id)) {
       throw new CustomError('Wrong id format', 400);
     }
-    const entry: IndexMedia | null = await IndexMedia.findByPk(id, {
+    const entry: IndexMediaData | null = await IndexMedia.findByPk(id, {
       include: {
         association: 'film',
       },
+      raw: true,
     });
     if (!entry) {
       res.json(null);
       return;
     }
-    const indexMedia: IndexMediaData = entry.get({ plain: true });
-
-    res.json(indexMedia);
+    res.json(entry);
   } catch (error) {
     next(error);
   }
@@ -37,8 +36,9 @@ router.get('/:id', async (req: Request, res, next) => {
 router.post('/', async (_req, res, next) => {
   try {
     const indexMedia: CreateIndexMedia[] = TMDBIndexToIndexMedia();
-    const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
+    const entries: IndexMediaData[] = await IndexMedia.bulkCreate(indexMedia, {
       updateOnDuplicate: ['popularity', 'baseRating', 'mediaType'],
+      returning: true,
     });
     res.json(entries);
   } catch (error) {

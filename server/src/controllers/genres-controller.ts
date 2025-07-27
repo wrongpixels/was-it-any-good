@@ -4,7 +4,7 @@ import { Genre } from '../models';
 const router: Router = express.Router();
 
 router.get('/', async (_req, res, _next) => {
-  const genres: Genre[] = await Genre.findAll();
+  const genres: Genre[] = await Genre.findAll({ raw: true });
   res.json(genres);
 });
 

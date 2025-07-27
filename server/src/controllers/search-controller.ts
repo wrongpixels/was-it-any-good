@@ -7,10 +7,7 @@ import {
   CreateIndexMedia,
   IndexMediaResponse,
 } from '../../../shared/types/models';
-import {
-  arrayToTMDBSearchTypes,
-  extractQuery,
-} from '../utils/search-helpers';
+import { arrayToTMDBSearchTypes, extractQuery } from '../util/search-helpers';
 import { TMDBSearchType } from '../../../shared/types/search';
 import { IndexMedia } from '../models';
 import {
@@ -21,6 +18,7 @@ import {
   TMDBSearchResult,
   TMDBSearchSchema,
 } from '../schemas/tmdb-index-media-schemas';
+import { toPlainData } from '../util/model-helpers';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -87,9 +85,10 @@ router.get('/', async (req: Request, res, next) => {
     ];
     const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
       updateOnDuplicate: ['popularity', 'image', 'baseRating'],
+      returning: true,
     });
     const indexMediaResponse: IndexMediaResponse = {
-      indexMedia: Array.from(entries.values()),
+      indexMedia: toPlainData(entries),
       totalPages: searchResult.total_pages,
       page: searchResult.page,
       totalResults: searchResult.total_results,

@@ -13,13 +13,12 @@ const router: Router = express.Router();
 
 router.get('/', async (_req, res, next) => {
   try {
-    const filmEntires: Film[] = await Film.findAll({});
+    const filmEntires: FilmResponse[] = await Film.findAll({ raw: true });
     if (!filmEntires) {
       res.json(null);
       return;
     }
-    const filmResponses: FilmResponse[] = Array.from(filmEntires.values());
-    res.json(filmResponses);
+    res.json(filmEntires);
   } catch (error) {
     next(error);
   }
@@ -28,17 +27,17 @@ router.get('/', async (_req, res, next) => {
 router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
-    const filmEntry: Film | null = await Film.findBy({
+    const filmEntry: FilmResponse | null = await Film.findBy({
       mediaId: id,
       activeUser: req.activeUser,
+      raw: true,
     });
 
     if (!filmEntry) {
       res.json(null);
       return;
     }
-    const film: FilmResponse = filmEntry.get({ plain: true });
-    res.json(film);
+    res.json(filmEntry);
   } catch (error) {
     next(error);
   }
@@ -52,6 +51,7 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       mediaType: MediaType.Film,
       activeUser: req.activeUser,
       isTmdbId: true,
+      raw: true,
     };
     let filmEntry: Film | null = await Film.findBy(mediaValues);
 
@@ -65,7 +65,7 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
         await transaction.rollback();
         console.log('Rolling back');
         if (error instanceof AxiosError && error.status === 404) {
-          //if it's a 404 Axios error, it means the logic run fine but the film doesn't exist in TMDB.
+          //if it's a 404 Axios error, the film doesn't exist in TMDB.
           res.json(null);
           return;
         }
@@ -76,8 +76,7 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
-    const film: FilmResponse = filmEntry.get({ plain: true });
-    res.json(film);
+    res.json(filmEntry);
   } catch (error) {
     next(error);
   }

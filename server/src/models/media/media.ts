@@ -395,6 +395,7 @@ class Media<
     activeUser,
     unscoped,
     transaction,
+    raw,
   }: MediaQueryValues): MediaQueryOptions {
     const include: Includeable[] = getUserRatingInclude(mediaType, activeUser);
     const scopeOptions: (string | ScopeOptions)[] = unscoped
@@ -409,7 +410,7 @@ class Media<
         ],
       });
     }
-    const findOptions: FindOptions = { include, transaction };
+    const findOptions: FindOptions = { include, transaction, raw };
     return { findOptions, scopeOptions };
   }
 
