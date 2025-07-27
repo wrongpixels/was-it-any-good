@@ -11,7 +11,7 @@
 const transitions = {
   baseZoom: 'transition-all duration-70 ease-out',
   baseHover: 'transition-all duration-40 ease-out',
-  slowHover: 'transition-all duration-70 ease-out',
+  slowHover: 'transition-all duration-60 ease-out',
 };
 
 export const styles = {

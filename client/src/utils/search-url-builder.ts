@@ -8,15 +8,11 @@ import {
   SortByType,
 } from '../../../shared/types/search';
 
-//To build our search queries in an easy chain-like way (…byTerm(…).byGenres(…).toString(…))
-//undefined params are skipped so we can use the chain completely adapting to user filters
-//toString() must be called to end the chain with the valid url!
-
 class SearchUrlBuilder {
-  private searchParams: URLSearchParams;
+  private params: Array<[string, string]>;
 
   constructor() {
-    this.searchParams = new URLSearchParams();
+    this.params = [];
   }
 
   private addParam(
@@ -24,15 +20,17 @@ class SearchUrlBuilder {
     key: string,
     append: boolean = false
   ): this {
-    if (param) {
+    if (param !== null && param !== undefined && param !== '') {
+      const paramStr = param.toString();
       if (key === 'm') {
-        if (!isValidSearchType(param.toString())) {
+        if (!isValidSearchType(paramStr)) {
           return this;
         }
       }
-      append
-        ? this.searchParams.append(key, param.toString())
-        : this.searchParams.set(key, param.toString());
+      if (!append) {
+        this.params = this.params.filter(([k]) => k !== key);
+      }
+      this.params.push([key, paramStr]);
     }
     return this;
   }
@@ -42,9 +40,9 @@ class SearchUrlBuilder {
     key: string
   ): this {
     if (params) {
-      this.searchParams.delete(key);
-      params.forEach((p: string | number | null) => {
-        if (p) {
+      this.params = this.params.filter(([k]) => k !== key);
+      params.forEach((p) => {
+        if (p !== null && p !== undefined && p !== '') {
           this.addParam(p, key, true);
         }
       });
@@ -55,9 +53,11 @@ class SearchUrlBuilder {
   byTerm(value: string | number | null) {
     return this.addParam(value, 'q');
   }
+
   byType(value?: string) {
     return this.addParam(value, 'm');
   }
+
   toPage(value: number | string = 1) {
     const numValue: number = Number(value);
     if (!numValue || numValue < 1 || Number.isNaN(numValue)) {
@@ -65,33 +65,46 @@ class SearchUrlBuilder {
     }
     return this.addParam(Math.min(numValue, 500), 'page');
   }
+
   byTypes(value?: string[]) {
     return this.addParams(value, 'm');
   }
+
   byMediaType(value?: MediaType) {
     return this.addParam(mediaTypeToSearchType(value), 'm');
   }
+
   byMediaTypes(value?: MediaType[]) {
     return this.addParams(mediaTypesToSearchTypes(value), 'm');
   }
+
   byCountry(value?: CountryCode) {
     return this.addParam(value, 'c');
   }
+
   byGenre(value?: number) {
     return this.addParam(value, 'g');
   }
+
   byGenres(value?: string[]) {
     return this.addParams(value, 'g');
   }
+
   orderBy(value?: OrderByType) {
     return this.addParam(value, 'orderBy');
   }
+
   sortBy(value?: SortByType) {
     return this.addParam(value, 'sortBy');
   }
+
   toString() {
-    const queryString = this.searchParams.toString();
-    return queryString;
+    return this.params
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+      )
+      .join('&');
   }
 }
 

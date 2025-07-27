@@ -30,14 +30,18 @@ const GenreSection = ({
         .byGenre(id)
         .byMediaType(mediaType)
         .toString();
-      map.set(g.id, url);
+      map.set(g.id, routerPaths.search.byQuery(url));
     });
+    console.log(map);
     return map;
   }, [genres, mediaType]);
 
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1">
-      <Link to={mediaIconUrl} className={`${styles.animations.zoomOnHover}`}>
+      <Link
+        to={routerPaths.search.byQuery(mediaIconUrl)}
+        className={`${styles.animations.zoomOnHover}`}
+      >
         <IconForMediaType mediaType={mediaType} className={'text-gray-600'} />
       </Link>
       <div className="text-sm">
