@@ -27,14 +27,14 @@ router.post('/', async (req: Request, res, next) => {
         model: User,
       },
     });
-    const user: User | null | undefined = currentSession
+    const user: User | null | undefined = currentSession?.user
       ? currentSession.user
       : await User.findOne({
           where: { username: loginData.username },
-          raw: true,
         });
 
     if (currentSession) {
+      console.log("There's an active session. logging out");
       await logoutUser(currentSession.userId);
     }
     if (!user) {

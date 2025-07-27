@@ -23,6 +23,7 @@ export const authHandler = async (
     const token = auth?.startsWith('Bearer ') ? auth.slice(7) : null;
 
     if (!token) {
+      console.log('No token!');
       req.activeUser = INV_ACTIVE_USER;
       return next();
     }

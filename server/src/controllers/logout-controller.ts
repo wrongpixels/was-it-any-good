@@ -4,7 +4,8 @@ const router = express.Router();
 
 router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (!req.activeUser?.isValid) {
+    console.log('Trying to log out', req.activeUser?.id);
+    if (!req.activeUser?.id) {
       res.status(200).end();
       return;
     }

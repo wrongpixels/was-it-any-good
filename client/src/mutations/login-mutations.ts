@@ -1,20 +1,16 @@
-import { useMutation, UseMutationResult } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoginData, UserSessionData } from '../../../shared/types/models';
 import { doLogin, doLogout, verifySession } from '../services/login-service';
-import { AxiosResponse } from 'axios';
 
 export const useLoginMutation = () =>
   useMutation<UserSessionData, Error, LoginData>({
     mutationFn: (loginData: LoginData) => doLogin(loginData),
   });
 
-export const useLogoutMutation = (): UseMutationResult<
-  AxiosResponse,
-  Error,
-  void
-> => {
+export const useLogoutMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: doLogout,
+    mutationFn: () => doLogout(queryClient),
   });
 };
 export const useAuthVerifyMutation = () =>

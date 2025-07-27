@@ -32,7 +32,6 @@ const GenreSection = ({
         .toString();
       map.set(g.id, routerPaths.sort.byQuery(url));
     });
-    console.log(map);
     return map;
   }, [genres, mediaType]);
 

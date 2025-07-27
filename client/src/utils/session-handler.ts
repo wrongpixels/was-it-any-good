@@ -4,11 +4,14 @@ import { STORAGE_KEY_USER } from '../constants/session-constants';
 import { QueryClient } from '@tanstack/react-query';
 
 export const saveLocalUserSession = (sessionData: UserSessionData) => {
+  console.log('save was called?');
   setAxiosToken(sessionData.token);
   window.localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(sessionData));
 };
 
 export const logoutClientSide = (queryClient: QueryClient) => {
+  console.log('ok,logging out now');
+
   eraseLocalUserSession();
   queryClient.removeQueries();
 };

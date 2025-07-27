@@ -1,7 +1,7 @@
 import { createContext, JSX } from 'react';
-import { useQueryClient, UseMutationResult } from '@tanstack/react-query';
+import { UseMutationResult } from '@tanstack/react-query';
 import { UserSessionData, LoginData } from '../../../shared/types/models';
-import { tryLoadUserData, logoutClientSide } from '../utils/session-handler';
+import { tryLoadUserData } from '../utils/session-handler';
 import {
   useLoginMutation,
   useLogoutMutation,
@@ -33,7 +33,6 @@ export interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
-  const queryClient = useQueryClient();
   const unverifiedSession: UserSessionData | null = tryLoadUserData();
 
   //We load any existing session into the context before verifying it's valid so the UI doesn't flicker
@@ -66,15 +65,10 @@ export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
     return;
   };
 
-  const logout = () => {
-    logoutMutation.mutate(undefined);
-    logoutClientSide(queryClient);
-  };
-
   const value: AuthContextValues = {
     session: session || null,
     login,
-    logout,
+    logout: logoutMutation.mutate,
     isLoginPending: loginMutation.isPending,
   };
 
