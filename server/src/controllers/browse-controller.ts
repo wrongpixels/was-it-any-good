@@ -2,7 +2,7 @@ import express, { Router } from 'express';
 import { extractQuery } from '../util/search-helpers';
 import { FilmResponse, ShowResponse } from '../../../shared/types/models';
 import { Film, Show } from '../models';
-import { FindOptions, Op, WhereOptions } from 'sequelize';
+import { FindAndCountOptions, Op, WhereOptions } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
 import { CountryCode } from '../../../shared/types/countries';
 import { validateCountries } from '../factories/media-factory';
@@ -64,11 +64,12 @@ router.get('/', async (req, res, next) => {
     const offset: number = limit * (searchPage - 1);
 
     //we apply all the filters here
-    const findOptions: FindOptions = {
+    const findOptions: FindAndCountOptions = {
       order: [[orderBy, sort]],
       limit,
       where,
       offset,
+      distinct: true,
     };
 
     //we decide which tables to search with the same filters and then combine
@@ -78,26 +79,26 @@ router.get('/', async (req, res, next) => {
     const browseShows: boolean =
       searchType === SearchType.Show || searchType === SearchType.Multi;
 
-    const [filmMatches, showMatches]: [Film[], Show[]] = await Promise.all([
+    const [filmMatches, showMatches] = await Promise.all([
       browseFilms
-        ? Film.findAll({
+        ? Film.findAndCountAll({
             ...findOptions,
             include: buildIncludeOptions(genres, MediaType.Film),
           })
-        : [],
+        : Promise.resolve({ count: 0, rows: [] }),
       browseShows
-        ? Show.findAll({
+        ? Show.findAndCountAll({
             ...findOptions,
             include: buildIncludeOptions(genres, MediaType.Show),
           })
-        : [],
+        : Promise.resolve({ count: 0, rows: [] }),
     ]);
     const matches: BrowseResponse = {
       page: searchPage,
-      totalFilmResults: 0,
-      totalShowResults: 0,
-      filmResults: toPlainArray(filmMatches) || undefined,
-      showResults: toPlainArray(showMatches) || undefined,
+      totalFilmResults: filmMatches.count,
+      totalShowResults: showMatches.count,
+      filmResults: toPlainArray(filmMatches.rows) || undefined,
+      showResults: toPlainArray(showMatches.rows) || undefined,
     };
 
     res.json(matches);
