@@ -6,27 +6,30 @@ export const extractQuery = (param: string | unknown | undefined): string[] => {
         .map(String)
         .filter((item): item is string => typeof item === 'string')
     : typeof param === 'string'
-      ? [param]
-      : [];
+    ? [param]
+    : [];
 };
 
-export const arrayToTMDBSearchTypes = (array: string[]) => {
+export const arrayToTMDBSearchTypes = (array: string[]): TMDBSearchType[] => {
+  const hasFilm = array.includes(SearchType.Film);
+  const hasShow = array.includes(SearchType.Show);
+  const hasPerson = array.includes(SearchType.Person);
+
   const tmdbSearchTypes: TMDBSearchType[] = [];
 
-  if (array.includes(SearchType.Film)) {
-    tmdbSearchTypes.push('movie');
-  }
-  if (array.includes(SearchType.Show)) {
-    const movieIndex = tmdbSearchTypes.indexOf('movie');
-    if (movieIndex !== -1) {
-      tmdbSearchTypes.splice(movieIndex, 1);
-      tmdbSearchTypes.push('multi');
-    } else {
-      tmdbSearchTypes.push('tv');
+  if (hasFilm && hasShow) {
+    tmdbSearchTypes.push(TMDBSearchType.Multi);
+  } else {
+    if (hasFilm) {
+      tmdbSearchTypes.push(TMDBSearchType.Movie);
+    }
+    if (hasShow) {
+      tmdbSearchTypes.push(TMDBSearchType.TV);
     }
   }
-  if (array.includes(SearchType.Person)) {
-    tmdbSearchTypes.push('person');
+  if (hasPerson) {
+    tmdbSearchTypes.push(TMDBSearchType.Person);
   }
+
   return tmdbSearchTypes;
 };

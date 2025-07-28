@@ -53,22 +53,22 @@ router.get('/', async (req: Request, res, next) => {
     let shows: TMDBIndexShow[] = [];
 
     switch (searchType) {
-      case 'movie': {
+      case TMDBSearchType.Movie: {
         films = TMDBIndexFilmArraySchema.parse(searchResult.results);
         break;
       }
-      case 'tv': {
+      case TMDBSearchType.TV: {
         shows = TMDBIndexShowArraySchema.parse(searchResult.results);
         break;
       }
-      case 'multi': {
+      case TMDBSearchType.Multi: {
         const moviesArr = searchResult.results.filter(
           (item: TMDBIndexFilm | TMDBIndexShow) =>
-            item.media_type === 'movie' || !item.media_type
+            item.media_type === TMDBSearchType.Movie || !item.media_type
         );
         const showsArr = searchResult.results.filter(
           (item: TMDBIndexFilm | TMDBIndexShow) =>
-            item.media_type === 'tv' || !item.media_type
+            item.media_type === TMDBSearchType.TV || !item.media_type
         );
 
         const movieResults = TMDBIndexFilmArraySchema.safeParse(moviesArr);

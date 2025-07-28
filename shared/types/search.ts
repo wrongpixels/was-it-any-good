@@ -18,12 +18,16 @@ export const mediaTypesToSearchTypes = (
 export enum SearchType {
   Film = 'films',
   Show = 'shows',
-  // Season = 'season',
   Person = 'people',
 }
 export const searchTypes: string[] = Object.values(SearchType);
 
-export type TMDBSearchType = 'movie' | 'tv' | 'person' | 'multi';
+export enum TMDBSearchType {
+  Movie = 'movie',
+  TV = 'tv',
+  Person = 'person',
+  Multi = 'multi',
+}
 
 export const isValidSearchType = (value: string): boolean =>
   searchTypes.includes(value);
