@@ -1,5 +1,3 @@
-import { MediaType } from './media';
-
 export enum OrderBy {
   Title = 'name',
   Rating = 'rating',
@@ -12,12 +10,6 @@ export enum Sorting {
   ascending = 'ASC',
 }
 const sortValues: string[] = Object.values<string>(Sorting);
-
-export enum BrowseType {
-  Film = MediaType.Film,
-  Show = MediaType.Show,
-  Multi = 'Multi',
-}
 
 export const isOrderBy = (value: string): value is OrderBy =>
   orderByValues.includes(value);
@@ -41,20 +33,4 @@ export const stringToSorting = (
     return undefined;
   }
   return value;
-};
-
-export const arrayToBrowseType = (array: string[]): BrowseType | undefined => {
-  const hasFilm = array.includes(BrowseType.Film);
-  const hasShow = array.includes(BrowseType.Show);
-
-  if (hasFilm && hasShow) {
-    return BrowseType.Multi;
-  }
-  if (hasFilm) {
-    return BrowseType.Film;
-  }
-  if (hasShow) {
-    return BrowseType.Show;
-  }
-  return undefined;
 };

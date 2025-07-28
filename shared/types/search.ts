@@ -16,11 +16,28 @@ export const mediaTypesToSearchTypes = (
   return validSearchTypes;
 };
 export enum SearchType {
-  Film = 'films',
-  Show = 'shows',
-  Person = 'people',
+  Film = 'film',
+  Show = 'show',
+  Person = 'person',
+  Multi = 'multi',
 }
 export const searchTypes: string[] = Object.values(SearchType);
+
+export const arrayToSearchType = (array: string[]): SearchType | undefined => {
+  const hasFilm = array.includes(SearchType.Film);
+  const hasShow = array.includes(SearchType.Show);
+
+  if (hasFilm && hasShow) {
+    return SearchType.Multi;
+  }
+  if (hasFilm) {
+    return SearchType.Film;
+  }
+  if (hasShow) {
+    return SearchType.Show;
+  }
+  return undefined;
+};
 
 export enum TMDBSearchType {
   Movie = 'movie',

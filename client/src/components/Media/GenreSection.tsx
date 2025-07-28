@@ -25,12 +25,12 @@ const GenreSection = ({
   const genreLinkMap = useMemo(() => {
     const map = new Map<number, string>();
     genres.forEach((g: GenreResponse) => {
-      const id: number = g.tmdbId || 0;
+      const id: number = g.id || 0;
       const url: string = searchUrl
         .byGenre(id)
         .byMediaType(mediaType)
         .toString();
-      map.set(g.id, routerPaths.sort.byQuery(url));
+      map.set(g.id, routerPaths.browse.byQuery(url));
     });
     return map;
   }, [genres, mediaType]);
@@ -38,7 +38,7 @@ const GenreSection = ({
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1">
       <Link
-        to={routerPaths.sort.byQuery(mediaIconUrl)}
+        to={routerPaths.browse.byQuery(mediaIconUrl)}
         className={`${styles.animations.zoomOnHover}`}
       >
         <IconForMediaType mediaType={mediaType} className={'text-gray-600'} />
