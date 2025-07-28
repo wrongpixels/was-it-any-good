@@ -10,7 +10,7 @@ import peopleRouter from './people-controller';
 import mediaIndexRouter from './index-media-controller';
 import suggestionsRouter from './suggestions-controller';
 import searchRouter from './search-controller';
-import sortRouter from './sort-controller';
+import browseRouter from './browse-controller';
 
 export {
   filmsRouter,
@@ -25,5 +25,5 @@ export {
   mediaIndexRouter,
   suggestionsRouter,
   searchRouter,
-  sortRouter,
+  browseRouter,
 };

@@ -43,5 +43,5 @@ export const mediaTypeToSearchType = (
   }
 };
 
-export type OrderByType = 'popularity' | 'title' | 'year' | 'rating';
-export type SortByType = 'desc' | 'asc';
+export type TMDBOrderByType = 'popularity' | 'title' | 'year' | 'rating';
+export type TMDBSortByType = 'desc' | 'asc';

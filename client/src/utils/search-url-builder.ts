@@ -1,11 +1,10 @@
+import { OrderBy, Sorting } from '../../../shared/types/browse';
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
 import {
   isValidSearchType,
   mediaTypesToSearchTypes,
   mediaTypeToSearchType,
-  OrderByType,
-  SortByType,
 } from '../../../shared/types/search';
 
 class SearchUrlBuilder {
@@ -91,12 +90,12 @@ class SearchUrlBuilder {
     return this.addParams(value, 'g');
   }
 
-  orderBy(value?: OrderByType) {
-    return this.addParam(value, 'orderBy');
+  orderBy(value?: OrderBy) {
+    return this.addParam(value, 'order');
   }
 
-  sortBy(value?: SortByType) {
-    return this.addParam(value, 'sortBy');
+  sortBy(value?: Sorting) {
+    return this.addParam(value, 'sort');
   }
 
   toString() {
