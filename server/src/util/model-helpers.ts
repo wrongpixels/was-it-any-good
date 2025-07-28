@@ -1,5 +1,10 @@
 import { Model } from 'sequelize';
 
-export const toPlainData = <T extends Model>(
-  data: T[] | null | undefined
-): T['dataValues'][] => data?.map((instance) => instance.toJSON()) ?? [];
+export const toPlain = <T extends Model>(
+  entry: T | null | undefined
+): T['dataValues'] | null => entry?.get({ plain: true }) ?? null;
+
+export const toPlainArray = <T extends Model>(
+  entries: T[] | null | undefined
+): T['dataValues'][] =>
+  entries?.map((instance) => instance.get({ plain: true })) ?? [];

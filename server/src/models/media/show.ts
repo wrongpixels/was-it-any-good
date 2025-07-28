@@ -17,6 +17,7 @@ import {
   RatingUpdateOptions,
   RatingUpdateValues,
 } from '../../types/helper-types';
+import { toPlain } from '../../util/model-helpers';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
@@ -34,7 +35,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
     if (media?.mediaType !== mediaType) {
       return null;
     }
-    return media;
+    return params.plainData ? toPlain(media) : media;
   }
   static async refreshRating(
     values: RatingUpdateValues,

@@ -7,6 +7,7 @@ import {
   RatingUpdateValues,
   RatingUpdateOptions,
 } from '../../types/helper-types';
+import { toPlain } from '../../util/model-helpers';
 
 class Season extends Media<
   InferAttributes<Season>,
@@ -55,7 +56,7 @@ class Season extends Media<
     if (media?.mediaType !== mediaType) {
       return null;
     }
-    return media;
+    return params.plainData ? toPlain(media) : media;
   }
 }
 

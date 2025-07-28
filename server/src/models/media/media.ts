@@ -44,7 +44,7 @@ import {
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare indexId?: CreationOptional<number | null>;
@@ -233,8 +233,8 @@ class Media<
       mediaType === MediaType.Show
         ? Show
         : mediaType === MediaType.Film
-          ? Film
-          : Season;
+        ? Film
+        : Season;
     const ratingTableName: string = Rating.tableName;
     const mediaTableName: string = model.tableName;
 
@@ -313,6 +313,7 @@ class Media<
 
   //a shared function to get media entries by either internal id or tmdbId
   //scopes for credits and the active user rating are included if provided
+  //if 'plain: true', it will convert to plain data before returning.
 
   static async findMediaBy(
     params: MediaQueryValues
@@ -324,14 +325,18 @@ class Media<
     const where: WhereOptions = params.isTmdbId
       ? { tmdbId: params.mediaId }
       : { id: params.mediaId };
-    const combinedFindOptions: FindOptions = { ...findOptions, where };
+    const combinedFindOptions: FindOptions = {
+      ...findOptions,
+      where,
+    };
+    console.log(combinedFindOptions);
     switch (params.mediaType) {
       case MediaType.Film:
-        return Film.scope(scopeOptions).findOne(combinedFindOptions);
+        return await Film.scope(scopeOptions).findOne(combinedFindOptions);
       case MediaType.Show:
-        return Show.scope(scopeOptions).findOne(combinedFindOptions);
+        return await Show.scope(scopeOptions).findOne(combinedFindOptions);
       case MediaType.Season:
-        return Season.scope(scopeOptions).findOne(combinedFindOptions);
+        return await Season.scope(scopeOptions).findOne(combinedFindOptions);
       default:
         throw new CustomError(`Invalid media type: ${params.mediaType}`, 400);
     }
@@ -395,7 +400,6 @@ class Media<
     activeUser,
     unscoped,
     transaction,
-    raw,
   }: MediaQueryValues): MediaQueryOptions {
     const include: Includeable[] = getUserRatingInclude(mediaType, activeUser);
     const scopeOptions: (string | ScopeOptions)[] = unscoped
@@ -410,7 +414,7 @@ class Media<
         ],
       });
     }
-    const findOptions: FindOptions = { include, transaction, raw };
+    const findOptions: FindOptions = { include, transaction };
     return { findOptions, scopeOptions };
   }
 

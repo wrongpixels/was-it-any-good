@@ -25,12 +25,15 @@ router.get('/', async (_req, res, next) => {
 });
 
 router.get('/:id', async (req: Request, res, next) => {
+  //we fetch and transform the data into our frontend interface using `plain: true`.
+  //this avoids handling a sequelize instance here and relying on express' toJSON()
+  //conversion.
   try {
     const id: string = req.params.id;
     const filmEntry: FilmResponse | null = await Film.findBy({
       mediaId: id,
       activeUser: req.activeUser,
-      raw: true,
+      plainData: true,
     });
 
     if (!filmEntry) {
@@ -51,14 +54,17 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       mediaType: MediaType.Film,
       activeUser: req.activeUser,
       isTmdbId: true,
-      raw: true,
+      plainData: true,
     };
-    let filmEntry: Film | null = await Film.findBy(mediaValues);
+    let filmEntry: FilmResponse | null = await Film.findBy(mediaValues);
 
     if (!filmEntry) {
       const transaction: Transaction = await sequelize.transaction();
       try {
-        filmEntry = await buildFilmEntry({ ...mediaValues, transaction });
+        filmEntry = await buildFilmEntry({
+          ...mediaValues,
+          transaction,
+        });
         await transaction.commit();
       } catch (error) {
         //we always rollback if something fails
@@ -76,6 +82,7 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
+    console.log(filmEntry);
     res.json(filmEntry);
   } catch (error) {
     next(error);

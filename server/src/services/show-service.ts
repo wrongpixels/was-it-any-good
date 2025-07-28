@@ -22,10 +22,12 @@ import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
 import { tmdbPaths } from '../util/url-helper';
+import { ShowResponse } from '../../../shared/types/models';
+import { toPlain } from '../util/model-helpers';
 
 export const buildShowEntry = async (
   params: MediaQueryValues
-): Promise<Show | null> => {
+): Promise<ShowResponse | null> => {
   const showData: ShowData = await fetchTMDBShow(params.mediaId);
   const { scopeOptions, findOptions } = Show.buildMediaQueryOptions(params);
   const showEntry: Show | null = await Show.scope(scopeOptions).create(
@@ -41,16 +43,13 @@ export const buildShowEntry = async (
   const seasons: CreateSeason[] = showData.seasons.map((s: SeasonData) =>
     buildSeason(s, showEntry)
   );
-  const seasonEntries = await Season.bulkCreate(seasons, {
+  await Season.bulkCreate(seasons, {
     ignoreDuplicates: true,
     transaction: params.transaction,
   });
-
-  if (!seasonEntries || seasonEntries.length <= 0) {
-    //throw new CustomError(`Seasons for Show ${showId} could not be created`, 400 );
-  }
   await buildCreditsAndGenres(showEntry, showData, params.transaction);
-  return showEntry.reload(findOptions);
+  await showEntry.reload({ ...findOptions });
+  return toPlain(showEntry);
 };
 
 export const fetchTMDBShow = async (

@@ -9,6 +9,7 @@ import {
   RatingUpdateValues,
   RatingUpdateOptions,
 } from '../../types/helper-types';
+import { toPlain } from '../../util/model-helpers';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   declare mediaType: MediaType.Film;
@@ -33,7 +34,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
     if (media?.mediaType !== mediaType) {
       return null;
     }
-    return media;
+    return params.plainData ? toPlain(media) : media;
   }
 }
 

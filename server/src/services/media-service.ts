@@ -14,7 +14,7 @@ import {
 } from '../schemas/tmdb-media-schema';
 import { MediaType } from '../../../shared/types/media';
 import { CreateMediaGenre, PersonResponse } from '../../../shared/types/models';
-import { toPlainData } from '../util/model-helpers';
+import { toPlainArray } from '../util/model-helpers';
 
 export const buildCreditsAndGenres = async (
   media: Film | Show,
@@ -143,7 +143,7 @@ const bulkCreatePeople = async (
 
   //we trim sequelize logic and return it to create the roles/jobs for each person
   if (peopleEntries.length > 0) {
-    return toPlainData<Person>(peopleEntries);
+    return toPlainArray<Person>(peopleEntries);
   }
   return null;
 };

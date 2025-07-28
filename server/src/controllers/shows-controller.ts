@@ -29,12 +29,15 @@ router.get('', async (_req, res, next) => {
 });
 
 router.get('/:id', async (req: Request, res, next) => {
+  //we fetch and transform the data into our frontend interface using `plainData: true`.
+  //this avoids handling a sequelize instance here and relying on express' toJSON()
+  //conversion.
   try {
     const id: string = req.params.id;
     const showEntry = await Show.findBy({
       mediaId: id,
       activeUser: req.activeUser,
-      raw: true,
+      plainData: true,
     });
     if (!showEntry) {
       res.json(null);
@@ -53,12 +56,16 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       mediaId: id,
       mediaType: MediaType.Show,
       isTmdbId: true,
+      plainData: true,
     };
-    let showEntry = await Show.findBy(mediaValues);
+    let showEntry: ShowResponse | null = await Show.findBy(mediaValues);
     if (!showEntry) {
       const transaction: Transaction = await sequelize.transaction();
       try {
-        showEntry = await buildShowEntry({ ...mediaValues, transaction });
+        showEntry = await buildShowEntry({
+          ...mediaValues,
+          transaction,
+        });
         await transaction.commit();
       } catch (error) {
         //we always rollback if something fails
@@ -78,8 +85,8 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
-    const show: ShowResponse = showEntry.get({ plain: true });
-    res.json(show);
+    console.log(showEntry);
+    res.json(showEntry);
   } catch (error) {
     next(error);
   }

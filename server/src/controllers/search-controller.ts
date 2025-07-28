@@ -18,7 +18,7 @@ import {
   TMDBSearchResult,
   TMDBSearchSchema,
 } from '../schemas/tmdb-index-media-schemas';
-import { toPlainData } from '../util/model-helpers';
+import { toPlainArray } from '../util/model-helpers';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -88,7 +88,7 @@ router.get('/', async (req: Request, res, next) => {
       returning: true,
     });
     const indexMediaResponse: IndexMediaResponse = {
-      indexMedia: toPlainData(entries),
+      indexMedia: toPlainArray(entries),
       totalPages: searchResult.total_pages,
       page: searchResult.page,
       totalResults: searchResult.total_results,
