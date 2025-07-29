@@ -16,6 +16,7 @@ import {
 } from '../schemas/tmdb-index-media-schemas';
 import { FilmData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
+import { Transaction } from 'sequelize';
 
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData
@@ -82,10 +83,9 @@ export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
 };
 
 export const addIndexMedia = async (
-  data: CreateIndexMedia
+  data: CreateIndexMedia,
+  transaction?: Transaction
 ): Promise<IndexMedia | null> => {
-  const [indexEntry]: [IndexMedia, boolean | null] = await IndexMedia.upsert(
-    data
-  );
+  const [indexEntry] = await IndexMedia.upsert(data, { transaction });
   return indexEntry;
 };

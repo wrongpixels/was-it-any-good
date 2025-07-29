@@ -16,7 +16,7 @@ import {
   ShowData,
 } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
-import { Show } from '../models';
+import { IndexMedia, Show } from '../models';
 import { buildCreditsAndGenres, trimCredits } from './media-service';
 import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
@@ -24,14 +24,29 @@ import CustomError from '../util/customError';
 import { tmdbPaths } from '../util/url-helper';
 import { ShowResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
+import {
+  addIndexMedia,
+  mediaDataToCreateIndexMedia,
+} from './index-media-service';
 
 export const buildShowEntry = async (
   params: MediaQueryValues
 ): Promise<ShowResponse | null> => {
   const showData: ShowData = await fetchTMDBShow(params.mediaId);
   const { scopeOptions, findOptions } = Show.buildMediaQueryOptions(params);
+  let indexId: number | undefined = params.indexId;
+  if (!indexId) {
+    const indexMedia: IndexMedia | null = await addIndexMedia(
+      mediaDataToCreateIndexMedia(showData),
+      params.transaction
+    );
+    if (!indexMedia?.id) {
+      throw new CustomError('Error creating Index Media', 400);
+    }
+    indexId = indexMedia.id;
+  }
   const showEntry: Show | null = await Show.scope(scopeOptions).create(
-    buildShow(showData),
+    buildShow(showData, indexId),
     {
       transaction: params.transaction,
     }
@@ -78,8 +93,9 @@ export const fetchTMDBShow = async (
   return actualShowData;
 };
 
-export const buildShow = (showData: ShowData): CreateShow => ({
+export const buildShow = (showData: ShowData, indexId: number): CreateShow => ({
   ...showData,
+  indexId,
   imdbId: showData.imdbId ? showData.imdbId : undefined,
   releaseDate: showData.releaseDate,
   country: showData.countries,

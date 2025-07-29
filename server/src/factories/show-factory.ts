@@ -37,7 +37,6 @@ export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   name: tmdb.name,
   year: getYearNum(tmdb.first_air_date),
   addedToMedia: false,
-  mediaId: null,
   mediaType: MediaType.Show,
 });
 
@@ -77,7 +76,7 @@ const createSeason = (
   image: season.poster_path
     ? imageLinker.createPosterURL(season.poster_path)
     : showPoster
-      ? imageLinker.createPosterURL(showPoster)
-      : DEF_SHOW.image,
+    ? imageLinker.createPosterURL(showPoster)
+    : DEF_SHOW.image,
   releaseDate: getAirDate(season.air_date),
 });

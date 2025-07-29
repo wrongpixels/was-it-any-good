@@ -94,6 +94,6 @@ Season.init(
     },
   }
 );
-export type CreateSeason = Omit<InferAttributes<Season>, 'id'>;
+export type CreateSeason = Omit<InferAttributes<Season>, 'id' | 'indexId'>;
 
 export default Season;

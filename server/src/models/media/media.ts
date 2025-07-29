@@ -331,11 +331,11 @@ class Media<
     }
   }
 
-  static async removeIndex(mediaId: number): Promise<void> {
+  static async removeIndex(indexId: number): Promise<void> {
     try {
-      await IndexMedia.destroy({ where: { mediaId } });
+      await IndexMedia.destroy({ where: { id: indexId } });
     } catch (error) {
-      console.error(`Failed to destroy index for mediaId: ${mediaId}`, error);
+      console.error(`Failed to destroy index for mediaId: ${indexId}`, error);
     }
   }
 
@@ -372,7 +372,7 @@ class Media<
         await media.syncIndex();
       },
       afterDestroy: async (media: Show | Film) => {
-        await Media.removeIndex(media.id);
+        await Media.removeIndex(media.indexId);
       },
     };
   }

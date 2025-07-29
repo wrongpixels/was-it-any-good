@@ -3,6 +3,7 @@ import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
 import { IndexMediaData } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
+import { getMediaId } from './index-media-helper';
 
 export const apiPaths = {
   films: {
@@ -102,10 +103,10 @@ export const buildRouterMediaLink = (
 };
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
-  const mediaId: number | null =
-    im.addedToMedia && im.mediaId
-      ? buildRouterMediaLink(im.mediaType, im.mediaId)
-      : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
+  const mediaId: number | null = getMediaId(im);
+  return mediaId
+    ? buildRouterMediaLink(im.mediaType, mediaId)
+    : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
 };
 
 export const isQueryActiveInUrl = (query: string): boolean => {
