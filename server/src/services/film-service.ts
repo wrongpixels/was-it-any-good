@@ -30,7 +30,6 @@ export const buildFilmEntry = async (
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
 
-  let indexId: number | undefined = params.indexId;
   const indexMedia: IndexMedia | null = await upsertIndexMedia(
     mediaDataToCreateIndexMedia(filmData),
     params.transaction
@@ -38,7 +37,7 @@ export const buildFilmEntry = async (
   if (!indexMedia?.id) {
     throw new CustomError('Error creating Index Media', 400);
   }
-  indexId = indexMedia.id;
+  const indexId = indexMedia.id;
 
   const { scopeOptions, findOptions } = Film.buildMediaQueryOptions(params);
   const filmEntry: Film | null = await Film.scope(scopeOptions).create(

@@ -47,7 +47,6 @@ class Media<
   TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
-  declare indexId: CreationOptional<number>;
   declare tmdbId: number;
   declare imdbId?: string;
   declare name: string;
@@ -82,10 +81,6 @@ class Media<
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-      },
-      indexId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
       },
       tmdbId: {
         type: DataTypes.INTEGER,
@@ -364,10 +359,6 @@ class Media<
 
   static hooks() {
     return {
-      afterCreate: async (media: Show | Film) => {
-        await media.syncIndex();
-      },
-
       afterUpdate: async (media: Show | Film) => {
         await media.syncIndex();
       },

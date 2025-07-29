@@ -38,7 +38,6 @@ export const buildShowEntry = async (
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
 
-  let indexId: number | undefined = params.indexId;
   const indexMedia: IndexMedia | null = await upsertIndexMedia(
     mediaDataToCreateIndexMedia(showData),
     params.transaction
@@ -46,7 +45,7 @@ export const buildShowEntry = async (
   if (!indexMedia?.id) {
     throw new CustomError('Error creating Index Media', 400);
   }
-  indexId = indexMedia.id;
+  const indexId = indexMedia.id;
 
   const showEntry: Show | null = await Show.scope(scopeOptions).create(
     buildShow(showData, indexId),

@@ -156,6 +156,7 @@ export interface BaseMediaResponse extends BaseResponse {
   country: CountryCode[];
   status: string;
   runtime: number | null;
+  indexId: number;
   userRating?: RatingData | null;
   cast?: CreditResponse[];
   crew?: CreditResponse[];
@@ -173,6 +174,7 @@ export interface ShowResponse extends BaseMediaResponse {
   lastAirDate: string | null;
   episodeCount: number;
   seasonCount: number;
+  indexId: number;
   seasons?: SeasonResponse[];
 }
 

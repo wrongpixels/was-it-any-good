@@ -12,6 +12,7 @@ import {
 import { toPlain } from '../../util/model-helpers';
 
 class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
+  declare indexId: number;
   declare mediaType: MediaType.Film;
   declare parentalGuide: keyof typeof FilmParental | null;
 
@@ -41,6 +42,10 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
 Film.init(
   {
     ...Media.baseInit(),
+    indexId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     mediaType: {
       type: DataTypes.STRING,
       defaultValue: MediaType.Film,
