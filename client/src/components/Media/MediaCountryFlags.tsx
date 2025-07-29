@@ -6,7 +6,7 @@ import {
   MediaTypeProps,
   OptClassNameProps,
 } from '../../types/common-props-types';
-import SearchUrlBuilder from '../../utils/search-url-builder';
+import UrlQueryBuilder from '../../utils/url-query-builder';
 import { Link } from 'react-router-dom';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { styles } from '../../constants/tailwind-styles';
@@ -49,7 +49,7 @@ const buildCountries = (
   codes: CountryCode[],
   mediaType?: MediaType
 ): CountryValues[] => {
-  const search: SearchUrlBuilder = new SearchUrlBuilder();
+  const search: UrlQueryBuilder = new UrlQueryBuilder();
   const countries: CountryValues[] = [];
   codes.forEach((c: CountryCode) => {
     if (c !== 'UNKNOWN') {

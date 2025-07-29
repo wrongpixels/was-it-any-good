@@ -12,7 +12,7 @@ import {
   routerPaths,
 } from '../../utils/url-helper';
 import SearchPageResults from './SearchPageResults';
-import SearchUrlBuilder from '../../utils/search-url-builder';
+import UrlQueryBuilder from '../../utils/url-query-builder';
 import SearchInputField from './SearchInput';
 import { SearchType, searchTypes } from '../../../../shared/types/search';
 import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
@@ -21,11 +21,7 @@ import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
-
-interface SearchQueryOpts {
-  newQuery?: string;
-  newPage?: number;
-}
+import { SearchQueryOpts } from '../../types/search-browse-types';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -36,7 +32,7 @@ const SearchPage = (): JSX.Element | null => {
   const navigateTo = useNavigate();
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
-  const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
+  const searchUrl: UrlQueryBuilder = new UrlQueryBuilder();
 
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const currentPage: number = Number(parameters.get('page'));

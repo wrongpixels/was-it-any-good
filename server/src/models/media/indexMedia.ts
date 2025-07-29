@@ -40,7 +40,7 @@ class IndexMedia extends Model<
       as: 'film',
       scope: {
         //we're forced to snake_case it as sequelize won't convert it
-        //automatically when used in browse-controller.ts
+        //automatically when used in buildIncludeOptions()
         media_type: MediaType.Film,
       },
     });
@@ -50,7 +50,7 @@ class IndexMedia extends Model<
       as: 'show',
       scope: {
         //we're forced to snake_case it as sequelize won't convert it
-        //automatically when used in browse-controller.ts
+        //automatically when used in buildIncludeOptions()
         media_type: MediaType.Show,
       },
     });

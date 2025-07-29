@@ -4,7 +4,7 @@ import React from 'react';
 import { MediaType } from '../../../../shared/types/media';
 import IconForMediaType from '../Header/Search/icons/IconForMediaType';
 import { Link } from 'react-router-dom';
-import SearchUrlBuilder from '../../utils/search-url-builder';
+import UrlQueryBuilder from '../../utils/url-query-builder';
 import { routerPaths } from '../../utils/url-helper';
 import { styles } from '../../constants/tailwind-styles';
 
@@ -20,7 +20,7 @@ const GenreSection = ({
   if (!genres || genres.length < 1) {
     return null;
   }
-  const searchUrl: SearchUrlBuilder = new SearchUrlBuilder();
+  const searchUrl: UrlQueryBuilder = new UrlQueryBuilder();
   const mediaIconUrl: string = searchUrl.byMediaType(mediaType).toString();
   const genreLinkMap = useMemo(() => {
     const map = new Map<number, string>();

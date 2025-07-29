@@ -11,7 +11,7 @@ import { styles } from '../../constants/tailwind-styles';
 interface SearchPageResultsProps {
   results?: IndexMediaResponse;
   navigatePage: (movement: number) => void;
-  term: string;
+  term?: string;
 }
 
 const SearchPageResults = ({
@@ -25,7 +25,7 @@ const SearchPageResults = ({
   return (
     <>
       <div className="flex flex-col items-center mx-auto relative font-medium gap-5">
-        {!!results && (
+        {!!results && term && (
           <span className="text-lg flex flex-row justify-center">
             {results.totalResults || 'No'} results for "
             {<span className="italic text-gray-500 font-normal">{term}</span>}"

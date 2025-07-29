@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import { extractQuery } from '../util/search-helpers';
-import { IndexMediaData } from '../../../shared/types/models';
+import { BrowseResponse } from '../../../shared/types/models';
 import { Film, IndexMedia, Show } from '../models';
 import { FindAndCountOptions, Op, WhereOptions } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
@@ -21,14 +21,6 @@ const router: Router = express.Router();
 //single endpoint to handle all filtering options. Only internal data, TMDB is not involved.
 //IndexMedia is used instead of Show/Film, as every media entry has a an associated IndexMedia
 //Combined mixed searches of Shows and Films has been discarded for being less flexible
-
-interface BrowseResponse {
-  totalFilmResults: number;
-  totalShowResults: number;
-  page: number;
-  showResults?: IndexMediaData[];
-  filmResults?: IndexMediaData[];
-}
 
 router.get('/', async (req, res, next) => {
   try {

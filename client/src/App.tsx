@@ -8,6 +8,7 @@ import NotFound from './components/NotFound';
 import { useAuth } from './hooks/use-auth';
 import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
+import BrowsePage from './components/Search/Browse/BrowsePage';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
@@ -32,6 +33,7 @@ const AppBody = (): JSX.Element => {
     <Routes>
       <Route path="/" element={null} />
       <Route path="/search" element={<SearchPage />} />
+      <Route path="/browse" element={<BrowsePage />} />
       <Route
         path="/film/:id"
         element={<MediaPage key="local-id" mediaType={MediaType.Film} />}

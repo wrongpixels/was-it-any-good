@@ -7,7 +7,7 @@ import {
   mediaTypeToSearchType,
 } from '../../../shared/types/search';
 
-class SearchUrlBuilder {
+class UrlQueryBuilder {
   private params: Array<[string, string]>;
 
   constructor() {
@@ -82,7 +82,7 @@ class SearchUrlBuilder {
     return this.addParam(value, 'c');
   }
 
-  byGenre(value?: number) {
+  byGenre(value?: number | null) {
     return this.addParam(value, 'g');
   }
 
@@ -108,4 +108,4 @@ class SearchUrlBuilder {
   }
 }
 
-export default SearchUrlBuilder;
+export default UrlQueryBuilder;

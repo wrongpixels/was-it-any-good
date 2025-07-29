@@ -151,6 +151,14 @@ export interface SeasonResponse extends BaseResponse {
   userRating?: RatingData | null;
 }
 
+export interface BrowseResponse {
+  totalFilmResults: number;
+  totalShowResults: number;
+  page: number;
+  showResults?: IndexMediaData[];
+  filmResults?: IndexMediaData[];
+}
+
 export interface BaseMediaResponse extends BaseResponse {
   sortName: string;
   country: CountryCode[];
