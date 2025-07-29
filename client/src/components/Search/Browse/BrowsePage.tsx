@@ -36,7 +36,7 @@ const BrowsePage = () => {
 
     return url;
   };
-  const { data: searchResults, isLoading } = useBrowseQuery(buildQuery(1));
+  const { data: searchResults, isLoading } = useBrowseQuery(buildQuery());
   return <></>;
 };
 
