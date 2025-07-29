@@ -70,6 +70,7 @@ const createSeason = (
   sortName: season.name,
   baseRating: season.vote_average,
   voteCount: season.vote_average > 0 ? 1 : 0,
+  rating: season.vote_average || 0,
   tmdbId: season.id,
   episodeCount: season.episode_count,
   description: season.overview || '',

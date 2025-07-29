@@ -41,7 +41,9 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
         />
       </span>
       <div className="flex flex-col w-full pl-3.5 my-2 text-gray-600">
-        <span className="text-gray-600 leading-5">{media.name}</span>
+        <span className="text-gray-600 leading-5 line-clamp-3">
+          {media.name}
+        </span>
         <span className="font-light text-sm pt-1 flex flex-row gap-1 items-center">
           <span className="font-semibold text-gray-400">{mediaDisplay}</span>
           {media.year ? `(${media.year})` : ''}

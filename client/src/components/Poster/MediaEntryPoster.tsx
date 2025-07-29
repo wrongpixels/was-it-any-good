@@ -3,6 +3,7 @@ import { MediaResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import LazyImage from '../common/LazyImage';
+import { styles } from '../../constants/tailwind-styles';
 
 interface MediaEntryPosterProps {
   media: MediaResponse;
@@ -17,7 +18,7 @@ const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
         src={media.image}
         alt={media.name}
         title={media.name}
-        className="rounded shadow ring-1 ring-gray-300"
+        className={`rounded shadow ring-1 ring-gray-300 ${styles.poster.media}`}
       />
       <div className="text-center">
         <PosterRating rating={average} media={media} valid={true} />
