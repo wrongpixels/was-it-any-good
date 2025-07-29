@@ -10,7 +10,6 @@ export const buildIncludeOptions = (
     console.log(genres);
     const genreInclude: IncludeOptions = {
       association: 'genres',
-      required: true,
       attributes: ['id', 'name', 'tmdbId'],
       where: {
         id: {

@@ -39,7 +39,9 @@ class IndexMedia extends Model<
       constraints: false,
       as: 'film',
       scope: {
-        mediaType: MediaType.Film,
+        //we're forced to snake_case it as sequelize won't convert it
+        //automatically when used in browse-controller.ts
+        media_type: MediaType.Film,
       },
     });
     this.hasOne(Show, {
@@ -47,7 +49,9 @@ class IndexMedia extends Model<
       constraints: false,
       as: 'show',
       scope: {
-        mediaType: MediaType.Show,
+        //we're forced to snake_case it as sequelize won't convert it
+        //automatically when used in browse-controller.ts
+        media_type: MediaType.Show,
       },
     });
   }
@@ -131,6 +135,7 @@ IndexMedia.init(
     modelName: 'index-media',
     underscored: true,
     sequelize,
+    //for setting a double unique
     indexes: [
       {
         unique: true,
