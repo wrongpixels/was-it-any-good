@@ -14,7 +14,7 @@ import {
 import PageResults from './SearchPageResults';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import SearchInputField from './SearchInput';
-import { SearchType, searchTypes } from '../../../../shared/types/search';
+import { SearchType } from '../../../../shared/types/search';
 import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
 import { capitalize } from '../../utils/common-format-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
@@ -41,7 +41,10 @@ const SearchPage = (): JSX.Element | null => {
   );
   const searchTerm: string | null = parameters.get('q');
 
-  const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
+  const typeFilters = new ParamManager(
+    [SearchType.Film, SearchType.Show, SearchType.Person],
+    activeSearchTypeParams
+  );
   const buildQuery = ({ newQuery, newPage }: QueryOpts) => {
     console.log(newPage);
     const url = searchUrl
