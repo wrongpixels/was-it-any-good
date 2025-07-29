@@ -15,6 +15,7 @@ import {
 import { arrayToSearchType, SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
+import { PAGE_LENGTH } from '../constants/search-browse-constants';
 
 const router: Router = express.Router();
 
@@ -62,7 +63,7 @@ router.get('/', async (req, res, next) => {
     const browseShows: boolean = searchType === SearchType.Show || isMulti;
 
     //20 results or 2x 10 of each.
-    const limit: number = isMulti ? 10 : 20;
+    const limit: number = isMulti ? PAGE_LENGTH / 2 : PAGE_LENGTH;
 
     //Enum values already match the expected array element names
     const mainFindOptions: FindAndCountOptions = {
@@ -102,11 +103,15 @@ router.get('/', async (req, res, next) => {
           })
         : Promise.resolve({ count: 0, rows: [] }),
     ]);
-
+    const totalFilmResults: number = filmMatches.count;
+    const totalShowResults: number = showMatches.count;
     const matches: BrowseResponse = {
       page: searchPage,
-      totalFilmResults: filmMatches.count,
-      totalShowResults: showMatches.count,
+      totalFilmResults,
+      totalShowResults,
+      totalPages: Math.ceil(
+        Math.max(totalFilmResults, totalShowResults) / limit
+      ),
       filmResults: toPlainArray(filmMatches.rows) || undefined,
       showResults: toPlainArray(showMatches.rows) || undefined,
     };
@@ -117,58 +122,3 @@ router.get('/', async (req, res, next) => {
 });
 
 export default router;
-
-//we decide which tables to search with the same filters and then combine
-//the results in a single MediaResponse
-
-/*
-    const browseFilms: boolean =
-      searchType === SearchType.Film || searchType === SearchType.Multi;
-    const browseShows: boolean =
-      searchType === SearchType.Show || searchType === SearchType.Multi;
-
-    const [filmMatches, showMatches] = await Promise.all([
-      browseFilms
-        ? Film.findAndCountAll({
-            ...findOptions,
-            include: buildIncludeOptions(genres, MediaType.Film),
-          })
-        : Promise.resolve({ count: 0, rows: [] }),
-      browseShows
-        ? Show.findAndCountAll({
-            ...findOptions,
-            include: buildIncludeOptions(genres, MediaType.Show),
-          })
-        : Promise.resolve({ count: 0, rows: [] }),
-    ]);
-    const matches: BrowseResponse = {
-      page: searchPage,
-      totalFilmResults: filmMatches.count,
-      totalShowResults: showMatches.count,
-      filmResults: toPlainArray(filmMatches.rows) || undefined,
-      showResults: toPlainArray(showMatches.rows) || undefined,
-    }; */
-
-/*
-    //If we made a Multi search, we have to reorder manually.
-    if (searchType === SearchType.Multi) {
-      res.json(
-        matches.sort((a: MediaResponse, b: MediaResponse) => {
-          switch (orderBy) {
-            case OrderBy.Rating:
-              return Sorting.descending
-                ? b.rating - a.rating
-                : a.rating - b.rating;
-            case OrderBy.Title:
-              return Sorting.descending
-                ? b.name.localeCompare(a.name)
-                : a.name.localeCompare(b.name);
-            default:
-              return Sorting.descending
-                ? b.popularity - a.popularity
-                : a.popularity - b.popularity;
-          }
-        })
-      );
-      return;
-    } */

@@ -48,6 +48,10 @@ export const apiPaths = {
     base: `${API_BASE}/search`,
     byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
+  browse: {
+    base: `${API_BASE}/browse`,
+    byQuery: (query: string) => `${apiPaths.browse.base}?${query}`,
+  },
 };
 export const routerPaths = {
   films: {

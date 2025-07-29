@@ -1,5 +1,4 @@
 import { OrderBy, Sorting } from '../../../shared/types/browse';
-import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
 import {
   isValidSearchType,
@@ -78,8 +77,12 @@ class UrlQueryBuilder {
     return this.addParams(mediaTypesToSearchTypes(value), 'm');
   }
 
-  byCountry(value?: CountryCode) {
+  byCountry(value?: string) {
     return this.addParam(value, 'c');
+  }
+
+  byCountries(value?: string[]) {
+    return this.addParams(value, 'c');
   }
 
   byGenre(value?: number | null) {
@@ -89,7 +92,9 @@ class UrlQueryBuilder {
   byGenres(value?: string[]) {
     return this.addParams(value, 'g');
   }
-
+  byYear(value?: number | string | null) {
+    return this.addParam(value, 'y');
+  }
   orderBy(value?: OrderBy) {
     return this.addParam(value, 'order');
   }

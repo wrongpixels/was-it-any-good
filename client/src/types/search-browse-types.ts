@@ -1,4 +1,4 @@
-export interface SearchQueryOpts {
+export interface QueryOpts {
   newQuery?: string;
   newPage?: number;
 }

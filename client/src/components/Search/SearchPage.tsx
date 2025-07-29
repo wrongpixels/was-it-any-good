@@ -11,7 +11,7 @@ import {
   normalizeMediaSearchParams,
   routerPaths,
 } from '../../utils/url-helper';
-import SearchPageResults from './SearchPageResults';
+import PageResults from './SearchPageResults';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import SearchInputField from './SearchInput';
 import { SearchType, searchTypes } from '../../../../shared/types/search';
@@ -21,7 +21,7 @@ import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
-import { SearchQueryOpts } from '../../types/search-browse-types';
+import { QueryOpts } from '../../types/search-browse-types';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -42,7 +42,7 @@ const SearchPage = (): JSX.Element | null => {
   const searchTerm: string | null = parameters.get('q');
 
   const typeFilters = new ParamManager(searchTypes, activeSearchTypeParams);
-  const buildSearchQuery = ({ newQuery, newPage }: SearchQueryOpts) => {
+  const buildQuery = ({ newQuery, newPage }: QueryOpts) => {
     console.log(newPage);
     const url = searchUrl
       .byTerm(newQuery || searchTerm)
@@ -55,19 +55,18 @@ const SearchPage = (): JSX.Element | null => {
   };
 
   const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
-    navigateTo(
-      routerPaths.search.byQuery(buildSearchQuery({ newPage: page })),
-      { replace }
-    );
+    navigateTo(routerPaths.search.byQuery(buildQuery({ newPage: page })), {
+      replace,
+    });
   const navigateToNewQuery = (
     newQuery: string | undefined,
     replace: boolean = false
   ) =>
-    navigateTo(routerPaths.search.byQuery(buildSearchQuery({ newQuery })), {
+    navigateTo(routerPaths.search.byQuery(buildQuery({ newQuery })), {
       replace,
     });
 
-  const currentQuery: string = buildSearchQuery({ newPage: currentPage });
+  const currentQuery: string = buildQuery({ newPage: currentPage });
 
   const { data: searchResults, isLoading } = useSearchQuery(
     currentQuery || '',
@@ -155,8 +154,11 @@ const SearchPage = (): JSX.Element | null => {
       <span className="pt-2">
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
         {searchResults && searchTerm && (
-          <SearchPageResults
-            results={searchResults}
+          <PageResults
+            results={[searchResults.indexMedia]}
+            totalPages={searchResults.totalPages}
+            totalResults={searchResults.totalResults}
+            page={searchResults.page}
             term={searchTerm}
             navigatePage={navigatePage}
           />
