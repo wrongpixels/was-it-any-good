@@ -20,7 +20,6 @@ class IndexMedia extends Model<
 > {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
-  declare mediaId: number | null;
   declare addedToMedia: boolean;
   declare name: string;
   declare image: string;
@@ -35,22 +34,26 @@ class IndexMedia extends Model<
   declare show?: Show;
 
   static associate() {
-    this.belongsTo(Film, {
-      foreignKey: 'mediaId',
+    this.hasOne(Film, {
+      foreignKey: 'indexId',
       constraints: false,
       as: 'film',
       scope: {
         mediaType: MediaType.Film,
       },
     });
-    this.belongsTo(Show, {
-      foreignKey: 'mediaId',
+    this.hasOne(Show, {
+      foreignKey: 'indexId',
       constraints: false,
       as: 'show',
       scope: {
         mediaType: MediaType.Show,
       },
     });
+  }
+
+  getMediaId(): number | null {
+    return !this.addedToMedia ? null : this.film?.id ?? this.show?.id ?? null;
   }
 }
 
@@ -64,10 +67,6 @@ IndexMedia.init(
     tmdbId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
-    mediaId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
     },
     mediaType: {
       type: DataTypes.STRING,

@@ -139,6 +139,7 @@ const bulkCreatePeople = async (
   const peopleEntries: Person[] = await Person.bulkCreate(peopleToCreate, {
     transaction,
     updateOnDuplicate: ['image'],
+    returning: true,
   });
 
   //we trim sequelize logic and return it to create the roles/jobs for each person

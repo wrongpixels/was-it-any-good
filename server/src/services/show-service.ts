@@ -75,7 +75,6 @@ export const fetchTMDBShow = async (
   };
 
   const actualShowData: ShowData = createShow(showData);
-
   return actualShowData;
 };
 

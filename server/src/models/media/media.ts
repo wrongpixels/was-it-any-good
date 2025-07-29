@@ -47,7 +47,7 @@ class Media<
   TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
-  declare indexId?: CreationOptional<number | null>;
+  declare indexId: CreationOptional<number>;
   declare tmdbId: number;
   declare imdbId?: string;
   declare name: string;
@@ -82,6 +82,10 @@ class Media<
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      indexId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       tmdbId: {
         type: DataTypes.INTEGER,
@@ -269,48 +273,6 @@ class Media<
     };
   }
 
-  //OLD UPDATE RATINGS, USING SEQUELIZE
-  /*
-  async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {
-    const mediaId: number = this.id;
-    const mediaType: MediaType = this.mediaType;
-    // Get sum of all related ratings
-    const summary: Rating | null = await Rating.findOne({
-      where: { mediaId, mediaType },
-      transaction,
-      raw: true,
-      attributes: [
-        [sequelize.fn('SUM', sequelize.col('user_score')), 'total'],
-        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
-      ],
-    });
-
-    // If no ratings exist yet, 0
-    const total: number = Number(summary?.total ?? 0);
-    const count: number = Number(summary?.count ?? 0);
-
-    let finalRating: number;
-    let finalVoteCount: number;
-
-    if (this.baseRating > 0) {
-      finalRating = (Number(this.baseRating) + total) / (1 + count);
-      finalVoteCount = 1 + count;
-    } else {
-      finalRating = count > 0 ? total / count : 0;
-      finalVoteCount = count;
-    }
-
-    this.rating = finalRating;
-    this.voteCount = finalVoteCount;
-
-    await this.save({ transaction });
-
-    return {
-      rating: finalRating,
-      voteCount: finalVoteCount,
-    };
-  } */
-
   //a shared function to get media entries by either internal id or tmdbId
   //scopes for credits and the active user rating are included if provided
   //if 'plain: true', it will convert to plain data before returning.
@@ -341,24 +303,6 @@ class Media<
         throw new CustomError(`Invalid media type: ${params.mediaType}`, 400);
     }
   }
-  /*
-  static async updateRatingById(
-    id: number,
-    mediaType: MediaType,
-    transaction?: Transaction
-  ): Promise<RatingStats> {
-    const media = await this.findMediaBy({
-      mediaId: id,
-      mediaType,
-      unscoped: true,
-    });
-
-    if (!media) {
-      return DEF_RATING_STATS;
-    }
-
-    return await media.doUpdateRatings(transaction);
-  }*/
 
   public async syncIndex(): Promise<void> {
     try {
@@ -491,3 +435,64 @@ class Media<
 }
 
 export default Media;
+
+//OLD UPDATE RATINGS, USING SEQUELIZE
+/*
+  async doUpdateRatings(transaction?: Transaction): Promise<RatingStats> {
+    const mediaId: number = this.id;
+    const mediaType: MediaType = this.mediaType;
+    // Get sum of all related ratings
+    const summary: Rating | null = await Rating.findOne({
+      where: { mediaId, mediaType },
+      transaction,
+      raw: true,
+      attributes: [
+        [sequelize.fn('SUM', sequelize.col('user_score')), 'total'],
+        [sequelize.fn('COUNT', sequelize.col('id')), 'count'],
+      ],
+    });
+
+    // If no ratings exist yet, 0
+    const total: number = Number(summary?.total ?? 0);
+    const count: number = Number(summary?.count ?? 0);
+
+    let finalRating: number;
+    let finalVoteCount: number;
+
+    if (this.baseRating > 0) {
+      finalRating = (Number(this.baseRating) + total) / (1 + count);
+      finalVoteCount = 1 + count;
+    } else {
+      finalRating = count > 0 ? total / count : 0;
+      finalVoteCount = count;
+    }
+
+    this.rating = finalRating;
+    this.voteCount = finalVoteCount;
+
+    await this.save({ transaction });
+
+    return {
+      rating: finalRating,
+      voteCount: finalVoteCount,
+    };
+  } */
+
+/*
+  static async updateRatingById(
+    id: number,
+    mediaType: MediaType,
+    transaction?: Transaction
+  ): Promise<RatingStats> {
+    const media = await this.findMediaBy({
+      mediaId: id,
+      mediaType,
+      unscoped: true,
+    });
+
+    if (!media) {
+      return DEF_RATING_STATS;
+    }
+
+    return await media.doUpdateRatings(transaction);
+  }*/

@@ -8,13 +8,10 @@ export interface MediaRoleResponse {
   mediaId: number;
   mediaType: MediaType;
   characterName: string[];
-  show?: IndexMediaData;
-  film?: IndexMediaData;
 }
 
 export interface CreateIndexMedia {
   tmdbId: number;
-  mediaId: number | null;
   addedToMedia: boolean;
   country: CountryCode[];
   name: string;
@@ -29,7 +26,8 @@ export interface CreateIndexMedia {
 
 export interface IndexMediaData extends CreateIndexMedia {
   id: number;
-  media?: MediaResponse;
+  film?: FilmResponse;
+  show?: ShowResponse;
 }
 
 export interface IndexMediaResponse {

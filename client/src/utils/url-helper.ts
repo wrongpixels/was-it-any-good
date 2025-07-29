@@ -101,10 +101,12 @@ export const buildRouterMediaLink = (
   }
 };
 
-export const urlFromIndexMedia = (im: IndexMediaData): string =>
-  im.addedToMedia && im.mediaId
-    ? buildRouterMediaLink(im.mediaType, im.mediaId)
-    : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
+export const urlFromIndexMedia = (im: IndexMediaData): string => {
+  const mediaId: number | null =
+    im.addedToMedia && im.mediaId
+      ? buildRouterMediaLink(im.mediaType, im.mediaId)
+      : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
+};
 
 export const isQueryActiveInUrl = (query: string): boolean => {
   const searchURL: string = routerPaths.search.byQuery(query);

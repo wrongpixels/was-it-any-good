@@ -14,6 +14,24 @@ import {
   TMDBIndexShow,
   TMDBIndexShowArraySchema,
 } from '../schemas/tmdb-index-media-schemas';
+import { FilmData, ShowData } from '../types/media/media-types';
+import { getYearNum } from '../../../shared/helpers/format-helper';
+
+export const mediaDataToCreateIndexMedia = (
+  data: FilmData | ShowData
+): CreateIndexMedia => ({
+  tmdbId: data.tmdbId,
+  image: data.image,
+  addedToMedia: true,
+  year: getYearNum(data.releaseDate),
+  country: data.countries,
+  name: data.name,
+  rating: data.rating,
+  baseRating: data.baseRating,
+  voteCount: data.voteCount,
+  popularity: data.popularity,
+  mediaType: data.mediaType,
+});
 
 const PAGES_TO_GATHER: number = 10;
 const DB_PATH: string = path.join(__dirname, '../db');
@@ -22,15 +40,15 @@ export const TMDBIndexToIndexMedia = (): CreateIndexMedia[] => {
   const testFilm: TMDBIndexFilm[] = TMDBIndexFilmArraySchema.parse(jsonFilms);
   const testShow: TMDBIndexShow[] = TMDBIndexShowArraySchema.parse(jsonShows);
 
-  const uniquieIndexMedia = new Map<string, CreateIndexMedia>();
+  const uniqueIndexMedia = new Map<string, CreateIndexMedia>();
 
   createIndexForMediaBulk(testFilm, testShow).forEach(
     (im: CreateIndexMedia) => {
       const key = `${im.tmdbId}-${im.mediaType}`;
-      uniquieIndexMedia.set(key, im);
+      uniqueIndexMedia.set(key, im);
     }
   );
-  return Array.from(uniquieIndexMedia.values());
+  return Array.from(uniqueIndexMedia.values());
 };
 
 export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
