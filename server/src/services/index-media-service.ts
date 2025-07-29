@@ -82,7 +82,7 @@ export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
   return media.length;
 };
 
-export const addIndexMedia = async (
+export const upsertIndexMedia = async (
   data: CreateIndexMedia,
   transaction?: Transaction
 ): Promise<IndexMedia | null> => {

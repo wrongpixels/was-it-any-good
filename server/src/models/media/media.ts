@@ -29,7 +29,7 @@ import { AuthorType } from '../../../../shared/types/roles';
 import { sequelize } from '../../util/db';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
-import { addIndexMedia } from '../../services/index-media-service';
+import { upsertIndexMedia } from '../../services/index-media-service';
 import { getYearNum } from '../../../../shared/helpers/format-helper';
 import {
   MediaQueryValues,
@@ -324,7 +324,7 @@ class Media<
       if (indexMediaData) {
         console.log('updating');
 
-        await addIndexMedia(indexMediaData);
+        await upsertIndexMedia(indexMediaData);
       }
     } catch (error) {
       console.error(`Failed to sync index for mediaId: ${this.id}`, error);

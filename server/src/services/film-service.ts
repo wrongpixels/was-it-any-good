@@ -17,7 +17,7 @@ import CustomError from '../util/customError';
 import { toPlain } from '../util/model-helpers';
 import { tmdbPaths } from '../util/url-helper';
 import {
-  addIndexMedia,
+  upsertIndexMedia,
   mediaDataToCreateIndexMedia,
 } from './index-media-service';
 import { buildCreditsAndGenres, trimCredits } from './media-service';
@@ -26,17 +26,20 @@ export const buildFilmEntry = async (
   params: MediaQueryValues
 ): Promise<FilmResponse | null> => {
   const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
+
+  //we first use the data to build or update the matching indexMedia via upsert
+  //we could findOrCreate, but setting fresh data is preferred
+
   let indexId: number | undefined = params.indexId;
-  if (!indexId) {
-    const indexMedia: IndexMedia | null = await addIndexMedia(
-      mediaDataToCreateIndexMedia(filmData),
-      params.transaction
-    );
-    if (!indexMedia?.id) {
-      throw new CustomError('Error creating Index Media', 400);
-    }
-    indexId = indexMedia.id;
+  const indexMedia: IndexMedia | null = await upsertIndexMedia(
+    mediaDataToCreateIndexMedia(filmData),
+    params.transaction
+  );
+  if (!indexMedia?.id) {
+    throw new CustomError('Error creating Index Media', 400);
   }
+  indexId = indexMedia.id;
+
   const { scopeOptions, findOptions } = Film.buildMediaQueryOptions(params);
   const filmEntry: Film | null = await Film.scope(scopeOptions).create(
     buildFilm(filmData, indexId),
