@@ -19,6 +19,7 @@ import {
   TMDBSearchSchema,
 } from '../schemas/tmdb-index-media-schemas';
 import { toPlainArray } from '../util/model-helpers';
+import { Op } from 'sequelize';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -32,10 +33,7 @@ router.get('/', async (req: Request, res, next) => {
     const searchTerm: string | undefined = req.query.q?.toString().trim() || '';
     const searchPage: string = req.query.page?.toString() ?? '1';
     const searchTypeString: string[] = extractQuery(req.query.m);
-    if (searchTypeString.length < 1) {
-      res.json(null);
-      return;
-    }
+
     const searchType: TMDBSearchType =
       arrayToTMDBSearchTypes(searchTypeString)[0];
 
@@ -83,12 +81,36 @@ router.get('/', async (req: Request, res, next) => {
       ...createIndexForFilmBulk(films),
       ...createIndexForShowBulk(shows),
     ];
+
+    //we bulk create or update if existing, returning so we know the involved ids
     const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
       updateOnDuplicate: ['popularity', 'image', 'baseRating'],
       returning: true,
     });
+
+    const ids = entries.map((i: IndexMedia) => i.id);
+
+    //we need to find them again to populate show/film ids
+    const populatedEntries = await IndexMedia.findAll({
+      where: {
+        id: {
+          [Op.in]: ids,
+        },
+      },
+      include: [
+        {
+          association: 'film',
+          attributes: ['id'],
+        },
+        {
+          association: 'show',
+          attributes: ['id'],
+        },
+      ],
+    });
+
     const indexMediaResponse: IndexMediaResponse = {
-      indexMedia: toPlainArray(entries),
+      indexMedia: toPlainArray(populatedEntries),
       totalPages: searchResult.total_pages,
       page: searchResult.page,
       totalResults: searchResult.total_results,

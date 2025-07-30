@@ -87,7 +87,6 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
-    console.log(showEntry);
     res.json(showEntry);
   } catch (error) {
     next(error);

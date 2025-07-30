@@ -23,7 +23,16 @@ router.get('/', async (req, res, next) => {
         ['name', 'ASC'],
       ],
       limit: 15,
-      raw: true,
+      include: [
+        {
+          association: 'film',
+          attributes: ['id'],
+        },
+        {
+          association: 'show',
+          attributes: ['id'],
+        },
+      ],
     });
     res.json(matches);
   } catch (error) {
