@@ -25,13 +25,20 @@ const PageResults = ({
   if (!results) {
     return null;
   }
+
+  const searchTerm = (): JSX.Element => (
+    <>
+      {' for '}
+      <span className="italic text-gray-500 font-normal pl-1">"{term}"</span>
+    </>
+  );
+
   return (
     <>
       <div className="flex flex-col items-center mx-auto relative font-medium gap-5">
-        {!!results && term && (
+        {!!results && (
           <span className="text-lg flex flex-row justify-center">
-            {totalResults || 'No'} results for "
-            {<span className="italic text-gray-500 font-normal">{term}</span>}"
+            {totalResults || 'No'} results <>{term && searchTerm()}</>
           </span>
         )}
         <span className="absolute right-0 flex flex-row items-center gap-2">

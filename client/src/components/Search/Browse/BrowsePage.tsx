@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom';
 import { useBrowseQuery } from '../../../queries/browse-queries';
 import UrlQueryBuilder from '../../../utils/url-query-builder';
-import PageResults from '../SearchPageResults';
+import PageResults from '../PageResults';
 import {
   normalizeMediaSearchParams,
   routerPaths,

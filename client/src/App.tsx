@@ -9,13 +9,15 @@ import { useAuth } from './hooks/use-auth';
 import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
+import RankingBar from './components/NavBar/RankingBar';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
     <Router>
       <Header />
-      <div className="flex-1 flex justify-center bg-gray-200 p-4 box-border">
-        <div className="p-4 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
+      <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
+        <RankingBar />
+        <div className="p-4 mb-4 flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
           <AppBody />
         </div>
       </div>

@@ -11,7 +11,7 @@ import {
   normalizeMediaSearchParams,
   routerPaths,
 } from '../../utils/url-helper';
-import PageResults from './SearchPageResults';
+import PageResults from './PageResults';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import SearchInputField from './SearchInput';
 import { SearchType } from '../../../../shared/types/search';
