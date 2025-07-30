@@ -39,7 +39,9 @@ const Synopsis = ({
         <span className=" text-gray-400 font-extralight">
           {displayAny ? '(' : ''}
           {displayDate && `${startYear} - ${endYear} | `}
-          {displayEpisodes && `${episodeCount} Episodes`}
+          {displayEpisodes && (
+            <span className="font-normal text-gray-450">{`${episodeCount} Episodes`}</span>
+          )}
           {displayAny ? '.) ' : ''}
         </span>
         <span className="text-regular text-gray-500">{content}</span>

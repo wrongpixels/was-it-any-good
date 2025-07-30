@@ -89,6 +89,7 @@ const BrowsePage = () => {
       <PageResults
         results={browseResults}
         navigatePage={navigatePage}
+        showBadge={true}
       ></PageResults>
     </>
   );

@@ -55,12 +55,18 @@ const MediaPeopleEntry = ({
                 loading="lazy"
               />
               <div className="w-28 flex flex-col items-center text-center py-1.5 flex-grow">
-                <div className="flex-grow flex items-center justify-center px-1">
+                <div className="flex-grow flex items-center justify-center px-0.5">
                   <div className="flex flex-col items-center gap-1.5">
-                    <div className="font-medium text-sm leading-tight break-words">
+                    <div
+                      className="font-medium text-sm leading-tight break-words line-clamp-2"
+                      title={c.person.name}
+                    >
                       {c.person.name}
                     </div>
-                    <div className="text-gray-500 text-xs font-medium leading-tight">
+                    <div
+                      className="text-gray-500 text-xs font-normal leading-tight line-clamp-2"
+                      title={getExtraInfo(c)}
+                    >
                       {getExtraInfo(c)}
                     </div>
                   </div>

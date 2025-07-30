@@ -7,18 +7,21 @@ import SearchCard from './SearchCard';
 import Button from '../common/Button';
 import DisabledDiv from '../common/DisabledDiv';
 import { styles } from '../../constants/tailwind-styles';
+import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 
 interface PageResultsProps {
   results: IndexMediaResponse;
   navigatePage: (movement: number) => void;
   term?: string;
   title?: string;
+  showBadge?: boolean;
 }
 
 const PageResults = ({
   results,
   term,
   navigatePage,
+  showBadge,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
@@ -30,6 +33,8 @@ const PageResults = ({
       <span className="italic text-gray-500 font-normal pl-1">"{term}"</span>
     </>
   );
+
+  const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
 
   return (
     <>
@@ -62,8 +67,13 @@ const PageResults = ({
         </span>
 
         <div className="grid grid-cols-3 gap-4 items-center">
-          {results.indexMedia.map((i: IndexMediaData) => (
-            <SearchCard key={i.id} media={i} />
+          {results.indexMedia.map((im: IndexMediaData, index: number) => (
+            <SearchCard
+              key={im.id}
+              media={im}
+              index={index + indexOffset}
+              showBadge={showBadge}
+            />
           ))}
         </div>
       </div>

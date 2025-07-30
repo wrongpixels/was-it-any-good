@@ -14,12 +14,19 @@ import {
 import LazyImage, { AspectRatio } from '../common/LazyImage';
 import DisplayRating from '../Rating/DisplayRating';
 import CountryFlags from '../Media/MediaCountryFlags';
+import IndexBadge from './Browse/IndexBadge';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
+  showBadge?: boolean;
+  index: number;
 }
 
-const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
+const SearchCard = ({
+  media,
+  index,
+  showBadge,
+}: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
   }
@@ -32,13 +39,14 @@ const SearchCard = ({ media }: SearchCardProps): JSX.Element | null => {
       className={`${styles.poster.search} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <span className="w-50 h-auto">
+      <span className="w-50 h-auto relative">
         <LazyImage
           aspect={AspectRatio.poster}
           src={media.image}
           alt={media.name}
-          className={`${styles.shadow.subtle}`}
+          className={'drop-shadow ring-1 ring-gray-300'}
         />
+        {showBadge && <IndexBadge index={index} />}
       </span>
       <div className="flex flex-col w-full pl-3.5 my-2 text-gray-600">
         <span className="text-gray-600 leading-5 line-clamp-3">

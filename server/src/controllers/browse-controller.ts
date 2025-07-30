@@ -15,10 +15,8 @@ import {
 import { arrayToSearchType, SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
-import {
-  EMPTY_RESULTS,
-  PAGE_LENGTH,
-} from '../constants/search-browse-constants';
+import { EMPTY_RESULTS } from '../constants/search-browse-constants';
+import { PAGE_LENGTH } from '../../../shared/types/search-browse';
 
 const router: Router = express.Router();
 

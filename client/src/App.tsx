@@ -17,7 +17,7 @@ const App = (): JSX.Element => (
       <Header />
       <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
         <RankingBar />
-        <div className="p-4 mb-4 flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#dfdfdf]">
+        <div className="p-4 mb-4 flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
           <AppBody />
         </div>
       </div>

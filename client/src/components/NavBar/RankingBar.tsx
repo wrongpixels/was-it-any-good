@@ -24,7 +24,7 @@ const RankingBar = (): JSX.Element => {
     routerPaths.browse.byQuery(query);
 
   const popular: LinkInfo = {
-    text: 'Trending',
+    text: 'Popular',
     key: 'rb-trending',
     icon: <TrendingIcon height={14} />,
     title: 'Popular media',

@@ -3,6 +3,7 @@ import { IndexMediaData } from '../../../../../../shared/types/models';
 import useHoverChecker from '../../../../hooks/use-hover-checker';
 import SelectedLine from '../../../common/SelectedLine';
 import IconForMediaType from '../icons/IconForMediaType';
+import { mediaTypeToDisplayName } from '../../../../utils/url-helper';
 
 interface SearchRowProps {
   indexMedia: IndexMediaData;
@@ -26,7 +27,8 @@ const SearchRow = ({
   return (
     <div
       ref={ref}
-      className={`flex flex-row gap-1 items-center align-middle px-1.5 py-0.5 relative font-medium rounded-lg ${
+      title={`${indexMedia.name} (${mediaTypeToDisplayName(indexMedia.mediaType)})`}
+      className={`flex flex-row gap-1 items-center align-middle px-1.5 py-0.5 relative font-medium rounded-lg max-w-sm ${
         isActive ? 'bg-amber-50 text-cyan-900' : 'text-gray-500'
       }`}
     >
@@ -35,8 +37,10 @@ const SearchRow = ({
         mediaType={indexMedia.mediaType}
         className={`pr-1 ${isActive ? 'text-amber-600' : 'text-starblue'}`}
       />
-      {indexMedia.name}
-      <span className="font-light">({indexMedia.year})</span>
+      <span className="truncate">{indexMedia.name}</span>
+      <span className="font-light">
+        {indexMedia.year ? `(${indexMedia.year})` : ''}
+      </span>
     </div>
   );
 };
