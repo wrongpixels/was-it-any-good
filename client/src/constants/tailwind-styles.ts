@@ -9,21 +9,25 @@
 // classes in a predicable way ('last one wins'), solving all of the above.
 
 const transitions = {
-  baseZoom: 'transition-all duration-70 ease-out',
-  baseHover: 'transition-all duration-40 ease-out',
-  slowHover: 'transition-all duration-60 ease-out',
+  slow: 'transition-all duration-70 ease-out',
+  slower: 'transition-all duration-100 ease-out',
+
+  fast: 'transition-all duration-40 ease-out',
+  normal: 'transition-all duration-60 ease-out',
 };
 
 export const styles = {
   hyperlink: 'text-starblue hover:text-hoverblue',
   animations: {
-    zoomOnHover: `${transitions.baseZoom} hover:scale-107`,
-    zoomLessOnHover: `${transitions.baseZoom} hover:scale-103`,
-    zoomMoreOnHover: `${transitions.baseZoom} hover:scale-115`,
-    upOnHover: `${transitions.baseHover} hover:-translate-y-1`,
-    upOnHoverShort: `${transitions.baseHover} hover:-translate-y-0.5`,
-    buttonRight: `${transitions.slowHover} hover:scale-101 hover:translate-x-0.25`,
-    buttonLeft: `${transitions.slowHover} hover:scale-101 hover:-translate-x-0.25`,
+    opacity70: `${transitions.slower} opacity-70 hover:opacity-100`,
+    opacity80: `${transitions.slower} opacity-80 hover:opacity-100`,
+    zoomOnHover: `${transitions.slow} hover:scale-107`,
+    zoomLessOnHover: `${transitions.slow} hover:scale-103`,
+    zoomMoreOnHover: `${transitions.slow} hover:scale-115`,
+    upOnHover: `${transitions.fast} hover:-translate-y-1`,
+    upOnHoverShort: `${transitions.fast} hover:-translate-y-0.5`,
+    buttonRight: `${transitions.normal} hover:scale-101 hover:translate-x-0.25`,
+    buttonLeft: `${transitions.normal} hover:scale-101 hover:-translate-x-0.25`,
   },
   shadow: {
     subtle: 'shadow-sm shadow-black/10',
@@ -34,7 +38,7 @@ export const styles = {
     search: 'border pl-7 text-base py-1.5 w-80 shadow-md shadow-black/5',
   },
   poster: {
-    media: `${transitions.baseZoom} hover:scale-101 cursor-pointer`,
+    media: `${transitions.slow} hover:scale-101 cursor-pointer`,
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search:

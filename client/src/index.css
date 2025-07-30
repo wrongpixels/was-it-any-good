@@ -64,6 +64,7 @@
   --color-starblue: #5d82c7;
   --color-starbright: #6d90d1;
   --color-starbrighter: #88aef3;
+  --color-starbutton: #7199e4;
 
   --color-hoverblue: #7c9edd;
   --color-notigreen: #289e63;
@@ -71,12 +72,9 @@
   --color-gray-350: rgb(161, 161, 161);
   --color-gray-325: rgb(192, 191, 191);
   --color-gray-450: rgb(175, 175, 175);
-
   --color-gold: rgb(189, 171, 72);
   --color-gold-bright: rgb(228, 208, 95);
-
   --color-bronze: rgb(190, 129, 48);
-
   --text-regular: 0.907rem;
 
   --animate-d-ping: d-ping 0.8s ease-out;

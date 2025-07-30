@@ -58,17 +58,26 @@ const RankingBar = (): JSX.Element => {
   const links: LinkInfo[] = [popular, bestAll, bestFilms, bestShows];
   console.log(popular);
   return (
-    <span className={'px-3 flex flex-row gap-6 py-1.5 text-sm w-5xl min-w-xl'}>
-      {links.map((li: LinkInfo) => (
-        <Link
+    <span
+      className={'px-3 flex flex-row gap-1.5 py-1.5 text-sm w-5xl min-w-xl'}
+    >
+      {links.map((li: LinkInfo, i: number) => (
+        <span
           key={li.key}
-          to={li.url}
-          className="flex flex-row gap-0.5 items-center text-gray-500"
-          title={li.title}
+          className={`flex flex-row gap-2 items-center ${styles.animations.opacity70}`}
         >
-          {li.icon || null}
-          <span className={`${styles.hyperlink}`}>{li.text}</span>
-        </Link>
+          <Link
+            to={li.url}
+            className="flex flex-row gap-0.5 items-center text-gray-600"
+            title={li.title}
+          >
+            {li.icon || null}
+            <span className={`text-starblue`}>{li.text}</span>
+          </Link>
+          {i < links.length - 1 && (
+            <span className="text-xs text-gray-500 mb-0.5">{'|'}</span>
+          )}
+        </span>
       ))}
     </span>
   );

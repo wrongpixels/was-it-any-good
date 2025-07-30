@@ -1,4 +1,5 @@
 import { JSX } from 'react';
+import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'toolbar';
@@ -8,19 +9,20 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const colors = (variant: string): string => {
   switch (variant) {
+    case 'toolbar':
     case 'secondary':
       return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
     case 'toolbar':
       return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
     default:
-      return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
+      return 'bg-starbutton hover:bg-starbutton border-gray-300 border-1 text-white';
   }
 };
 
 const sizes = (size: string): string => {
   switch (size) {
     case 'xs':
-      return 'text-xs h-7 min-h-7 flex items-center'; // Fixed height for XS
+      return 'text-xs h-7 min-h-7 flex items-center';
     case 'sm':
       return 'text-sm h-8 min-h-8 flex items-center';
     case 'lg':
@@ -46,7 +48,10 @@ const Button = ({
     <button
       type="button"
       {...props}
-      className={`${colors(variant)} ${sizes(size)} rounded px-2 shadow-sm font-medium leading-none ${className || ''}`}
+      className={mergeClassnames(
+        `${colors(variant)} ${sizes(size)} rounded px-2 shadow-sm font-medium leading-none`,
+        className
+      )}
     >
       {children}
     </button>
