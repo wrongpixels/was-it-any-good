@@ -1,242 +1,142 @@
-import express, { Router, Request, Response, NextFunction } from 'express';
-import { IndexMedia } from '../models';
-import { FindAndCountOptions, Op, QueryTypes, WhereOptions } from 'sequelize';
-import { arrayToSearchType, SearchType } from '../../../shared/types/search';
+import express, { Router } from 'express';
+import { extractQuery } from '../util/search-helpers';
+import { IndexMediaResponse } from '../../../shared/types/models';
+import { Film, IndexMedia, Show } from '../models';
+import { FindAndCountOptions, FindOptions, Op, WhereOptions } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
 import { CountryCode } from '../../../shared/types/countries';
+import { validateCountries } from '../factories/media-factory';
 import {
   OrderBy,
   Sorting,
   stringToOrderBy,
   stringToSorting,
 } from '../../../shared/types/browse';
-import { extractQuery } from '../util/search-helpers';
-import { validateCountries } from '../factories/media-factory';
+import { arrayToSearchType, SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
-import { PAGE_LENGTH } from '../constants/search-browse-constants';
-import { sequelize } from '../util/db';
-
-// Define types for plain IndexMedia and combined results
-type PlainIndexMedia = ReturnType<typeof toPlainArray>[number];
-
-type CombinedResult = PlainIndexMedia & {
-  mediaType: MediaType.Film | MediaType.Show;
-  popularity: number;
-};
-
-// Extend BrowseResponse to include combinedResults
-declare module '../../../shared/types/models' {
-  interface BrowseResponse {
-    combinedResults?: CombinedResult[];
-  }
-}
+import {
+  EMPTY_RESULTS,
+  PAGE_LENGTH,
+} from '../constants/search-browse-constants';
 
 const router: Router = express.Router();
 
-router.get('/', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/', async (req, res, next) => {
   try {
     const searchType: SearchType =
       arrayToSearchType(extractQuery(req.query.m)) ?? SearchType.Multi;
-    const page = Number(req.query.page) || 1;
-    const limit = PAGE_LENGTH; // 20 results
-    const offset = (page - 1) * limit;
-
-    // Filters
-    const genres = extractQuery(req.query.g) || [];
-    const rawC = extractQuery(req.query.c);
-    const cRawArr: string[] = Array.isArray(rawC)
-      ? rawC
-      : rawC != null
-      ? [rawC]
-      : [];
-    const countries: CountryCode[] = validateCountries(cRawArr).filter(
-      (c) => c !== 'UNKNOWN'
-    );
-    const year = req.query.y?.toString();
-
-    // Sorting
+    const isMulti: boolean = searchType === SearchType.Multi;
+    const searchPage: number = Number(req.query.page) || 1;
+    const genres: string[] = extractQuery(req.query.g);
+    const countries: CountryCode[] = validateCountries(
+      extractQuery(req.query.c)
+    ).filter((c: CountryCode) => c !== 'UNKNOWN');
+    const year: string | undefined = req.query.y?.toString();
     const orderBy: OrderBy =
       stringToOrderBy(req.query.orderBy?.toString()) || OrderBy.Popularity;
+    console.log(orderBy);
     const sort: Sorting =
       stringToSorting(req.query.sort?.toString()) || Sorting.descending;
-    const sortDirection = sort === Sorting.ascending ? 'ASC' : 'DESC';
 
-    if (searchType === SearchType.Multi) {
-      // Build SQL query for combined search
-      const filmQuery = `
-        SELECT im.id AS index_media_id, 'film' AS media_type, f.popularity
-        FROM index_media im
-        JOIN films f ON im.film_id = f.id
-        ${
-          genres.length > 0
-            ? 'LEFT JOIN film_genres fg ON f.id = fg.film_id'
-            : ''
-        }
-        WHERE im.added_to_media = true
-        ${
-          year
-            ? `AND f.release_date BETWEEN '${year}-01-01' AND '${year}-12-31'`
-            : ''
-        }
-        ${
-          countries.length > 0
-            ? `AND f.country && ARRAY[${countries
-                .map((c) => `'${c}'`)
-                .join(',')}]::varchar[]`
-            : ''
-        }
-        ${
-          genres.length > 0
-            ? `AND fg.genre_id IN (${genres.map((g) => `'${g}'`).join(',')})`
-            : ''
-        }
-        ${
-          genres.length > 0
-            ? 'GROUP BY im.id, f.id HAVING COUNT(DISTINCT fg.genre_id) = ' +
-              genres.length
-            : ''
-        }
-      `;
+    //shared filters and pagination values
+    const whereOptions: WhereOptions = {};
+    if (year) {
+      whereOptions.releaseDate = {
+        [Op.between]: [`${year}-01-01`, `${year}-12-31`],
+      };
+    }
+    if (countries.length > 0) {
+      whereOptions.country = { [Op.overlap]: countries };
+    }
 
-      const showQuery = `
-        SELECT im.id AS index_media_id, 'show' AS media_type, s.popularity
-        FROM index_media im
-        JOIN shows s ON im.show_id = s.id
-        ${
-          genres.length > 0
-            ? 'LEFT JOIN show_genres sg ON s.id = sg.show_id'
-            : ''
-        }
- folos WHERE im.added_to_media = true
-        ${
-          year
-            ? `AND s.release_date BETWEEN '${year}-01-01' AND '${year}-12-31'`
-            : ''
-        }
-        ${
-          countries.length > 0
-            ? `AND s.country && ARRAY[${countries
-                .map((c) => `'${c}'`)
-                .join(',')}]::varchar[]`
-            : ''
-        }
-        ${
-          genres.length > 0
-            ? `AND sg.genre_id IN (${genres.map((g) => `'${g}'`).join(',')})`
-            : ''
-        }
-        ${
-          genres.length > 0
-            ? 'GROUP BY im.id, s.id HAVING COUNT(DISTINCT sg.genre_id) = ' +
-              genres.length
-            : ''
-        }
-      `;
+    const findAndCountOptions: FindAndCountOptions = {
+      order: [[orderBy, sort]],
+      distinct: true,
+      limit: PAGE_LENGTH,
+      offset: PAGE_LENGTH * (searchPage - 1),
+    };
 
-      // Combine queries with UNION ALL
-      const combinedQuery = `
-        (${filmQuery})
-        UNION ALL
-        (${showQuery})
-        ORDER BY popularity ${sortDirection}
-        LIMIT ${limit} OFFSET ${offset}
-      `;
+    const filmFindOptions: FindOptions<Film> = {
+      raw: true,
+      where: whereOptions,
+      attributes: ['indexId'],
+      include: buildIncludeOptions(genres, MediaType.Film),
+    };
+    const showFindOptions: FindOptions = {
+      ...filmFindOptions,
+      include: buildIncludeOptions(genres, MediaType.Show),
+    };
 
-      // Execute query to get IDs and metadata
-      const results: {
-        index_media_id: number;
-        media_type: string;
-        popularity: number;
-      }[] = await sequelize.query(combinedQuery, { type: QueryTypes.SELECT });
+    if (isMulti) {
+      //if is multi search, we filter Films and Shows directly, gather their indexIds, and finally get the IndexMedia
+      //with limit, order and pagination
+      //this is not ideal, but sequelize has many inconsistencies and limitations when filtering nested 'includes' and
+      //combining tables, so this was the most readable, reliable and manageable approach using ORM.
+      const [filmIndexIds, showIndexIds] = await Promise.all([
+        //we get the indexId of Films and Shows matching the filters.
+        Film.findAll(filmFindOptions),
+        Show.findAll(showFindOptions),
+      ]);
 
-      // Fetch full IndexMedia instances
-      const ids = results.map((r) => r.index_media_id);
-      const indexMediaList = await IndexMedia.findAll({
-        where: { id: ids },
+      //we now combine their indexIds into a single array
+      const matchingIndexIds = [
+        ...filmIndexIds.map((f) => f.indexId),
+        ...showIndexIds.map((s) => s.indexId),
+      ];
+
+      //if no matches, we stop here
+      if (matchingIndexIds.length === 0) {
+        res.json(EMPTY_RESULTS);
+        return;
+      }
+      //we get our full IndexMedia entries by id, applying limit, order and pagination safely
+      const { count, rows } = await IndexMedia.findAndCountAll({
+        where: {
+          id: { [Op.in]: matchingIndexIds },
+          addedToMedia: true,
+        },
+        ...findAndCountOptions,
         include: [
-          { association: 'film', required: false },
-          { association: 'show', required: false },
+          //we still need the film/show ids for the frontend
+          { association: 'film', attributes: ['id'] },
+          { association: 'show', attributes: ['id'] },
         ],
       });
-
-      // Map to maintain order from SQL query
-      const indexMediaMap = new Map(indexMediaList.map((im) => [im.id, im]));
-      const combinedResults: CombinedResult[] = results.map((r) => {
-        const im = indexMediaMap.get(r.index_media_id)!;
-        const plainIm = im.toJSON() as PlainIndexMedia;
-        return {
-          ...plainIm,
-          mediaType: r.media_type as MediaType.Film | MediaType.Show,
-          popularity: r.popularity,
-        };
-      });
-
-      // Get total count for pagination
-      const countQuery = `
-        SELECT COUNT(*) AS total
-        FROM (
-          (${filmQuery})
-          UNION ALL
-          (${showQuery})
-        ) AS combined
-      `;
-      const countResult: { total: number }[] = await sequelize.query(
-        countQuery,
-        { type: QueryTypes.SELECT }
-      );
-      const totalCount = countResult[0].total;
-      const totalPages = Math.ceil(totalCount / limit);
-
-      res.json({
-        page,
-        totalPages,
-        combinedResults,
-      });
+      const response: IndexMediaResponse = {
+        page: searchPage,
+        totalResults: count,
+        totalPages: Math.ceil(count / PAGE_LENGTH),
+        indexMedia: toPlainArray(rows),
+      };
+      res.json(response);
     } else {
-      // Single-type search (Film or Show)
-      const isFilm = searchType === SearchType.Film;
-      const association = isFilm ? 'film' : 'show';
-      const mediaType = isFilm ? MediaType.Film : MediaType.Show;
-
-      const whereOptions: WhereOptions = {};
-      if (year) {
-        whereOptions.release_date = {
-          [Op.between]: [`${year}-01-01`, `${year}-12-31`],
-        };
-      }
-      if (countries.length > 0) {
-        whereOptions.country = { [Op.overlap]: countries };
-      }
-
-      const findOptions: FindAndCountOptions = {
-        where: { added_to_media: true },
+      //if it's a single type query, we make things way more straightforward:
+      const isFilm: boolean = searchType === SearchType.Film;
+      const matches = await IndexMedia.findAndCountAll({
+        ...findAndCountOptions,
+        where: { addedToMedia: true },
         include: [
           {
-            association,
+            association: isFilm ? 'film' : 'show',
+            attributes: ['id'],
             required: true,
             where: whereOptions,
-            include: buildIncludeOptions(genres, mediaType),
+            include: buildIncludeOptions(
+              genres,
+              isFilm ? MediaType.Film : MediaType.Show
+            ),
           },
         ],
-        order: [[orderBy, sort]],
-        limit,
-        offset,
-        distinct: true,
-      };
-
-      const { count, rows } = await IndexMedia.findAndCountAll(findOptions);
-      const totalResults = count;
-      const totalPages = Math.ceil(totalResults / limit);
-
-      res.json({
-        page,
-        totalFilmResults: isFilm ? totalResults : 0,
-        totalShowResults: !isFilm ? totalResults : 0,
-        totalPages,
-        filmResults: isFilm ? toPlainArray(rows) : undefined,
-        showResults: !isFilm ? toPlainArray(rows) : undefined,
       });
+
+      const response: IndexMediaResponse = {
+        page: searchPage,
+        totalResults: matches.count,
+        totalPages: Math.ceil(matches.count / PAGE_LENGTH),
+        indexMedia: toPlainArray(matches.rows),
+      };
+      res.json(response);
     }
   } catch (error) {
     next(error);
