@@ -34,10 +34,11 @@ router.get('/', async (req, res, next) => {
     ).filter((c: CountryCode) => c !== 'UNKNOWN');
     const year: string | undefined = req.query.y?.toString();
     const orderBy: OrderBy =
-      stringToOrderBy(req.query.orderBy?.toString()) || OrderBy.Popularity;
-    console.log(orderBy);
+      stringToOrderBy(req.query.orderby?.toString()) || OrderBy.Popularity;
     const sort: Sorting =
-      stringToSorting(req.query.sort?.toString()) || Sorting.descending;
+      stringToSorting(req.query.sort?.toString().toUpperCase()) ||
+      Sorting.descending;
+    console.log(countries, extractQuery(req.query.c));
 
     //shared filters and pagination values
     const whereOptions: WhereOptions = {};
