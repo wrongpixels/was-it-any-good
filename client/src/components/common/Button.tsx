@@ -15,7 +15,7 @@ const colors = (variant: string): string => {
     case 'toolbar':
       return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
     default:
-      return 'bg-starbutton hover:bg-starbutton border-gray-300 border-1 text-white';
+      return 'bg-starbutton hover:bg-starbrighter border-gray-300 border-1 text-white';
   }
 };
 
