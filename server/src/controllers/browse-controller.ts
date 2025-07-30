@@ -38,7 +38,6 @@ router.get('/', async (req, res, next) => {
     const sort: Sorting =
       stringToSorting(req.query.sort?.toString().toUpperCase()) ||
       Sorting.descending;
-    console.log(orderBy, req.query.sort);
 
     //shared filters for years and countries
     const whereOptions: WhereOptions = {};

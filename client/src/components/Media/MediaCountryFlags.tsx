@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { styles } from '../../constants/tailwind-styles';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
+import { routerPaths } from '../../utils/url-helper';
 
 interface CountryFlagWrapperProps extends PropsWithChildren {
   to: string;
@@ -49,14 +50,16 @@ const buildCountries = (
   codes: CountryCode[],
   mediaType?: MediaType
 ): CountryValues[] => {
-  const search: UrlQueryBuilder = new UrlQueryBuilder();
+  const urlBuilder: UrlQueryBuilder = new UrlQueryBuilder();
   const countries: CountryValues[] = [];
   codes.forEach((c: CountryCode) => {
     if (c !== 'UNKNOWN') {
       countries.push({
         name: Country[c],
         image: `${FLAG_URL}/${c.toLowerCase()}.png`,
-        searchUrl: search.byCountry(c).byMediaType(mediaType).toString(),
+        searchUrl: routerPaths.browse.byQuery(
+          urlBuilder.byCountry(c).byMediaType(mediaType).toString()
+        ),
       });
     }
   });

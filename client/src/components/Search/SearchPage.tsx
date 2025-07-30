@@ -154,8 +154,13 @@ const SearchPage = (): JSX.Element | null => {
         toggleParam={toggleParam}
         typeFilters={typeFilters}
       />
-      <span className="pt-2">
-        {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
+      <span className="pt-1">
+        {isLoading && (
+          <SpinnerPage
+            text={`Searching for "${searchTerm}"...`}
+            paddingTop={0}
+          />
+        )}
         {searchResults && searchTerm && (
           <PageResults
             results={searchResults}

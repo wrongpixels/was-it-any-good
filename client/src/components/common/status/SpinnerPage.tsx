@@ -5,18 +5,23 @@ import LoadingSpinner from '../icons/LoadingSpinner';
 
 interface SpinnerPageProps extends OptStringProps {
   spinnerColor?: string;
+  paddingTop?: number;
 }
 
 const SpinnerPage = ({
   text,
   spinnerColor = 'text-starblue',
+  paddingTop = 5,
 }: SpinnerPageProps): JSX.Element | null => {
   if (!text) {
     return null;
   }
+  const paddingString: string = `pt-${paddingTop}`;
   setTitle(text);
   return (
-    <div className="m-0 pt-5 flex flex-row gap-2 justify-center w-full font-medium text-xl items-center whitespace-pre-line">
+    <div
+      className={`m-0 flex flex-row gap-2 justify-center w-full font-medium text-xl items-center whitespace-pre-line ${paddingString}`}
+    >
       <LoadingSpinner className={spinnerColor} />
       <h1 className="font-medium">{text}</h1>
     </div>
