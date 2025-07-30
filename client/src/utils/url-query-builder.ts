@@ -96,7 +96,7 @@ class UrlQueryBuilder {
     return this.addParam(value, 'y');
   }
   orderBy(value?: OrderBy) {
-    return this.addParam(value, 'order');
+    return this.addParam(value, 'orderby');
   }
 
   sortBy(value?: Sorting) {

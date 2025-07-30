@@ -16,7 +16,7 @@ const SpinnerPage = ({
   }
   setTitle(text);
   return (
-    <div className="m-0 flex flex-row gap-2 justify-center w-full font-medium text-xl items-center whitespace-pre-line">
+    <div className="m-0 pt-5 flex flex-row gap-2 justify-center w-full font-medium text-xl items-center whitespace-pre-line">
       <LoadingSpinner className={spinnerColor} />
       <h1 className="font-medium">{text}</h1>
     </div>

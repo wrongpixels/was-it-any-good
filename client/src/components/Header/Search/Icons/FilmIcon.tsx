@@ -1,13 +1,13 @@
-import { OptClassNameProps } from '../../../../types/common-props-types';
+import { OptIconProps } from '../../../../types/common-props-types';
 
-const FilmIcon = (props: OptClassNameProps) => (
-  <span {...props}>
+const FilmIcon = ({ width = 18, height = 18, ...rest }: OptIconProps) => (
+  <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 512 512"
       fill="currentColor"
-      width={18}
-      height={18}
+      width={width}
+      height={height}
     >
       <g>
         <g>

@@ -15,6 +15,7 @@ const transitions = {
 };
 
 export const styles = {
+  hyperlink: 'text-starblue hover:text-hoverblue',
   animations: {
     zoomOnHover: `${transitions.baseZoom} hover:scale-107`,
     zoomLessOnHover: `${transitions.baseZoom} hover:scale-103`,

@@ -1,27 +1,25 @@
 import { JSX } from 'react';
-import { IndexMediaData } from '../../../../shared/types/models';
+import {
+  IndexMediaData,
+  IndexMediaResponse,
+} from '../../../../shared/types/models';
 import SearchCard from './SearchCard';
 import Button from '../common/Button';
 import DisabledDiv from '../common/DisabledDiv';
 import { styles } from '../../constants/tailwind-styles';
 
-interface SearchPageResultsProps {
-  totalPages: number;
-  totalResults: number;
-  page: number;
-  results: IndexMediaData[][];
+interface PageResultsProps {
+  results: IndexMediaResponse;
   navigatePage: (movement: number) => void;
   term?: string;
+  title?: string;
 }
 
 const PageResults = ({
   results,
-  totalResults,
-  totalPages,
-  page = 1,
   term,
   navigatePage,
-}: SearchPageResultsProps): JSX.Element | null => {
+}: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
   }
@@ -35,16 +33,16 @@ const PageResults = ({
 
   return (
     <>
-      <div className="flex flex-col items-center mx-auto relative font-medium gap-5">
+      <div className="flex flex-col items-center relative font-medium gap-5 mx-6">
         {!!results && (
           <span className="text-lg flex flex-row justify-center">
-            {totalResults || 'No'} results <>{term && searchTerm()}</>
+            {results.totalResults || 'No'} results <>{term && searchTerm()}</>
           </span>
         )}
         <span className="absolute right-0 flex flex-row items-center gap-2">
-          {`Page ${page} of ${totalPages}`}
+          {`Page ${results.page} of ${results.totalPages}`}
           <span className="flex flex-row gap-1">
-            <DisabledDiv disabled={page === 1}>
+            <DisabledDiv disabled={results.page === 1}>
               <Button
                 className={`w-8 ${styles.animations.buttonLeft}`}
                 onClick={() => navigatePage(-1)}
@@ -52,7 +50,7 @@ const PageResults = ({
                 ⏴
               </Button>
             </DisabledDiv>
-            <DisabledDiv disabled={page >= totalPages}>
+            <DisabledDiv disabled={results.page >= results.totalPages}>
               <Button
                 className={`w-8 ${styles.animations.buttonRight}`}
                 onClick={() => navigatePage(1)}
@@ -62,16 +60,12 @@ const PageResults = ({
             </DisabledDiv>
           </span>
         </span>
-        {results.map((r: IndexMediaData[], i: number) => (
-          <div
-            className="grid grid-cols-3 gap-4 items-center min-w-4xl max-w-1"
-            key={`indexR-${i}`}
-          >
-            {r.map((i: IndexMediaData) => (
-              <SearchCard key={i.id} media={i} />
-            ))}
-          </div>
-        ))}
+
+        <div className="grid grid-cols-3 gap-4 items-center">
+          {results.indexMedia.map((i: IndexMediaData) => (
+            <SearchCard key={i.id} media={i} />
+          ))}
+        </div>
       </div>
     </>
   );

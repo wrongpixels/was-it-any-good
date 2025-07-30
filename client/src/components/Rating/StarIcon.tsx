@@ -2,10 +2,10 @@ import { JSX } from 'react';
 import { styles } from '../../constants/tailwind-styles';
 
 interface StarIconProps {
-  readonly width: number;
+  readonly width?: number;
   readonly interactive?: boolean;
 }
-const StarIcon = ({ width, interactive }: StarIconProps): JSX.Element => (
+const StarIcon = ({ width = 24, interactive }: StarIconProps): JSX.Element => (
   <svg
     width={width}
     height={width}

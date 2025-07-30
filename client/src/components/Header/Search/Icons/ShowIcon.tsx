@@ -1,13 +1,13 @@
-import { OptClassNameProps } from '../../../../types/common-props-types';
+import { OptIconProps } from '../../../../types/common-props-types';
 
-const ShowIcon = (props: OptClassNameProps) => (
-  <span {...props}>
+const ShowIcon = ({ width = 20, height = 20, ...rest }: OptIconProps) => (
+  <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="none"
-      width={20}
-      height={20}
+      width={width}
+      height={height}
     >
       <path
         stroke="currentColor"

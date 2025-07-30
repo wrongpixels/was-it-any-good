@@ -15,6 +15,12 @@ import { searchTypes } from '../../../../../shared/types/search';
 import { QueryOpts } from '../../../types/search-browse-types';
 import SpinnerPage from '../../common/status/SpinnerPage';
 import ErrorPage from '../../common/status/ErrorPage';
+import {
+  OrderBy,
+  Sorting,
+  stringToOrderBy,
+  stringToSorting,
+} from '../../../../../shared/types/browse';
 
 const BrowsePage = () => {
   const navigateTo = useNavigate();
@@ -29,6 +35,10 @@ const BrowsePage = () => {
   const genres: string[] = parameters.getAll('g');
   const countries: string[] = parameters.getAll('c');
   const year = parameters.get('y');
+  const orderBy: OrderBy | undefined = stringToOrderBy(
+    parameters.get('orderby')
+  );
+  const sort: Sorting | undefined = stringToSorting(parameters.get('sort'));
   const typeFilters = new ParamManager(searchTypes, activeTypeParams);
   const buildQuery = ({ newPage }: QueryOpts) => {
     console.log(newPage);
@@ -38,6 +48,8 @@ const BrowsePage = () => {
       .byCountries(countries)
       .byYear(year)
       .toPage(newPage)
+      .orderBy(orderBy)
+      .sortBy(sort)
       .toString();
 
     console.log(url);
@@ -46,7 +58,7 @@ const BrowsePage = () => {
   const currentQuery: string = buildQuery({ newPage: currentPage });
   console.log(currentQuery);
   const { data: browseResults, isLoading } = useBrowseQuery(currentQuery);
-
+  console.log(browseResults);
   const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
     navigateTo(routerPaths.browse.byQuery(buildQuery({ newPage: page })), {
       replace,
@@ -75,15 +87,7 @@ const BrowsePage = () => {
     <>
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
       <PageResults
-        results={[
-          browseResults.filmResults || [],
-          browseResults.showResults || [],
-        ]}
-        totalPages={browseResults?.totalPages}
-        totalResults={
-          browseResults.totalFilmResults + browseResults.totalShowResults
-        }
-        page={browseResults?.page}
+        results={browseResults}
         navigatePage={navigatePage}
       ></PageResults>
     </>

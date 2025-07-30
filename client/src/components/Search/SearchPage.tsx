@@ -158,10 +158,7 @@ const SearchPage = (): JSX.Element | null => {
         {isLoading && <SpinnerPage text={`Searching for "${searchTerm}"...`} />}
         {searchResults && searchTerm && (
           <PageResults
-            results={[searchResults.indexMedia]}
-            totalPages={searchResults.totalPages}
-            totalResults={searchResults.totalResults}
-            page={searchResults.page}
+            results={searchResults}
             term={searchTerm}
             navigatePage={navigatePage}
           />

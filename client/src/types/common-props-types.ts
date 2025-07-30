@@ -19,3 +19,9 @@ export interface OptStringProps extends OptClassNameProps {
 export interface OptBoolProps extends OptClassNameProps {
   condition?: boolean;
 }
+
+export interface OptIconProps extends OptClassNameProps {
+  condition?: boolean;
+  width?: number;
+  height?: number;
+}
