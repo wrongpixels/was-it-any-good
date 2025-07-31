@@ -1,6 +1,7 @@
 import { JSX } from 'react';
 import { OptClassNameProps } from '../../../types/common-props-types';
 import CrownIcon from '../../Header/Search/icons/Crown';
+import { styles } from '../../../constants/tailwind-styles';
 
 interface IndexBadgeProps extends OptClassNameProps {
   index: number;
@@ -22,7 +23,7 @@ const getColors = (index: number) => {
 const IndexBadge = ({ index }: IndexBadgeProps): JSX.Element | null => {
   return (
     <span
-      className={`absolute -ml-0.25 -mt-0.25 left-0 top-0 w-8 h-8 rounded-br-xl border-1 ring-1 rounded-tl-sm justify-center items-center flex drop-shadow-sm  ${getColors(index)}`}
+      className={`absolute -ml-0.25 -mt-0.25 left-0 top-0 w-8 h-8 rounded-br-xl border-1 ring-1 rounded-tl-sm justify-center items-center flex shadow/100 ${getColors(index)} ${styles.shadow.allShadow()}`}
     >
       {index === 1 ? <CrownIcon /> : index}
     </span>

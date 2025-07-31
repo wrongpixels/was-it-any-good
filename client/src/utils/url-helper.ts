@@ -74,12 +74,14 @@ export const routerPaths = {
   },
   search: {
     base: `/search`,
-    byQuery: (query: string) => `${routerPaths.search.base}?${query}`,
-    byTerm: (term: number | string) => `${routerPaths.search.base}?q=${term}`,
+    query: () => `${routerPaths.search.base}?`,
+    byQuery: (query: string) => `${routerPaths.search.query()}${query}`,
+    byTerm: (term: number | string) => `${routerPaths.search.query()}q=${term}`,
   },
   browse: {
     base: '/browse',
-    byQuery: (query: string) => `${routerPaths.browse.base}?${query}`,
+    query: () => `${routerPaths.browse.base}?`,
+    byQuery: (query: string) => `${routerPaths.browse.query()}${query}`,
   },
 };
 
@@ -143,9 +145,7 @@ export const mediaTypeToDisplayName = (mediaType: MediaType) => {
 //Normalizes media type search parameters (m=...) into unified values ('film' or 'show'),
 //handling various user inputs like 'movies', 'tv-shows', 'series' etc.
 //it also adds show and films by default if none is selected.
-export const normalizeMediaSearchParams = (
-  rawParams: string[]
-): SearchType[] => {
+export const normalizeQueryTypeParams = (rawParams: string[]): SearchType[] => {
   const resultParams: SearchType[] = [];
   const addToParams = (p: SearchType) => {
     if (!resultParams.includes(p)) {

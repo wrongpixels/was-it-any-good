@@ -8,7 +8,7 @@ import { setPageInfo } from '../../utils/page-info-setter';
 import SpinnerPage from '../common/status/SpinnerPage';
 import {
   isQueryActiveInUrl,
-  normalizeMediaSearchParams,
+  normalizeQueryTypeParams,
   routerPaths,
 } from '../../utils/url-helper';
 import PageResults from './PageResults';
@@ -36,7 +36,7 @@ const SearchPage = (): JSX.Element | null => {
 
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const currentPage: number = Number(parameters.get('page'));
-  const activeSearchTypeParams: string[] = normalizeMediaSearchParams(
+  const activeSearchTypeParams: string[] = normalizeQueryTypeParams(
     parameters.getAll('m')
   );
   const searchTerm: string | null = parameters.get('q');
@@ -45,7 +45,7 @@ const SearchPage = (): JSX.Element | null => {
     [SearchType.Film, SearchType.Show, SearchType.Person],
     activeSearchTypeParams
   );
-  const buildQuery = ({ newQuery, newPage }: QueryOpts) => {
+  const buildQuery = ({ newTerm: newQuery, newPage }: QueryOpts) => {
     console.log(newPage);
     const url = searchUrl
       .byTerm(newQuery || searchTerm)
@@ -65,7 +65,7 @@ const SearchPage = (): JSX.Element | null => {
     newQuery: string | undefined,
     replace: boolean = false
   ) =>
-    navigateTo(routerPaths.search.byQuery(buildQuery({ newQuery })), {
+    navigateTo(routerPaths.search.byQuery(buildQuery({ newTerm: newQuery })), {
       replace,
     });
 

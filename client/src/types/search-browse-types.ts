@@ -1,4 +1,4 @@
 export interface QueryOpts {
-  newQuery?: string;
+  newTerm?: string;
   newPage?: number;
 }
