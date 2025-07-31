@@ -7,6 +7,8 @@ import {
 import { isMerged } from '../../utils/credits-merger';
 import { Link } from 'react-router-dom';
 import { styles } from '../../constants/tailwind-styles';
+import LazyImage from '../common/LazyImage';
+import imageLinker from '../../../../shared/util/image-linker';
 
 interface MediaPeopleEntryProps {
   people: CreditResponse[] | MergedCredits[];
@@ -47,8 +49,9 @@ const MediaPeopleEntry = ({
               key={c.person.id}
               className={`flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
             >
-              <img
-                src={c.person.image}
+              <LazyImage
+                t
+                src={imageLinker.getAvatarImage(c.person.image)}
                 alt={c.person.name}
                 title={c.person.name}
                 className="w-26 rounded h-auto shadow ring-1 ring-gray-300"

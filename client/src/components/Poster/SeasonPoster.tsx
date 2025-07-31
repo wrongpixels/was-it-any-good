@@ -3,6 +3,7 @@ import { SeasonResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
 import LazyImage from '../common/LazyImage';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
+import imageLinker from '../../../../shared/util/image-linker';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
@@ -19,7 +20,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         </div>
       </div>
       <LazyImage
-        src={media.image}
+        src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
         title={media.name}
         className="rounded shadow ring-1 ring-gray-300"
