@@ -121,8 +121,6 @@ export const createCrew = (crewData: TMDBCrewData[]): AuthorData[] => {
       switch (c.job) {
         case TMDBAcceptedJobs.Director:
           return createDirector(c);
-        case TMDBAcceptedJobs.Producer:
-          return createProducer(c);
         case TMDBAcceptedJobs.ExecutiveProducer:
           return createProducer(c);
         case TMDBAcceptedJobs.OriginalMusicComposer:

@@ -19,10 +19,6 @@ export const buildCreditsAndGenres = async (
 ): Promise<MediaRole[] | null> => {
   console.log('\n\nSTARTING PROCESS\n\n');
   const mediaId: number = media.id;
-  console.log('IMPORTANT 2!!!');
-  console.log(mediaData.crew);
-  console.log(mediaData.cast);
-  console.log('IMPORTANT 2!!!');
   const genres: MediaGenre[] | null = await buildGenres(
     mediaData,
     mediaId,

@@ -100,7 +100,6 @@ export enum TMDBAcceptedJobs {
   Screenplay = 'Screenplay',
   Director = 'Director',
   OriginalMusicComposer = 'Original Music Composer',
-  Producer = 'Producer',
   ExecutiveProducer = 'Executive Producer',
   Creator = 'Creator',
   Writer = 'Writer',

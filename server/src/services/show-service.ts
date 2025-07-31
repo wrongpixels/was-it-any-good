@@ -1,7 +1,6 @@
 import { createShow } from '../factories/show-factory';
 import {
   TMDBCreditsData,
-  TMDBFilmCreditsSchema,
   TMDBShowCreditsData,
   TMDBShowCreditsSchema,
 } from '../schemas/tmdb-media-schema';
@@ -19,7 +18,7 @@ import {
 } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import { IndexMedia, Show } from '../models';
-import { buildCreditsAndGenres, trimCredits } from './media-service';
+import { buildCreditsAndGenres } from './media-service';
 import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
@@ -30,6 +29,7 @@ import {
   upsertIndexMedia,
   mediaDataToCreateIndexMedia,
 } from './index-media-service';
+import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
 
 export const buildShowEntry = async (
   params: MediaQueryValues
@@ -77,19 +77,24 @@ export const fetchTMDBShow = async (
   const [showRes, creditsRes, externalIdsRes] = await Promise.all([
     tmdbAPI.get(tmdbPaths.shows.byTMDBId(tmdbId)),
     tmdbAPI.get(tmdbPaths.shows.extendedCredits(tmdbId)),
+    //for some reason, the imdbId is not included in show entries
     tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
   ]);
   const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
 
-  const creditsData: TMDBShowCreditsData | undefined =
+  const showCreditsData: TMDBShowCreditsData | undefined =
     TMDBShowCreditsSchema.safeParse(creditsRes.data)['data'];
 
-  //extended show credits have a very different format than regular show/film credits.
-  //regular credits only include uncomplete data from last aired season, which is not acceptable.
-  //as we want a unified logic for building our people/roles db entries no matter the media,
-  //we convert extended credits into TMDBCreditsData, the format that regular credits follow.
+  if (!showCreditsData) {
+    throw new CustomError('Error creating entry credits', 400);
+  }
 
-  console.log(creditsData);
+  //TMDB show credits endpoint is unreliable, providing incomplete data or a single season's.
+  //instead, we fetch the 'aggregate_credits' for the full cast/crew history.
+  //these use a different data structure than all other credits, so in order to
+  //maintain a single pipeline for creating all our media (film, season, show),
+  //we transform extended credits into the TMDBCreditsData our factories expect:
+  const creditsData: TMDBCreditsData = formatTMDBShowCredits(showCreditsData);
 
   const imdbData: TMDBImdbData = TMDBExternalIdSchema.parse(
     externalIdsRes.data
