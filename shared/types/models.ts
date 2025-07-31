@@ -199,6 +199,7 @@ export interface CreditResponse {
 
 export interface MergedCredits {
   mergedRoles: AuthorType[]
+  order: number
   person: PersonResponse
 }
 

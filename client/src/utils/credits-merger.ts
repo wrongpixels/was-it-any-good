@@ -37,6 +37,7 @@ export const mergeCredits = (
       mergedMap.set(personId, {
         person: c.person,
         mergedRoles: currentRole ? [currentRole] : [],
+        order: mergedMap.size,
       });
     }
   });

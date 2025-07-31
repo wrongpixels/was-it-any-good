@@ -18,6 +18,7 @@ import {
   RatingUpdateValues,
 } from '../../types/helper-types';
 import { toPlain } from '../../util/model-helpers';
+import { SeasonResponse } from '../../../../shared/types/models';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
@@ -26,6 +27,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare lastAirDate: string | null;
   declare episodeCount: number;
   declare seasonCount: number;
+  declare seasons?: SeasonResponse[];
 
   static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
     const mediaType = MediaType.Show;
@@ -36,7 +38,14 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
     if (media?.mediaType !== mediaType) {
       return null;
     }
-    return params.plainData ? toPlain(media) : media;
+    //If the show has seasons, we sort them by index post-fetch.
+    //ordering within sequelize proved unreliable with `separate: true` +
+    //nested scopes. faster fetch + manual sort was deemed the better trade-off.
+
+    if (media.seasons) {
+      media.seasons.sort((a, b) => a.index - b.index);
+    }
+    return params.plainData ? toPlain<Show>(media) : media;
   }
   static async refreshRating(
     values: RatingUpdateValues,
@@ -92,7 +101,9 @@ Show.init(
       withSeasons(include?: Includeable[]) {
         return {
           include: {
+            separate: true,
             association: 'seasons',
+            required: false,
             attributes: [
               'id',
               'index',
@@ -113,7 +124,6 @@ Show.init(
             ],
             include,
           },
-          order: [['seasons', 'index', 'ASC']],
         };
       },
       withCredits: Show.creditsScope(MediaType.Show),

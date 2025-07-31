@@ -42,6 +42,7 @@ export const UNKNOWN_DIRECTORS: PersonResponse = {
 export const UNKNOWN_CREW: MergedCredits[] = [
   {
     mergedRoles: [],
+    order: 0,
     person: UNKNOWN_CREATORS,
   },
 ]
@@ -49,6 +50,7 @@ export const UNKNOWN_CREW: MergedCredits[] = [
 export const DEF_CREW_TV: MergedCredits[] = [
   {
     mergedRoles: [],
+    order: 0,
     person: UNKNOWN_CREATORS,
   },
 ]

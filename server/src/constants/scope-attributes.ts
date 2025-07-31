@@ -20,6 +20,7 @@ export const getUserRatingInclude = (
   }
   return [
     {
+      separate: true,
       association: 'userRating',
       where: {
         userId: activeUser.id,

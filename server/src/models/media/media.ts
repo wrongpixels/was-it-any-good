@@ -44,7 +44,7 @@ import {
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
@@ -232,8 +232,8 @@ class Media<
       mediaType === MediaType.Show
         ? Show
         : mediaType === MediaType.Film
-        ? Film
-        : Season;
+          ? Film
+          : Season;
     const ratingTableName: string = Rating.tableName;
     const mediaTableName: string = model.tableName;
 
@@ -353,7 +353,11 @@ class Media<
         ],
       });
     }
-    const findOptions: FindOptions = { include, transaction };
+
+    const findOptions: FindOptions = {
+      include,
+      transaction,
+    };
     return { findOptions, scopeOptions };
   }
 
@@ -381,19 +385,11 @@ class Media<
               attributes: ['id', 'name', 'tmdbId', 'image'],
             },
           ],
-          attributes: {
-            exclude: [
-              'role',
-              'mediaId',
-              'mediaType',
-              'createdAt',
-              'updatedAt',
-              'personId',
-            ],
-          },
+          attributes: ['id', 'characterName', 'order'],
         },
         {
           association: 'crew',
+          separate: true,
           include: [
             {
               association: 'person',

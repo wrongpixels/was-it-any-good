@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { TMDB_API_URL, TMDB_MEDIA_URL } from '../constants/url-constants';
 dotenv.config();
 
-const POSTGRES_URI: string = process.env.POSTGRES_URI || '';
+const POSTGRES_URI: string = process.env.LOCAL_POSTGRES_URI || '';
 
 const PORT: number = parseInt(process.env.PORT || '6060', 10);
 const API_SECRET: string = process.env.API_SECRET || '';
