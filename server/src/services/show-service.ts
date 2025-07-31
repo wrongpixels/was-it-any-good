@@ -1,7 +1,9 @@
 import { createShow } from '../factories/show-factory';
 import {
   TMDBCreditsData,
-  TMDBCreditsSchema,
+  TMDBFilmCreditsSchema,
+  TMDBShowCreditsData,
+  TMDBShowCreditsSchema,
 } from '../schemas/tmdb-media-schema';
 import {
   TMDBExternalIdSchema,
@@ -74,13 +76,21 @@ export const fetchTMDBShow = async (
 ): Promise<ShowData> => {
   const [showRes, creditsRes, externalIdsRes] = await Promise.all([
     tmdbAPI.get(tmdbPaths.shows.byTMDBId(tmdbId)),
-    tmdbAPI.get(tmdbPaths.shows.credits(tmdbId)),
+    tmdbAPI.get(tmdbPaths.shows.extendedCredits(tmdbId)),
     tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
   ]);
   const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
-  const creditsData: TMDBCreditsData = trimCredits(
-    TMDBCreditsSchema.parse(creditsRes.data)
-  );
+
+  const creditsData: TMDBShowCreditsData | undefined =
+    TMDBShowCreditsSchema.safeParse(creditsRes.data)['data'];
+
+  //extended show credits have a very different format than regular show/film credits.
+  //regular credits only include uncomplete data from last aired season, which is not acceptable.
+  //as we want a unified logic for building our people/roles db entries no matter the media,
+  //we convert extended credits into TMDBCreditsData, the format that regular credits follow.
+
+  console.log(creditsData);
+
   const imdbData: TMDBImdbData = TMDBExternalIdSchema.parse(
     externalIdsRes.data
   );

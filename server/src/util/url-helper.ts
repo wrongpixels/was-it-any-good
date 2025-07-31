@@ -7,8 +7,14 @@ export const tmdbPaths = {
   shows: {
     base: '/tv',
     byTMDBId: (id: string | number) => `${tmdbPaths.shows.base}/${id}`,
+    extendedCredits: (id: string | number) =>
+      `${tmdbPaths.shows.byTMDBId(id)}/aggregate_credits`,
     credits: (id: string | number) => `${tmdbPaths.shows.byTMDBId(id)}/credits`,
     extIds: (id: string | number) =>
       `${tmdbPaths.shows.byTMDBId(id)}/external_ids`,
+  },
+  seasons: {
+    credits: (showId: string | number, seasonId: string | number) =>
+      `${tmdbPaths.shows.byTMDBId(showId)}/season/${seasonId}/credits`,
   },
 };

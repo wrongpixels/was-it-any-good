@@ -22,20 +22,49 @@ const TMDBCreditRoleSchema = TMDBEntrySchema.extend({
   profile_path: z.string().nullable(),
 });
 
-const TMDBCastRoleSchema = TMDBCreditRoleSchema.extend({
+const TMDBFilmCastRoleSchema = TMDBCreditRoleSchema.extend({
   order: z.number(),
   character: z.string(),
 });
+const TMDBActorRoleSchema = z.object({
+  credit_id: z.string(),
+  character: z.string(),
+  episode_count: z.number(),
+});
 
-const TMDBCrewSchema = TMDBCreditRoleSchema.extend({
+const TMDBShowCastRoleSchema = TMDBCreditRoleSchema.omit({
+  credit_id: true,
+}).extend({
+  order: z.number(),
+  roles: z.array(TMDBActorRoleSchema),
+});
+
+const TMDBFilmCrewSchema = TMDBCreditRoleSchema.extend({
   job: z.string(),
   department: z.string(),
 });
+const TMDBCrewJobSchema = z.object({
+  credit_id: z.string(),
+  job: z.string(),
+  episode_count: z.number(),
+});
+const TMDBShowCrewSchema = TMDBCreditRoleSchema.omit({
+  credit_id: true,
+}).extend({
+  jobs: z.array(TMDBCrewJobSchema),
+  department: z.string(),
+});
 
-export const TMDBCreditsSchema = z.object({
+export const TMDBFilmCreditsSchema = z.object({
   id: z.number(),
-  cast: z.array(TMDBCastRoleSchema),
-  crew: z.array(TMDBCrewSchema),
+  cast: z.array(TMDBFilmCastRoleSchema),
+  crew: z.array(TMDBFilmCrewSchema),
+});
+
+export const TMDBShowCreditsSchema = z.object({
+  id: z.number(),
+  cast: z.array(TMDBShowCastRoleSchema),
+  crew: z.array(TMDBShowCrewSchema),
 });
 
 export const TMDBMediaSchema = z.object({
@@ -54,11 +83,16 @@ export const TMDBMediaSchema = z.object({
 export const isShow = (tmdb: TMDBMediaData): tmdb is TMDBShowData =>
   'number_of_episodes' in tmdb;
 
+export type TMDBActorRole = z.infer<typeof TMDBActorRoleSchema>;
+export type TMDBCrewJob = z.infer<typeof TMDBCrewJobSchema>;
 export type TMDBMediaData = TMDBShowData | TMDBFilmData;
-export type TMDBCreditsData = z.infer<typeof TMDBCreditsSchema>;
+export type TMDBCreditsData = z.infer<typeof TMDBFilmCreditsSchema>;
+export type TMDBShowCreditsData = z.infer<typeof TMDBShowCreditsSchema>;
 export type TMDBGenreData = z.infer<typeof TMDBGenreSchema>;
-export type TMDBCrewData = z.infer<typeof TMDBCrewSchema>;
-export type TMDBCastRoleData = z.infer<typeof TMDBCastRoleSchema>;
+export type TMDBCrewData = z.infer<typeof TMDBFilmCrewSchema>;
+export type TMDBShowCrewData = z.infer<typeof TMDBShowCrewSchema>;
+export type TMDBCastRoleData = z.infer<typeof TMDBFilmCastRoleSchema>;
+export type TMDBShowCastRoleData = z.infer<typeof TMDBShowCastRoleSchema>;
 export type TMDBStudioData = z.infer<typeof TMDBStudioSchema>;
 export type TMDBEntryData = z.infer<typeof TMDBEntrySchema>;
 

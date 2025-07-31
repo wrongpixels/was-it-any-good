@@ -175,7 +175,7 @@ export const createCast = (cast: TMDBCastRoleData[]): RoleData[] => {
   filteredCast.forEach((c: TMDBCastRoleData) => {
     const key: string = c.id.toString();
     const entry: RoleData | undefined = combinedRoleMap.get(key);
-    if (entry) {
+    if (entry && c.character) {
       combinedRoleMap.set(key, {
         ...entry,
         character: entry.character.concat(c.character),

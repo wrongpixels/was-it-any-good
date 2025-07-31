@@ -9,18 +9,19 @@ import {
 } from '../schemas/tmdb-film-schema';
 import {
   TMDBCreditsData,
-  TMDBCreditsSchema,
+  TMDBFilmCreditsSchema,
 } from '../schemas/tmdb-media-schema';
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
 import { toPlain } from '../util/model-helpers';
+import { trimCredits } from '../util/tmdb-credits-formatter';
 import { tmdbPaths } from '../util/url-helper';
 import {
   upsertIndexMedia,
   mediaDataToCreateIndexMedia,
 } from './index-media-service';
-import { buildCreditsAndGenres, trimCredits } from './media-service';
+import { buildCreditsAndGenres } from './media-service';
 
 export const buildFilmEntry = async (
   params: MediaQueryValues
@@ -67,7 +68,7 @@ export const fetchTMDBFilm = async (
   ]);
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   const creditsData: TMDBCreditsData = trimCredits(
-    TMDBCreditsSchema.parse(creditsRes.data)
+    TMDBFilmCreditsSchema.parse(creditsRes.data)
   );
   const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
   const actualFilmData: FilmData = createFilm(filmData);

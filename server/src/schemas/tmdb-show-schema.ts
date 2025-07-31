@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import {
-  TMDBCreditsSchema,
+  TMDBFilmCreditsSchema,
   TMDBEntrySchema,
   TMDBMediaSchema,
 } from './tmdb-media-schema';
@@ -34,7 +34,7 @@ export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
 
 export const TMDBShowSchema = TMDBShowInfoSchema.extend({
   imdb_id: z.string().nullable(),
-  credits: TMDBCreditsSchema,
+  credits: TMDBFilmCreditsSchema,
 });
 
 export const TMDBExternalIdSchema = z.object({

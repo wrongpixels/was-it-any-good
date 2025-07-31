@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TMDBCreditsSchema, TMDBMediaSchema } from './tmdb-media-schema';
+import { TMDBFilmCreditsSchema, TMDBMediaSchema } from './tmdb-media-schema';
 
 export const TMDBFilmInfoSchema = TMDBMediaSchema.extend({
   title: z.string(),
@@ -10,7 +10,7 @@ export const TMDBFilmInfoSchema = TMDBMediaSchema.extend({
 });
 
 export const TMDBFilmSchema = TMDBFilmInfoSchema.extend({
-  credits: TMDBCreditsSchema,
+  credits: TMDBFilmCreditsSchema,
 });
 export type TMDBFilmData = z.infer<typeof TMDBFilmSchema>;
 

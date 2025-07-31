@@ -7,14 +7,10 @@ import { CreateMediaRole } from '../models/people/mediaRole';
 import Person, { CreatePerson } from '../models/people/person';
 //import { CreateGenreData } from '../types/genres/genre-types';
 import { AuthorType, MediaData, MediaPerson } from '../types/media/media-types';
-import {
-  acceptedJobs,
-  TMDBCreditsData,
-  TMDBCrewData,
-} from '../schemas/tmdb-media-schema';
 import { MediaType } from '../../../shared/types/media';
 import { CreateMediaGenre, PersonResponse } from '../../../shared/types/models';
 import { toPlainArray } from '../util/model-helpers';
+import { mediaPersonToCreatePerson } from '../util/tmdb-credits-formatter';
 
 export const buildCreditsAndGenres = async (
   media: Film | Show,
@@ -24,8 +20,8 @@ export const buildCreditsAndGenres = async (
   console.log('\n\nSTARTING PROCESS\n\n');
   const mediaId: number = media.id;
   console.log('IMPORTANT 2!!!');
-  console.log(mediaData.crew.filter((m) => m.name === 'Trey Parker'));
-  console.log(mediaData.cast.filter((m) => m.name === 'Trey Parker'));
+  console.log(mediaData.crew);
+  console.log(mediaData.cast);
   console.log('IMPORTANT 2!!!');
   const genres: MediaGenre[] | null = await buildGenres(
     mediaData,
@@ -115,13 +111,6 @@ export const buildGenres = async (
   );
   return mediaGenres?.length > 0 ? mediaGenres : null;
 };
-
-const mediaPersonToCreatePerson = (mediaPerson: MediaPerson): CreatePerson => ({
-  name: mediaPerson.name,
-  tmdbId: mediaPerson.tmdbId,
-  image: mediaPerson.image,
-  country: mediaPerson.country ? [mediaPerson.country] : ['UNKNOWN'],
-});
 
 const bulkCreatePeople = async (
   mediaPeople: MediaPerson[],
@@ -219,13 +208,4 @@ export const bulkCreateMediaRoles = async (
     }
   );
   return mediaRoleEntries.length > 0 ? mediaRoleEntries : null;
-};
-export const trimCredits = (credits: TMDBCreditsData): TMDBCreditsData => {
-  return {
-    ...credits,
-    cast: credits.cast.slice(0, 20),
-    crew: credits.crew.filter((crewMember: TMDBCrewData) =>
-      acceptedJobs.includes(crewMember.job)
-    ),
-  };
 };
