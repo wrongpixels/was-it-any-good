@@ -26,7 +26,10 @@ export const buildFilmEntry = async (
   params: MediaQueryValues
 ): Promise<FilmResponse | null> => {
   const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
-
+  console.log('IMPORTANT 1!!!');
+  console.log(filmData.crew.filter((m) => m.name === 'Trey Parker'));
+  console.log(filmData.cast.filter((m) => m.name === 'Trey Parker'));
+  console.log('IMPORTANT 1!!!');
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
 
@@ -68,7 +71,6 @@ export const fetchTMDBFilm = async (
   );
   const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
   const actualFilmData: FilmData = createFilm(filmData);
-
   return actualFilmData;
 };
 

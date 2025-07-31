@@ -9,7 +9,7 @@ const Header = () => {
     <span className={`sticky top-0 z-50`}>
       <span className="h-11 bg-[#5980c7] flex flex-col shadow-sm py-1">
         <span className="relative flex flex-row w-5xl items-center mx-auto">
-          <span className="absolute left-0">
+          <span className="absolute left-0  z-51">
             <SearchField />
           </span>
 

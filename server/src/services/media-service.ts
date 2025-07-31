@@ -23,7 +23,10 @@ export const buildCreditsAndGenres = async (
 ): Promise<MediaRole[] | null> => {
   console.log('\n\nSTARTING PROCESS\n\n');
   const mediaId: number = media.id;
-
+  console.log('IMPORTANT 2!!!');
+  console.log(mediaData.crew.filter((m) => m.name === 'Trey Parker'));
+  console.log(mediaData.cast.filter((m) => m.name === 'Trey Parker'));
+  console.log('IMPORTANT 2!!!');
   const genres: MediaGenre[] | null = await buildGenres(
     mediaData,
     mediaId,
@@ -165,7 +168,7 @@ export const bulkCreateMediaRoles = async (
   //we take the original mediaPeople array to create MediaRoles/jobs for each person there.
   const mediaRolesMap = new Map<string, CreateMediaRole>();
   mediaPeople.forEach((mediaPerson: MediaPerson) => {
-    if (!mediaPerson.tmdbId || !mediaPerson.type) {
+    if (!mediaPerson.tmdbId) {
       return;
     }
     //we ensure we only create MediaRoles for people with a tmdbId matching a valid id.
@@ -175,7 +178,8 @@ export const bulkCreateMediaRoles = async (
     }
     //a person can have multiple jobs in a movie/show, but not 2 of the same type, so if a
     //role is present twice, we simply keep the last.
-    const key = `${dbId}_${mediaId}_${mediaType}_${mediaPerson.type}`;
+    const key = `${dbId}_${mediaId}_${mediaType}_${mediaPerson.type}_${mediaPerson.name}`;
+    console.log(key);
     const createRole: CreateMediaRole = {
       personId: dbId,
       mediaId,

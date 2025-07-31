@@ -1,9 +1,8 @@
 import imageLinker from '../util/image-linker';
 import {
   TMDBAcceptedJobs,
-  TMDBAcceptedDepartments,
   TMDBCrewData,
-  TMDBRoleData,
+  TMDBCastRoleData,
   TMDBStudioData,
   TMDBMediaData,
   isShow,
@@ -63,10 +62,7 @@ export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
   countries: validateCountries(tmdb.origin_country || []),
   imdbId: tmdb.imdb_id,
   description: tmdb.overview,
-  genres: mapTMDBGenres(
-    tmdb.genres
-    //    isShow(tmdb) ? MediaType.Show : MediaType.Film
-  ),
+  genres: mapTMDBGenres(tmdb.genres),
   cast: createCast(tmdb.credits.cast),
   crew: getCrew(tmdb),
   studios: createStudios(tmdb.production_companies),
@@ -132,12 +128,13 @@ export const createCrew = (crewData: TMDBCrewData[]): AuthorData[] => {
         case TMDBAcceptedJobs.OriginalMusicComposer:
           return createComposer(c);
         case TMDBAcceptedJobs.Screenplay:
+        case TMDBAcceptedJobs.Writer:
           return createWriter(c);
         default:
           return null;
       }
     })
-    .filter((c: AuthorData | null): c is AuthorData => c !== null);
+    .filter((c: AuthorData | null) => !!c);
 };
 
 export const createCrewMember = (
@@ -170,14 +167,13 @@ export const createComposer = (crewMember: TMDBCrewData): AuthorData => ({
   ...createCrewMember(crewMember),
 });
 
-export const createCast = (cast: TMDBRoleData[]): RoleData[] => {
-  const filteredCast: TMDBRoleData[] = cast.filter(
-    (c: TMDBRoleData) =>
-      c.known_for_department === TMDBAcceptedDepartments.Acting
+export const createCast = (cast: TMDBCastRoleData[]): RoleData[] => {
+  const filteredCast: TMDBCastRoleData[] = cast.filter(
+    (c: TMDBCastRoleData) => c.character
   );
   const combinedRoleMap = new Map<string, RoleData>();
-  filteredCast.forEach((c: TMDBRoleData) => {
-    const key: string = `${c.id}`;
+  filteredCast.forEach((c: TMDBCastRoleData) => {
+    const key: string = c.id.toString();
     const entry: RoleData | undefined = combinedRoleMap.get(key);
     if (entry) {
       combinedRoleMap.set(key, {
@@ -191,7 +187,7 @@ export const createCast = (cast: TMDBRoleData[]): RoleData[] => {
   return Array.from(combinedRoleMap.values());
 };
 
-export const createRole = (castMember: TMDBRoleData): RoleData => ({
+export const createRole = (castMember: TMDBCastRoleData): RoleData => ({
   ...DEF_ROLE,
   name: castMember.name,
   order: castMember.order,

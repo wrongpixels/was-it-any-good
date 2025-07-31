@@ -85,7 +85,6 @@ router.get('/tmdb/:id', async (req: Request, res, next) => {
       res.json(null);
       return;
     }
-    console.log(filmEntry);
     res.json(filmEntry);
   } catch (error) {
     next(error);

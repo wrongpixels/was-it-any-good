@@ -58,20 +58,9 @@ export type TMDBMediaData = TMDBShowData | TMDBFilmData;
 export type TMDBCreditsData = z.infer<typeof TMDBCreditsSchema>;
 export type TMDBGenreData = z.infer<typeof TMDBGenreSchema>;
 export type TMDBCrewData = z.infer<typeof TMDBCrewSchema>;
-export type TMDBRoleData = z.infer<typeof TMDBCastRoleSchema>;
+export type TMDBCastRoleData = z.infer<typeof TMDBCastRoleSchema>;
 export type TMDBStudioData = z.infer<typeof TMDBStudioSchema>;
 export type TMDBEntryData = z.infer<typeof TMDBEntrySchema>;
-
-export enum TMDBAcceptedDepartments {
-  Writing = 'Writing',
-  Directing = 'Directing',
-  Acting = 'Acting',
-  Sound = 'Sound',
-}
-
-export const acceptedDepartments: string[] = Object.values<string>(
-  TMDBAcceptedDepartments
-);
 
 export enum TMDBAcceptedJobs {
   Screenplay = 'Screenplay',
@@ -80,5 +69,6 @@ export enum TMDBAcceptedJobs {
   Producer = 'Producer',
   ExecutiveProducer = 'Executive Producer',
   Creator = 'Creator',
+  Writer = 'Writer',
 }
 export const acceptedJobs: string[] = Object.values<string>(TMDBAcceptedJobs);

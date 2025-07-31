@@ -28,7 +28,7 @@ Session.associate();
 Rating.associate();
 Season.associate();
 IndexMedia.associate();
-sequelize.sync({ force: false });
+sequelize.sync({ force: true });
 
 export {
   Media,
