@@ -1,4 +1,5 @@
 import { MediaType } from '../types/media'
+import { SeasonResponse, ShowResponse } from '../types/models'
 
 export const stringToMediaType = (media: string): MediaType | null => {
   switch (media.toLowerCase()) {
@@ -12,3 +13,8 @@ export const stringToMediaType = (media: string): MediaType | null => {
       return null
   }
 }
+
+export const reorderSeasons = (
+  show: ShowResponse,
+): SeasonResponse[] | undefined =>
+  show?.seasons?.sort((a, b) => a.index - b.index)

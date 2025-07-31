@@ -30,6 +30,7 @@ import {
   mediaDataToCreateIndexMedia,
 } from './index-media-service';
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
+import { reorderSeasons } from '../../../shared/helpers/media-helper';
 
 export const buildShowEntry = async (
   params: MediaQueryValues
@@ -48,7 +49,6 @@ export const buildShowEntry = async (
     throw new CustomError('Error creating Index Media', 400);
   }
   const indexId = indexMedia.id;
-
   const showEntry: Show | null = await Show.scope(scopeOptions).create(
     buildShow(showData, indexId),
     {
@@ -67,8 +67,14 @@ export const buildShowEntry = async (
     transaction: params.transaction,
   });
   await buildCreditsAndGenres(showEntry, showData, params.transaction);
-  await showEntry.reload({ ...findOptions });
-  return toPlain(showEntry);
+  await showEntry.reload({
+    ...findOptions,
+  });
+  const showResponse: ShowResponse | null = toPlain(showEntry);
+  if (showResponse?.seasons) {
+    showResponse.seasons = reorderSeasons(showResponse);
+  }
+  return showResponse;
 };
 
 export const fetchTMDBShow = async (
@@ -112,6 +118,7 @@ export const fetchTMDBShow = async (
 
 export const buildShow = (showData: ShowData, indexId: number): CreateShow => ({
   ...showData,
+  seasons: undefined,
   indexId,
   imdbId: showData.imdbId ? showData.imdbId : undefined,
   releaseDate: showData.releaseDate,

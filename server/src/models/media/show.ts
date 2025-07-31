@@ -19,6 +19,7 @@ import {
 } from '../../types/helper-types';
 import { toPlain } from '../../util/model-helpers';
 import { SeasonResponse } from '../../../../shared/types/models';
+import { reorderSeasons } from '../../../../shared/helpers/media-helper';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
@@ -43,7 +44,7 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
     //nested scopes. faster fetch + manual sort was deemed the better trade-off.
 
     if (media.seasons) {
-      media.seasons.sort((a, b) => a.index - b.index);
+      media.seasons = reorderSeasons(media);
     }
     return params.plainData ? toPlain<Show>(media) : media;
   }
