@@ -1,5 +1,3 @@
-import imageLinker from '../util/image-linker';
-
 import { DEF_CREATOR, DEF_SEASON, DEF_SHOW } from '../constants/media-defaults';
 import { SeasonData, AuthorData, ShowData } from '../types/media/media-types';
 import {
@@ -75,9 +73,9 @@ const createSeason = (
   episodeCount: season.episode_count,
   description: season.overview || '',
   image: season.poster_path
-    ? imageLinker.createPosterURL(season.poster_path)
+    ? season.poster_path
     : showPoster
-    ? imageLinker.createPosterURL(showPoster)
-    : DEF_SHOW.image,
+      ? showPoster
+      : DEF_SHOW.image,
   releaseDate: getAirDate(season.air_date),
 });

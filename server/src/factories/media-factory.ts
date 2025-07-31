@@ -1,4 +1,3 @@
-import imageLinker from '../util/image-linker';
 import {
   TMDBAcceptedJobs,
   TMDBCrewData,
@@ -44,9 +43,7 @@ export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   rating: tmdb.vote_average || 0,
   popularity: tmdb.popularity,
   voteCount: tmdb.vote_average > 0 ? 1 : 0,
-  image: tmdb.poster_path
-    ? imageLinker.createPosterURL(tmdb.poster_path)
-    : DEF_FILM.image,
+  image: tmdb.poster_path ? tmdb.poster_path : DEF_FILM.image,
 });
 
 export const createIndexForMediaBulk = (
@@ -102,9 +99,7 @@ export const validateCountries = (codes: string[]): CountryCode[] => {
 
 export const createStudio = (studio: TMDBStudioData): StudioData => ({
   ...DEF_STUDIO,
-  image: studio.logo_path
-    ? imageLinker.createStudioImageURL(studio.logo_path)
-    : DEF_STUDIO.image,
+  image: studio.logo_path ? studio.logo_path : DEF_STUDIO.image,
   country: validateCountry(studio.origin_country) || undefined,
   name: studio.name,
   tmdbId: studio.id,
@@ -139,9 +134,7 @@ export const createCrewMember = (
   crewMember: TMDBCrewData | TMDBCreatorData
 ): IndividualData => ({
   name: crewMember.name,
-  image: crewMember.profile_path
-    ? imageLinker.createAvatarURL(crewMember.profile_path)
-    : DEF_IMAGE_PERSON,
+  image: crewMember.profile_path ? crewMember.profile_path : DEF_IMAGE_PERSON,
   tmdbId: crewMember.id,
 });
 
@@ -189,9 +182,7 @@ export const createRole = (castMember: TMDBCastRoleData): RoleData => ({
   ...DEF_ROLE,
   name: castMember.name,
   order: castMember.order,
-  image: castMember.profile_path
-    ? imageLinker.createAvatarURL(castMember.profile_path)
-    : DEF_IMAGE_PERSON,
+  image: castMember.profile_path ? castMember.profile_path : DEF_IMAGE_PERSON,
   tmdbId: castMember.id,
   character: castMember.character ? [castMember.character] : [''],
   roleType: RoleType.Main,

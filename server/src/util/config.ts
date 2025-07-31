@@ -1,6 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
-import { TMDB_API_URL, TMDB_MEDIA_URL } from '../constants/url-constants';
+import { TMDB_API_URL } from '../constants/url-constants';
 dotenv.config();
 
 const POSTGRES_URI: string = process.env.LOCAL_POSTGRES_URI || '';
@@ -30,4 +30,4 @@ const tmdbAPI = axios.create({
   },
 });
 
-export { POSTGRES_URI, PORT, tmdbAPI, TMDB_MEDIA_URL, API_SECRET };
+export { POSTGRES_URI, PORT, tmdbAPI, API_SECRET };

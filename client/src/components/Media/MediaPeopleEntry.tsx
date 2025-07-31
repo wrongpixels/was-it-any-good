@@ -54,9 +54,9 @@ const MediaPeopleEntry = ({
                 className="w-26 rounded h-auto shadow ring-1 ring-gray-300"
                 loading="lazy"
               />
-              <div className="w-28 flex flex-col items-center text-center py-1.5 flex-grow">
+              <div className="w-28 flex flex-col items-center text-center pt-1.5 pb-1 flex-grow">
                 <div className="flex-grow flex items-center justify-center px-0.5">
-                  <div className="flex flex-col items-center gap-1.5">
+                  <div className="flex flex-col items-center gap-1">
                     <div
                       className="font-medium text-sm leading-tight break-words line-clamp-2"
                       title={c.person.name}
