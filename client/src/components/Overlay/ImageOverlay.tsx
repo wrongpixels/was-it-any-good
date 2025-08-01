@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import imageLinker from '../../../../shared/util/image-linker';
 import { userOverlay } from '../../context/OverlayProvider';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
+import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
+import { TMDB_URL } from '../../../../shared/constants/url-constants';
 
 const ImageOverlay = () => {
   const { overlay, clean } = userOverlay();
@@ -40,7 +42,7 @@ const ImageOverlay = () => {
         onClick={clean}
       >
         <span
-          className={`bg-gray-100 border-gray-100 border-14 rounded drop-shadow-xl/60 cursor-default 
+          className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
             pointer-events-auto w-auto transition-all duration-350
             ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
         >
@@ -48,8 +50,12 @@ const ImageOverlay = () => {
             key={overlay.image}
             variant={ImageVariant.inline}
             src={imageLinker.getFullSizeImage(overlay.image)}
+            className="rounded-md"
           />
-          <span>Image source:</span>
+          <span className="text-xs flex flex-row text-gray-500 font-semibold pl-3 items-center justify-baseline mt-3 gap-2 pointer-events-auto">
+            <>{'Image Source:'}</>
+            <TMDBLogoHor height={12} url={TMDB_URL} />
+          </span>
         </span>
       </span>
     </div>

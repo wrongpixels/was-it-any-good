@@ -4,9 +4,9 @@ import { routerPaths } from '../../utils/url-helper';
 import { MediaType } from '../../../../shared/types/media';
 import { OrderBy } from '../../../../shared/types/browse';
 import { Link } from 'react-router-dom';
-import FilmIcon from '../comon/icons/FilmIcon';
-import ShowIcon from '../../common/icons/ShowIcon';
-import StarIcon from '../Rating/StarIcon';
+import FilmIcon from '../common/icons/FilmIcon';
+import ShowIcon from '../common/icons/ShowIcon';
+import StarIcon from '../common/icons/Rating/StarIcon';
 import TrendingIcon from '../common/icons/TrendingIcon';
 import { styles } from '../../constants/tailwind-styles';
 
@@ -68,7 +68,7 @@ const RankingBar = (): JSX.Element => {
         >
           <Link
             to={li.url}
-            className="flex flex-row gap-0.5 items-center text-gray-600"
+            className="flex flex-row gap-1.5 items-center text-gray-600"
             title={li.title}
           >
             {li.icon || null}

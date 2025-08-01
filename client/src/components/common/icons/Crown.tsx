@@ -1,7 +1,7 @@
 import { OptIconProps } from '../../../types/common-props-types';
 import SVG from '../SVG';
 
-const CrownIcon = ({ width = 18, height = 18, ...rest }: OptIconProps) => (
+const CrownIcon = ({ width, height = 18, ...rest }: OptIconProps) => (
   <span {...rest}>
     <SVG
       xmlns="http://www.w3.org/2000/svg"

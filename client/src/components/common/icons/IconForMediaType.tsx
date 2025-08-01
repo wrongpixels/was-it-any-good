@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { MediaType } from '../../../../../shared/types/media';
-import FilmIcon from '../../comon/icons/FilmIcon';
-import ShowIcon from '../../../common/icons/ShowIcon';
+import FilmIcon from './FilmIcon';
+import ShowIcon from './ShowIcon';
 import { MediaTypeProps } from '../../../types/common-props-types';
 
 const IconForMediaType = ({

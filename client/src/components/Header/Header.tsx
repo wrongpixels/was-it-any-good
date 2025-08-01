@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import HeaderLogin from './HeaderLogin';
-import StarIcon from '../Rating/StarIcon';
+import StarIcon from '../common/icons/Rating/StarIcon';
 import SearchField from './Search/SearchField';
 import { styles } from '../../constants/tailwind-styles';
 

@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { styles } from '../../constants/tailwind-styles';
+import { styles } from '../../../../constants/tailwind-styles';
 
 interface StarIconProps {
   readonly width?: number;

@@ -1,6 +1,6 @@
 import { OptIconProps } from '../../../types/common-props-types';
 
-const TrendingIcon = ({ width = 18, height = 18, ...rest }: OptIconProps) => (
+const TrendingIcon = ({ width, height = 18, ...rest }: OptIconProps) => (
   <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"

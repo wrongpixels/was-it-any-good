@@ -1,4 +1,4 @@
-import StarIcon from './StarIcon';
+import StarIcon from '../common/icons/Rating/StarIcon';
 import {
   RATING_DELAYS,
   RATING_DURATIONS,
