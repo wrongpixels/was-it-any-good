@@ -1,10 +1,11 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../SVG';
 
-const TMDBLogoHor = ({ width, height, ...rest }: OptIconProps) => (
+const TMDBLogoHor = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   <span {...rest}>
     <SVG
-      url={rest.url}
+      url={url}
+      newTab={newTab}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 273.42 35.52"
       width={width}

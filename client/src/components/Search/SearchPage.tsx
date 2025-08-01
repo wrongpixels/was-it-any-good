@@ -1,27 +1,17 @@
-import {
-  SetURLSearchParams,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
 import { JSX, useEffect } from 'react';
 import { setPageInfo } from '../../utils/page-info-setter';
 import SpinnerPage from '../common/status/SpinnerPage';
-import {
-  isQueryActiveInUrl,
-  normalizeQueryTypeParams,
-  routerPaths,
-} from '../../utils/url-helper';
+import { routerPaths } from '../../utils/url-helper';
 import PageResults from './PageResults';
-import UrlQueryBuilder from '../../utils/url-query-builder';
 import SearchInputField from './SearchInput';
 import { SearchType } from '../../../../shared/types/search';
-import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
+import { ParamStructure } from '../../utils/search-param-manager';
 import { capitalize } from '../../utils/common-format-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
-import { QueryOpts } from '../../types/search-browse-types';
+import useUrlQueryManager from '../../hooks/use-url-query-manager';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -29,83 +19,41 @@ import { QueryOpts } from '../../types/search-browse-types';
 //or the searchTerm in the url changes.
 
 const SearchPage = (): JSX.Element | null => {
-  const navigateTo = useNavigate();
+  //a hook shared with BrowsePage to interpret the active url as states
+  //and navigate to new queries and result pages based on active parameters
+  const {
+    searchTerm,
+    currentQuery,
+    navigatePages,
+    navigateToPage,
+    navigateToNewTerm,
+    currentPage,
+    queryTypeManager,
+  } = useUrlQueryManager(routerPaths.search.query());
+
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
-  const searchUrl: UrlQueryBuilder = new UrlQueryBuilder();
-
-  const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  const currentPage: number = Number(parameters.get('page'));
-  const activeSearchTypeParams: string[] = normalizeQueryTypeParams(
-    parameters.getAll('m')
-  );
-  const searchTerm: string | null = parameters.get('q');
-
-  const typeFilters = new ParamManager(
-    [SearchType.Film, SearchType.Show, SearchType.Person],
-    activeSearchTypeParams
-  );
-  const buildQuery = ({ newTerm: newQuery, newPage }: QueryOpts) => {
-    console.log(newPage);
-    const url = searchUrl
-      .byTerm(newQuery || searchTerm)
-      .byTypes(typeFilters.getAppliedNames())
-      .toPage(newPage)
-      .toString();
-
-    console.log(url);
-    return url;
-  };
-
-  const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
-    navigateTo(routerPaths.search.byQuery(buildQuery({ newPage: page })), {
-      replace,
-    });
-  const navigateToNewQuery = (
-    newQuery: string | undefined,
-    replace: boolean = false
-  ) =>
-    navigateTo(routerPaths.search.byQuery(buildQuery({ newTerm: newQuery })), {
-      replace,
-    });
-
-  const currentQuery: string = buildQuery({ newPage: currentPage });
 
   const { data: searchResults, isLoading } = useSearchQuery(
     currentQuery || '',
     searchTerm
   );
-  const navigatePage = (movement: number) => {
-    if (!searchResults) {
-      return;
+  //to avoid setting a url bigger than totalPages or less than 1
+  //this is also protected in the backend
+  useEffect(() => {
+    if (
+      currentPage <= 0 ||
+      (searchResults && searchResults.totalPages < Number(currentPage))
+    ) {
+      navigateToPage(searchResults?.totalPages || 1);
     }
-    const nextPosition: number = (currentPage || 1) + movement;
-    const nextPage: number = Math.min(
-      Math.max(1, nextPosition),
-      searchResults.totalPages
-    );
-    navigateToCurrentQuery(false, nextPage);
-  };
+  }, [searchResults]);
+
   setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
-
-  //to fix unmatched query parameters on first render
-  useEffect(() => {
-    if (searchTerm && !isQueryActiveInUrl(currentQuery)) {
-      console.log(currentQuery);
-      // navigateToCurrentQuery(true), [searchTerm];
-    }
-  });
-
-  useEffect(() => {
-    if (searchResults && searchResults.totalPages < Number(currentPage)) {
-      console.log(currentPage);
-      navigateToCurrentQuery(true, searchResults.totalPages), [searchResults];
-    }
-  });
 
   const toggleParam = (param: ParamStructure) => {
     let alertMessage: string = '';
-    if (param.applied && typeFilters.getApplied().length === 1) {
+    if (param.applied && queryTypeManager.getApplied().length === 1) {
       alertMessage = 'Select at least one!';
     }
     if (param.name === SearchType.Person) {
@@ -123,7 +71,7 @@ const SearchPage = (): JSX.Element | null => {
       });
       return;
     }
-    typeFilters.toggleParam(param);
+    queryTypeManager.toggleParam(param);
     console.log('refresh', param);
     handleSearch(searchTerm);
   };
@@ -140,7 +88,7 @@ const SearchPage = (): JSX.Element | null => {
       });
       return;
     }
-    navigateToNewQuery(newSearch || undefined, newSearch === searchTerm);
+    navigateToNewTerm(newSearch || undefined, newSearch === searchTerm);
   };
 
   return (
@@ -152,7 +100,7 @@ const SearchPage = (): JSX.Element | null => {
       <SearchParams
         ref={anchorRef}
         toggleParam={toggleParam}
-        typeFilters={typeFilters}
+        typeFilters={queryTypeManager}
       />
       <span className="pt-1">
         {isLoading && (
@@ -165,7 +113,7 @@ const SearchPage = (): JSX.Element | null => {
           <PageResults
             results={searchResults}
             term={searchTerm}
-            navigatePage={navigatePage}
+            navigatePages={navigatePages}
           />
         )}
       </span>

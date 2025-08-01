@@ -1,5 +1,5 @@
 //a hook that automatically reads the active url queries
-//and provides ways to handle them
+//and provides ways to handle them and navigate them
 import {
   useNavigate,
   SetURLSearchParams,
@@ -27,7 +27,6 @@ const useUrlQueryManager = (basePath: string) => {
   const currentPage: number = Number(parameters.get('page'));
   const queryType: string[] = normalizeQueryTypeParams(parameters.getAll('m'));
   const queryTypeManager = new ParamManager(searchTypes, queryType);
-
   const genres: string[] = parameters.getAll('g');
   const countries: string[] = parameters.getAll('c');
   const year = parameters.get('y');
@@ -38,7 +37,7 @@ const useUrlQueryManager = (basePath: string) => {
 
   //the function that generates a valid query from params
   const buildQuery = ({ newTerm: newQuery, newPage }: QueryOpts) => {
-    const url = queryBuilder
+    const url: string = queryBuilder
       .byTerm(newQuery || searchTerm)
       .byTypes(queryTypeManager.getAppliedNames())
       .byGenres(genres)
@@ -70,23 +69,27 @@ const useUrlQueryManager = (basePath: string) => {
       replace,
     });
 
-  //to move any number of pages in any direction (-2, 1...)
-  const navigatePage = (movement: number) => {
-    const nextPosition: number = (currentPage || 1) + movement;
-    /*const nextPage: number = Math.min(
-      Math.max(1, nextPosition),
-      browseResults.totalPages
-    );*/
-    navigateToCurrentQuery(false, nextPosition);
+  //to go to a specific page
+  const navigateToPage = (page: number) => {
+    navigateToCurrentQuery(false, page);
   };
+
+  //to move pages in any direction (-2, 1...)
+  const navigatePages = (movement: number) => {
+    const nextPosition: number = (currentPage || 1) + movement;
+    navigateToPage(nextPosition);
+  };
+
+  //To avoid setting a page url bigger than our results
 
   return {
     searchTerm,
     currentQuery,
+    currentPage,
     queryTypeManager,
-    navigateToCurrentQuery,
     navigateToNewTerm,
-    navigatePage,
+    navigateToPage,
+    navigatePages,
   };
 };
 

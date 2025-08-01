@@ -11,7 +11,7 @@ import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 
 interface PageResultsProps {
   results: IndexMediaResponse;
-  navigatePage: (movement: number) => void;
+  navigatePages: (movement: number) => void;
   term?: string;
   title?: string;
   showBadge?: boolean;
@@ -20,7 +20,7 @@ interface PageResultsProps {
 const PageResults = ({
   results,
   term,
-  navigatePage,
+  navigatePages,
   showBadge,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
@@ -50,7 +50,7 @@ const PageResults = ({
             <DisabledDiv disabled={results.page === 1}>
               <Button
                 className={`w-8 ${styles.animations.buttonLeft}`}
-                onClick={() => navigatePage(-1)}
+                onClick={() => navigatePages(-1)}
               >
                 ⏴
               </Button>
@@ -58,7 +58,7 @@ const PageResults = ({
             <DisabledDiv disabled={results.page >= results.totalPages}>
               <Button
                 className={`w-8 ${styles.animations.buttonRight}`}
-                onClick={() => navigatePage(1)}
+                onClick={() => navigatePages(1)}
               >
                 ⏵
               </Button>

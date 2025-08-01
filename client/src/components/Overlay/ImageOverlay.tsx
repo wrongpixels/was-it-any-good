@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import imageLinker from '../../../../shared/util/image-linker';
 import { userOverlay } from '../../context/OverlayProvider';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
@@ -12,9 +12,28 @@ const ImageOverlay = () => {
   const { overlay, clean } = userOverlay();
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const hideTimerRef = useRef<number>(null);
+  const hideTimerRef = useRef<number | null>(null);
 
-  useEventBlocker(overlay.active, ['wheel', 'touchmove']);
+  useEventBlocker(overlay.active, ['wheel', 'touchmove', 'keydown']);
+
+  const closeWithKey = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === ' ') {
+        clean();
+      }
+      e.preventDefault();
+    },
+    [clean]
+  );
+
+  useEffect(() => {
+    if (overlay.active) {
+      window.addEventListener('keydown', closeWithKey);
+    }
+    return () => {
+      window.removeEventListener('keydown', closeWithKey);
+    };
+  }, [overlay.active, closeWithKey]);
 
   useEffect(() => {
     if (overlay.active) {
@@ -68,7 +87,12 @@ const ImageOverlay = () => {
           />
           <span className="text-xs flex flex-row text-gray-500 font-semibold pl-3 items-center justify-baseline mt-3 gap-2 pointer-events-auto">
             <>{'Image Source:'}</>
-            <TMDBLogoHor height={12} url={TMDB_URL} />
+            <TMDBLogoHor
+              height={12}
+              url={TMDB_URL}
+              newTab={true}
+              title={'Open TMDB in a new tab'}
+            />
           </span>
         </span>
       </span>

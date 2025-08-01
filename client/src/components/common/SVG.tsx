@@ -5,15 +5,21 @@ import { Link } from 'react-router-dom';
 
 interface SVGProps extends React.SVGProps<SVGSVGElement> {
   url?: string;
+  newTab?: boolean;
 }
 
-const SVG = ({ url, ...rest }: SVGProps): JSX.Element => {
+const SVG = ({ url, newTab, ...rest }: SVGProps): JSX.Element => {
   const svgContent = (): JSX.Element => <svg {...rest} />;
 
   return (
     <>
       {(!!url && (
-        <Link to={url} className="no-underline text-inherit cursor-pointer">
+        <Link
+          to={url}
+          className="no-underline text-inherit cursor-pointer"
+          target={newTab ? '_blank' : ''}
+          rel={newTab ? 'noopener noreferrer' : ''}
+        >
           {svgContent()}
         </Link>
       )) ||

@@ -1,3 +1,5 @@
+//a hook to disable events by name globally
+//the 'isBlocked' props boolean controls if the events are blocked or not
 import { useEffect } from 'react';
 
 const blockEvent = (e: Event) => {

@@ -25,4 +25,5 @@ export interface OptIconProps extends OptClassNameProps {
   width?: number;
   height?: number;
   url?: string;
+  newTab?: boolean;
 }
