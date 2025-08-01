@@ -56,20 +56,26 @@ export const apiPaths = {
 export const routerPaths = {
   films: {
     base: '/film',
+    idParam: () => `${routerPaths.films.base}/:id`,
+    TMDBIdParam: () => `$/tmdb/${routerPaths.films.base}/:id`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
   },
   shows: {
     base: '/show',
+    idParam: () => `${routerPaths.shows.base}/:id`,
+    TMDBIdParam: () => `$/tmdb/${routerPaths.shows.base}/:id`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
   },
   people: {
     base: '/person',
+    withParam: () => `${routerPaths.people.base}/:id`,
     byId: (id: number | string) => `${routerPaths.people.base}/${id}`,
   },
   users: {
     base: '/user',
+    withParam: () => `${routerPaths.users.base}/:id`,
     byId: (id: number | string) => `${routerPaths.users.base}/${id}`,
   },
   search: {

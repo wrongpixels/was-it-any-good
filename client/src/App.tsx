@@ -39,8 +39,8 @@ const AppBody = (): JSX.Element => {
   return (
     <Routes>
       <Route path="/" element={null} />
-      <Route path="/search" element={<SearchPage />} />
-      <Route path="/browse" element={<BrowsePage />} />
+      <Route path={routerPaths.search.base} element={<SearchPage />} />
+      <Route path={routerPaths.browse.base} element={<BrowsePage />} />
       <Route
         path={routerPaths.popular.multi.base()}
         element={
@@ -70,21 +70,21 @@ const AppBody = (): JSX.Element => {
       />
 
       <Route
-        path="/film/:id"
+        path={routerPaths.films.idParam()}
         element={<MediaPage key="local-id" mediaType={MediaType.Film} />}
       />
       <Route
-        path="/show/:id"
+        path={routerPaths.shows.idParam()}
         element={<MediaPage key="local-id" mediaType={MediaType.Show} />}
       />
       <Route
-        path="/tmdb/film/:id"
+        path={routerPaths.films.TMDBIdParam()}
         element={
           <MediaPage key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
         }
       />
       <Route
-        path="/tmdb/show/:id"
+        path={routerPaths.shows.TMDBIdParam()}
         element={
           <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
         }
