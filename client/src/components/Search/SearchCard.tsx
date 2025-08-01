@@ -49,7 +49,7 @@ const SearchCard = ({
         />
         {showBadge && <IndexBadge index={index} />}
       </span>
-      <div className="flex flex-col w-full pl-3.5 my-2 text-gray-600">
+      <div className="flex flex-col w-full pl-3 my-2 text-gray-600">
         <span className="text-gray-600 leading-5 line-clamp-3">
           {media.name}
         </span>
@@ -57,8 +57,8 @@ const SearchCard = ({
           <span className="font-semibold text-gray-400">{mediaDisplay}</span>
           {media.year ? `(${media.year})` : ''}
           <CountryFlags
-            className="mb-1 ml-1"
-            countryCodes={media.country ? [media.country[0]] : []}
+            className="ml-1 gap-1 mb-0.5"
+            countryCodes={media.country ? media.country.slice(0, 2) : []}
             useLink={false}
           />
           {/* Space for add to list etc*/}
