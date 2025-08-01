@@ -7,6 +7,7 @@ import AuthProvider from './context/AuthProvider.tsx';
 import { setupAxiosInterceptors } from './utils/axios-config.ts';
 import { NotificationProvider } from './context/NotificationProvider.tsx';
 import { AnimationProvider } from './context/AnimationProvider.tsx';
+import OverlayProvider from './context/OverlayProvider.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,7 +31,9 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <AnimationProvider>
           <NotificationProvider>
-            <App />
+            <OverlayProvider>
+              <App />
+            </OverlayProvider>
           </NotificationProvider>
         </AnimationProvider>
       </AuthProvider>

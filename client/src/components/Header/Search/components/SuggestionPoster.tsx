@@ -7,6 +7,7 @@ import { getMediaAverageRating } from '../../../../utils/ratings-helper';
 import { styles } from '../../../../constants/tailwind-styles';
 import { Link } from 'react-router-dom';
 import { urlFromIndexMedia } from '../../../../utils/url-helper';
+import imageLinker from '../../../../../../shared/util/image-linker';
 
 interface SuggestionPoster {
   media?: IndexMediaData | null;
@@ -24,7 +25,7 @@ const SuggestionPoster = ({ media }: SuggestionPoster): JSX.Element | null => {
       className={`${styles.poster.suggestions}`}
     >
       <LazyImage
-        src={media.image}
+        src={imageLinker.getPosterImage(media.image)}
         title={media.name}
         alt={media.name}
         className={`${styles.shadow.subtle} ring-1 ring-gray-200`}

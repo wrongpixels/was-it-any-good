@@ -15,6 +15,7 @@ import LazyImage, { AspectRatio } from '../common/LazyImage';
 import DisplayRating from '../Rating/DisplayRating';
 import CountryFlags from '../Media/MediaCountryFlags';
 import IndexBadge from './Browse/IndexBadge';
+import imageLinker from '../../../../shared/util/image-linker';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -42,7 +43,7 @@ const SearchCard = ({
       <span className="w-50 h-auto relative">
         <LazyImage
           aspect={AspectRatio.poster}
-          src={media.image}
+          src={imageLinker.getPosterImage(media.image)}
           alt={media.name}
           className={'drop-shadow ring-1 ring-gray-300'}
         />

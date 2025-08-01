@@ -10,10 +10,12 @@ import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
 import RankingBar from './components/NavBar/RankingBar';
+import ImageOverlay from './components/Overlay/ImageOverlay';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
     <Router>
+      <ImageOverlay />
       <Header />
       <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
         <RankingBar />

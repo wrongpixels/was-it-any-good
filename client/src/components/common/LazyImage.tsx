@@ -37,6 +37,7 @@ const LazyImage = ({
         )}
         <img
           {...props}
+          key={props.src}
           loading="lazy"
           className={mergeClassnames('rounded-xs', className)}
           onLoad={() => setIsLoading(false)}
