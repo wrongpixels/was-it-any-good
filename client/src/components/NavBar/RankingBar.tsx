@@ -4,10 +4,10 @@ import { routerPaths } from '../../utils/url-helper';
 import { MediaType } from '../../../../shared/types/media';
 import { OrderBy } from '../../../../shared/types/browse';
 import { Link } from 'react-router-dom';
-import FilmIcon from '../Header/Search/icons/FilmIcon';
-import ShowIcon from '../Header/Search/icons/ShowIcon';
+import FilmIcon from '../comon/icons/FilmIcon';
+import ShowIcon from '../../common/icons/ShowIcon';
 import StarIcon from '../Rating/StarIcon';
-import TrendingIcon from '../Header/Search/icons/TrendingIcon';
+import TrendingIcon from '../common/icons/TrendingIcon';
 import { styles } from '../../constants/tailwind-styles';
 
 interface LinkInfo {

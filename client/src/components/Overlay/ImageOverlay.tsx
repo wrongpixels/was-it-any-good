@@ -34,19 +34,23 @@ const ImageOverlay = () => {
         ${isVisible ? 'opacity-100 bg-cyan-950/80' : 'opacity-0 pointer-events-none'}`}
     >
       <span
-        className={`flex flex-1 h-full items-center align-middle justify-center cursor-pointer
+        className={`flex flex-col h-full items-center align-middle justify-center cursor-pointer
           transition-transform duration-250 ease-in-out
           ${isVisible ? 'scale-100' : 'scale-85'}`}
         onClick={clean}
       >
-        <LazyImage
-          key={overlay.image}
-          className={`border-gray-100 border-14 rounded drop-shadow-xl/60 cursor-default 
+        <span
+          className={`bg-gray-100 border-gray-100 border-14 rounded drop-shadow-xl/60 cursor-default 
             pointer-events-auto w-auto transition-all duration-350
             ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
-          variant={ImageVariant.inline}
-          src={imageLinker.getFullSizeImage(overlay.image)}
-        />
+        >
+          <LazyImage
+            key={overlay.image}
+            variant={ImageVariant.inline}
+            src={imageLinker.getFullSizeImage(overlay.image)}
+          />
+          <span>Image source:</span>
+        </span>
       </span>
     </div>
   );

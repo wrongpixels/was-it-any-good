@@ -24,4 +24,5 @@ export interface OptIconProps extends OptClassNameProps {
   condition?: boolean;
   width?: number;
   height?: number;
+  url?: string;
 }

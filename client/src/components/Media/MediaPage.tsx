@@ -97,7 +97,7 @@ const MediaPage = ({
             ) : (
               <div>
                 <CrewEntrySection
-                  title="Direction and Creation"
+                  title="Creation and Direction"
                   crew={media.mergedCrew || DEF_CREW_TV}
                   filterRoles={
                     media.mergedCrew

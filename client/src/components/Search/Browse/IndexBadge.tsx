@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { OptClassNameProps } from '../../../types/common-props-types';
-import CrownIcon from '../../Header/Search/icons/Crown';
+import CrownIcon from '../../common/icons/Crown';
 import { styles } from '../../../constants/tailwind-styles';
 
 interface IndexBadgeProps extends OptClassNameProps {

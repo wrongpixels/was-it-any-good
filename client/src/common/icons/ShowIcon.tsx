@@ -1,4 +1,4 @@
-import { OptIconProps } from '../../../../types/common-props-types';
+import { OptIconProps } from '../../types/common-props-types';
 
 const ShowIcon = ({ width = 20, height = 20, ...rest }: OptIconProps) => (
   <span {...rest}>
