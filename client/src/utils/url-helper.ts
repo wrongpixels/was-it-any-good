@@ -57,14 +57,14 @@ export const routerPaths = {
   films: {
     base: '/film',
     idParam: () => `${routerPaths.films.base}/:id`,
-    TMDBIdParam: () => `$/tmdb/${routerPaths.films.base}/:id`,
+    TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
   },
   shows: {
     base: '/show',
     idParam: () => `${routerPaths.shows.base}/:id`,
-    TMDBIdParam: () => `$/tmdb/${routerPaths.shows.base}/:id`,
+    TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
   },

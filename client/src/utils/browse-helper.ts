@@ -6,7 +6,7 @@ export const getBrowseTitle = (
   order?: OrderBy
 ): string => {
   if (!order || !searchType) {
-    return 'Browse Media';
+    return 'Media Browser';
   }
 
   const relationship: string =
