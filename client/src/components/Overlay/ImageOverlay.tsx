@@ -1,29 +1,43 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import imageLinker from '../../../../shared/util/image-linker';
 import { userOverlay } from '../../context/OverlayProvider';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
 import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
+import useEventBlocker from '../../hooks/use-event-blocker';
+
+const ANIM_DURATION: number = 300;
 
 const ImageOverlay = () => {
   const { overlay, clean } = userOverlay();
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const hideTimerRef = useRef<number>(null);
+
+  useEventBlocker(overlay.active, ['wheel', 'touchmove']);
 
   useEffect(() => {
     if (overlay.active) {
       setIsMounted(true);
-      const showTimer = setTimeout(() => {
-        setIsVisible(true);
-      }, 20);
-      return () => clearTimeout(showTimer);
-    } else {
-      setIsVisible(false);
-      const hideTimer = setTimeout(() => {
-        setIsMounted(false);
-      }, 500);
-      return () => clearTimeout(hideTimer);
+      const animationFrame = requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        })
+      );
+
+      return () => {
+        cancelAnimationFrame(animationFrame);
+        setIsVisible(false);
+        hideTimerRef.current = window.setTimeout(() => {
+          setIsMounted(false);
+        }, ANIM_DURATION);
+      };
     }
+    return () => {
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
+    };
   }, [overlay.active]);
 
   if (!isMounted) {
@@ -43,7 +57,7 @@ const ImageOverlay = () => {
       >
         <span
           className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
-            pointer-events-auto w-auto transition-all duration-350
+            pointer-events-auto w-auto transition-all duration-300
             ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
         >
           <LazyImage
