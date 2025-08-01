@@ -37,61 +37,66 @@ const AppBody = (): JSX.Element => {
     return <SigningInPage />;
   }
   return (
-    <Routes>
-      <Route path="/" element={null} />
-      <Route path={routerPaths.search.base} element={<SearchPage />} />
-      <Route path={routerPaths.browse.base} element={<BrowsePage />} />
-      <Route
-        path={routerPaths.popular.multi.base()}
-        element={
-          <BrowsePage
-            searchType={SearchType.Multi}
-            orderBy={OrderBy.Popularity}
-          />
-        }
-      />
-      <Route
-        path={routerPaths.tops.multi.base()}
-        element={
-          <BrowsePage searchType={SearchType.Multi} orderBy={OrderBy.Rating} />
-        }
-      />
-      <Route
-        path={routerPaths.tops.films.base()}
-        element={
-          <BrowsePage searchType={SearchType.Film} orderBy={OrderBy.Rating} />
-        }
-      />
-      <Route
-        path={routerPaths.tops.shows.base()}
-        element={
-          <BrowsePage searchType={SearchType.Show} orderBy={OrderBy.Rating} />
-        }
-      />
+    <div className="mx-4 mb-4">
+      <Routes>
+        <Route path="/" element={null} />
+        <Route path={routerPaths.search.base} element={<SearchPage />} />
+        <Route path={routerPaths.browse.base} element={<BrowsePage />} />
+        <Route
+          path={routerPaths.popular.multi.base()}
+          element={
+            <BrowsePage
+              searchType={SearchType.Multi}
+              orderBy={OrderBy.Popularity}
+            />
+          }
+        />
+        <Route
+          path={routerPaths.tops.multi.base()}
+          element={
+            <BrowsePage
+              searchType={SearchType.Multi}
+              orderBy={OrderBy.Rating}
+            />
+          }
+        />
+        <Route
+          path={routerPaths.tops.films.base()}
+          element={
+            <BrowsePage searchType={SearchType.Film} orderBy={OrderBy.Rating} />
+          }
+        />
+        <Route
+          path={routerPaths.tops.shows.base()}
+          element={
+            <BrowsePage searchType={SearchType.Show} orderBy={OrderBy.Rating} />
+          }
+        />
 
-      <Route
-        path={routerPaths.films.idParam()}
-        element={<MediaPage key="local-id" mediaType={MediaType.Film} />}
-      />
-      <Route
-        path={routerPaths.shows.idParam()}
-        element={<MediaPage key="local-id" mediaType={MediaType.Show} />}
-      />
-      <Route
-        path={routerPaths.films.TMDBIdParam()}
-        element={
-          <MediaPage key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
-        }
-      />
-      <Route
-        path={routerPaths.shows.TMDBIdParam()}
-        element={
-          <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
-        }
-      />
-      <Route path="/person/:id" element={<PersonPage />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route
+          path={routerPaths.films.idParam()}
+          element={<MediaPage key="local-id" mediaType={MediaType.Film} />}
+        />
+        <Route
+          path={routerPaths.shows.idParam()}
+          element={<MediaPage key="local-id" mediaType={MediaType.Show} />}
+        />
+        <Route
+          path={routerPaths.films.TMDBIdParam()}
+          element={
+            <MediaPage key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
+          }
+        />
+        <Route
+          path={routerPaths.shows.TMDBIdParam()}
+          element={
+            <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
+          }
+        />
+        <Route path="/person/:id" element={<PersonPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 };
 

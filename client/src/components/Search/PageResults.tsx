@@ -37,7 +37,7 @@ const PageResults = ({
   const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
 
   return (
-    <div className="flex flex-col font-medium gap-5 mx-6">
+    <div className="flex flex-col font-medium gap-5">
       <div className="relative w-full h-8 flex items-center">
         <span className="w-full text-center text-lg">
           {results.totalResults || 'No'} results <>{term && searchTerm()}</>
