@@ -4,6 +4,7 @@ import { API_BASE } from '../constants/url-constants';
 import { IndexMediaData } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
+import { CountryCode } from '../../../shared/types/countries';
 
 export const apiPaths = {
   films: {
@@ -127,6 +128,14 @@ export const routerPaths = {
       withQuery: (query: string) =>
         `${routerPaths.popular.multi.query()}${query}`,
     },
+  },
+};
+
+export const mediaPaths = {
+  countries: {
+    base: '/flags',
+    byCode: (code: string) =>
+      `${mediaPaths.countries.base}/${code.toLowerCase()}.svg`,
   },
 };
 

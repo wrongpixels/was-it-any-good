@@ -11,11 +11,11 @@ const colors = (variant: string): string => {
   switch (variant) {
     case 'toolbar':
     case 'secondary':
-      return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
+      return 'bg-blue-400 hover:bg-blue-300 ring-gray-300 ring-1 text-white';
     case 'toolbar':
-      return 'bg-blue-400 hover:bg-blue-300 border-gray-300 border-1 text-white';
+      return 'bg-blue-400 hover:bg-blue-300 ring-gray-300 ring-1 text-white';
     default:
-      return 'bg-starbutton hover:bg-starbrighter border-gray-300 border-1 text-white';
+      return 'relative bg-starbutton hover:bg-starbrighter border-1 border-black/15 text-white before:absolute before:inset-x-0.5 before:top-0 before:h-px before:bg-white/30 mx-0.25';
   }
 };
 
@@ -33,6 +33,7 @@ const sizes = (size: string): string => {
       return 'text-base h-8 min-h-8 flex items-center';
   }
 };
+
 const Button = ({
   children,
   variant = 'primary',
@@ -49,7 +50,7 @@ const Button = ({
       type="button"
       {...props}
       className={mergeClassnames(
-        `${colors(variant)} ${sizes(size)} rounded px-2 shadow-sm font-medium leading-none`,
+        `${colors(variant)} ${sizes(size)} rounded-sm px-2 drop-shadow-sm/20 font-medium leading-none`,
         className
       )}
     >

@@ -31,7 +31,7 @@ const LazyImage = ({
     return (
       <div className="relative flex items-center">
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded">
             <LoadingSpinner className="w-4" />
           </div>
         )}

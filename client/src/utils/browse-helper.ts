@@ -11,9 +11,9 @@ export const getBrowseTitle = (
 
   const relationship: string =
     order === OrderBy.Popularity
-      ? 'Most popular'
+      ? 'Most Popular'
       : order === OrderBy.Rating
-        ? 'Top rated'
+        ? 'Top Rated'
         : order === OrderBy.Year
           ? 'by Year'
           : 'by Title';

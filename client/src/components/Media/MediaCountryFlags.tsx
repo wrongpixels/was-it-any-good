@@ -1,17 +1,16 @@
 import { PropsWithChildren, useMemo } from 'react';
-import Country, { CountryCode } from '../../../../shared/types/countries';
+import Country, {
+  CountryCode,
+  CountryValues,
+} from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { FLAG_URL } from '../../constants/url-constants';
-import {
-  MediaTypeProps,
-  OptClassNameProps,
-} from '../../types/common-props-types';
+import { MediaTypeProps } from '../../types/common-props-types';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import { Link } from 'react-router-dom';
-import LazyImage, { ImageVariant } from '../common/LazyImage';
-import { styles } from '../../constants/tailwind-styles';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 import { routerPaths } from '../../utils/url-helper';
+import CountryFlag from '../common/CountryFlag';
 
 interface CountryFlagWrapperProps extends PropsWithChildren {
   to: string;
@@ -35,17 +34,6 @@ interface CountryFlagsProps extends MediaTypeProps {
   useLink?: boolean;
 }
 
-interface CountryFlagIconProps extends OptClassNameProps {
-  country: CountryValues;
-  useLink?: boolean;
-}
-
-interface CountryValues {
-  name: string;
-  image: string;
-  searchUrl: string;
-}
-
 const buildCountries = (
   codes: CountryCode[],
   mediaType?: MediaType
@@ -56,6 +44,7 @@ const buildCountries = (
     if (c !== 'UNKNOWN') {
       countries.push({
         name: Country[c],
+        code: c,
         image: `${FLAG_URL}/${c.toLowerCase()}.png`,
         searchUrl: routerPaths.browse.byQuery(
           urlBuilder.byCountry(c).byMediaType(mediaType).toString()
@@ -93,21 +82,11 @@ const CountryFlags = ({
     >
       {showCountries.map((c: CountryValues) => (
         <CountryFlagWrapper key={c.name} to={c.searchUrl} useLink={useLink}>
-          <CountryFlagIcon country={c} useLink={useLink} />
+          <CountryFlag country={c} useLink={useLink} />
         </CountryFlagWrapper>
       ))}
     </span>
   );
 };
-
-const CountryFlagIcon = ({ country, useLink }: CountryFlagIconProps) => (
-  <LazyImage
-    src={country.image}
-    alt={`${country.name} flag`}
-    title={country.name}
-    variant={ImageVariant.inline}
-    className={`w-6 h-4 ring-1 ring-gray-300 shadow-xs ${useLink ? styles.animations.zoomOnHover : ''}`}
-  />
-);
 
 export default CountryFlags;

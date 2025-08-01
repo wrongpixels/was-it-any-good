@@ -62,8 +62,12 @@
 @theme {
   --color-staryellow: #ccd45d;
   --color-starblue: #5d82c7;
+  --color-stardark: #6682b6;
+
   --color-starbright: #6d90d1;
   --color-starbrighter: #88aef3;
+  --color-starbrightest: #a9c3f1;
+
   --color-starbutton: #7199e4;
 
   --color-hoverblue: #7c9edd;

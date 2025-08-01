@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import imageLinker from '../../../../shared/util/image-linker';
 import { userOverlay } from '../../context/OverlayProvider';
-import LazyImage, { ImageVariant } from '../common/LazyImage';
+import LazyImage, { AspectRatio, ImageVariant } from '../common/LazyImage';
 import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
@@ -76,16 +76,17 @@ const ImageOverlay = () => {
       >
         <span
           className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
-            pointer-events-auto w-auto transition-all duration-300
+            pointer-events-auto transition-all duration-300
             ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
         >
           <LazyImage
             key={overlay.image}
+            aspect={AspectRatio.poster}
             variant={ImageVariant.inline}
             src={imageLinker.getFullSizeImage(overlay.image)}
-            className="rounded-md"
+            className="rounded-md min-w-120 min-h-180 bg-gray-200 ring-gray-300 ring-1"
           />
-          <span className="text-xs flex flex-row text-gray-500 font-semibold pl-3 items-center justify-baseline mt-3 gap-2 pointer-events-auto">
+          <span className="text-xs flex flex-row text-gray-500 font-semibold pr-3 items-center justify-end mt-3 gap-2 pointer-events-auto ">
             <>{'Image Source:'}</>
             <TMDBLogoHor
               height={12}
