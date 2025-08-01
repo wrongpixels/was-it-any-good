@@ -11,7 +11,7 @@ import {
   Sorting,
   stringToSorting,
 } from '../../../shared/types/browse';
-import { searchTypes } from '../../../shared/types/search';
+import { SearchType, searchTypes } from '../../../shared/types/search';
 import { QueryOpts } from '../types/search-browse-types';
 import ParamManager from '../utils/search-param-manager';
 import { normalizeQueryTypeParams } from '../utils/url-helper';
@@ -26,7 +26,10 @@ const useUrlQueryManager = (basePath: string) => {
   const searchTerm: string | null = parameters.get('q');
   const currentPage: number = Number(parameters.get('page'));
   const queryType: string[] = normalizeQueryTypeParams(parameters.getAll('m'));
-  const queryTypeManager = new ParamManager(searchTypes, queryType);
+  const queryTypeManager = new ParamManager(
+    searchTypes.filter((t: string) => t !== SearchType.Multi),
+    queryType
+  );
   const genres: string[] = parameters.getAll('g');
   const countries: string[] = parameters.getAll('c');
   const year = parameters.get('y');

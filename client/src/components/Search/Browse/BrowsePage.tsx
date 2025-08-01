@@ -6,34 +6,41 @@ import ErrorPage from '../../common/status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
 
-const BrowsePage = () => {
+interface BrowsePageProps {
+  title?: string;
+  baseQuery?: string;
+}
+
+const BrowsePage = ({ title = '', baseQuery = '' }: BrowsePageProps) => {
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters
   const { currentQuery, navigatePages, navigateToPage, currentPage } =
     useUrlQueryManager(routerPaths.browse.query());
-  const { data: browseResults, isLoading } = useBrowseQuery(currentQuery);
+  const {
+    data: browseResults,
+    isLoading,
+    isError,
+  } = useBrowseQuery(currentQuery);
   console.log(browseResults);
 
   //to avoid setting a url bigger than totalPages or less than 1
   //this is also protected in the backend
   useEffect(() => {
     if (
-      currentPage <= 0 ||
+      currentPage < 0 ||
       (browseResults && browseResults.totalPages < Number(currentPage))
     ) {
       navigateToPage(browseResults?.totalPages || 1);
     }
   }, [browseResults]);
 
-  if (isLoading) {
-    return <>{isLoading && <SpinnerPage text={'Browsing WIAG...'} />}</>;
-  }
-  if (!browseResults) {
+  if (isError || browseResults === null) {
     return <ErrorPage />;
   }
 
   return (
     <>
+      {title ?? <span>{title}</span>}
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
       <PageResults
         results={browseResults}

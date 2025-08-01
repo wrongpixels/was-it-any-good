@@ -111,7 +111,8 @@ router.get('/', async (req: Request, res, next) => {
 
     const indexMediaResponse: IndexMediaResponse = {
       indexMedia: toPlainArray(populatedEntries),
-      totalPages: searchResult.total_pages,
+      //we consider no results a blank page 1
+      totalPages: searchResult.total_pages || 1,
       page: searchResult.page,
       totalResults: searchResult.total_results,
     };

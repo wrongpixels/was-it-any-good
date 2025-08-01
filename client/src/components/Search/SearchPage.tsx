@@ -12,6 +12,7 @@ import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
 import useUrlQueryManager from '../../hooks/use-url-query-manager';
+import ErrorPage from '../common/status/ErrorPage';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -34,10 +35,11 @@ const SearchPage = (): JSX.Element | null => {
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
 
-  const { data: searchResults, isLoading } = useSearchQuery(
-    currentQuery || '',
-    searchTerm
-  );
+  const {
+    data: searchResults,
+    isLoading,
+    isError,
+  } = useSearchQuery(currentQuery || '', searchTerm);
   //to avoid setting a url bigger than totalPages or less than 1
   //this is also protected in the backend
   useEffect(() => {
@@ -91,6 +93,10 @@ const SearchPage = (): JSX.Element | null => {
     navigateToNewTerm(newSearch || undefined, newSearch === searchTerm);
   };
 
+  if (isError || searchResults === null) {
+    <ErrorPage />;
+  }
+
   return (
     <div className="flex flex-col items-center gap-4 pt-5">
       <SearchInputField
@@ -102,7 +108,7 @@ const SearchPage = (): JSX.Element | null => {
         toggleParam={toggleParam}
         typeFilters={queryTypeManager}
       />
-      <span className="pt-1">
+      <span className="pt-1 w-full">
         {isLoading && (
           <SpinnerPage
             text={`Searching for "${searchTerm}"...`}

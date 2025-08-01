@@ -107,7 +107,8 @@ router.get('/', async (req, res, next) => {
       const response: IndexMediaResponse = {
         page: searchPage,
         totalResults: count,
-        totalPages: Math.ceil(count / PAGE_LENGTH),
+        //we consider no results a blank page 1
+        totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         indexMedia: toPlainArray(rows),
       };
       res.json(response);
@@ -134,7 +135,8 @@ router.get('/', async (req, res, next) => {
       const response: IndexMediaResponse = {
         page: searchPage,
         totalResults: count,
-        totalPages: Math.ceil(count / PAGE_LENGTH),
+        //we consider no results a blank page 1
+        totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         indexMedia: toPlainArray(rows),
       };
       res.json(response);
