@@ -2,6 +2,7 @@ export enum OrderBy {
   Title = 'name',
   Rating = 'rating',
   Popularity = 'popularity',
+  Year = 'year',
 }
 const orderByValues: string[] = Object.values<string>(OrderBy);
 

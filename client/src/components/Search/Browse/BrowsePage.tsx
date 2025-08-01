@@ -5,13 +5,19 @@ import SpinnerPage from '../../common/status/SpinnerPage';
 import ErrorPage from '../../common/status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
+import EntryTitle from '../../EntryTitle';
+import { SearchType } from '../../../../../shared/types/search';
+import { OrderBy } from '../../../../../shared/types/browse';
+import { getBrowseTitle } from '../../../utils/browse-helper';
 
 interface BrowsePageProps {
-  title?: string;
-  baseQuery?: string;
+  orderBy?: OrderBy;
+  searchType?: SearchType;
 }
 
-const BrowsePage = ({ title = '', baseQuery = '' }: BrowsePageProps) => {
+const BrowsePage = ({ searchType, orderBy }: BrowsePageProps) => {
+  const title: string | null = getBrowseTitle(searchType, orderBy);
+
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters
   const { currentQuery, navigatePages, navigateToPage, currentPage } =
@@ -39,15 +45,19 @@ const BrowsePage = ({ title = '', baseQuery = '' }: BrowsePageProps) => {
   }
 
   return (
-    <>
-      {title ?? <span>{title}</span>}
+    <div key={title}>
+      {title && (
+        <div className="mb-8">
+          <EntryTitle title={title} />
+        </div>
+      )}
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
       <PageResults
         results={browseResults}
         navigatePages={navigatePages}
         showBadge={true}
       ></PageResults>
-    </>
+    </div>
   );
 };
 

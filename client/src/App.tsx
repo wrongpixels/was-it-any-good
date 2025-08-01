@@ -11,6 +11,9 @@ import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
 import RankingBar from './components/NavBar/RankingBar';
 import ImageOverlay from './components/Overlay/ImageOverlay';
+import { routerPaths } from './utils/url-helper';
+import { OrderBy } from '../../shared/types/browse';
+import { SearchType } from '../../shared/types/search';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
@@ -38,6 +41,34 @@ const AppBody = (): JSX.Element => {
       <Route path="/" element={null} />
       <Route path="/search" element={<SearchPage />} />
       <Route path="/browse" element={<BrowsePage />} />
+      <Route
+        path={routerPaths.popular.multi.base()}
+        element={
+          <BrowsePage
+            searchType={SearchType.Multi}
+            orderBy={OrderBy.Popularity}
+          />
+        }
+      />
+      <Route
+        path={routerPaths.tops.multi.base()}
+        element={
+          <BrowsePage searchType={SearchType.Multi} orderBy={OrderBy.Rating} />
+        }
+      />
+      <Route
+        path={routerPaths.tops.films.base()}
+        element={
+          <BrowsePage searchType={SearchType.Film} orderBy={OrderBy.Rating} />
+        }
+      />
+      <Route
+        path={routerPaths.tops.shows.base()}
+        element={
+          <BrowsePage searchType={SearchType.Show} orderBy={OrderBy.Rating} />
+        }
+      />
+
       <Route
         path="/film/:id"
         element={<MediaPage key="local-id" mediaType={MediaType.Film} />}

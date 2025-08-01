@@ -83,6 +83,45 @@ export const routerPaths = {
     query: () => `${routerPaths.browse.base}?`,
     byQuery: (query: string) => `${routerPaths.browse.query()}${query}`,
   },
+  tops: {
+    base: '/top',
+    shows: {
+      base: () => `${routerPaths.tops.base}/shows`,
+      query: () => `${routerPaths.tops.shows.base()}?`,
+      withQuery: (query: string) => `${routerPaths.tops.shows.query()}${query}`,
+    },
+    films: {
+      base: () => `${routerPaths.tops.base}/films`,
+      query: () => `${routerPaths.tops.films.base()}?`,
+      withQuery: (query: string) => `${routerPaths.tops.films.query()}${query}`,
+    },
+    multi: {
+      base: () => `${routerPaths.tops.base}/media`,
+      query: () => `${routerPaths.tops.multi.base()}?`,
+      withQuery: (query: string) => `${routerPaths.tops.multi.query()}${query}`,
+    },
+  },
+  popular: {
+    base: '/popular',
+    shows: {
+      base: () => `${routerPaths.popular.base}/shows`,
+      query: () => `${routerPaths.popular.shows.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.popular.shows.query()}${query}`,
+    },
+    films: {
+      base: () => `${routerPaths.popular.base}/films`,
+      query: () => `${routerPaths.popular.films.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.popular.films.query()}${query}`,
+    },
+    multi: {
+      base: () => `${routerPaths.popular.base}/media`,
+      query: () => `${routerPaths.popular.multi.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.popular.multi.query()}${query}`,
+    },
+  },
 };
 
 export const buildRouterMediaLink = (
