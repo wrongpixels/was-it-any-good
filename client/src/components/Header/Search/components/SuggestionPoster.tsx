@@ -28,7 +28,7 @@ const SuggestionPoster = ({ media }: SuggestionPoster): JSX.Element | null => {
         src={imageLinker.getPosterImage(media.image)}
         title={media.name}
         alt={media.name}
-        className={`${styles.shadow.subtle} ring-1 ring-gray-200`}
+        className={`${styles.shadow.subtle} ring-1 ring-gray-200 cursor-`}
       />
       <div className="h-5 m-1">
         <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
