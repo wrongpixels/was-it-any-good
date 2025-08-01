@@ -84,7 +84,7 @@ const ImageOverlay = () => {
             aspect={AspectRatio.poster}
             variant={ImageVariant.inline}
             src={imageLinker.getFullSizeImage(overlay.image)}
-            className="rounded-md min-w-120 min-h-180 bg-gray-200 ring-gray-300 ring-1"
+            className="rounded-md min-w-125 min-h-185 bg-gray-200 shadow/30 ring-1 ring-gray-350"
           />
           <span className="text-xs flex flex-row text-gray-500 font-semibold pr-3 items-center justify-end mt-3 gap-2 pointer-events-auto ">
             <>{'Image Source:'}</>
