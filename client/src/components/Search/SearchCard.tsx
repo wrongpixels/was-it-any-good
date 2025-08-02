@@ -75,7 +75,7 @@ const SearchCard = ({
                   genreMap.map((g: GenreUrlMap) => (
                     <span
                       key={g.id}
-                      className="text-xs font-medium px-2 py-0.25 rounded-full bg-starblue/30 text-gray-600 overflow-clip"
+                      className="text-xs font-medium px-2 py-0.25 rounded-full bg-starbright/40 text-cyan-800 overflow-clip"
                     >
                       {g.name}
                     </span>

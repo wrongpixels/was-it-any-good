@@ -12,10 +12,13 @@ const Separator = ({
 }: SeparatorProps): JSX.Element => (
   <div
     className={mergeClassnames(
-      `border-t border-gray-200 ${margin ? 'mt-3' : ''}`,
+      `h-0 w-full flex flex-col ${margin ? 'mt-3' : ''}`,
       className
     )}
-  />
+  >
+    <span className="border-t border-gray-200 h-0" />
+    <span className="border-t border-white pt-1 h-0" />
+  </div>
 );
 
 export default Separator;

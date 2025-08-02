@@ -3,6 +3,7 @@ import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
 import { getYearParenthesis } from '../../../shared/helpers/format-helper';
 import CountryFlags from './Media/MediaCountryFlags';
+import Separator from './common/Separator';
 
 export interface EntryTitleProps extends PropsWithChildren {
   title?: string | undefined;
@@ -24,7 +25,7 @@ const EntryTitle = ({
 }: EntryTitleProps): JSX.Element | null => {
   return (
     <>
-      <div className="border-b border-gray-200 pb-3 mb-2 min-h-15">
+      <div className="pb-3 mb-2 min-h-15 flex flex-col">
         <h2 className="text-3xl">
           <span className="inline-flex flex-wrap items-center gap-2 align-middle justify-center">
             {icon && icon}
@@ -43,6 +44,7 @@ const EntryTitle = ({
           </h3>
         )}
         {children}
+        <Separator />
       </div>
     </>
   );
