@@ -50,7 +50,7 @@ export const AnimatedDiv = ({
       return () =>
         refNode.removeEventListener('animationend', handleAnimationEnd);
     }
-  }, [animation, animKey, stop, activeAnimations]);
+  }, [animation, animKey, stop, loopIsNumber, context]);
 
   const animationClass = animation?.animationClass || '';
   const inlineStyles: CSSProperties = { ...props.style };
