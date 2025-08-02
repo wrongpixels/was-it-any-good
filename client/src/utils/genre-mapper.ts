@@ -3,6 +3,12 @@ import { GenreResponse } from '../../../shared/types/models';
 import { routerPaths } from './url-helper';
 import UrlQueryBuilder from './url-query-builder';
 
+export interface GenreUrlMap {
+  id: number;
+  name: string;
+  url: string;
+}
+
 const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder();
 
 //converts an array of GenreResponses into a map with populated urls to browse
@@ -11,8 +17,8 @@ const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder();
 export const genreUrlMapper = (
   genres: GenreResponse[],
   mediaType?: MediaType
-): Map<number, string> => {
-  const map = new Map<number, string>();
+): GenreUrlMap[] => {
+  const map: GenreUrlMap[] = [];
 
   genres.forEach((g: GenreResponse) => {
     const id: number = g.id || 0;
@@ -20,7 +26,7 @@ export const genreUrlMapper = (
       .byGenre(id)
       .byMediaType(mediaType)
       .toString();
-    map.set(g.id, routerPaths.browse.byQuery(url));
+    map.push({ id: g.id, name: g.name, url: routerPaths.browse.byQuery(url) });
   });
   return map;
 };

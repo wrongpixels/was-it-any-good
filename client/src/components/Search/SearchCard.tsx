@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../shared/types/models';
 import {
@@ -16,6 +16,9 @@ import DisplayRating from '../Rating/DisplayRating';
 import CountryFlags from '../Media/MediaCountryFlags';
 import IndexBadge from './Browse/IndexBadge';
 import imageLinker from '../../../../shared/util/image-linker';
+import { MediaType } from '../../../../shared/types/media';
+import { getMediaGenres, IndexGenreMap } from '../../utils/index-media-helper';
+import { GenreUrlMap } from '../../utils/genre-mapper';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -33,6 +36,10 @@ const SearchCard = ({
   }
   const average: number = getMediaAverageRating(media);
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
+  const genreMap: GenreUrlMap[] | null = useMemo(
+    () => getMediaGenres(media),
+    [media]
+  );
 
   return (
     <Link
@@ -49,19 +56,33 @@ const SearchCard = ({
         />
         {showBadge && <IndexBadge index={index} />}
       </span>
-      <div className="flex flex-col w-full pl-3 my-2 text-gray-600">
+      <div className="flex flex-col w-full pl-3 mt-1 text-gray-600">
         <span className="text-gray-600 leading-5 line-clamp-3">
           {media.name}
         </span>
-        <span className="font-light text-sm pt-1 flex flex-row gap-1 items-center">
-          <span className="font-semibold text-gray-400">{mediaDisplay}</span>
-          {media.year ? `(${media.year})` : ''}
-          <CountryFlags
-            className="ml-1 gap-1 mb-0.5"
-            countryCodes={media.country ? media.country.slice(0, 2) : []}
-            useLink={false}
-          />
-          {/* Space for add to list etc*/}
+        <span className="flex flex-col">
+          <span className="font-light text-sm pt-0 flex flex-row gap-1 items-center relative">
+            <span className="font-semibold text-gray-400">{mediaDisplay}</span>
+            {media.year ? `(${media.year})` : ''}
+            <CountryFlags
+              className="ml-1 gap-1 mb-0.5"
+              countryCodes={media.country ? media.country.slice(0, 2) : []}
+              useLink={false}
+            />
+            <div className="h-5 overflow-clip absolute top-0 left-0 mt-7">
+              <span className="flex flex-wrap gap-1">
+                {genreMap &&
+                  genreMap.map((g: GenreUrlMap) => (
+                    <span
+                      key={g.id}
+                      className="text-xs font-medium px-2 py-0.25 rounded-full bg-starblue/30 text-gray-600 overflow-clip"
+                    >
+                      {g.name}
+                    </span>
+                  ))}
+              </span>
+            </div>
+          </span>
         </span>
         <div className="grow" />
         <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500 pr-1">

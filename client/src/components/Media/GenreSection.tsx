@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import { routerPaths } from '../../utils/url-helper';
 import { styles } from '../../constants/tailwind-styles';
-import { genreUrlMapper } from '../../utils/genre-mapper';
+import { GenreUrlMap, genreUrlMapper } from '../../utils/genre-mapper';
 
 interface GenreSectionProps {
   genres: GenreResponse[];
@@ -23,7 +23,7 @@ const GenreSection = ({
   }
   const searchUrl: UrlQueryBuilder = new UrlQueryBuilder();
   const mediaIconUrl: string = searchUrl.byMediaType(mediaType).toString();
-  const genreLinkMap: Map<number, string> = useMemo(
+  const genreUrlMap: GenreUrlMap[] = useMemo(
     () => genreUrlMapper(genres, mediaType),
     [genres, mediaType]
   );
@@ -36,11 +36,11 @@ const GenreSection = ({
         <IconForMediaType mediaType={mediaType} className={'text-gray-600'} />
       </Link>
       <div className="text-sm">
-        {genres.map((g: GenreResponse, i: number) => (
+        {genreUrlMap.map((g: GenreUrlMap, i: number) => (
           <React.Fragment key={g.id}>
             {i > 0 && ' | '}
             <Link
-              to={genreLinkMap.get(g.id) || routerPaths.search.base}
+              to={g.url || routerPaths.search.base}
               className={'hover:underline cursor-pointer'}
               title={g.name}
             >
