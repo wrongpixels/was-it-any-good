@@ -390,6 +390,7 @@ class Media<
         {
           association: 'crew',
           separate: true,
+          limit: 5,
           include: [
             {
               association: 'person',

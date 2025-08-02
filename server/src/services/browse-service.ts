@@ -3,27 +3,32 @@ import { MediaType } from '../../../shared/types/media';
 
 export const buildIncludeOptions = (
   genres: string[] | undefined,
-  mediaType: MediaType
+  mediaType: MediaType,
+  isFilterPass?: boolean
 ): IncludeOptions[] => {
-  const include: IncludeOptions[] = [];
-  if (genres && genres.length > 0) {
-    console.log(genres);
-    const genreInclude: IncludeOptions = {
-      association: 'genres',
-      attributes: ['id', 'name', 'tmdbId'],
+  const hasFilters: boolean = !!genres && genres.length > 0;
+
+  //if it's a filter pass and we're not filtering genres, there's no
+  //need to include them.
+  if (isFilterPass && !hasFilters) {
+    return [];
+  }
+  const genreInclude: IncludeOptions = {
+    association: 'genres',
+    attributes: ['id', 'name', 'tmdbId'],
+    through: {
+      attributes: [],
       where: {
-        id: {
-          [Op.in]: genres,
-        },
+        mediaType,
       },
-      through: {
-        attributes: [],
-        where: {
-          mediaType,
-        },
+    },
+  };
+  if (hasFilters) {
+    genreInclude.where = {
+      id: {
+        [Op.in]: genres,
       },
     };
-    include.push(genreInclude);
   }
-  return include;
+  return [genreInclude];
 };

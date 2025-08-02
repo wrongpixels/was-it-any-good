@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import { routerPaths } from '../../utils/url-helper';
 import { styles } from '../../constants/tailwind-styles';
+import { genreUrlMapper } from '../../utils/genre-mapper';
 
 interface GenreSectionProps {
   genres: GenreResponse[];
@@ -22,19 +23,10 @@ const GenreSection = ({
   }
   const searchUrl: UrlQueryBuilder = new UrlQueryBuilder();
   const mediaIconUrl: string = searchUrl.byMediaType(mediaType).toString();
-  const genreLinkMap = useMemo(() => {
-    const map = new Map<number, string>();
-    genres.forEach((g: GenreResponse) => {
-      const id: number = g.id || 0;
-      const url: string = searchUrl
-        .byGenre(id)
-        .byMediaType(mediaType)
-        .toString();
-      map.set(g.id, routerPaths.browse.byQuery(url));
-    });
-    return map;
-  }, [genres, mediaType]);
-
+  const genreLinkMap: Map<number, string> = useMemo(
+    () => genreUrlMapper(genres, mediaType),
+    [genres, mediaType]
+  );
   return (
     <div className="flex items-center text-gray-400 gap-2 relative ml-1">
       <Link

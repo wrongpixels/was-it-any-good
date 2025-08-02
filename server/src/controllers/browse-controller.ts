@@ -56,24 +56,25 @@ router.get('/', async (req, res, next) => {
       offset: PAGE_LENGTH * (searchPage - 1),
     };
 
-    const filmFindOptions: FindOptions<Film> = {
-      //we just need the indexId, so raw + attribute to make the operation as lightweight as possible
-      raw: true,
-      attributes: ['indexId'],
-
-      where: whereOptions,
-      include: buildIncludeOptions(genres, MediaType.Film),
-    };
-    const showFindOptions: FindOptions = {
-      ...filmFindOptions,
-      include: buildIncludeOptions(genres, MediaType.Show),
-    };
-
     if (isMulti) {
       //if is multi search, we filter Films and Shows directly, gather their indexIds, and finally we'll
       //get the full IndexMedia entries from them applying proper limit, order and pagination
       //this is not ideal, but sequelize has many inconsistencies and limitations when filtering nested 'includes' and
       //combining tables, so this was the most readable, reliable and manageable approach using ORM.
+
+      const filmFindOptions: FindOptions<Film> = {
+        //we just need the indexId, so raw + attribute to make the operation as lightweight as possible
+        raw: true,
+        attributes: ['indexId'],
+
+        where: whereOptions,
+        include: buildIncludeOptions(genres, MediaType.Film, true),
+      };
+      const showFindOptions: FindOptions = {
+        ...filmFindOptions,
+        include: buildIncludeOptions(genres, MediaType.Show, true),
+      };
+
       const [filmIndexIds, showIndexIds] = await Promise.all([
         //we get the indexId of Films and Shows matching the filters.
         Film.findAll(filmFindOptions),
@@ -99,9 +100,17 @@ router.get('/', async (req, res, next) => {
         },
         ...findAndCountOptions,
         include: [
-          //we still need the film/show ids for the frontend
-          { association: 'film', attributes: ['id'] },
-          { association: 'show', attributes: ['id'] },
+          //we still need the film/show ids, rating and genres for the frontend
+          {
+            association: 'film',
+            attributes: ['id', 'rating'],
+            include: buildIncludeOptions(undefined, MediaType.Film),
+          },
+          {
+            association: 'show',
+            attributes: ['id', 'rating'],
+            include: buildIncludeOptions(undefined, MediaType.Show),
+          },
         ],
       });
       const response: IndexMediaResponse = {
@@ -121,7 +130,7 @@ router.get('/', async (req, res, next) => {
         include: [
           {
             association: isFilm ? 'film' : 'show',
-            attributes: ['id'],
+            attributes: ['id', 'rating'],
             required: true,
             where: whereOptions,
             include: buildIncludeOptions(
