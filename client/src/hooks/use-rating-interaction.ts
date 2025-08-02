@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react'; // Import useCallback and useMemo
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
 import { PADDING_ADJUSTER } from '../constants/ratings-constants';
@@ -32,6 +32,8 @@ export const useRatingInteractions = (
   const { session } = useAuth();
   const { playAnim } = useAnimEngine();
 
+  // This function is a pure calculation and isn't returned, so it doesn't
+  // strictly need useCallback. It's fine as is.
   const calculateNewRating = (x: number, width: number): UserVote => {
     const starsWidth: number = starWidth * 5;
     const paddingWidth: number = width - starsWidth;
@@ -46,24 +48,32 @@ export const useRatingInteractions = (
     return numToVote(rating);
   };
 
-  const handleVoteAnimation = () => {
+  // This is an internal helper, but since it's used by a memoized callback (handleClick),
+  // it's good practice to memoize it as well to keep dependencies stable.
+  const handleVoteAnimation = useCallback(() => {
     setJustVoted(true);
     setTimeout(() => setJustVoted(false), 400);
-  };
+  }, []); // No dependencies from the render scope
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>): void => {
-    const container: EventTarget & HTMLDivElement = e.currentTarget;
-    const { left, width }: DOMRect = container.getBoundingClientRect();
-    const x: number = e.clientX - left;
-    const newRating: UserVote = calculateNewRating(x, width);
-    if (status === 'locked') {
-      return;
-    }
-    setHoverScore(newRating);
-    setStatus('hovering');
-  };
+  // --- OPTIMIZATION 1: Memoize all handler functions ---
+  // This ensures that the `handlers` object we return is stable.
 
-  const handleClick = (): void => {
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>): void => {
+      if (status === 'locked') {
+        return;
+      }
+      const container: EventTarget & HTMLDivElement = e.currentTarget;
+      const { left, width }: DOMRect = container.getBoundingClientRect();
+      const x: number = e.clientX - left;
+      const newRating: UserVote = calculateNewRating(x, width);
+      setHoverScore(newRating);
+      setStatus('hovering');
+    },
+    [status, starWidth, userRating]
+  ); // Add all dependencies the function uses
+
+  const handleClick = useCallback((): void => {
     if (status === 'locked') {
       return;
     }
@@ -89,29 +99,68 @@ export const useRatingInteractions = (
       handleVoteAnimation();
     }
     setStatus('locked');
-  };
-  const handleMouseLeave = (): void => {
+  }, [
+    status,
+    session,
+    hoverScore,
+    userRating,
+    mediaType,
+    showId,
+    sendPosterNotification,
+    playAnim,
+    handleUnvote,
+    handleVote,
+    handleVoteAnimation,
+  ]);
+
+  const handleMouseLeave = useCallback((): void => {
     setHoverScore(UserVote.None);
     setStatus('idle');
-  };
+  }, []);
 
-  return {
-    state: {
+  // --- OPTIMIZATION 2: Memoize the created objects ---
+  // This ensures that if the inputs to these objects don't change, the objects
+  // themselves are not recreated.
+
+  const state = useMemo(
+    () => ({
       hoverRating: hoverScore,
       isHovering: status === 'hovering',
       isLocked: status === 'locked',
       justVoted,
-    },
-    handlers: {
+    }),
+    [hoverScore, status, justVoted]
+  );
+
+  const handlers = useMemo(
+    () => ({
       handleMouseMove,
       handleClick,
       handleMouseLeave,
-    },
-    display: getRatingDisplayValues({
-      hoverScore,
-      currentScore: userRating?.userScore,
-      defaultRating,
-      isHovering: status === 'hovering',
     }),
-  };
+    [handleMouseMove, handleClick, handleMouseLeave]
+  );
+
+  const display = useMemo(
+    () =>
+      getRatingDisplayValues({
+        hoverScore,
+        currentScore: userRating?.userScore,
+        defaultRating,
+        isHovering: status === 'hovering',
+      }),
+    [hoverScore, userRating, defaultRating, status]
+  );
+
+  // --- OPTIMIZATION 3: Memoize the final return value ---
+  // This is the most important step. It guarantees that the hook's consumer
+  // will only re-render when one of the memoized objects actually changes.
+  return useMemo(
+    () => ({
+      state,
+      handlers,
+      display,
+    }),
+    [state, handlers, display]
+  );
 };
