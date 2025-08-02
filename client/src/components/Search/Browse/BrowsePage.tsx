@@ -5,8 +5,12 @@ import SpinnerPage from '../../common/status/SpinnerPage';
 import ErrorPage from '../../common/status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
-import EntryTitle, { EntryTitleProps } from '../../EntryTitle';
-import { OverrideParams } from '../../../types/search-browse-types';
+import EntryTitle from '../../EntryTitle';
+import {
+  BrowsePageTitleOptions,
+  OverrideParams,
+} from '../../../types/search-browse-types';
+import { setPageInfo } from '../../../utils/page-info-setter';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overriden with OverrideParams.
@@ -16,7 +20,7 @@ import { OverrideParams } from '../../../types/search-browse-types';
 
 export interface BrowsePageProps {
   overrideParams?: OverrideParams;
-  pageTitleOptions?: EntryTitleProps;
+  pageTitleOptions?: BrowsePageTitleOptions;
 }
 
 const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
@@ -50,15 +54,27 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   if (isError || browseResults === null) {
     return <ErrorPage />;
   }
+
+  if (pageTitleOptions) {
+    setPageInfo({ title: pageTitleOptions.tabTitle || pageTitleOptions.title });
+  }
+
   return (
-    <div key={currentQuery}>
-      {pageTitleOptions && <EntryTitle {...pageTitleOptions} />}
+    <div key={currentQuery} className="flex flex-col flex-1">
+      {pageTitleOptions && (
+        <EntryTitle
+          title={pageTitleOptions.title}
+          icon={pageTitleOptions.icon}
+        />
+      )}
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
-      <PageResults
-        results={browseResults}
-        navigatePages={navigatePages}
-        showBadge={true}
-      ></PageResults>
+      <div className="flex flex-col flex-1">
+        <PageResults
+          results={browseResults}
+          navigatePages={navigatePages}
+          showBadge={true}
+        ></PageResults>
+      </div>
     </div>
   );
 };

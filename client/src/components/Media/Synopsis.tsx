@@ -19,9 +19,6 @@ const Synopsis = ({
   mediaType,
   episodeCount,
 }: SynopsisProps): JSX.Element | null => {
-  if (!title || !content) {
-    return null;
-  }
   const isShow: boolean = mediaType === MediaType.Show;
   const displayEpisodes: boolean =
     isShow && episodeCount !== undefined && episodeCount > 0;
@@ -44,7 +41,9 @@ const Synopsis = ({
           )}
           {displayAny ? '.) ' : ''}
         </span>
-        <span className="text-regular text-gray-500">{content}</span>
+        <span className="text-regular text-gray-500">
+          {content || DEF_SYNOPSIS}
+        </span>
       </p>
     </div>
   );

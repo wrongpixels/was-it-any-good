@@ -71,19 +71,19 @@ const buildProps = ({
 export const browsePageRoutes: BrowsePageRouterData[] = [
   {
     path: routerPaths.popular.multi.base(),
-    browseProps: buildProps({ title: 'Most Popular' }),
+    browseProps: buildProps({ title: 'Most Popular Media' }),
   },
   {
     path: routerPaths.tops.multi.base(),
     browseProps: buildProps({
-      title: 'Best Rated Media',
+      title: 'Top Rated Media',
       orderBy: OrderBy.Rating,
     }),
   },
   {
     path: routerPaths.tops.films.base(),
     browseProps: buildProps({
-      title: 'Best Rated Films',
+      title: 'Top Rated Films',
       orderBy: OrderBy.Rating,
       searchType: SearchType.Film,
     }),
@@ -91,7 +91,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   {
     path: routerPaths.tops.shows.base(),
     browseProps: buildProps({
-      title: 'Best Rated Shows',
+      title: 'Top Rated TV Shows',
       orderBy: OrderBy.Rating,
       searchType: SearchType.Show,
     }),

@@ -1,3 +1,4 @@
+import { JSX } from 'react';
 import { OrderBy, Sorting } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 
@@ -8,6 +9,12 @@ export interface OverrideParams {
   orderBy?: OrderBy;
   sort?: Sorting;
   searchType?: SearchType;
+}
+
+export interface BrowsePageTitleOptions {
+  title: string;
+  icon?: JSX.Element;
+  tabTitle?: string;
 }
 
 export interface QueryOpts {
