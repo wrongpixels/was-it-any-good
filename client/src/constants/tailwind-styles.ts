@@ -56,10 +56,10 @@ export const styles = {
         const gradientColors: Record<number, string> = {
           1: 'from-gold/15',
           2: 'from-gray-400/30',
-          3: 'from-darkbronze/15',
+          3: 'from-darkbronze/15 ring-darkbronze',
         };
 
-        return `${baseClasses} ring-gray-325 ${gradientColors[index] ?? ''}`.trim();
+        return `${baseClasses} ring-2 ${gradientColors[index] ?? ''}`.trim();
       },
     },
   },
