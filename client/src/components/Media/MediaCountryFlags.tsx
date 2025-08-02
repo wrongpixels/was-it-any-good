@@ -10,7 +10,7 @@ import UrlQueryBuilder from '../../utils/url-query-builder';
 import { Link } from 'react-router-dom';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 import { routerPaths } from '../../utils/url-helper';
-import CountryFlag from '../common/CountryFlag';
+import CountryFlag from '../common/CountryFlags';
 
 interface CountryFlagWrapperProps extends PropsWithChildren {
   to: string;

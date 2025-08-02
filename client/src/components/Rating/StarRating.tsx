@@ -10,6 +10,7 @@ import {
   useNotificationContext,
 } from '../../context/NotificationProvider';
 import { LOW_NOTIFICATION } from '../../constants/notification-constants';
+import { AnimatedDiv } from '../common/AnimatedDiv';
 
 interface StarRatingProps {
   readonly starWidth?: number;
@@ -47,7 +48,7 @@ const StarRating = ({
         onClick={handlers.handleClick}
       >
         <span className="w-4" />
-        <div className="relative">
+        <AnimatedDiv className="relative" animKey="main-media-stars">
           <div className="text-gray-300" ref={anchorRef}>
             <StarList
               width={starWidth}
@@ -82,7 +83,7 @@ const StarRating = ({
               </div>
             )}
           </div>
-        </div>
+        </AnimatedDiv>
         <div className="w-4" />
       </div>
       {state.isHovering && <HoverMessage message={display.hoverMessage} />}

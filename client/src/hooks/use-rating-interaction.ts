@@ -7,6 +7,7 @@ import { useAuth } from './use-auth';
 import { MediaResponse, SeasonResponse } from '../../../shared/types/models';
 import { useRatingMutations } from './use-rating-mutations';
 import { getRatingDisplayValues } from '../utils/rating-display-values';
+import { useAnimEngine } from '../context/AnimationProvider';
 
 type InteractionStatus = 'idle' | 'hovering' | 'locked';
 
@@ -29,6 +30,7 @@ export const useRatingInteractions = (
   const [status, setStatus] = useState<InteractionStatus>('idle');
   const [justVoted, setJustVoted] = useState(false);
   const { session } = useAuth();
+  const { playAnim } = useAnimEngine();
 
   const calculateNewRating = (x: number, width: number): UserVote => {
     const starsWidth: number = starWidth * 5;
@@ -67,6 +69,10 @@ export const useRatingInteractions = (
     }
     if (!session || session.expired || !session.userId) {
       sendPosterNotification('You have to login to vote!');
+      playAnim({
+        animKey: 'main-media-stars',
+        animationClass: 'animate-shake',
+      });
       return;
     }
     if (
