@@ -3,8 +3,10 @@ import { IndexMediaResponse } from '../../../../shared/types/models';
 import { styles } from '../../constants/tailwind-styles';
 import Button from '../common/Button';
 import DisabledDiv from '../common/DisabledDiv';
+import { OptClassNameProps } from '../../types/common-props-types';
+import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
-interface PageResultsNavProps {
+interface PageResultsNavProps extends OptClassNameProps {
   results: IndexMediaResponse;
   navigatePages: (page: number) => void;
 }
@@ -12,9 +14,12 @@ interface PageResultsNavProps {
 const PageResultsNav = ({
   results,
   navigatePages,
+  ...rest
 }: PageResultsNavProps): JSX.Element => {
   return (
-    <span className="absolute right-0 top-0 flex flex-row items-center gap-2 h-full">
+    <span
+      className={`${mergeClassnames('absolute right-0 flex flex-row items-center gap-2 h-full', rest.className)}`}
+    >
       {`Page ${results.page} of ${results.totalPages}`}
       <span className="flex flex-row gap-1">
         <DisabledDiv disabled={results.page === 1}>

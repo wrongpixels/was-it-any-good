@@ -15,6 +15,7 @@ export interface BrowsePageRouterData {
 
 const defIconProps: OptIconProps = {
   height: 30,
+  width: 30,
   className: 'text-gold',
 };
 

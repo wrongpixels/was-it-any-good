@@ -68,11 +68,11 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
         />
       )}
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 mt-2">
         <PageResults
           results={browseResults}
           navigatePages={navigatePages}
-          showBadge={true}
+          showBadge={!!overrideParams?.orderBy}
         ></PageResults>
       </div>
     </div>

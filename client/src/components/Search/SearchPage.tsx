@@ -101,7 +101,7 @@ const SearchPage = (): JSX.Element | null => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 pt-5">
+    <div className="flex flex-col items-center gap-4 pt-5 flex-1">
       <SearchInputField
         text={searchTerm || undefined}
         handleSearch={handleSearch}
@@ -111,7 +111,7 @@ const SearchPage = (): JSX.Element | null => {
         toggleParam={toggleParam}
         typeFilters={queryTypeManager}
       />
-      <span className="pt-1 w-full">
+      <span className="pt-1 w-full flex flex-1">
         {isLoading && (
           <SpinnerPage
             text={`Searching for "${searchTerm}"...`}
@@ -119,11 +119,13 @@ const SearchPage = (): JSX.Element | null => {
           />
         )}
         {searchResults && searchTerm && (
-          <PageResults
-            results={searchResults}
-            term={searchTerm}
-            navigatePages={navigatePages}
-          />
+          <div className="flex flex-1">
+            <PageResults
+              results={searchResults}
+              term={searchTerm}
+              navigatePages={navigatePages}
+            />
+          </div>
         )}
       </span>
     </div>

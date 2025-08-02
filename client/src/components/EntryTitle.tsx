@@ -24,9 +24,9 @@ const EntryTitle = ({
 }: EntryTitleProps): JSX.Element | null => {
   return (
     <>
-      <div className="border-b border-gray-200 pb-3 mb-2">
+      <div className="border-b border-gray-200 pb-3 mb-2 min-h-15">
         <h2 className="text-3xl">
-          <span className="inline-flex flex-wrap items-center gap-2 align-middle">
+          <span className="inline-flex flex-wrap items-center gap-2 align-middle justify-center">
             {icon && icon}
             <span className="font-bold">{title}</span>
             <span className="text-gray-400 font-regular">
