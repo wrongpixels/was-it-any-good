@@ -4,24 +4,38 @@ import { routerPaths } from '../../../utils/url-helper';
 import SpinnerPage from '../../common/status/SpinnerPage';
 import ErrorPage from '../../common/status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
-import { useEffect } from 'react';
+import { JSX, useEffect } from 'react';
 import EntryTitle from '../../EntryTitle';
-import { SearchType } from '../../../../../shared/types/search';
-import { OrderBy } from '../../../../../shared/types/browse';
-import { getBrowseTitle } from '../../../utils/browse-helper';
+import { OverrideParams } from '../../../types/search-browse-types';
 
-interface BrowsePageProps {
-  orderBy?: OrderBy;
-  searchType?: SearchType;
+//BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
+//it can be used combining url queries, which can be overriden with OverrideParams.
+//when an override params is provided, the equivalent url one will be ignored.
+//this way, the component can also be used for our 'top shows/films/media' etc pages
+//while still being compatible with the other params introduced in the url
+
+interface BrowsePageCustomization {
+  //title and icon allows us to customize the BrowsePage for special pages
+  title: string;
+  icon?: JSX.Element;
 }
 
-const BrowsePage = ({ searchType, orderBy }: BrowsePageProps) => {
-  const title: string | null = getBrowseTitle(searchType, orderBy);
+interface BrowsePageProps {
+  overrideParams?: OverrideParams;
+  customization?: BrowsePageCustomization;
+}
 
+const BrowsePage = ({ overrideParams, customization }: BrowsePageProps) => {
+  const title: string | undefined = customization?.title;
+  const basePath = overrideParams?.basePath || routerPaths.browse.query();
   //a hook shared with SearchPage to interpret the active url as states
-  //and navigate to new queries and result pages based on active parameters
+  //and navigate to new queries and result pages based on active parameters.
+  //verride params are passed here.
   const { currentQuery, navigatePages, navigateToPage, currentPage } =
-    useUrlQueryManager(routerPaths.browse.query());
+    useUrlQueryManager({
+      basePath,
+      overrideParams,
+    });
   const {
     data: browseResults,
     isLoading,

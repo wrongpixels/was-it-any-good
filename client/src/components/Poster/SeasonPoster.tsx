@@ -4,6 +4,8 @@ import PosterRating from './PosterRating';
 import LazyImage from '../common/LazyImage';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import imageLinker from '../../../../shared/util/image-linker';
+import { styles } from '../../constants/tailwind-styles';
+import { OverlayValues, useOverlay } from '../../context/OverlayProvider';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
@@ -11,6 +13,7 @@ interface SeasonPosterProps {
 
 const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
+  const { openAsOverlay }: OverlayValues = useOverlay();
 
   return (
     <div className="text-center bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
@@ -23,7 +26,8 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
         title={media.name}
-        className="rounded shadow ring-1 ring-gray-300"
+        className={`rounded shadow ${styles.poster.media}`}
+        onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
       <div>
         <PosterRating rating={average} media={media} valid={true} />

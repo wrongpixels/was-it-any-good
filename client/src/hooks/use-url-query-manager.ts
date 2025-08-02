@@ -12,12 +12,22 @@ import {
   stringToSorting,
 } from '../../../shared/types/browse';
 import { SearchType, searchTypes } from '../../../shared/types/search';
-import { QueryOpts } from '../types/search-browse-types';
+import { OverrideParams, QueryOpts } from '../types/search-browse-types';
 import ParamManager from '../utils/search-param-manager';
 import { normalizeQueryTypeParams } from '../utils/url-helper';
 import UrlQueryBuilder from '../utils/url-query-builder';
 
-const useUrlQueryManager = (basePath: string) => {
+//if the manager receives override params, they'll be used ignoring
+//equivalent url params.
+interface UrlQueryManagerOptions {
+  basePath: string;
+  overrideParams?: OverrideParams;
+}
+
+const useUrlQueryManager = ({
+  basePath,
+  overrideParams,
+}: UrlQueryManagerOptions) => {
   const navigateTo = useNavigate();
   const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder();
 
@@ -43,12 +53,15 @@ const useUrlQueryManager = (basePath: string) => {
     const url: string = queryBuilder
       .byTerm(newQuery || searchTerm)
       .byTypes(queryTypeManager.getAppliedNames())
+      //if we sent an override search type, it will replace the ones just added.
+      //if undefined, it will just be skipped keeping them.
+      .byType(overrideParams?.searchType)
       .byGenres(genres)
       .byCountries(countries)
       .byYear(year)
       .toPage(newPage)
-      .orderBy(orderBy)
-      .sortBy(sort)
+      .orderBy(overrideParams?.orderBy || orderBy)
+      .sortBy(overrideParams?.sort || sort)
       .toString();
     return url;
   };
@@ -57,20 +70,20 @@ const useUrlQueryManager = (basePath: string) => {
   const currentQuery: string = buildQuery({ newPage: currentPage });
   console.log(currentQuery);
 
-  //to navigate to a version of the current query
-  const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
-    navigateTo(`${basePath}${buildQuery({ newPage: page })}`, {
+  //to build a new query with a new term, if provided, or reuse the current one.
+  //if page is not provided, we default to page 1.
+  const navigateToQuery = (
+    newTerm?: string,
+    page?: number,
+    replace: boolean = false
+  ) =>
+    navigateTo(`${basePath}?${buildQuery({ newTerm, newPage: page })}`, {
       replace,
     });
 
-  //to navigate to page 1 of a new search term
-  const navigateToNewTerm = (
-    newTerm: string | undefined,
-    replace: boolean = false
-  ) =>
-    navigateTo(`${basePath}${buildQuery({ newTerm: newTerm })}`, {
-      replace,
-    });
+  //to navigate to a version of the current query term
+  const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
+    navigateToQuery(undefined, page, replace);
 
   //to go to a specific page
   const navigateToPage = (page: number) => {
@@ -90,7 +103,7 @@ const useUrlQueryManager = (basePath: string) => {
     currentQuery,
     currentPage,
     queryTypeManager,
-    navigateToNewTerm,
+    navigateToNewTerm: navigateToQuery,
     navigateToPage,
     navigatePages,
   };

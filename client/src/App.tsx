@@ -46,8 +46,11 @@ const AppBody = (): JSX.Element => {
           path={routerPaths.popular.multi.base()}
           element={
             <BrowsePage
-              searchType={SearchType.Multi}
-              orderBy={OrderBy.Popularity}
+              customization={{ title: 'Most Popular' }}
+              overrideParams={{
+                orderBy: OrderBy.Popularity,
+                searchType: SearchType.Multi,
+              }}
             />
           }
         />
@@ -55,21 +58,36 @@ const AppBody = (): JSX.Element => {
           path={routerPaths.tops.multi.base()}
           element={
             <BrowsePage
-              searchType={SearchType.Multi}
-              orderBy={OrderBy.Rating}
+              customization={{ title: 'Best Rated Media' }}
+              overrideParams={{
+                orderBy: OrderBy.Rating,
+                searchType: SearchType.Multi,
+              }}
             />
           }
         />
         <Route
           path={routerPaths.tops.films.base()}
           element={
-            <BrowsePage searchType={SearchType.Film} orderBy={OrderBy.Rating} />
+            <BrowsePage
+              customization={{ title: 'Best Rated Films' }}
+              overrideParams={{
+                orderBy: OrderBy.Rating,
+                searchType: SearchType.Film,
+              }}
+            />
           }
         />
         <Route
           path={routerPaths.tops.shows.base()}
           element={
-            <BrowsePage searchType={SearchType.Show} orderBy={OrderBy.Rating} />
+            <BrowsePage
+              customization={{ title: 'Best Rated TV Shows' }}
+              overrideParams={{
+                orderBy: OrderBy.Rating,
+                searchType: SearchType.Show,
+              }}
+            />
           }
         />
 

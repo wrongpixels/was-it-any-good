@@ -41,7 +41,7 @@ export const styles = {
     search: 'border pl-7 text-base py-1.5 w-80 shadow-md shadow-black/5',
   },
   poster: {
-    media: `${transitions.slow} hover:scale-101 cursor-pointer`,
+    media: `${transitions.slow} ring-1 ring-gray-325 hover:scale-101 cursor-pointer`,
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search: {

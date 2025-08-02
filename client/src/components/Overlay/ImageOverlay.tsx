@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
-import imageLinker from '../../../../shared/util/image-linker';
-import { userOverlay } from '../../context/OverlayProvider';
+import { useOverlay } from '../../context/OverlayProvider';
 import LazyImage, { AspectRatio, ImageVariant } from '../common/LazyImage';
 import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
@@ -9,7 +8,7 @@ import useEventBlocker from '../../hooks/use-event-blocker';
 const ANIM_DURATION: number = 300;
 
 const ImageOverlay = () => {
-  const { overlay, clean } = userOverlay();
+  const { overlay, clean } = useOverlay();
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
@@ -83,7 +82,7 @@ const ImageOverlay = () => {
             key={overlay.image}
             aspect={AspectRatio.poster}
             variant={ImageVariant.inline}
-            src={imageLinker.getFullSizeImage(overlay.image)}
+            src={overlay.image}
             className="rounded-md min-w-125 min-h-185 bg-gray-200 shadow/30 ring-1 ring-gray-350"
           />
           <span className="text-xs flex flex-row text-gray-500 font-semibold pr-3 items-center justify-end mt-3 gap-2 pointer-events-auto ">

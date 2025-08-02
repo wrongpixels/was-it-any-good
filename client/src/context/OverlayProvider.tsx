@@ -1,14 +1,15 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
-interface OverlayContextValues {
+export interface OverlayContextValues {
   image: string;
   active: boolean;
   className?: string;
 }
 
-interface OverlayValues {
+export interface OverlayValues {
   overlay: OverlayContextValues;
   setOverlay: (overlay: OverlayContextValues) => void;
+  openAsOverlay: (image: string, className?: string) => void;
   clean: () => void;
 }
 
@@ -21,6 +22,7 @@ const DEF_OVERLAY: OverlayContextValues = {
 const OverlayContext = createContext<OverlayValues>({
   overlay: DEF_OVERLAY,
   setOverlay: () => {},
+  openAsOverlay: () => {},
   clean: () => {},
 });
 
@@ -32,7 +34,9 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
       value={{
         overlay,
         setOverlay,
-        clean: () => setOverlay({ ...overlay, active: false }),
+        openAsOverlay: (image: string, className?: string) =>
+          setOverlay({ ...DEF_OVERLAY, active: true, image, className }),
+        clean: () => setOverlay(DEF_OVERLAY),
       }}
     >
       {children}
@@ -40,7 +44,7 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
   );
 };
 
-export const userOverlay = (): OverlayValues => {
+export const useOverlay = (): OverlayValues => {
   const overlay = useContext(OverlayContext);
   if (!overlay) {
     throw new Error('useOverlay must be used within an OverlayProvider');

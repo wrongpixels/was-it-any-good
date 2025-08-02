@@ -5,7 +5,7 @@ import { getMediaAverageRating } from '../../utils/ratings-helper';
 import LazyImage from '../common/LazyImage';
 import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
-import { userOverlay } from '../../context/OverlayProvider';
+import { useOverlay } from '../../context/OverlayProvider';
 
 interface MediaEntryPosterProps {
   media: MediaResponse;
@@ -13,7 +13,7 @@ interface MediaEntryPosterProps {
 
 const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
-  const { setOverlay } = userOverlay();
+  const { openAsOverlay } = useOverlay();
 
   return (
     <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
@@ -22,12 +22,7 @@ const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
         alt={media.name}
         title={media.name}
         className={`rounded shadow ring-1 ring-gray-300 ${styles.poster.media}`}
-        onClick={() =>
-          setOverlay({
-            image: imageLinker.getFullSizeImage(media.image),
-            active: true,
-          })
-        }
+        onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
       <div className="text-center">
         <PosterRating rating={average} media={media} valid={true} />
