@@ -50,7 +50,7 @@ const PosterRating = ({
           {!isSeason && (
             <div className={`w-6 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
-                media={media}
+                id={media.tmdbId}
                 mediaType={media.mediaType}
                 tmdb={true}
               />
@@ -75,7 +75,7 @@ const PosterRating = ({
           {!isSeason && (
             <div className={`w-6 opacity-80 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
-                media={media}
+                id={media.imdbId}
                 mediaType={media.mediaType}
                 tmdb={false}
               />

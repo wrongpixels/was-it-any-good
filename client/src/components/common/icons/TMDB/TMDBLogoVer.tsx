@@ -4,11 +4,15 @@ import SVG from '../../SVG';
 const TMDBLogoVer = ({
   width = 190.24,
   height = 81.52,
+  newTab,
+  url,
   ...rest
 }: OptIconProps) => (
   <span {...rest}>
     <SVG
       xmlns="http://www.w3.org/2000/svg"
+      url={url}
+      newTab={newTab}
       viewBox="0 0 190.24 81.52"
       width={width}
       height={height}

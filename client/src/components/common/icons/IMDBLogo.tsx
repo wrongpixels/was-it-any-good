@@ -1,10 +1,11 @@
 import { OptIconProps } from '../../../types/common-props-types';
 import SVG from '../SVG';
 
-const IMDBLogo = ({ width = 575, height = 289.83, ...rest }: OptIconProps) => (
+const IMDBLogo = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   <span {...rest}>
     <SVG
-      url={rest.url}
+      url={url}
+      newTab={newTab}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 575 289.83"
       width={width}
