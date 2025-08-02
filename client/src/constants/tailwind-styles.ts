@@ -44,8 +44,24 @@ export const styles = {
     media: `${transitions.slow} hover:scale-101 cursor-pointer`,
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
-    search:
-      'bg-white border-8 border-white rounded-sm shadow-md ring-1 ring-gray-300 w-full',
+    search: {
+      base: 'bg-white p-2 rounded-sm shadow-md ring-1 ring-gray-300 w-full bg-gradient-to-t to-white ',
+      byIndex: (index: number, showbadge?: boolean) => {
+        const baseClasses = `${styles.poster.search.base}`;
+
+        if (!showbadge || index >= 4) {
+          return `${baseClasses} from-gray-100`;
+        }
+
+        const gradientColors: Record<number, string> = {
+          1: 'from-gold/15',
+          2: 'from-gray-400/30',
+          3: 'from-darkbronze/15',
+        };
+
+        return `${baseClasses} ring-gray-325 ${gradientColors[index] ?? ''}`.trim();
+      },
+    },
   },
   buttons: {
     dark: 'bg-cyan-800 hover:bg-cyan-600',
