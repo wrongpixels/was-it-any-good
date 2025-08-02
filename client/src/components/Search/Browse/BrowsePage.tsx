@@ -4,8 +4,8 @@ import { routerPaths } from '../../../utils/url-helper';
 import SpinnerPage from '../../common/status/SpinnerPage';
 import ErrorPage from '../../common/status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
-import { JSX, useEffect } from 'react';
-import EntryTitle from '../../EntryTitle';
+import { useEffect } from 'react';
+import EntryTitle, { EntryTitleProps } from '../../EntryTitle';
 import { OverrideParams } from '../../../types/search-browse-types';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
@@ -14,19 +14,12 @@ import { OverrideParams } from '../../../types/search-browse-types';
 //this way, the component can also be used for our 'top shows/films/media' etc pages
 //while still being compatible with the other params introduced in the url
 
-interface BrowsePageCustomization {
-  //title and icon allows us to customize the BrowsePage for special pages
-  title: string;
-  icon?: JSX.Element;
-}
-
-interface BrowsePageProps {
+export interface BrowsePageProps {
   overrideParams?: OverrideParams;
-  customization?: BrowsePageCustomization;
+  pageTitleOptions?: EntryTitleProps;
 }
 
-const BrowsePage = ({ overrideParams, customization }: BrowsePageProps) => {
-  const title: string | undefined = customization?.title;
+const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.query();
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
@@ -57,14 +50,9 @@ const BrowsePage = ({ overrideParams, customization }: BrowsePageProps) => {
   if (isError || browseResults === null) {
     return <ErrorPage />;
   }
-
   return (
-    <div key={title}>
-      {title && (
-        <div className="mb-8">
-          <EntryTitle title={title} />
-        </div>
-      )}
+    <div key={currentQuery}>
+      {pageTitleOptions && <EntryTitle {...pageTitleOptions} />}
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
       <PageResults
         results={browseResults}

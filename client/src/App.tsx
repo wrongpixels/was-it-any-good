@@ -12,8 +12,10 @@ import BrowsePage from './components/Search/Browse/BrowsePage';
 import RankingBar from './components/NavBar/RankingBar';
 import ImageOverlay from './components/Overlay/ImageOverlay';
 import { routerPaths } from './utils/url-helper';
-import { OrderBy } from '../../shared/types/browse';
-import { SearchType } from '../../shared/types/search';
+import {
+  BrowsePageRouterData,
+  browsePageRoutes,
+} from './config/browsePageRoutes';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
@@ -42,54 +44,15 @@ const AppBody = (): JSX.Element => {
         <Route path="/" element={null} />
         <Route path={routerPaths.search.base} element={<SearchPage />} />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
-        <Route
-          path={routerPaths.popular.multi.base()}
-          element={
-            <BrowsePage
-              customization={{ title: 'Most Popular' }}
-              overrideParams={{
-                orderBy: OrderBy.Popularity,
-                searchType: SearchType.Multi,
-              }}
-            />
-          }
-        />
-        <Route
-          path={routerPaths.tops.multi.base()}
-          element={
-            <BrowsePage
-              customization={{ title: 'Best Rated Media' }}
-              overrideParams={{
-                orderBy: OrderBy.Rating,
-                searchType: SearchType.Multi,
-              }}
-            />
-          }
-        />
-        <Route
-          path={routerPaths.tops.films.base()}
-          element={
-            <BrowsePage
-              customization={{ title: 'Best Rated Films' }}
-              overrideParams={{
-                orderBy: OrderBy.Rating,
-                searchType: SearchType.Film,
-              }}
-            />
-          }
-        />
-        <Route
-          path={routerPaths.tops.shows.base()}
-          element={
-            <BrowsePage
-              customization={{ title: 'Best Rated TV Shows' }}
-              overrideParams={{
-                orderBy: OrderBy.Rating,
-                searchType: SearchType.Show,
-              }}
-            />
-          }
-        />
+
+        {/*We've centralized all our top/most popular etc routes in a single array */}
+        {browsePageRoutes.map((browseRoute: BrowsePageRouterData) => (
+          <Route
+            path={browseRoute.path}
+            key={browseRoute.path}
+            element={<BrowsePage {...browseRoute.browseProps} />}
+          />
+        ))}
 
         <Route
           path={routerPaths.films.idParam()}

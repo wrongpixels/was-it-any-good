@@ -30,7 +30,7 @@ const SearchPage = (): JSX.Element | null => {
     navigateToNewTerm,
     currentPage,
     queryTypeManager,
-  } = useUrlQueryManager(routerPaths.search.query());
+  } = useUrlQueryManager({ basePath: routerPaths.search.base });
 
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
@@ -90,7 +90,10 @@ const SearchPage = (): JSX.Element | null => {
       });
       return;
     }
-    navigateToNewTerm(newSearch || undefined, newSearch === searchTerm);
+    navigateToNewTerm({
+      newTerm: newSearch || undefined,
+      replace: newSearch === searchTerm,
+    });
   };
 
   if (isError || searchResults === null) {

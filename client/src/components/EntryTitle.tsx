@@ -4,10 +4,11 @@ import { MediaType } from '../../../shared/types/media';
 import { getYearParenthesis } from '../../../shared/helpers/format-helper';
 import CountryFlags from './Media/MediaCountryFlags';
 
-interface EntryTitleProps extends PropsWithChildren {
-  title: string | undefined;
+export interface EntryTitleProps extends PropsWithChildren {
+  title?: string | undefined;
   subtitle?: string;
   country?: CountryCode[] | null;
+  icon?: JSX.Element;
   date?: string | null;
   mediaType?: MediaType;
 }
@@ -16,6 +17,7 @@ const EntryTitle = ({
   title,
   subtitle,
   country,
+  icon,
   date,
   mediaType,
   children,
@@ -24,7 +26,8 @@ const EntryTitle = ({
     <>
       <div className="border-b border-gray-200 pb-3 mb-2">
         <h2 className="text-3xl">
-          <span className="inline-flex flex-wrap items-center gap-2">
+          <span className="inline-flex flex-wrap items-center gap-2 align-middle">
+            {icon && icon}
             <span className="font-bold">{title}</span>
             <span className="text-gray-400 font-regular">
               {date && getYearParenthesis(date)}

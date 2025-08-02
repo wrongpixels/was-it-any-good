@@ -16,12 +16,19 @@ import { OverrideParams, QueryOpts } from '../types/search-browse-types';
 import ParamManager from '../utils/search-param-manager';
 import { normalizeQueryTypeParams } from '../utils/url-helper';
 import UrlQueryBuilder from '../utils/url-query-builder';
+import { useCallback, useMemo } from 'react';
 
 //if the manager receives override params, they'll be used ignoring
 //equivalent url params.
 interface UrlQueryManagerOptions {
   basePath: string;
   overrideParams?: OverrideParams;
+}
+
+interface NavigateToQueryOptions {
+  page?: number;
+  replace?: boolean;
+  newTerm?: string;
 }
 
 const useUrlQueryManager = ({
@@ -49,64 +56,92 @@ const useUrlQueryManager = ({
   const sort: Sorting | undefined = stringToSorting(parameters.get('sort'));
 
   //the function that generates a valid query from params
-  const buildQuery = ({ newTerm: newQuery, newPage }: QueryOpts) => {
-    const url: string = queryBuilder
-      .byTerm(newQuery || searchTerm)
-      .byTypes(queryTypeManager.getAppliedNames())
-      //if we sent an override search type, it will replace the ones just added.
-      //if undefined, it will just be skipped keeping them.
-      .byType(overrideParams?.searchType)
-      .byGenres(genres)
-      .byCountries(countries)
-      .byYear(year)
-      .toPage(newPage)
-      .orderBy(overrideParams?.orderBy || orderBy)
-      .sortBy(overrideParams?.sort || sort)
-      .toString();
-    return url;
-  };
+  const buildQuery = useCallback(
+    ({ newTerm: newQuery, newPage }: QueryOpts) => {
+      const url: string = queryBuilder
+        .byTerm(newQuery || searchTerm)
+        .byTypes(queryTypeManager.getAppliedNames())
+        //if we sent an override search type, it will replace the ones just added.
+        //if undefined, it will just be skipped keeping them.
+        .byType(overrideParams?.searchType)
+        .byGenres(genres)
+        .byCountries(countries)
+        .byYear(year)
+        .toPage(newPage)
+        .orderBy(overrideParams?.orderBy || orderBy)
+        .sortBy(overrideParams?.sort || sort)
+        .toString();
+      return url;
+    },
+    [
+      searchTerm,
+      queryTypeManager,
+      overrideParams,
+      genres,
+      countries,
+      year,
+      orderBy,
+      sort,
+      queryBuilder,
+    ]
+  );
 
   //the current query after filtering invalid params
-  const currentQuery: string = buildQuery({ newPage: currentPage });
+  const currentQuery: string = useMemo(
+    () => buildQuery({ newPage: currentPage }),
+    [buildQuery, currentPage]
+  );
   console.log(currentQuery);
 
   //to build a new query with a new term, if provided, or reuse the current one.
   //if page is not provided, we default to page 1.
-  const navigateToQuery = (
-    newTerm?: string,
-    page?: number,
-    replace: boolean = false
-  ) =>
-    navigateTo(`${basePath}?${buildQuery({ newTerm, newPage: page })}`, {
-      replace,
-    });
-
-  //to navigate to a version of the current query term
-  const navigateToCurrentQuery = (replace: boolean = false, page: number = 1) =>
-    navigateToQuery(undefined, page, replace);
+  const navigateToQuery = useCallback(
+    ({ newTerm, page, replace = false }: NavigateToQueryOptions) => {
+      navigateTo(`${basePath}?${buildQuery({ newTerm, newPage: page })}`, {
+        replace,
+      });
+    },
+    [navigateTo, basePath, buildQuery]
+  );
 
   //to go to a specific page
-  const navigateToPage = (page: number) => {
-    navigateToCurrentQuery(false, page);
-  };
+  const navigateToPage = useCallback(
+    (page: number) => {
+      navigateToQuery({ page, replace: false });
+    },
+    [navigateToQuery]
+  );
 
   //to move pages in any direction (-2, 1...)
-  const navigatePages = (movement: number) => {
-    const nextPosition: number = (currentPage || 1) + movement;
-    navigateToPage(nextPosition);
-  };
+  const navigatePages = useCallback(
+    (movement: number) => {
+      const nextPosition: number = (currentPage || 1) + movement;
+      navigateToPage(nextPosition);
+    },
+    [currentPage, navigateToPage]
+  );
 
   //To avoid setting a page url bigger than our results
 
-  return {
-    searchTerm,
-    currentQuery,
-    currentPage,
-    queryTypeManager,
-    navigateToNewTerm: navigateToQuery,
-    navigateToPage,
-    navigatePages,
-  };
+  return useMemo(
+    () => ({
+      searchTerm,
+      currentQuery,
+      currentPage,
+      queryTypeManager,
+      navigateToNewTerm: navigateToQuery, // Renamed for clarity in the return
+      navigateToPage,
+      navigatePages,
+    }),
+    [
+      searchTerm,
+      currentQuery,
+      currentPage,
+      queryTypeManager,
+      navigateToQuery,
+      navigateToPage,
+      navigatePages,
+    ]
+  );
 };
-
 export default useUrlQueryManager;
