@@ -18,6 +18,7 @@ import IndexBadge from './Browse/IndexBadge';
 import imageLinker from '../../../../shared/util/image-linker';
 import { getMediaGenres } from '../../utils/index-media-helper';
 import { GenreUrlMap } from '../../utils/genre-mapper';
+import React from 'react';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -98,4 +99,4 @@ const SearchCard = ({
     </Link>
   );
 };
-export default SearchCard;
+export default React.memo(SearchCard);

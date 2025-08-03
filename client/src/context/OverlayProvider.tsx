@@ -1,7 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
 
 export interface OverlayContextValues {
-  image: string;
+  image: string | undefined;
   active: boolean;
   className?: string;
 }
@@ -14,7 +14,7 @@ export interface OverlayValues {
 }
 
 const DEF_OVERLAY: OverlayContextValues = {
-  image: '',
+  image: undefined,
   active: false,
   className: '',
 };

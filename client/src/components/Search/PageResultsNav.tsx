@@ -5,6 +5,7 @@ import Button from '../common/Button';
 import DisabledDiv from '../common/DisabledDiv';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
+import React from 'react';
 
 interface PageResultsNavProps extends OptClassNameProps {
   results: IndexMediaResponse;
@@ -43,4 +44,4 @@ const PageResultsNav = ({
   );
 };
 
-export default PageResultsNav;
+export default React.memo(PageResultsNav);

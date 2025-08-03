@@ -18,7 +18,7 @@ const MediaPeopleEntry = ({
     return null;
   }
 
-  //we memo the posters to avoid re-calculating them on scroll
+  //we memo the posters to avoid re-buildin them on scroll
   const PeopleCredits: JSX.Element[] = useMemo(
     () =>
       people
@@ -27,7 +27,7 @@ const MediaPeopleEntry = ({
             !!credit.person?.name && !!credit.person.id
         )
         .map((c: CreditResponse | MergedCredits) => (
-          <MediaPersonPoster credit={c} />
+          <MediaPersonPoster key={c.person.id} credit={c} />
         )),
     [people]
   );

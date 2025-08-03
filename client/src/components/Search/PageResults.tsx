@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, useMemo } from 'react';
 import {
   IndexMediaData,
   IndexMediaResponse,
@@ -32,8 +32,27 @@ const PageResults = ({
       <span className="italic text-gray-500 font-normal pl-1">"{term}"</span>
     </>
   );
-
   const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
+
+  //we memo the entries
+  const resultEntries: JSX.Element[] = useMemo(
+    () =>
+      results.indexMedia.map((im: IndexMediaData, index: number) => (
+        <SearchCard
+          key={im.id}
+          media={im}
+          index={index + indexOffset}
+          showBadge={showBadge}
+        />
+      )),
+    [results]
+  );
+
+  //and the navBar
+  const navBar: JSX.Element = useMemo(
+    () => <PageResultsNav results={results} navigatePages={navigatePages} />,
+    [results, navigatePages]
+  );
 
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
@@ -41,27 +60,16 @@ const PageResults = ({
         <span className="w-full text-center text-lg">
           {results.totalResults || 'No'} results <>{term && searchTerm()}</>
         </span>
-        <PageResultsNav results={results} navigatePages={navigatePages} />
+        {navBar}
       </div>
       <span className="flex-1">
         {results.indexMedia.length > 0 ? (
-          <div className="grid grid-cols-3 gap-4">
-            {results.indexMedia.map((im: IndexMediaData, index: number) => (
-              <SearchCard
-                key={im.id}
-                media={im}
-                index={index + indexOffset}
-                showBadge={showBadge}
-              />
-            ))}
-          </div>
+          <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
         ) : (
           <div className="h-64 w-full" aria-hidden="true" />
         )}
       </span>
-      <span className="relative w-full mt-5 mb-2 h-fit">
-        <PageResultsNav results={results} navigatePages={navigatePages} />
-      </span>
+      <span className="relative w-full mt-5 mb-2 h-fit">{navBar}</span>
     </div>
   );
 };
