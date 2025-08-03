@@ -1,18 +1,9 @@
 import express, { Request, Response } from 'express';
 import { Person } from '../models';
 import CustomError from '../util/customError';
-import {
-  IndexMediaData,
-  MediaRoleResponse,
-  PersonResponse,
-} from '../../../shared/types/models';
-import {
-  AuthorMedia,
-  authorOrder,
-  SortedRoles,
-} from '../../../shared/types/roles';
-import { MediaType } from '../../../shared/types/media';
+import { PersonResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
+import { sortRoles } from '../services/people-service';
 const router = express.Router();
 
 router.get('/', async (_req, res, next) => {
@@ -42,49 +33,12 @@ router.get(
         return;
       }
       const personData: PersonResponse = toPlain<Person>(person);
+      //we sort indexMedia here by roles (Actor, Director…) because sequelize
+      //is not great for that and the frontend should avoid doing it.
       res.json({ ...personData, sortedRoles: sortRoles(personData) });
     } catch (error) {
       next(error);
     }
   }
 );
-
-const getIndexMedia = (role: MediaRoleResponse): IndexMediaData | undefined => {
-  if (role.mediaType === MediaType.Film) {
-    return role.film?.indexMedia;
-  }
-  if (role.mediaType === MediaType.Show) {
-    return role.show?.indexMedia;
-  }
-  return undefined;
-};
-const sortRoles = (person: PersonResponse): SortedRoles => {
-  const authorMedia: AuthorMedia[] = [];
-  person.roles?.forEach((r: MediaRoleResponse) => {
-    const indexMedia: IndexMediaData | undefined = getIndexMedia(r);
-    if (indexMedia) {
-      const entry = authorMedia.find(
-        (a: AuthorMedia) => a.authorType === r.role
-      );
-      if (entry) {
-        entry.indexMedia.push(indexMedia);
-      } else {
-        authorMedia.push({ authorType: r.role, indexMedia: [indexMedia] });
-      }
-    }
-  });
-  authorMedia.sort((a, b) => {
-    const countB = b.indexMedia.length;
-    const countA = a.indexMedia.length;
-    if (countA !== countB) {
-      return countB - countA;
-    }
-    return (
-      authorOrder.indexOf(a.authorType) - authorOrder.indexOf(b.authorType)
-    );
-  });
-  const mainRoles = authorMedia.map((role) => role.authorType);
-  return { mediaByRole: authorMedia, mainRoles };
-};
-
 export default router;

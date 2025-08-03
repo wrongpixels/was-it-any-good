@@ -37,7 +37,7 @@ const MediaPersonPoster = ({ credit }: MediaPersonPosterProps) => {
         src={imageLinker.getAvatarImage(credit.person.image)}
         alt={credit.person.name}
         title={credit.person.name}
-        className="w-26 rounded h-auto shadow ring-1 ring-gray-300"
+        className="w-26 rounded h-33 shadow ring-1 ring-gray-300"
         loading="lazy"
       />
       <div className="w-28 flex flex-col items-center text-center pt-1 pb-1 flex-grow">

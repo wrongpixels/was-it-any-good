@@ -12,6 +12,9 @@ const crewRolePriority: Record<AuthorType, number> = {
   [AuthorType.Unknown]: 99,
 };
 
+//to merge individual credits within the same media for the each person.
+//we display them in order according to the priority
+
 export const mergeCredits = (
   credits: CreditResponse[]
 ): MergedCredits[] | undefined => {
@@ -27,7 +30,6 @@ export const mergeCredits = (
     if (!personId) {
       return;
     }
-
     if (mergedMap.has(personId)) {
       const existingEntry: MergedCredits = mergedMap.get(personId)!;
       if (currentRole && !existingEntry.mergedRoles.includes(currentRole)) {

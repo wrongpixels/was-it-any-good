@@ -286,7 +286,7 @@ class Media<
       ...findOptions,
       where,
     };
-    console.log(combinedFindOptions);
+    //we need to do it like this or TS complains about typing.
     switch (params.mediaType) {
       case MediaType.Film:
         return await Film.scope(scopeOptions).findOne(combinedFindOptions);
@@ -390,7 +390,6 @@ class Media<
         {
           association: 'crew',
           separate: true,
-          limit: 5,
           include: [
             {
               association: 'person',

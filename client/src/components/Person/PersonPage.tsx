@@ -4,7 +4,7 @@ import { usePersonQuery } from '../../queries/people-queries';
 import BasicPoster from '../Poster/BasicPoster';
 import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
-import imageLinker from '../../../../shared/util/image-linker';
+import { AuthorMedia } from '../../../../shared/types/roles';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -28,13 +28,22 @@ const PersonPage = (): JSX.Element | null => {
   return (
     <div>
       <EntryTitle title={person.name} />
-      <div className="pt-3 w-43">
-        <BasicPoster
-          title={person.name}
-          src={person.image}
-          alt={person.name}
-          extraInfo={person.sortedRoles?.mainRoles.join(', ')}
-        />
+      <div className="pt-3 flex flex-row">
+        <span className="inline-block w-40">
+          <BasicPoster
+            title={person.name}
+            src={person.image}
+            alt={person.name}
+            extraInfo={person.sortedRoles?.mainRoles.join(', ')}
+          />
+        </span>
+        <div className="flex flex-col w-fit">
+          {person.sortedRoles?.mediaByRole.map((media: AuthorMedia) => (
+            <div key={media.authorType}>
+              <span>{`As ${media.authorType}`}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
