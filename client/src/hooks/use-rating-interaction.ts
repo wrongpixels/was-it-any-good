@@ -80,7 +80,7 @@ export const useRatingInteractions = (
     if (!session || session.expired || !session.userId) {
       sendPosterNotification('You have to login to vote!');
       playAnim({
-        animKey: 'main-media-stars',
+        animKey: `${mediaType}-stars-${media.id}`,
         animationClass: 'animate-shake',
       });
       return;

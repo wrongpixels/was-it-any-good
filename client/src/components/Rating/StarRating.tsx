@@ -48,7 +48,10 @@ const StarRating = ({
         onClick={handlers.handleClick}
       >
         <span className="w-4" />
-        <AnimatedDiv className="relative" animKey="main-media-stars">
+        <AnimatedDiv
+          className="relative"
+          animKey={`${mediaType}-stars-${media.id}`}
+        >
           <div className="text-gray-300" ref={anchorRef}>
             <StarList
               width={starWidth}
