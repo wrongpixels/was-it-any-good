@@ -27,7 +27,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50">
-      <div className="h-11 bg-[#5980c7] shadow-sm">
+      <div className="h-11 bg-[#5980c7] shadow-md/15">
         <div className="relative flex h-full w-full max-w-5xl items-center justify-between mx-auto px-4">
           <div className="flex-1 flex justify-start">
             <div className="hidden md:block">
@@ -79,8 +79,6 @@ const Header = () => {
           </div>
         </div>
       )}
-
-      <div className="absolute top-11 bg-black/15 w-full h-0.5 shadow-sm shadow-black/20" />
     </header>
   );
 };

@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { PathMatch, useMatch } from 'react-router-dom';
+import { Link, PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import BasicPoster from '../Poster/BasicPoster';
 import { setTitle } from '../../utils/page-info-setter';
@@ -18,6 +18,11 @@ import {
 } from '../../constants/ratings-constants';
 import DisplayRating from '../Rating/DisplayRating';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
+import {
+  mediaTypeToDisplayName,
+  urlFromIndexMedia,
+} from '../../utils/url-helper';
+import Separator from '../common/Separator';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -42,8 +47,8 @@ const PersonPage = (): JSX.Element | null => {
   return (
     <div>
       <EntryTitle title={person.name} />
-      <div className="pt-3 flex flex-row">
-        <span className="inline-block w-40">
+      <div className="flex flex-row">
+        <span className="w-40">
           <BasicPoster
             title={person.name}
             src={person.image}
@@ -51,28 +56,40 @@ const PersonPage = (): JSX.Element | null => {
             extraInfo={person.sortedRoles?.mainRoles.join(', ')}
           />
         </span>
-        <div className="flex flex-col w-fit">
-          {person.sortedRoles?.mediaByRole.map((media: AuthorMedia) => (
-            <div key={media.authorType}>
-              <span>{`As ${media.authorType}`}</span>
-              <ScrollableDiv>
-                {media.indexMedia.map((i: IndexMediaData) => (
-                  <div className={`w-35 ${styles.poster.regular()}`}>
-                    <LazyImage
-                      src={imageLinker.getPosterImage(i.image)}
-                      alt={i.name}
-                      title={i.name}
-                      className={`rounded shadow`}
-                      onClick={() =>
-                        openAsOverlay(imageLinker.getFullSizeImage(i.image))
-                      }
-                    />
-                    <IndexMediaRatingStars value={i.rating} />
-                  </div>
-                ))}
-              </ScrollableDiv>
-            </div>
-          ))}
+        <span className="pr-10 border-r-1 border-gray-200" />
+        <div className="flex flex-col w-fit gap-2 pl-4 -mt-2">
+          {person.sortedRoles?.mediaByRole.map(
+            (media: AuthorMedia, index: number) => (
+              <div key={media.authorType} className="flex flex-row">
+                <span className="flex flex-col w-full">
+                  {index > 0 && <Separator className="w-full pb-2" />}
+                  <span className="text-left font-semibold text-lg pb-1">
+                    {`${media.authorType}:`}
+                  </span>
+                  <ScrollableDiv className="ml-4">
+                    {media.indexMedia.map((im: IndexMediaData) => (
+                      <Link
+                        to={urlFromIndexMedia(im)}
+                        title={`${im.name} (${mediaTypeToDisplayName(im.mediaType)})`}
+                      >
+                        <div className={`w-35 ${styles.poster.animated()}`}>
+                          <span className="text-sm text-gray-500 text-center -translate-y-1 line-clamp-2">
+                            {im.name}
+                          </span>
+                          <LazyImage
+                            src={imageLinker.getPosterImage(im.image)}
+                            alt={im.name}
+                            className={`rounded shadow ring-1 ring-gray-325`}
+                          />
+                          <IndexMediaRatingStars value={im.rating} />
+                        </div>
+                      </Link>
+                    ))}
+                  </ScrollableDiv>
+                </span>
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>

@@ -42,7 +42,10 @@ export const styles = {
   },
   poster: {
     regular: () =>
-      `${styles.animations.posterZoom} bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-pointer`,
+      `bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-default`,
+
+    animated: () =>
+      `${styles.animations.posterZoom} ${styles.poster.regular()} cursor-pointer`,
 
     media: `${transitions.slow} ring-1 ring-gray-325 hover:scale-101 cursor-pointer`,
     suggestions:

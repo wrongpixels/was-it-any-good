@@ -11,7 +11,7 @@ import DisplayRating from '../Rating/DisplayRating';
 
 const IndexMediaRatingStars = ({ value: average = 0 }: OptNumPros) => {
   return (
-    <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500 pr-1">
+    <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500">
       {average ? (
         average
       ) : (
@@ -19,7 +19,11 @@ const IndexMediaRatingStars = ({ value: average = 0 }: OptNumPros) => {
           {NO_RATINGS}
         </div>
       )}
-      <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
+      <DisplayRating
+        className="-mt-0.5"
+        rating={average}
+        starWidth={DEF_MINI_STAR_WIDTH}
+      />
     </span>
   );
 };
