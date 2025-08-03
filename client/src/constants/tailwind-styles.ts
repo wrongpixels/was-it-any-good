@@ -45,7 +45,7 @@ export const styles = {
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search: {
-      base: 'bg-white p-2 rounded-sm shadow-md ring-1 ring-gray-300 w-full bg-gradient-to-t to-white ',
+      base: 'bg-white p-2 rounded-sm shadow-md ring-1 ring-gray-300 w-full bg-gradient-to-t to-white',
       byIndex: (index: number, showbadge?: boolean) => {
         const baseClasses = `${styles.poster.search.base}`;
 
@@ -62,6 +62,9 @@ export const styles = {
         return `${baseClasses} ring-2 ${gradientColors[index] ?? ''}`.trim();
       },
     },
+  },
+  gradient: {
+    poster: 'bg-gradient-to-t from-gray-200/60 via-white to-white',
   },
   buttons: {
     dark: 'bg-cyan-800 hover:bg-cyan-600',

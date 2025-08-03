@@ -16,8 +16,7 @@ import DisplayRating from '../Rating/DisplayRating';
 import CountryFlags from '../Media/MediaCountryFlags';
 import IndexBadge from './Browse/IndexBadge';
 import imageLinker from '../../../../shared/util/image-linker';
-import { MediaType } from '../../../../shared/types/media';
-import { getMediaGenres, IndexGenreMap } from '../../utils/index-media-helper';
+import { getMediaGenres } from '../../utils/index-media-helper';
 import { GenreUrlMap } from '../../utils/genre-mapper';
 
 interface SearchCardProps {

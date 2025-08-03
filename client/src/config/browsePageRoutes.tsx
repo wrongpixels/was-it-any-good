@@ -72,7 +72,7 @@ const buildProps = ({
 export const browsePageRoutes: BrowsePageRouterData[] = [
   {
     path: routerPaths.popular.multi.base(),
-    browseProps: buildProps({ title: 'Most Popular Media' }),
+    browseProps: buildProps({ title: 'Popular Media' }),
   },
   {
     path: routerPaths.tops.multi.base(),

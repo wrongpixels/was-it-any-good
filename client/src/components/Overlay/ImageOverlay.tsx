@@ -8,7 +8,7 @@ import useEventBlocker from '../../hooks/use-event-blocker';
 const ANIM_DURATION: number = 300;
 
 const ImageOverlay = () => {
-  const { overlay, clean } = useOverlay();
+  const { overlay, clean, setOverlay } = useOverlay();
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);

@@ -46,7 +46,7 @@ const MediaPeopleEntry = ({
             <Link
               to={`/person/${c.person.id}`}
               key={c.person.id}
-              className={`flex-shrink-0 flex flex-col bg-white items-center shadow-md rounded border-5 border-white ring-1 ring-gray-300 pt-1 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+              className={`flex-shrink-0 flex flex-col items-center shadow-md rounded p-1 pt-2 ring-1 ring-gray-300 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} ${styles.gradient.poster}`}
             >
               <LazyImage
                 variant={ImageVariant.inline}
@@ -56,7 +56,7 @@ const MediaPeopleEntry = ({
                 className="w-26 rounded h-auto shadow ring-1 ring-gray-300"
                 loading="lazy"
               />
-              <div className="w-28 flex flex-col items-center text-center pt-1.5 pb-1 flex-grow">
+              <div className="w-28 flex flex-col items-center text-center pt-1 pb-1 flex-grow">
                 <div className="flex-grow flex items-center justify-center px-0.5">
                   <div className="flex flex-col items-center gap-1">
                     <div
