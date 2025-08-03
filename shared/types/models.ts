@@ -1,6 +1,6 @@
 import { CountryCode } from './countries'
 import { MediaType } from './media'
-import { AuthorType } from './roles'
+import { AuthorType, SortedRoles } from './roles'
 
 export interface MediaRoleResponse {
   id: number
@@ -8,6 +8,8 @@ export interface MediaRoleResponse {
   mediaId: number
   mediaType: MediaType
   characterName: string[]
+  film?: FilmResponse
+  show?: ShowResponse
 }
 
 export interface CreateIndexMedia {
@@ -119,12 +121,13 @@ export interface GenreResponse {
 export interface PersonResponse {
   id: number
   name: string
-  tmdbId?: number | undefined
+  tmdbId?: number
   gamedbId?: string | undefined
   image: string
   birthDate?: string | undefined
   country: CountryCode[]
   roles?: MediaRoleResponse[]
+  sortedRoles?: SortedRoles
 }
 
 export interface BaseResponse {
