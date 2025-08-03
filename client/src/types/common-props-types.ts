@@ -16,6 +16,10 @@ export interface OptStringProps extends OptClassNameProps {
   text?: string;
 }
 
+export interface OptNumPros extends OptClassNameProps {
+  value?: number;
+}
+
 export interface OptBoolProps extends OptClassNameProps {
   condition?: boolean;
 }

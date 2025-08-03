@@ -19,6 +19,7 @@ import imageLinker from '../../../../shared/util/image-linker';
 import { getMediaGenres } from '../../utils/index-media-helper';
 import { GenreUrlMap } from '../../utils/genre-mapper';
 import React from 'react';
+import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -85,16 +86,7 @@ const SearchCard = ({
           </span>
         </span>
         <div className="grow" />
-        <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500 pr-1">
-          {average ? (
-            average
-          ) : (
-            <div className="text-sm font-normal text-gray-300 text-center pt-2 pb-1 italic">
-              {NO_RATINGS}
-            </div>
-          )}
-          <DisplayRating rating={average} starWidth={DEF_MINI_STAR_WIDTH} />
-        </span>
+        <IndexMediaRatingStars value={average} />
       </div>
     </Link>
   );

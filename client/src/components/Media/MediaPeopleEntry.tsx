@@ -1,7 +1,7 @@
 import { JSX, useMemo } from 'react';
 import { CreditResponse, MergedCredits } from '../../../../shared/types/models';
 import MediaPersonPoster from './MediaPersonPoster';
-import ScrollableDiv from '../Person/ScrollableDiv';
+import ScrollableDiv from '../common/ScrollableDiv';
 
 interface MediaPeopleEntryProps {
   people: CreditResponse[] | MergedCredits[];

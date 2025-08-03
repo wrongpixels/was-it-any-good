@@ -11,7 +11,6 @@
 const transitions = {
   slow: 'transition-all duration-70 ease-out',
   slower: 'transition-all duration-100 ease-out',
-
   fast: 'transition-all duration-40 ease-out',
   normal: 'transition-all duration-60 ease-out',
 };
@@ -23,6 +22,7 @@ export const styles = {
     opacity80: `${transitions.slower} opacity-80 hover:opacity-100`,
     zoomOnHover: `${transitions.slow} hover:scale-107`,
     zoomLessOnHover: `${transitions.slow} hover:scale-103`,
+    posterZoom: `${transitions.slow} hover:scale-101`,
     zoomMoreOnHover: `${transitions.slow} hover:scale-115`,
     upOnHover: `${transitions.fast} hover:-translate-y-1`,
     upOnHoverShort: `${transitions.fast} hover:-translate-y-0.5`,
@@ -41,6 +41,9 @@ export const styles = {
     search: 'border pl-7 text-base py-1.5 w-80 shadow-md shadow-black/5',
   },
   poster: {
+    regular: () =>
+      `${styles.animations.posterZoom} bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-pointer`,
+
     media: `${transitions.slow} ring-1 ring-gray-325 hover:scale-101 cursor-pointer`,
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
