@@ -31,7 +31,7 @@ export const styles = {
   },
   shadow: {
     subtle: 'shadow-sm shadow-black/10',
-    textShadow: '[text-shadow:_1px_2px_2px_rgb(0_0_0_/_0.3)]',
+    textShadow: '[text-shadow:_1px_2px_2px_rgb(0_0_0_/_0.2)]',
     allShadow: () =>
       `${styles.shadow.textShadow} [drop-shadow:_1px_2px_2px_rgb(0_0_0_/_0.3)]`,
   },

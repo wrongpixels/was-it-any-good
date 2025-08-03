@@ -22,7 +22,7 @@ const BasicPoster = ({ extraInfo, src }: BasicPosterProps): JSX.Element => {
         className={`rounded shadow ring-1 ring-gray-300 ${styles.poster.media} min-h-53 `}
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(src))}
       />
-      <span className="p-0.5 mt-0.5 font-medium text-sm leading-tight break-words text-gray-500 text-center">
+      <span className="p-0.5 mt-0.5 font-normal text-sm leading-tight break-words text-gray-500 text-center">
         {extraInfo}
       </span>
     </div>
