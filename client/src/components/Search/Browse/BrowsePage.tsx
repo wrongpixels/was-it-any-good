@@ -25,6 +25,7 @@ export interface BrowsePageProps {
 
 const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.query();
+  console.log('base path is', basePath);
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
   //verride params are passed here.

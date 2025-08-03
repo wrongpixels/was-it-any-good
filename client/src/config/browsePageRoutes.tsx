@@ -43,58 +43,58 @@ const getIcon = (
   }
 };
 
-interface BrowsePropsBuilder {
+interface PageRouteBuilderProps {
   title: string;
+  path: string;
   searchType?: SearchType;
   orderBy?: OrderBy;
   sort?: Sorting;
 }
 
-const buildProps = ({
+const buildPageRoute = ({
   title,
+  path,
   searchType = SearchType.Multi,
   orderBy = OrderBy.Popularity,
   sort = Sorting.descending,
-}: BrowsePropsBuilder): BrowsePageProps => {
+}: PageRouteBuilderProps): BrowsePageRouterData => {
   return {
-    pageTitleOptions: {
-      title,
-      icon: getIcon(searchType, orderBy),
-    },
-    overrideParams: {
-      orderBy,
-      searchType,
-      sort,
+    path,
+    browseProps: {
+      pageTitleOptions: {
+        title,
+        icon: getIcon(searchType, orderBy),
+      },
+      overrideParams: {
+        orderBy,
+        searchType,
+        sort,
+        basePath: path,
+      },
     },
   };
 };
 
 export const browsePageRoutes: BrowsePageRouterData[] = [
-  {
+  buildPageRoute({
+    title: 'Popular Media',
     path: routerPaths.popular.multi.base(),
-    browseProps: buildProps({ title: 'Popular Media' }),
-  },
-  {
+  }),
+  buildPageRoute({
+    title: 'Top Rated Media',
     path: routerPaths.tops.multi.base(),
-    browseProps: buildProps({
-      title: 'Top Rated Media',
-      orderBy: OrderBy.Rating,
-    }),
-  },
-  {
+    orderBy: OrderBy.Rating,
+  }),
+  buildPageRoute({
+    title: 'Top Rated Films',
     path: routerPaths.tops.films.base(),
-    browseProps: buildProps({
-      title: 'Top Rated Films',
-      orderBy: OrderBy.Rating,
-      searchType: SearchType.Film,
-    }),
-  },
-  {
+    orderBy: OrderBy.Rating,
+    searchType: SearchType.Film,
+  }),
+  buildPageRoute({
+    title: 'Top Rated TV Shows',
     path: routerPaths.tops.shows.base(),
-    browseProps: buildProps({
-      title: 'Top Rated TV Shows',
-      orderBy: OrderBy.Rating,
-      searchType: SearchType.Show,
-    }),
-  },
+    orderBy: OrderBy.Rating,
+    searchType: SearchType.Show,
+  }),
 ];

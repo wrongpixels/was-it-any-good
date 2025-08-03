@@ -27,17 +27,23 @@ const EntryTitle = ({
     <>
       <div className="pb-3 mb-2 min-h-15 flex flex-col">
         <h2 className="text-3xl">
-          <span className="inline-flex flex-wrap items-center gap-2 align-middle justify-center">
-            {icon && icon}
-            <span className="font-bold">{title}</span>
-            <span className="text-gray-400 font-regular">
-              {date && getYearParenthesis(date)}
-            </span>
-            {country && (
-              <CountryFlags countryCodes={country} mediaType={mediaType} />
-            )}
+          {icon && (
+            <span className="inline-block align-middle mr-2">{icon}</span>
+          )}
+
+          <span className="font-bold align-middle">{title}</span>
+
+          <span className="font-normal text-gray-400 align-middle">
+            {date && ` ${getYearParenthesis(date)}`}
           </span>
+
+          {country && (
+            <span className="inline-block align-middle ml-1">
+              <CountryFlags countryCodes={country} mediaType={mediaType} />
+            </span>
+          )}
         </h2>
+
         {subtitle && subtitle !== title && (
           <h3 className="text-gray-400 text-sm font-normal italic mt-1">
             "{subtitle}"
