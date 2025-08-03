@@ -25,7 +25,7 @@ const EntryTitle = ({
 }: EntryTitleProps): JSX.Element | null => {
   return (
     <>
-      <div className="pb-3 mb-2 min-h-15 flex flex-col">
+      <div className="pb-3 mb-1 min-h-15 flex flex-col">
         <h2 className="text-3xl">
           {icon && (
             <span className="inline-block align-middle mr-2">{icon}</span>

@@ -1,10 +1,6 @@
 import { JSX, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../shared/types/models';
-import {
-  DEF_MINI_STAR_WIDTH,
-  NO_RATINGS,
-} from '../../constants/ratings-constants';
 import { styles } from '../../constants/tailwind-styles';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import {
@@ -12,7 +8,6 @@ import {
   urlFromIndexMedia,
 } from '../../utils/url-helper';
 import LazyImage, { AspectRatio } from '../common/LazyImage';
-import DisplayRating from '../Rating/DisplayRating';
 import CountryFlags from '../Media/MediaCountryFlags';
 import IndexBadge from './Browse/IndexBadge';
 import imageLinker from '../../../../shared/util/image-linker';

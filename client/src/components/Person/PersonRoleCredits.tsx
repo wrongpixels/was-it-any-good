@@ -35,7 +35,7 @@ const PersonRoleCredits = ({ media, isFirst }: PersonRoleCreditsProps) => {
           >
             <div className={`${styles.poster.animated()} w-35 `}>
               <span className="text-sm text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 ">
-                <span className="line-clamp-2">{im.name}</span>
+                <span className="line-clamp-2 leading-tight">{im.name}</span>
               </span>
 
               <div className="flex-1 relative">

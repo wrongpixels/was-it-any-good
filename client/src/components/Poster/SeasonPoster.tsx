@@ -16,7 +16,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   const { openAsOverlay }: OverlayValues = useOverlay();
 
   return (
-    <div className="text-center bg-white shadow-md w-40 rounded border-9 border-white ring-1 ring-gray-300 self-start">
+    <div className={`${styles.poster.regular()}`}>
       <div className="text-sm font-medium text-center -translate-y-1">
         <div className="truncate" title={media.name}>
           {media.name}
@@ -26,7 +26,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
         title={media.name}
-        className={`rounded shadow ${styles.poster.media}`}
+        className={`rounded shadow ${styles.poster.media} `}
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
       <div>

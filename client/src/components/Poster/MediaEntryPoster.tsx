@@ -16,7 +16,7 @@ const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
   const { openAsOverlay } = useOverlay();
 
   return (
-    <div className="bg-white shadow-md rounded border-9 border-white ring-1 ring-gray-300 self-start">
+    <div className={`${styles.poster.regular()}`}>
       <LazyImage
         src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
