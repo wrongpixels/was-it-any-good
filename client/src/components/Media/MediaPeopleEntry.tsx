@@ -18,7 +18,7 @@ const MediaPeopleEntry = ({
     return null;
   }
 
-  //we memo the posters to avoid re-buildin them on scroll
+  //we memo the posters to avoid re-building them on scroll
   const PeopleCredits: JSX.Element[] = useMemo(
     () =>
       people

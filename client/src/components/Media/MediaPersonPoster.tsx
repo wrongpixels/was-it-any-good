@@ -7,10 +7,18 @@ import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { routerPaths } from '../../utils/url-helper';
 import React from 'react';
 
-const getExtraInfo = (person: CreditResponse | MergedCredits): string =>
-  isMerged(person)
-    ? person.mergedRoles.join(', ')
-    : person.characterName?.join(', ').replace(' (voice)', '') || 'Unknown';
+//We unify the inconsistent way character names are used in TMDB and remove the '(voice)' tags,
+//as those take so much useless space.
+const getExtraInfo = (person: CreditResponse | MergedCredits): string => {
+  if (isMerged(person)) {
+    return person.mergedRoles.join(', ');
+  }
+  const cleanNames: string[] | undefined = person.characterName?.map(
+    (c: string) => c.replace(/\s*\(voice\)/g, '').replace(/ \/ /g, ', ')
+  );
+
+  return cleanNames?.join(', ').replace(' (voice)', '') || 'Unknown';
+};
 
 interface MediaPersonPosterProps {
   credit: CreditResponse | MergedCredits;
