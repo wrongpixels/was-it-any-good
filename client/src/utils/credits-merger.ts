@@ -1,3 +1,4 @@
+import { MediaType } from '../../../shared/types/media';
 import { CreditResponse, MergedCredits } from '../../../shared/types/models';
 import { AuthorType } from '../../../shared/types/roles';
 
@@ -16,7 +17,8 @@ const crewRolePriority: Record<AuthorType, number> = {
 //we display them in order according to the priority
 
 export const mergeCredits = (
-  credits: CreditResponse[]
+  credits: CreditResponse[],
+  mediaType: MediaType
 ): MergedCredits[] | undefined => {
   const mergedMap: Map<number, MergedCredits> = new Map<
     number,
@@ -56,8 +58,17 @@ export const mergeCredits = (
     const bPriority = crewRolePriority[b.mergedRoles[0]] ?? 99;
     return aPriority - bPriority;
   });
+  //if it's a show, after unifying and sorting, we keep the 5 most important people.
+  //we do this because shows tend to have way too many directors listed to be relevant.
+  //we do it here and not in the backend in case we want to add a "show all" button.
+  // (crew sizes on media are limtied to 20 people on creation either way)
+  //if we did this before, person with many roles (creator, director, writer) would count as 4 people.
 
-  return mergedList.length > 0 ? mergedList : undefined;
+  return mergedList.length > 0
+    ? mediaType === MediaType.Show
+      ? mergedList.slice(0, 5)
+      : mergedList
+    : undefined;
 };
 
 export const isMerged = (

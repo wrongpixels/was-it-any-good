@@ -13,7 +13,10 @@ const transformCredits = (data: MediaResponse): MediaResponse => {
   return {
     ...data,
     cast: data.cast && data.cast.length > 0 ? data.cast : undefined,
-    mergedCrew: data.crew.length > 0 ? mergeCredits(data.crew) : undefined,
+    mergedCrew:
+      data.crew.length > 0
+        ? mergeCredits(data.crew, data.mediaType)
+        : undefined,
   };
 };
 

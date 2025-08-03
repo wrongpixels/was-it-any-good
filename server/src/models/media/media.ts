@@ -389,6 +389,16 @@ class Media<
         },
         {
           association: 'crew',
+          where: {
+            role: {
+              //currently, we just care about direct creators
+              [Op.in]: [
+                AuthorType.Creator,
+                AuthorType.Director,
+                AuthorType.Writer,
+              ],
+            },
+          },
           separate: true,
           include: [
             {
