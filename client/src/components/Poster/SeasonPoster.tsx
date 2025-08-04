@@ -29,7 +29,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         className={`rounded shadow ${styles.poster.media} `}
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
-      <div>
+      <div className="text-center">
         <PosterRating rating={average} media={media} valid={true} />
       </div>
     </div>

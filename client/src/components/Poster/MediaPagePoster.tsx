@@ -7,11 +7,11 @@ import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
 import { useOverlay } from '../../context/OverlayProvider';
 
-interface MediaEntryPosterProps {
+interface MediaPagePosterProps {
   media: MediaResponse;
 }
 
-const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
+const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
   const { openAsOverlay } = useOverlay();
 
@@ -31,4 +31,4 @@ const MediaEntryPoster = ({ media }: MediaEntryPosterProps): JSX.Element => {
   );
 };
 
-export default MediaEntryPoster;
+export default MediaPagePoster;

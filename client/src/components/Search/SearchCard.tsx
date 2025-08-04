@@ -15,6 +15,7 @@ import { getMediaGenres } from '../../utils/index-media-helper';
 import { GenreUrlMap } from '../../utils/genre-mapper';
 import React from 'react';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
+import Bubble from '../common/Bubble';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -69,12 +70,7 @@ const SearchCard = ({
               <span className="flex flex-wrap gap-1">
                 {genreMap &&
                   genreMap.map((g: GenreUrlMap) => (
-                    <span
-                      key={g.id}
-                      className="text-xs font-medium px-2 py-0.25 rounded-full bg-starbright/40 text-cyan-800 overflow-clip"
-                    >
-                      {g.name}
-                    </span>
+                    <Bubble key={g.id} text={g.name} />
                   ))}
               </span>
             </div>

@@ -3,7 +3,7 @@ import { PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
-import BasicPoster from '../Poster/BasicPoster';
+import PersonPagePoster from '../Poster/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
 
@@ -31,7 +31,7 @@ const PersonPage = (): JSX.Element | null => {
       <EntryTitle title={person.name} />
       <div className="flex flex-row flex-1">
         <div className="w-40 mt-7 flex-shrink-0">
-          <BasicPoster
+          <PersonPagePoster
             title={person.name}
             src={person.image}
             alt={person.name}

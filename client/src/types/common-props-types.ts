@@ -6,6 +6,7 @@ export interface OptClassNameProps {
   className?: string;
   title?: string;
   ref?: React.Ref<HTMLDivElement>;
+  key?: string | number;
 }
 
 export interface MediaTypeProps extends OptClassNameProps {

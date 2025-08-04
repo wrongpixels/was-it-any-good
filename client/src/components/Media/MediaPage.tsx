@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
-import MediaEntryPoster from '../Poster/MediaEntryPoster';
+import MediaPagePoster from '../Poster/MediaPagePoster';
 import MediaHeader from './MediaHeader';
 import SeasonsEntry from './SeasonsEntry';
 import { useParams } from 'react-router-dom';
@@ -115,7 +115,7 @@ const MediaPage = ({
           </div>
         </div>
         <div className="w-50">
-          <MediaEntryPoster media={media} />
+          <MediaPagePoster media={media} />
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
