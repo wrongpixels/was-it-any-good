@@ -39,6 +39,7 @@ import {
   RatingUpdateOptions,
   RatingUpdateValues,
 } from '../../types/helper-types';
+import { calculateShowAverage } from '../../../../shared/util/rating-average-calculator';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -246,6 +247,7 @@ class Media<
       rating: sequelize.literal(ratingExpressionString),
       voteCount: sequelize.literal(voteCountExpressionString),
     };
+
     const options: RatingUpdateOptions = {
       where: { id: mediaId, mediaType },
       returning: true,
@@ -259,7 +261,38 @@ class Media<
     if (affectedCount === 0 || !updatedMedia) {
       return DEF_RATING_STATS;
     }
-    await updatedMedia.syncIndex();
+    //if show or season, we need both to calculate an average for indexMedia.
+    //indexMedia is needed so it can store the calculated average between
+    //seasons and using for ordering by rating without expensive calculations.
+    if (updatedMedia instanceof Show) {
+      await updatedMedia.reload({
+        attributes: ['rating', 'baseRating', 'voteCount', 'indexId'],
+
+        include: [
+          {
+            association: 'seasons',
+            attributes: ['rating', 'baseRating', 'voteCount'],
+          },
+        ],
+        transaction,
+      });
+      await updatedMedia.syncIndex(transaction);
+    }
+    if (updatedMedia instanceof Season) {
+      const parentShow: Show | null = await Show.findByPk(updatedMedia.showId, {
+        attributes: ['rating', 'baseRating', 'voteCount', 'indexId'],
+        transaction,
+        include: [
+          {
+            association: 'seasons',
+            attributes: ['rating', 'baseRating', 'voteCount'],
+          },
+        ],
+      });
+      if (parentShow) {
+        parentShow.syncIndex(transaction);
+      }
+    }
 
     return {
       rating: updatedMedia.rating,
@@ -300,20 +333,13 @@ class Media<
 
   public async syncIndex(transaction?: Transaction): Promise<void> {
     try {
-      console.log('Trying to update');
-      if (this instanceof Show) {
-        await this.reload({
-          raw: true,
-          include: {
-            association: 'seasons',
-            attributes: ['rating'],
-          },
-        });
-        console.log(this.seasons);
-      }
+      const rating =
+        this instanceof Show && !!this.seasons
+          ? calculateShowAverage(this)
+          : this.rating;
       await IndexMedia.update(
         {
-          rating: this.rating,
+          rating,
           voteCount: this.voteCount,
         },
         {
@@ -323,7 +349,7 @@ class Media<
           transaction,
         }
       );
-      console.log('updated!');
+      console.log('updated!', rating);
     } catch (error) {
       console.error(`Failed to sync index for mediaId: ${this.id}`, error);
     }

@@ -70,6 +70,7 @@ export const buildShowEntry = async (
   await showEntry.reload({
     ...findOptions,
   });
+  await showEntry.syncIndex(params.transaction);
   const showResponse: ShowResponse | null = toPlain(showEntry);
   if (showResponse?.seasons) {
     showResponse.seasons = reorderSeasons(showResponse);

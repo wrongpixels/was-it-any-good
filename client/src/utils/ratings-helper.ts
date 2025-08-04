@@ -6,6 +6,11 @@ import {
   SeasonResponse,
   ShowResponse,
 } from '../../../shared/types/models';
+import {
+  getMediaCurrentRating,
+  calculateShowAverage,
+  calculateAverage,
+} from '../../../shared/util/rating-average-calculator';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
@@ -187,52 +192,4 @@ export const getMediaAverageRating = (
     return calculateShowAverage(media);
   }
   return calculateAverage(media);
-};
-
-export const getMediaCurrentRating = (
-  media: MediaResponse | SeasonResponse | IndexMediaData
-): number => (media.rating > 0 ? media.rating : media.baseRating);
-
-export const calculateAverage = (
-  media: MediaResponse | SeasonResponse | IndexMediaData
-): number => {
-  const globalAverage: number = getMediaCurrentRating(media);
-  return Math.round(globalAverage * 10) / 10;
-};
-
-//To create a weighted average for the 'show' as a whole, taking all seasons and
-//their individual ratings into consideration
-export const calculateShowAverage = (media: ShowResponse): number => {
-  const globalAverage: number = calculateAverage(media);
-
-  const SHOW_WEIGHT = 0.4;
-  const SEASONS_WEIGHT = 0.6;
-
-  if (!media.seasons || media.seasonCount === 0) {
-    return globalAverage;
-  }
-  let validSeasons: SeasonResponse[] = [];
-  media.seasons.map((s: SeasonResponse) =>
-    s.baseRating > 0 || s.rating > 0 ? validSeasons.push(s) : null
-  );
-  const seasonsAverage =
-    validSeasons.reduce(
-      (sum, season) =>
-        sum +
-        (season.rating !== null && season.rating > 0
-          ? Number(season.rating)
-          : Number(season.baseRating)),
-      0
-    ) / validSeasons.length;
-  //if the show itself has not been voted, we return the seasons
-  if (globalAverage === 0 && seasonsAverage) {
-    return Math.round(seasonsAverage * 10) / 10;
-  }
-
-  //We round the result to only 1 decimal
-  return seasonsAverage > 0
-    ? Math.round(
-        (globalAverage * SHOW_WEIGHT + seasonsAverage * SEASONS_WEIGHT) * 10
-      ) / 10
-    : globalAverage;
 };
