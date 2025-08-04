@@ -142,6 +142,32 @@ IndexMedia.init(
         fields: ['tmdb_id', 'media_type'],
       },
     ],
+    scopes: {
+      withMediaAndGenres: {
+        include: [
+          {
+            association: 'film',
+            attributes: ['id'],
+            include: [
+              {
+                association: 'genres',
+                attributes: ['id', 'name'],
+              },
+            ],
+          },
+          {
+            association: 'show',
+            attributes: ['id'],
+            include: [
+              {
+                association: 'genres',
+                attributes: ['id', 'name'],
+              },
+            ],
+          },
+        ],
+      },
+    },
   }
 );
 

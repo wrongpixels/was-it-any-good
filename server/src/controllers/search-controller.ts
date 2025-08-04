@@ -54,9 +54,11 @@ router.get('/', async (req: Request, res, next) => {
       );
       if (indexFilms) {
         films = indexFilms?.films;
+        searchResult = indexFilms;
       }
       if (indexShows) {
         shows = indexShows?.shows;
+        searchResult = indexShows;
       }
     } else {
       //if it's multi, things get way more complicated.
@@ -181,34 +183,14 @@ router.get('/', async (req: Request, res, next) => {
     //we find them again to get the show/film ids and the genres of the
     //IndexMedia entries of media already in our db. Even if we have the reference
     //to the entries, reloading them individually is simply less efficient.
-    const populatedEntries = await IndexMedia.findAll({
+    const populatedEntries = await IndexMedia.scope(
+      'withMediaAndGenres'
+    ).findAll({
       where: {
         id: {
           [Op.in]: ids,
         },
       },
-      include: [
-        {
-          association: 'film',
-          attributes: ['id'],
-          include: [
-            {
-              association: 'genres',
-              attributes: ['id', 'name'],
-            },
-          ],
-        },
-        {
-          association: 'show',
-          attributes: ['id'],
-          include: [
-            {
-              association: 'genres',
-              attributes: ['id', 'name'],
-            },
-          ],
-        },
-      ],
     });
 
     const indexMediaResponse: IndexMediaResponse = {
