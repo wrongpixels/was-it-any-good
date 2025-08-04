@@ -13,7 +13,8 @@ export const buildIncludeOptions = (
   if (isFilterPass && !hasFilters) {
     return [];
   }
-  const genreInclude: IncludeOptions = {
+  const includeOptions: IncludeOptions[] = [];
+  const genreIncludeOptions: IncludeOptions = {
     association: 'genres',
     attributes: ['id', 'name', 'tmdbId'],
     through: {
@@ -24,11 +25,19 @@ export const buildIncludeOptions = (
     },
   };
   if (hasFilters) {
-    genreInclude.where = {
+    genreIncludeOptions.where = {
       id: {
         [Op.in]: genres,
       },
     };
   }
-  return [genreInclude];
+  includeOptions.push(genreIncludeOptions);
+
+  if (mediaType === MediaType.Show) {
+    includeOptions.push({
+      association: 'seasons',
+      attributes: ['rating'],
+    });
+  }
+  return includeOptions;
 };

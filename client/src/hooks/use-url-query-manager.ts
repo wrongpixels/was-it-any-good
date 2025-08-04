@@ -71,6 +71,7 @@ const useUrlQueryManager = ({
         .orderBy(overrideParams?.orderBy || orderBy)
         .sortBy(overrideParams?.sort || sort)
         .toString();
+
       return url;
     },
     [
@@ -107,7 +108,12 @@ const useUrlQueryManager = ({
   //to go to a specific page
   const navigateToPage = useCallback(
     (page: number) => {
-      navigateToQuery({ page, replace: false });
+      if (!overrideParams) {
+        navigateToQuery({ page, replace: false });
+      } else {
+        //if we're overriding parameters, like 'top/shows', we simply set the page query
+        navigateTo(`${page <= 1 ? basePath : `${basePath}?page=${page}`}`);
+      }
     },
     [navigateToQuery]
   );
@@ -129,7 +135,7 @@ const useUrlQueryManager = ({
       currentQuery,
       currentPage,
       queryTypeManager,
-      navigateToNewTerm: navigateToQuery, // Renamed for clarity in the return
+      navigateToQuery,
       navigateToPage,
       navigatePages,
     }),

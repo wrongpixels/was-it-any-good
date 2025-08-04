@@ -42,7 +42,7 @@ const PersonRoleCredits = ({ media, isFirst }: PersonRoleCreditsProps) => {
                 <LazyImage
                   src={imageLinker.getPosterImage(im.image)}
                   alt={im.name}
-                  className="absolute inset-0 w-full h-full object-cover rounded shadow ring-1 ring-gray-325"
+                  className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
                 />
               </div>
               <IndexMediaRatingStars value={im.rating} />

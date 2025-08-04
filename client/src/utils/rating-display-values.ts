@@ -25,7 +25,8 @@ export const getRatingDisplayValues = ({
   const getStarColor = (): string => {
     if (isHovering) {
       const isUnvoteAction: boolean =
-        hoverScore === UserVote.Unvote || hoverScore === currentScore;
+        currentScore !== undefined &&
+        (hoverScore === UserVote.Unvote || hoverScore === currentScore);
       return isUnvoteAction ? RATING_COLORS.delete : RATING_COLORS.hover;
     }
     return currentScore ? RATING_COLORS.selected : RATING_COLORS.default;
@@ -56,7 +57,10 @@ export const getRatingDisplayValues = ({
         currentScore !== UserVote.None &&
         (currentScore === hoverScore || hoverScore === UserVote.Unvote)
       ) {
-        return 'Unvote';
+        if (currentScore !== undefined) {
+          return 'Unvote';
+        }
+        return UserVote.One.toString();
       }
       return hoverScore.toString();
     }

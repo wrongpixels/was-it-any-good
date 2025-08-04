@@ -27,7 +27,7 @@ const SearchPage = (): JSX.Element | null => {
     currentQuery,
     navigatePages,
     navigateToPage,
-    navigateToNewTerm,
+    navigateToQuery: navigateToNewTerm,
     currentPage,
     queryTypeManager,
   } = useUrlQueryManager({ basePath: routerPaths.search.base });
@@ -111,13 +111,10 @@ const SearchPage = (): JSX.Element | null => {
         toggleParam={toggleParam}
         typeFilters={queryTypeManager}
       />
+      {isLoading && (
+        <SpinnerPage text={`Searching for "${searchTerm}"...`} paddingTop={2} />
+      )}
       <span className="pt-1 w-full flex flex-1">
-        {isLoading && (
-          <SpinnerPage
-            text={`Searching for "${searchTerm}"...`}
-            paddingTop={0}
-          />
-        )}
         {searchResults && searchTerm && (
           <div className="flex flex-1">
             <PageResults

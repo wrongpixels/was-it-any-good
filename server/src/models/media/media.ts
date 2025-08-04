@@ -29,8 +29,6 @@ import { AuthorType } from '../../../../shared/types/roles';
 import { sequelize } from '../../util/db';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
-import { upsertIndexMedia } from '../../services/index-media-service';
-import { getYearNum } from '../../../../shared/helpers/format-helper';
 import {
   MediaQueryValues,
   MediaQueryOptions,
@@ -49,6 +47,7 @@ class Media<
   declare id: CreationOptional<number>;
   declare tmdbId: number;
   declare imdbId?: string;
+  declare indexId?: number;
   declare name: string;
   declare originalName: string;
   declare sortName: string;
@@ -257,10 +256,10 @@ class Media<
       values,
       options
     );
-
     if (affectedCount === 0 || !updatedMedia) {
       return DEF_RATING_STATS;
     }
+    await updatedMedia.syncIndex();
 
     return {
       rating: updatedMedia.rating,
@@ -299,28 +298,32 @@ class Media<
     }
   }
 
-  public async syncIndex(): Promise<void> {
+  public async syncIndex(transaction?: Transaction): Promise<void> {
     try {
       console.log('Trying to update');
-      const indexMediaData = {
-        tmdbId: this.tmdbId,
-        mediaType: this.mediaType,
-        mediaId: this.id,
-        addedToMedia: true,
-        country: this.country,
-        name: this.name,
-        image: this.image,
-        rating: this.rating,
-        baseRating: this.baseRating,
-        year: getYearNum(this.releaseDate),
-        voteCount: this.voteCount,
-        popularity: this.popularity,
-      };
-      if (indexMediaData) {
-        console.log('updating');
-
-        await upsertIndexMedia(indexMediaData);
+      if (this instanceof Show) {
+        await this.reload({
+          raw: true,
+          include: {
+            association: 'seasons',
+            attributes: ['rating'],
+          },
+        });
+        console.log(this.seasons);
       }
+      await IndexMedia.update(
+        {
+          rating: this.rating,
+          voteCount: this.voteCount,
+        },
+        {
+          where: {
+            id: this.indexId,
+          },
+          transaction,
+        }
+      );
+      console.log('updated!');
     } catch (error) {
       console.error(`Failed to sync index for mediaId: ${this.id}`, error);
     }

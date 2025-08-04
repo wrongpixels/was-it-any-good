@@ -39,7 +39,7 @@ const PersonPage = (): JSX.Element | null => {
           />
         </div>
 
-        <div className="flex-1 border-l border-gray-200 ml-10 pl-4">
+        <div className="flex-1 border-l border-gray-200 ml-10 pl-4 overflow-auto">
           <div className="flex flex-col gap-2 -mt-2">
             {person.sortedRoles?.mediaByRole.map(
               (media: AuthorMedia, index: number) => (
