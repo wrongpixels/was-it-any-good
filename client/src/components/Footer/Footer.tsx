@@ -11,7 +11,9 @@ const Footer = () => {
       >
         <GitHubLogo height={20} />{' '}
         <span className="ml-1">
-          <span className="text-gray-500">by @</span>
+          <span className="text-gray-500 font-extralight">
+            by <span className="font-medium">@</span>
+          </span>
           <span className="font-semibold">{'wrongpixels'}</span>
         </span>
       </Link>

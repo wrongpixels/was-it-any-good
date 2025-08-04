@@ -10,6 +10,7 @@ import peopleRouter from './people-controller';
 import mediaIndexRouter from './index-media-controller';
 import suggestionsRouter from './suggestions-controller';
 import searchRouter from './search-controller';
+import trendingRouter from './trending-controller';
 import browseRouter from './browse-controller';
 
 export {
@@ -26,4 +27,5 @@ export {
   suggestionsRouter,
   searchRouter,
   browseRouter,
+  trendingRouter,
 };

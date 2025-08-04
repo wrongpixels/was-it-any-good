@@ -9,9 +9,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const colors = (variant: string): string => {
   switch (variant) {
-    case 'toolbar':
     case 'secondary':
-      return 'bg-blue-400 hover:bg-blue-300 ring-gray-300 ring-1 text-white';
     case 'toolbar':
       return 'bg-blue-400 hover:bg-blue-300 ring-gray-300 ring-1 text-white';
     default:

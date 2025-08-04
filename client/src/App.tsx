@@ -40,10 +40,11 @@ const AppBody = (): JSX.Element => {
   if (isLoginPending) {
     return <SigningInPage />;
   }
+  console.log(routerPaths.trending.multi.base());
   return (
     <div className="mx-4 mb-4 flex flex-col flex-1">
       <Routes>
-        <Route path="/" element={null} />
+        <Route path="/" element={<SearchPage />} />
         <Route path={routerPaths.search.base} element={<SearchPage />} />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
 

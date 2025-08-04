@@ -77,6 +77,10 @@ const buildPageRoute = ({
 
 export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
+    title: 'Trending Now',
+    path: routerPaths.trending.base,
+  }),
+  buildPageRoute({
     title: 'Popular Media',
     path: routerPaths.popular.multi.base(),
   }),

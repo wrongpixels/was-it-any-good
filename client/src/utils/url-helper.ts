@@ -128,6 +128,27 @@ export const routerPaths = {
         `${routerPaths.popular.multi.query()}${query}`,
     },
   },
+  trending: {
+    base: '/trending',
+    shows: {
+      base: () => `${routerPaths.trending.base}/shows`,
+      query: () => `${routerPaths.trending.shows.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.trending.shows.query()}${query}`,
+    },
+    films: {
+      base: () => `${routerPaths.trending.base}/films`,
+      query: () => `${routerPaths.trending.films.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.trending.films.query()}${query}`,
+    },
+    multi: {
+      base: () => `${routerPaths.trending.base}/media`,
+      query: () => `${routerPaths.trending.multi.base()}?`,
+      withQuery: (query: string) =>
+        `${routerPaths.trending.multi.query()}${query}`,
+    },
+  },
 };
 
 export const mediaPaths = {

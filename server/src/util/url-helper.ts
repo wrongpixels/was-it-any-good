@@ -28,4 +28,13 @@ export const tmdbPaths = {
     films: (term: string, page?: string) =>
       tmdbPaths.search.bySearchType(term, TMDBSearchType.Movie, page),
   },
+  discover: {
+    base: '/discover',
+    bySearchType: (searchType: TMDBSearchType, page?: string) =>
+      `${tmdbPaths.discover.base}/${searchType}?page=${page || 1}`,
+    shows: (page?: string) =>
+      tmdbPaths.discover.bySearchType(TMDBSearchType.TV, page),
+    films: (page?: string) =>
+      tmdbPaths.discover.bySearchType(TMDBSearchType.Movie, page),
+  },
 };

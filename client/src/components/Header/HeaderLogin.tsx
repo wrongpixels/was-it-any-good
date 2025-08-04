@@ -13,7 +13,11 @@ const HeaderLogin = (): JSX.Element => {
       <div className="flex gap-2 items-center text-amber-100 font-normal">
         <div className="flex items-center gap-2 text-sm">
           {session.username}
-          <Button size="xs" variant="primary" onClick={handleLogout}>
+          <Button
+            size="xs"
+            className="border-sky-700 border-1"
+            onClick={handleLogout}
+          >
             Log out
           </Button>
         </div>
