@@ -1,3 +1,5 @@
+import { TMDBSearchType } from '../../../shared/types/search';
+
 export const tmdbPaths = {
   films: {
     base: '/movie',
@@ -16,5 +18,14 @@ export const tmdbPaths = {
   seasons: {
     credits: (showId: string | number, seasonId: string | number) =>
       `${tmdbPaths.shows.byTMDBId(showId)}/season/${seasonId}/credits`,
+  },
+  search: {
+    base: '/search',
+    bySearchType: (term: string, searchType: TMDBSearchType, page?: string) =>
+      `${tmdbPaths.search.base}/${searchType}?query=${term}&page=${page || 1}`,
+    shows: (term: string, page?: string) =>
+      tmdbPaths.search.bySearchType(term, TMDBSearchType.TV, page),
+    films: (term: string, page?: string) =>
+      tmdbPaths.search.bySearchType(term, TMDBSearchType.Movie, page),
   },
 };

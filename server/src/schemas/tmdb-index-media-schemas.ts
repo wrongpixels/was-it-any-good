@@ -14,25 +14,25 @@ export type TMDBSearchResult = z.infer<typeof TMDBSearchSchema>;
 export const TMDBIndexFilmSchema = TMDBFilmSchema.pick({
   id: true,
   poster_path: true,
-  release_date: true,
-  vote_average: true,
   title: true,
-  popularity: true,
   origin_country: true,
 }).extend({
   media_type: z.string().optional(),
+  release_date: z.string().optional().default(''),
+  vote_average: z.number().optional().default(0),
+  popularity: z.number().optional().default(0),
 });
 
 export const TMDBIndexShowSchema = TMDBShowSchema.pick({
   id: true,
   poster_path: true,
-  first_air_date: true,
-  vote_average: true,
   name: true,
-  popularity: true,
   origin_country: true,
 }).extend({
   media_type: z.string().optional(),
+  first_air_date: z.string().optional().default(''),
+  vote_average: z.number().optional().default(0),
+  popularity: z.number().optional().default(0),
 });
 
 export const TMDBIndexPersonSchema = z.object({
