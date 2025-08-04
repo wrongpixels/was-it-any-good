@@ -1,0 +1,22 @@
+import { Link } from 'react-router-dom';
+import GitHubLogo from '../common/icons/GitHubLogo';
+
+const Footer = () => {
+  return (
+    <footer className="text-sm text-left items-center w-5xl my-2 cursor-default ml-10">
+      <Link
+        to={'https://github.com/wrongpixels'}
+        target="_blank"
+        className="flex flex-row gap-0.5"
+      >
+        <GitHubLogo height={20} />{' '}
+        <span className="ml-1">
+          <span className="text-gray-500">by @</span>
+          <span className="font-semibold">{'wrongpixels'}</span>
+        </span>
+      </Link>
+    </footer>
+  );
+};
+
+export default Footer;

@@ -16,6 +16,7 @@ import {
   BrowsePageRouterData,
   browsePageRoutes,
 } from './config/browsePageRoutes';
+import Footer from './components/Footer/Footer';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
@@ -24,9 +25,10 @@ const App = (): JSX.Element => (
       <Header />
       <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
         <RankingBar />
-        <div className="p-4 mb-4 flex flex-col flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
+        <div className="p-4 flex flex-col flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
           <AppBody />
         </div>
+        <Footer />
       </div>
     </Router>
   </div>

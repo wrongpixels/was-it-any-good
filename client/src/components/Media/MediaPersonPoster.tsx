@@ -28,7 +28,9 @@ const MediaPersonPoster = ({ credit }: MediaPersonPosterProps) => {
   const extraInfo: string = getExtraInfo(credit);
   return (
     <Link
-      to={routerPaths.people.byId(credit.person.id)}
+      to={
+        credit.person.id > 0 ? routerPaths.people.byId(credit.person.id) : '#'
+      }
       key={credit.person.id}
       className={`flex-shrink-0 flex flex-col items-center shadow-md rounded p-1 pt-2 ring-1 ring-gray-300 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} ${styles.gradient.poster}`}
     >
