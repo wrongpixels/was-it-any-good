@@ -76,7 +76,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
         </span>
       }
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
-      <div className="flex flex-col flex-1 mt-2">
+      <div className="flex flex-col flex-1 mt-1">
         <PageResults
           results={browseResults}
           navigatePages={navigatePages}

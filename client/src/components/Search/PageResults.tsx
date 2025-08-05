@@ -22,7 +22,7 @@ const PageResults = ({
   term,
   navigatePages,
   showBadge,
-  showNavBar,
+  showNavBar = true,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;

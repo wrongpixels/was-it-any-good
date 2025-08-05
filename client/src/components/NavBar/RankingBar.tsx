@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import FilmIcon from '../common/icons/FilmIcon';
 import ShowIcon from '../common/icons/ShowIcon';
 import StarIcon from '../common/icons/Rating/StarIcon';
-import TrendingIcon from '../common/icons/TrendingIcon';
 import { styles } from '../../constants/tailwind-styles';
+import CrownIcon from '../common/icons/Crown';
 
 interface LinkInfo {
   text: string;
@@ -19,7 +19,7 @@ const RankingBar = (): JSX.Element => {
   const popular: LinkInfo = {
     text: 'Popular',
     key: 'rb-popular',
-    icon: <TrendingIcon height={14} />,
+    icon: <StarIcon width={15} />,
     title: 'Popular media',
     url: routerPaths.popular.multi.base(),
   };
@@ -27,7 +27,7 @@ const RankingBar = (): JSX.Element => {
     text: 'The Best',
     key: 'rb-best',
     title: 'Films and Shows by rating',
-    icon: <StarIcon width={15} />,
+    icon: <CrownIcon width={14} />,
     url: routerPaths.tops.multi.base(),
   };
   const bestFilms: LinkInfo = {
@@ -44,7 +44,7 @@ const RankingBar = (): JSX.Element => {
     icon: <ShowIcon height={16} />,
     url: routerPaths.tops.shows.base(),
   };
-  const links: LinkInfo[] = [popular, bestAll, bestFilms, bestShows];
+  const links: LinkInfo[] = [popular, bestFilms, bestShows, bestAll];
   console.log(popular);
   return (
     <span

@@ -130,12 +130,23 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
         />
       )}
       {isHome && (
-        <span className="w-full">
-          <EntryTitle
-            title={'Trending'}
-            icon={<TrendingIcon className={'text-gold'} height={24} />}
-          />
-        </span>
+        <>
+          <span className="text-center flex flex-col align-middle justify-center text-sm text-gray-400">
+            <span className="font-medium">
+              Want to add a Show or Film to WIAG?{' '}
+            </span>
+            <span>Search for it or type its TMDB id in the URL!</span>
+            <span className="text-gray-350 italic">
+              (Example: <span className="text-starblue">/tmdb/show/123</span>)
+            </span>
+          </span>
+          <span className="w-full -mt-14">
+            <EntryTitle
+              title={'Trending'}
+              icon={<TrendingIcon className={'text-gold'} height={24} />}
+            />
+          </span>
+        </>
       )}
       {isLoading && (
         <SpinnerPage
@@ -150,6 +161,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
               results={searchResults}
               term={searchTerm || undefined}
               navigatePages={navigatePages}
+              showNavBar={!isHome}
             />
           </div>
         )}
