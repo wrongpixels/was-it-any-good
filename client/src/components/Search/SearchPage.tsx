@@ -15,6 +15,7 @@ import ErrorPage from '../common/status/ErrorPage';
 import { useTrendingQuery } from '../../queries/trending-queries';
 import EntryTitle from '../EntryTitle';
 import TrendingIcon from '../common/icons/TrendingIcon';
+import Instructions from '../common/Instructions';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -131,15 +132,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
       )}
       {isHome && (
         <>
-          <span className="text-center flex flex-col align-middle justify-center text-sm text-gray-400">
-            <span className="font-medium">
-              Want to add a Show or Film to WIAG?{' '}
-            </span>
-            <span>Search for it or type its TMDB id in the URL!</span>
-            <span className="text-gray-350 italic">
-              (Example: <span className="text-starblue">/tmdb/show/123</span>)
-            </span>
-          </span>
+          <Instructions />
           <span className="w-full -mt-14">
             <EntryTitle
               title={'Trending'}

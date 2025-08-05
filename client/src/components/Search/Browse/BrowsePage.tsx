@@ -61,7 +61,13 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   }
 
   if (pageTitleOptions) {
-    setPageInfo({ title: pageTitleOptions.tabTitle || pageTitleOptions.title });
+    setPageInfo({
+      title: pageTitleOptions.tabTitle || pageTitleOptions.title,
+    });
+  } else if (operationString) {
+    setPageInfo({
+      title: operationString,
+    });
   }
 
   return (

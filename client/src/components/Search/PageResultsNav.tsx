@@ -21,7 +21,7 @@ const PageResultsNav = ({
     <span
       className={`${mergeClassnames('absolute right-0 flex flex-row items-center gap-2 h-full', rest.className)}`}
     >
-      {`Page ${results.page} of ${results.totalPages}`}
+      {`Page ${results.page} of ${results.totalPages || 1}`}
       <span className="flex flex-row gap-1">
         <DisabledDiv disabled={results.page === 1}>
           <Button

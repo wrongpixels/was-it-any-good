@@ -7,6 +7,7 @@ import SearchCard from './SearchCard';
 
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
+import Instructions from '../common/Instructions';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -63,7 +64,9 @@ const PageResults = ({
         {results.indexMedia.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
         ) : (
-          <div className="h-64 w-full" aria-hidden="true" />
+          <div className="h-64 w-full" aria-hidden="true">
+            <Instructions condition={true} />
+          </div>
         )}
       </span>
       {showNavBar && (
