@@ -57,7 +57,7 @@ class IndexMedia extends Model<
   }
 
   getMediaId(): number | null {
-    return !this.addedToMedia ? null : this.film?.id ?? this.show?.id ?? null;
+    return !this.addedToMedia ? null : (this.film?.id ?? this.show?.id ?? null);
   }
 }
 
@@ -152,6 +152,9 @@ IndexMedia.init(
               {
                 association: 'genres',
                 attributes: ['id', 'name'],
+                through: {
+                  attributes: [],
+                },
               },
             ],
           },
@@ -162,6 +165,9 @@ IndexMedia.init(
               {
                 association: 'genres',
                 attributes: ['id', 'name'],
+                through: {
+                  attributes: [],
+                },
               },
             ],
           },

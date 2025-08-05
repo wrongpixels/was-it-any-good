@@ -32,12 +32,12 @@ export const buildIncludeOptions = (
     };
   }
   includeOptions.push(genreIncludeOptions);
-
+  /*
   if (mediaType === MediaType.Show) {
     includeOptions.push({
       association: 'seasons',
       attributes: ['rating'],
     });
-  }
+  }*/
   return includeOptions;
 };
