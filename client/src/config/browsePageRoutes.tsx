@@ -46,6 +46,7 @@ const getIcon = (
 interface PageRouteBuilderProps {
   title: string;
   path: string;
+  subtitle?: string;
   searchType?: SearchType;
   orderBy?: OrderBy;
   sort?: Sorting;
@@ -54,6 +55,7 @@ interface PageRouteBuilderProps {
 const buildPageRoute = ({
   title,
   path,
+  subtitle,
   searchType = SearchType.Multi,
   orderBy = OrderBy.Popularity,
   sort = Sorting.descending,
@@ -63,6 +65,7 @@ const buildPageRoute = ({
     browseProps: {
       pageTitleOptions: {
         title,
+        subtitle,
         icon: getIcon(searchType, orderBy),
       },
       overrideParams: {
@@ -76,10 +79,6 @@ const buildPageRoute = ({
 };
 
 export const browsePageRoutes: BrowsePageRouterData[] = [
-  buildPageRoute({
-    title: 'Trending Now',
-    path: routerPaths.trending.base,
-  }),
   buildPageRoute({
     title: 'Popular Media',
     path: routerPaths.popular.multi.base(),

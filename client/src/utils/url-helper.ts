@@ -48,6 +48,8 @@ export const apiPaths = {
     base: `${API_BASE}/search`,
     byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
+  trending: `${API_BASE}/trending`,
+
   browse: {
     base: `${API_BASE}/browse`,
     byQuery: (query: string) => `${apiPaths.browse.base}?${query}`,

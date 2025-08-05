@@ -13,6 +13,7 @@ export interface OverrideParams {
 
 export interface BrowsePageTitleOptions {
   title: string;
+  subtitle?: string;
   icon?: JSX.Element;
   tabTitle?: string;
 }

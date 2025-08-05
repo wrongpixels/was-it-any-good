@@ -6,20 +6,26 @@ import PageResults from './PageResults';
 import SearchInputField from './SearchInput';
 import { SearchType } from '../../../../shared/types/search';
 import { ParamStructure } from '../../utils/search-param-manager';
-import { capitalize } from '../../utils/common-format-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import SearchParams from './SearchParams';
 import useUrlQueryManager from '../../hooks/use-url-query-manager';
 import ErrorPage from '../common/status/ErrorPage';
+import { useTrendingQuery } from '../../queries/trending-queries';
+import EntryTitle from '../EntryTitle';
+import TrendingIcon from '../common/icons/TrendingIcon';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
 //users can edit the url to get the same results and no API call takes place until Search form is submitted
 //or the searchTerm in the url changes.
 
-const SearchPage = (): JSX.Element | null => {
+interface SearchPageProps {
+  isHome?: boolean;
+}
+
+const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   //a hook shared with BrowsePage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters
   const {
@@ -39,19 +45,26 @@ const SearchPage = (): JSX.Element | null => {
     data: searchResults,
     isLoading,
     isError,
-  } = useSearchQuery(currentQuery || '', searchTerm);
+  } = !isHome
+    ? useSearchQuery(currentQuery || '', searchTerm)
+    : useTrendingQuery();
   //to avoid setting a url bigger than totalPages or less than 1
   //this is also protected in the backend
   useEffect(() => {
     if (
-      currentPage <= 0 ||
-      (searchResults && searchResults.totalPages < Number(currentPage))
+      !isHome &&
+      !!currentQuery &&
+      (currentPage <= 0 ||
+        (searchResults && searchResults.totalPages < Number(currentPage)))
     ) {
       navigateToPage(searchResults?.totalPages || 1);
     }
   }, [searchResults]);
-
-  setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
+  if (isHome) {
+    setPageInfo({ title: 'Home' });
+  } else {
+    setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
+  }
 
   const toggleParam = (param: ParamStructure) => {
     let alertMessage: string = '';
@@ -59,7 +72,7 @@ const SearchPage = (): JSX.Element | null => {
       alertMessage = 'Select at least one!';
     }
     if (param.name === SearchType.Person) {
-      alertMessage = `Search for ${capitalize(SearchType.Person)}\nnot implemented yet! 😔`;
+      alertMessage = `Search for People\nnot implemented yet! 😔`;
     }
 
     if (alertMessage) {
@@ -75,11 +88,14 @@ const SearchPage = (): JSX.Element | null => {
     }
     queryTypeManager.toggleParam(param);
     console.log('refresh', param);
-    handleSearch(searchTerm);
+    handleSearch(searchTerm, true);
   };
 
-  const handleSearch = (newSearch: string | null) => {
-    if (!newSearch) {
+  const handleSearch = (
+    newSearch: string | null,
+    skipCheck: boolean = false
+  ) => {
+    if (!newSearch && !skipCheck) {
       setNotification({
         message: 'You are searching for\nliterally nothing!',
         anchorRef,
@@ -106,20 +122,33 @@ const SearchPage = (): JSX.Element | null => {
         text={searchTerm || undefined}
         handleSearch={handleSearch}
       />
-      <SearchParams
-        ref={anchorRef}
-        toggleParam={toggleParam}
-        typeFilters={queryTypeManager}
-      />
+      {!isHome && (
+        <SearchParams
+          ref={anchorRef}
+          toggleParam={toggleParam}
+          typeFilters={queryTypeManager}
+        />
+      )}
+      {isHome && (
+        <span className="w-full">
+          <EntryTitle
+            title={'Trending'}
+            icon={<TrendingIcon className={'text-gold'} height={24} />}
+          />
+        </span>
+      )}
       {isLoading && (
-        <SpinnerPage text={`Searching for "${searchTerm}"...`} paddingTop={2} />
+        <SpinnerPage
+          text={isHome ? 'Loading...' : `Searching for "${searchTerm}"...`}
+          paddingTop={2}
+        />
       )}
       <span className="pt-1 w-full flex flex-1">
-        {searchResults && searchTerm && (
+        {searchResults && (searchTerm || isHome) && (
           <div className="flex flex-1">
             <PageResults
               results={searchResults}
-              term={searchTerm}
+              term={searchTerm || undefined}
               navigatePages={navigatePages}
             />
           </div>

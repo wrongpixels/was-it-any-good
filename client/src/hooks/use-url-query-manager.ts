@@ -17,6 +17,7 @@ import ParamManager from '../utils/search-param-manager';
 import { normalizeQueryTypeParams } from '../utils/url-helper';
 import UrlQueryBuilder from '../utils/url-query-builder';
 import { useCallback, useMemo } from 'react';
+import { getBrowseOperation } from '../utils/common-format-helper';
 
 //if the manager receives override params, they'll be used ignoring
 //equivalent url params.
@@ -53,6 +54,14 @@ const useUrlQueryManager = ({
   const orderBy: OrderBy | undefined = stringToOrderBy(
     parameters.get('orderby')
   );
+
+  //a string version of the operation based on the paramas "Browsing Shows by Genre" etc.
+  const operationString: string = getBrowseOperation({
+    queryType,
+    genres,
+    countries,
+    year,
+  });
   const sort: Sorting | undefined = stringToSorting(parameters.get('sort'));
 
   //the function that generates a valid query from params
@@ -127,13 +136,12 @@ const useUrlQueryManager = ({
     [currentPage, navigateToPage]
   );
 
-  //To avoid setting a page url bigger than our results
-
   return useMemo(
     () => ({
       searchTerm,
       currentQuery,
       currentPage,
+      operationString,
       queryTypeManager,
       navigateToQuery,
       navigateToPage,
@@ -143,6 +151,7 @@ const useUrlQueryManager = ({
       searchTerm,
       currentQuery,
       currentPage,
+      operationString,
       queryTypeManager,
       navigateToQuery,
       navigateToPage,

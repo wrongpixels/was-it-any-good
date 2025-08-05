@@ -14,6 +14,7 @@ interface PageResultsProps {
   term?: string;
   title?: string;
   showBadge?: boolean;
+  showNavBar?: boolean;
 }
 
 const PageResults = ({
@@ -21,6 +22,7 @@ const PageResults = ({
   term,
   navigatePages,
   showBadge,
+  showNavBar,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
@@ -34,7 +36,6 @@ const PageResults = ({
   );
   const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
 
-  //we memo the entries
   const resultEntries: JSX.Element[] = useMemo(
     () =>
       results.indexMedia.map((im: IndexMediaData, index: number) => (
@@ -45,23 +46,19 @@ const PageResults = ({
           showBadge={showBadge}
         />
       )),
-    [results]
-  );
-
-  //and the navBar
-  const navBar: JSX.Element = useMemo(
-    () => <PageResultsNav results={results} navigatePages={navigatePages} />,
-    [results, navigatePages]
+    [results, showBadge]
   );
 
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
-      <div className="relative w-full h-8 flex items-center">
-        <span className="w-full text-center text-lg">
-          {results.totalResults || 'No'} results <>{term && searchTerm()}</>
-        </span>
-        {navBar}
-      </div>
+      {showNavBar && (
+        <div className="relative w-full h-8 flex items-center">
+          <span className="w-full text-center text-lg">
+            {results.totalResults || 'No'} results <>{term && searchTerm()}</>
+          </span>
+          <PageResultsNav results={results} navigatePages={navigatePages} />
+        </div>
+      )}
       <span className="flex-1">
         {results.indexMedia.length > 0 ? (
           <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
@@ -69,7 +66,11 @@ const PageResults = ({
           <div className="h-64 w-full" aria-hidden="true" />
         )}
       </span>
-      <span className="relative w-full mt-5 mb-2 h-fit">{navBar}</span>
+      {showNavBar && (
+        <span className="relative w-full mt-5 mb-2 h-fit">
+          <PageResultsNav results={results} navigatePages={navigatePages} />
+        </span>
+      )}
     </div>
   );
 };

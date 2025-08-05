@@ -6,7 +6,6 @@ import ShowIcon from '../common/icons/ShowIcon';
 import StarIcon from '../common/icons/Rating/StarIcon';
 import TrendingIcon from '../common/icons/TrendingIcon';
 import { styles } from '../../constants/tailwind-styles';
-import PopularIcon from '../common/icons/PopularIcon';
 
 interface LinkInfo {
   text: string;
@@ -17,17 +16,10 @@ interface LinkInfo {
 }
 
 const RankingBar = (): JSX.Element => {
-  const trending: LinkInfo = {
-    text: 'Trending',
-    key: 'rb-trending',
-    icon: <TrendingIcon height={14} />,
-    title: 'Trending media',
-    url: routerPaths.trending.base,
-  };
   const popular: LinkInfo = {
     text: 'Popular',
     key: 'rb-popular',
-    icon: <PopularIcon height={14} />,
+    icon: <TrendingIcon height={14} />,
     title: 'Popular media',
     url: routerPaths.popular.multi.base(),
   };
@@ -52,7 +44,7 @@ const RankingBar = (): JSX.Element => {
     icon: <ShowIcon height={16} />,
     url: routerPaths.tops.shows.base(),
   };
-  const links: LinkInfo[] = [trending, bestAll, bestFilms, bestShows];
+  const links: LinkInfo[] = [popular, bestAll, bestFilms, bestShows];
   console.log(popular);
   return (
     <span

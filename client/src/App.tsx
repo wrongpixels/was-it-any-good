@@ -44,7 +44,7 @@ const AppBody = (): JSX.Element => {
   return (
     <div className="mx-4 mb-4 flex flex-col flex-1">
       <Routes>
-        <Route path="/" element={<SearchPage />} />
+        <Route path="/" element={<SearchPage isHome={true} />} />
         <Route path={routerPaths.search.base} element={<SearchPage />} />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
 

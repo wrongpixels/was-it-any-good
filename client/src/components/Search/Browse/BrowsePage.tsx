@@ -25,15 +25,19 @@ export interface BrowsePageProps {
 
 const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.query();
-  console.log('base path is', basePath);
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
   //verride params are passed here.
-  const { currentQuery, navigatePages, navigateToPage, currentPage } =
-    useUrlQueryManager({
-      basePath,
-      overrideParams,
-    });
+  const {
+    currentQuery,
+    navigatePages,
+    navigateToPage,
+    currentPage,
+    operationString,
+  } = useUrlQueryManager({
+    basePath,
+    overrideParams,
+  });
   const {
     data: browseResults,
     isLoading,
@@ -62,12 +66,15 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
 
   return (
     <div key={currentQuery} className="flex flex-col flex-1">
-      {pageTitleOptions && (
-        <EntryTitle
-          title={pageTitleOptions.title}
-          icon={pageTitleOptions.icon}
-        />
-      )}
+      {
+        <span className="mb-2">
+          <EntryTitle
+            title={pageTitleOptions?.title || operationString}
+            subtitle={pageTitleOptions?.subtitle}
+            icon={pageTitleOptions?.icon}
+          />
+        </span>
+      }
       {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
       <div className="flex flex-col flex-1 mt-2">
         <PageResults
