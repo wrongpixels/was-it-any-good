@@ -16,6 +16,7 @@ import { GenreUrlMap } from '../../utils/genre-mapper';
 import React from 'react';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 import Bubble from '../common/Bubble';
+import WIAGBadge from './WIAGBadge';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -51,7 +52,9 @@ const SearchCard = ({
           alt={media.name}
           className={'drop-shadow ring-1 ring-gray-300'}
         />
-        {showBadge && <IndexBadge index={index} />}
+        {(showBadge && <IndexBadge index={index} />) || media.addedToMedia ? (
+          <WIAGBadge />
+        ) : null}
       </span>
       <div className="flex flex-col w-full pl-3 mt-1 text-gray-600">
         <span className="text-gray-600 leading-5 line-clamp-3">
