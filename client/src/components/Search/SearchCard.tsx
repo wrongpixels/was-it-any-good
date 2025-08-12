@@ -52,7 +52,8 @@ const SearchCard = ({
           alt={media.name}
           className={'drop-shadow ring-1 ring-gray-300'}
         />
-        {(showBadge && <IndexBadge index={index} />) || media.addedToMedia ? (
+        {(showBadge && <IndexBadge index={index} />) ||
+        (showBadge && media.addedToMedia) ? (
           <WIAGBadge />
         ) : null}
       </span>
