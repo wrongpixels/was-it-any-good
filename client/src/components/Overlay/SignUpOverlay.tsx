@@ -1,14 +1,11 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
-import LazyImage, { AspectRatio, ImageVariant } from '../common/LazyImage';
-import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
-import { TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';
 
 const ANIM_DURATION: number = 300;
 
-const ImageOverlay = () => {
+const SignUpOverlay = () => {
   const { overlay, clean } = useOverlay();
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -32,7 +29,7 @@ const ImageOverlay = () => {
   );
 
   useEffect(() => {
-    if (overlay.active && overlay.overlayType === OverlayType.Image) {
+    if (overlay.active && overlay.overlayType === OverlayType.SignUp) {
       window.addEventListener('keydown', closeWithKey);
     }
     return () => {
@@ -41,7 +38,7 @@ const ImageOverlay = () => {
   }, [overlay.active, closeWithKey, overlay.overlayType]);
 
   useEffect(() => {
-    if (overlay.active && overlay.overlayType === OverlayType.Image) {
+    if (overlay.active && overlay.overlayType === OverlayType.SignUp) {
       setIsMounted(true);
       const animationFrame = requestAnimationFrame(() =>
         requestAnimationFrame(() => {
@@ -71,7 +68,7 @@ const ImageOverlay = () => {
   return (
     <div
       className={`fixed inset-0 backdrop-blur-xs z-99 transition-all duration-200 ease-in-out
-        ${isVisible ? 'opacity-100 bg-cyan-950/80' : 'opacity-0 pointer-events-none'}`}
+        ${isVisible ? 'opacity-100 bg-gray-300' : 'opacity-0 pointer-events-none'}`}
     >
       <span
         className={`flex flex-col h-full items-center align-middle justify-center cursor-pointer
@@ -83,27 +80,10 @@ const ImageOverlay = () => {
           className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
             pointer-events-auto transition-all duration-300
             ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
-        >
-          <LazyImage
-            key={overlay.image}
-            aspect={AspectRatio.poster}
-            variant={ImageVariant.inline}
-            src={overlay.image}
-            className="rounded-md min-w-125 min-h-185 bg-gray-200 shadow/30 ring-1 ring-gray-350"
-          />
-          <span className="text-xs flex flex-row text-gray-500 font-semibold pr-3 items-center justify-end mt-3 gap-2 pointer-events-auto ">
-            <>{'Image Source:'}</>
-            <TMDBLogoHor
-              height={12}
-              url={TMDB_URL}
-              newTab={true}
-              title={'Open TMDB in a new tab'}
-            />
-          </span>
-        </span>
+        ></span>
       </span>
     </div>
   );
 };
 
-export default ImageOverlay;
+export default SignUpOverlay;

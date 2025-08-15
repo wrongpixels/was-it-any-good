@@ -13,7 +13,7 @@ interface MediaPagePosterProps {
 
 const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
-  const { openAsOverlay } = useOverlay();
+  const { openImageAsOverlay: openAsOverlay } = useOverlay();
 
   return (
     <div className={`${styles.poster.regular()}`}>

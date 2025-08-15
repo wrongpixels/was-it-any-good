@@ -14,7 +14,7 @@ const PersonPagePoster = ({
   extraInfo,
   src,
 }: PersonPagePosterProps): JSX.Element => {
-  const { openAsOverlay } = useOverlay();
+  const { openImageAsOverlay: openAsOverlay } = useOverlay();
 
   return (
     <div className={`${styles.poster.regular()} flex flex-col gap-1`}>

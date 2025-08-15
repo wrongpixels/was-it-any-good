@@ -1,28 +1,33 @@
 import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { OverlayType } from '../types/overlay-types';
 
 export interface OverlayContextValues {
   image: string | undefined;
   active: boolean;
+  overlayType: OverlayType;
   className?: string;
 }
 
 export interface OverlayValues {
   overlay: OverlayContextValues;
   setOverlay: (overlay: OverlayContextValues) => void;
-  openAsOverlay: (image: string, className?: string) => void;
+  openSignUpOverlay: () => void;
+  openImageAsOverlay: (image: string, className?: string) => void;
   clean: () => void;
 }
 
 const DEF_OVERLAY: OverlayContextValues = {
   image: undefined,
   active: false,
+  overlayType: OverlayType.None,
   className: '',
 };
 
 const OverlayContext = createContext<OverlayValues>({
   overlay: DEF_OVERLAY,
   setOverlay: () => {},
-  openAsOverlay: () => {},
+  openSignUpOverlay: () => {},
+  openImageAsOverlay: () => {},
   clean: () => {},
 });
 
@@ -34,8 +39,20 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
       value={{
         overlay,
         setOverlay,
-        openAsOverlay: (image: string, className?: string) =>
-          setOverlay({ ...DEF_OVERLAY, active: true, image, className }),
+        openSignUpOverlay: () =>
+          setOverlay({
+            ...DEF_OVERLAY,
+            active: true,
+            overlayType: OverlayType.SignUp,
+          }),
+        openImageAsOverlay: (image: string, className?: string) =>
+          setOverlay({
+            ...DEF_OVERLAY,
+            active: true,
+            image,
+            className,
+            overlayType: OverlayType.Image,
+          }),
         clean: () => setOverlay(DEF_OVERLAY),
       }}
     >

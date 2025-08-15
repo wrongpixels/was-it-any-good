@@ -17,10 +17,12 @@ import {
   browsePageRoutes,
 } from './config/browsePageRoutes';
 import Footer from './components/Footer/Footer';
+import SignUpOverlay from './components/Overlay/SignUpOverlay';
 
 const App = (): JSX.Element => (
   <div className="w-full min-h-screen flex flex-col">
     <Router>
+      <SignUpOverlay />
       <ImageOverlay />
       <Header />
       <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">

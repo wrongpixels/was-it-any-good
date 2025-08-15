@@ -13,7 +13,7 @@ interface SeasonPosterProps {
 
 const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
-  const { openAsOverlay }: OverlayValues = useOverlay();
+  const { openImageAsOverlay }: OverlayValues = useOverlay();
 
   return (
     <div className={`${styles.poster.regular()} w-40`}>
@@ -28,7 +28,9 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         alt={media.name}
         title={media.name}
         className={`rounded shadow ${styles.poster.media}`}
-        onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
+        onClick={() =>
+          openImageAsOverlay(imageLinker.getFullSizeImage(media.image))
+        }
       />
       <div className="text-center">
         <PosterRating rating={average} media={media} valid={true} />

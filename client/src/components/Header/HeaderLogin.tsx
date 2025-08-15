@@ -3,10 +3,13 @@ import Button from '../common/Button';
 import { useLoginForm } from '../../hooks/use-login-form';
 import { InputField } from '../common/InputField';
 import { styles } from '../../constants/tailwind-styles';
+import { useOverlay } from '../../context/OverlayProvider';
 
 const HeaderLogin = (): JSX.Element => {
   const { session, handleLogout, submitLogin, passwordInput, userInput } =
     useLoginForm();
+
+  const { openSignUpOverlay } = useOverlay();
 
   if (session) {
     return (
@@ -48,7 +51,12 @@ const HeaderLogin = (): JSX.Element => {
         </form>
         <span className="text-xs text-white">{'or'}</span>
 
-        <Button size="xs" type="submit" variant="accept">
+        <Button
+          size="xs"
+          type="submit"
+          variant="accept"
+          onClick={() => openSignUpOverlay}
+        >
           Sign Up
         </Button>
       </div>
