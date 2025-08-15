@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { SeasonResponse } from '../../../../shared/types/models';
 import PosterRating from './PosterRating';
-import LazyImage from '../common/LazyImage';
+import LazyImage, { ImageVariant } from '../common/LazyImage';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import imageLinker from '../../../../shared/util/image-linker';
 import { styles } from '../../constants/tailwind-styles';
@@ -16,17 +16,18 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   const { openAsOverlay }: OverlayValues = useOverlay();
 
   return (
-    <div className={`${styles.poster.regular()}`}>
+    <div className={`${styles.poster.regular()} w-40`}>
       <div className="text-sm font-medium text-center -translate-y-1">
         <div className="truncate" title={media.name}>
           {media.name}
         </div>
       </div>
       <LazyImage
+        variant={ImageVariant.inline}
         src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
         title={media.name}
-        className={`rounded shadow ${styles.poster.media} `}
+        className={`rounded shadow ${styles.poster.media}`}
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
       <div className="text-center">
