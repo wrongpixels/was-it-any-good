@@ -16,8 +16,9 @@ const Instructions = ({ condition: linkToSearch }: OptBoolProps) => {
         )}
         <span>{'for it or type its TMDB id in the URL!'}</span>
       </span>
-      <span className="text-gray-350 italic">
-        ({'Example:'} <span className="text-starblue">{'/tmdb/show/123'}</span>)
+      <span className="text-gray-350 italic cursor-text">
+        ({'Example:'}{' '}
+        <span className="text-starblue cursor-text">{'/tmdb/show/123'}</span>)
       </span>
     </span>
   );

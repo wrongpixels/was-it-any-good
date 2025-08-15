@@ -39,7 +39,7 @@ export const styles = {
   },
   inputField: {
     header:
-      'ring-0 hover:ring-1 ring-amber-200 py-1 focus:ring-2 focus:ring-sky-300',
+      'ring-0 hover:ring-1 ring-amber-200 py-1 focus:ring-2 focus:ring-sky-300 text-xs  h-7',
     search: 'border pl-7 text-base py-1.5 w-80 shadow-md shadow-black/5',
   },
   poster: {

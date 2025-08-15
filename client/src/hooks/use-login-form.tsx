@@ -20,12 +20,12 @@ export const useLoginForm = (): LoginFormValues => {
 
   const loginNotification = useNotificationContext();
   const userInput: InputFieldHookValues = useInputField({
-    label: 'User',
     name: 'username',
+    placeholder: 'User',
   });
   const passwordInput: InputFieldHookValues = useInputField({
-    label: 'Password',
     name: 'password',
+    placeholder: 'Password',
     type: 'password',
   });
 

@@ -2,13 +2,17 @@ import { JSX } from 'react';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'toolbar';
+  variant?: 'primary' | 'secondary' | 'toolbar' | 'accept' | 'cancel';
   size?: 'sm' | 'md' | 'lg' | 'xs';
   extraClassNames?: string;
 }
 
 const colors = (variant: string): string => {
   switch (variant) {
+    case 'accept':
+      return 'bg-button-green hover:bg-button-green-hover ring-gray-300 ring-1 text-white';
+    case 'cancel':
+      return 'bg-red-400 hover:bg-red-300 ring-gray-300 ring-1 text-white';
     case 'secondary':
     case 'toolbar':
       return 'bg-blue-400 hover:bg-blue-300 ring-gray-300 ring-1 text-white';

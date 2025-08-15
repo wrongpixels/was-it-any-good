@@ -10,11 +10,17 @@ const HeaderLogin = (): JSX.Element => {
 
   if (session) {
     return (
-      <div className="flex gap-2 items-center text-amber-100 font-normal">
-        <div className="flex items-center gap-2 text-sm">
-          {session.username}
+      <div className="flex gap-2 items-center font-normal ">
+        <div className="flex items-center gap-2  text-sm ">
+          <span className="text-gray-100 flex flex-row gap-1">
+            @
+            <span className="text-amber-100 font-semibold">
+              {session.username}
+            </span>
+          </span>
           <Button
             size="xs"
+            variant="cancel"
             className="border-sky-700 border-1"
             onClick={handleLogout}
           >
@@ -26,22 +32,25 @@ const HeaderLogin = (): JSX.Element => {
   }
   return (
     <div className="flex gap-2 items-center">
-      <div className="relative">
+      <div className="relative flex flex-row gap-3 items-center">
         <form onSubmit={submitLogin} className="flex gap-2">
           <InputField
             {...userInput.getProps()}
             className={`w-20 ${styles.inputField.header}`}
-            labelClassName="text-gray-200"
           />
           <InputField
             {...passwordInput.getProps()}
             className={`w-20 ${styles.inputField.header}`}
-            labelClassName="text-gray-200"
           />
           <Button size="xs" type="submit" variant="toolbar">
-            Login
+            Log In
           </Button>
         </form>
+        <span className="text-xs text-white">{'or'}</span>
+
+        <Button size="xs" type="submit" variant="accept">
+          Sign Up
+        </Button>
       </div>
     </div>
   );
