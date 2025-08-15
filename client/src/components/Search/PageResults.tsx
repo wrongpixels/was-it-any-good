@@ -8,13 +8,14 @@ import SearchCard from './SearchCard';
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
+import { BadgeType } from '../../types/search-browse-types';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
   navigatePages: (movement: number) => void;
   term?: string;
   title?: string;
-  showBadge?: boolean;
+  badgeType: BadgeType;
   showNavBar?: boolean;
 }
 
@@ -22,7 +23,7 @@ const PageResults = ({
   results,
   term,
   navigatePages,
-  showBadge,
+  badgeType = BadgeType.None,
   showNavBar = true,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
@@ -44,10 +45,10 @@ const PageResults = ({
           key={im.id}
           media={im}
           index={index + indexOffset}
-          showBadge={showBadge}
+          badgeType={badgeType}
         />
       )),
-    [results, showBadge]
+    [results, badgeType]
   );
 
   return (

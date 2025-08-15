@@ -7,6 +7,7 @@ import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
 import EntryTitle from '../../EntryTitle';
 import {
+  BadgeType,
   BrowsePageTitleOptions,
   OverrideParams,
 } from '../../../types/search-browse-types';
@@ -86,7 +87,9 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
         <PageResults
           results={browseResults}
           navigatePages={navigatePages}
-          showBadge={!!overrideParams?.orderBy}
+          badgeType={
+            !!overrideParams?.orderBy ? BadgeType.RankBadge : BadgeType.None
+          }
         ></PageResults>
       </div>
     </div>

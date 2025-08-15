@@ -5,6 +5,8 @@
 //   2. You must either write raw CSS (abandoning Tailwind's classes) or use @apply
 //    (making the final build bigger).
 
+import { BadgeType } from '../types/search-browse-types';
+
 // This approach uses JS objects + tailwind-merge to easily reuse and combine with Tailwind
 // classes in a predicable way ('last one wins'), solving all of the above.
 
@@ -52,10 +54,13 @@ export const styles = {
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search: {
       base: 'bg-white p-2 rounded-sm shadow-md ring-1 ring-gray-300 w-full bg-gradient-to-t to-white',
-      byIndex: (index: number, showbadge?: boolean) => {
+      byBadgeType: (badgeType: BadgeType, index: number) => {
         const baseClasses = `${styles.poster.search.base}`;
 
-        if (!showbadge || index >= 4) {
+        if (badgeType === BadgeType.AddedBadge) {
+          return `${baseClasses} from-green-100 via-green-100`;
+        }
+        if (badgeType === BadgeType.None || index >= 4) {
           return `${baseClasses} from-gray-100`;
         }
 

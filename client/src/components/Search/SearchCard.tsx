@@ -17,21 +17,37 @@ import React from 'react';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 import Bubble from '../common/Bubble';
 import WIAGBadge from './WIAGBadge';
+import { BadgeType } from '../../types/search-browse-types';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
-  showBadge?: boolean;
+  badgeType: BadgeType;
   index: number;
 }
+
+const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
+  switch (badgeType) {
+    case BadgeType.RankBadge:
+      return <IndexBadge index={index} />;
+    case BadgeType.AddedBadge:
+      return <WIAGBadge />;
+    default:
+      return null;
+  }
+};
 
 const SearchCard = ({
   media,
   index,
-  showBadge,
+  badgeType = BadgeType.None,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
   }
+  const realBadgeType: BadgeType =
+    badgeType === BadgeType.AddedBadge && !media.addedToMedia
+      ? BadgeType.None
+      : badgeType;
   const average: number = getMediaAverageRating(media);
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
@@ -42,7 +58,7 @@ const SearchCard = ({
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search.byIndex(index, showBadge)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className="w-50 h-auto relative">
@@ -52,10 +68,7 @@ const SearchCard = ({
           alt={media.name}
           className={'drop-shadow ring-1 ring-gray-300'}
         />
-        {(showBadge && <IndexBadge index={index} />) ||
-        (showBadge && media.addedToMedia) ? (
-          <WIAGBadge />
-        ) : null}
+        {getBadge(realBadgeType, index)}
       </span>
       <div className="flex flex-col w-full pl-3 mt-1 text-gray-600">
         <span className="text-gray-600 leading-5 line-clamp-3">

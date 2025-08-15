@@ -22,3 +22,9 @@ export interface QueryOpts {
   newTerm?: string;
   newPage?: number;
 }
+
+export enum BadgeType {
+  RankBadge,
+  AddedBadge,
+  None,
+}

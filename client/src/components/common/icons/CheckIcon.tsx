@@ -4,8 +4,8 @@ interface OptIconProps {
   [key: string]: any;
 }
 
-const CheckIcon = ({ width, height, ...rest }: OptIconProps) => (
-  <span {...rest}>
+const CheckIcon = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
+  <span {...rest} title="Added to WIAG database">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -17,7 +17,7 @@ const CheckIcon = ({ width, height, ...rest }: OptIconProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M4 13L7.5 17L11 13L14.5 17L18.7085 8" />
+      <path d="M5 13l4 4L19 7" />
     </svg>
   </span>
 );

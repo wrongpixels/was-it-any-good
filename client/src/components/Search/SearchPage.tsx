@@ -16,6 +16,7 @@ import { useTrendingQuery } from '../../queries/trending-queries';
 import EntryTitle from '../EntryTitle';
 import TrendingIcon from '../common/icons/TrendingIcon';
 import Instructions from '../common/Instructions';
+import { BadgeType } from '../../types/search-browse-types';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -49,7 +50,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   } = !isHome
     ? useSearchQuery(currentQuery || '', searchTerm)
     : useTrendingQuery();
-  //to avoid setting a url bigger than totalPages or less than 1
+  //to avoid setting a url page number above totalPages or less than 1
   //this is also protected in the backend
   useEffect(() => {
     if (
@@ -155,6 +156,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
               term={searchTerm || undefined}
               navigatePages={navigatePages}
               showNavBar={!isHome}
+              badgeType={isHome ? BadgeType.AddedBadge : BadgeType.None}
             />
           </div>
         )}
