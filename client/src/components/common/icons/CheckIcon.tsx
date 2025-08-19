@@ -17,7 +17,14 @@ const CheckIcon = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M5 13l4 4L19 7" />
+      <path
+        d="M6 13l3.5 3.5L18 8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   </span>
 );

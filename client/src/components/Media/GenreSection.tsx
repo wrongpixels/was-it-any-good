@@ -29,22 +29,23 @@ const GenreSection = ({
   );
 
   return (
-    <div className="flex items-center text-gray-400 gap-2 relative ml-1">
+    <div className="flex flex-row items-center text-gray-400 gap-2 relative ml-1">
       <Link
         to={routerPaths.browse.byQuery(mediaIconUrl)}
-        className={`${styles.animations.zoomOnHover} border-r border-gray-300 pr-2`}
+        className={`text-gray-600 ${styles.animations.zoomOnHover}`}
       >
-        <IconForMediaType mediaType={mediaType} className={'text-gray-600'} />
+        <IconForMediaType mediaType={mediaType} />
       </Link>
-      <span className="flex flex-row gap-1.5 -translate-y-0.25">
+      <span className=" border-l border-gray-300 h-4 w-0" />
+      <span className="flex flex-row gap-1.5 items-center -translate-y-0.5 h-5">
         {genreUrlMap.map((g: GenreUrlMap) => (
           <Link
             key={g.id}
             to={g.url}
             title={`Show more '${g.name}' ${mediaTypeToDisplayName(mediaType)}s`}
-            className={`${styles.animations.zoomLessOnHover}`}
+            className={`${styles.animations.zoomOnHover}`}
           >
-            <Bubble text={g.name} className="pt-0.5 pb-0.75" />
+            <Bubble text={g.name} className="pt-0.25 pb-0.5" />
           </Link>
         ))}
       </span>
