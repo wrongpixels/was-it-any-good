@@ -56,6 +56,7 @@ export const apiPaths = {
   },
 };
 export const routerPaths = {
+  home: '/',
   films: {
     base: '/film',
     idParam: () => `${routerPaths.films.base}/:id`,

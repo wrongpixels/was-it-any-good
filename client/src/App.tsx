@@ -9,7 +9,7 @@ import { useAuth } from './hooks/use-auth';
 import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
-import RankingBar from './components/NavBar/RankingBar';
+import NavBar from './components/NavBar/RankingBar';
 import ImageOverlay from './components/Overlay/ImageOverlay';
 import { routerPaths } from './utils/url-helper';
 import {
@@ -26,7 +26,7 @@ const App = (): JSX.Element => (
       <ImageOverlay />
       <Header />
       <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
-        <RankingBar />
+        <NavBar />
         <div className="p-4 flex flex-col flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
           <AppBody />
         </div>
