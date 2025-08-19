@@ -1,7 +1,7 @@
 import { MediaType } from '../../../shared/types/media';
 import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
-import { IndexMediaData } from '../../../shared/types/models';
+import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
 
@@ -160,6 +160,10 @@ export const mediaPaths = {
     byCode: (code: string) =>
       `${mediaPaths.countries.base}/${code.toLowerCase()}.svg`,
   },
+};
+
+export const buildMediaLink = (media: MediaResponse) => {
+  return buildRouterMediaLink(media.mediaType, media.id);
 };
 
 export const buildRouterMediaLink = (

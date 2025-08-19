@@ -1,14 +1,14 @@
-import { IndexMediaData } from './models'
+import { MediaResponse } from "./models";
 
 export enum AuthorType {
-  Director = 'Director',
-  Writer = 'Writer',
-  Creator = 'Creator',
-  Producer = 'Producer',
-  ExecProducer = 'Executive Producer',
-  MusicComposer = 'Original Music Composer',
-  Actor = 'Actor',
-  Unknown = 'Unknown',
+  Director = "Director",
+  Writer = "Writer",
+  Creator = "Creator",
+  Producer = "Producer",
+  ExecProducer = "Executive Producer",
+  MusicComposer = "Original Music Composer",
+  Actor = "Actor",
+  Unknown = "Unknown",
 }
 
 export const authorOrder: AuthorType[] = [
@@ -18,14 +18,14 @@ export const authorOrder: AuthorType[] = [
   AuthorType.Actor,
   AuthorType.Producer,
   AuthorType.MusicComposer,
-]
+];
 
 export interface SortedRoles {
-  mainRoles: AuthorType[]
-  mediaByRole: AuthorMedia[]
+  mainRoles: AuthorType[];
+  mediaByRole: AuthorMedia[];
 }
 
 export interface AuthorMedia {
-  authorType: AuthorType
-  indexMedia: IndexMediaData[]
+  authorType: AuthorType;
+  media: MediaResponse[];
 }

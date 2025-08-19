@@ -8,7 +8,6 @@ import {
 import { sequelize } from '../../util/db';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
-import IndexMedia from '../media/indexMedia';
 
 class Person extends Model<
   InferAttributes<Person>,
@@ -87,31 +86,19 @@ Person.init(
             include: [
               {
                 association: 'film',
-                attributes: ['indexId'],
+
                 required: false,
                 where: {
                   '$roles.media_type$': MediaType.Film,
                 },
-                include: [
-                  {
-                    model: IndexMedia,
-                    as: 'indexMedia',
-                  },
-                ],
               },
               {
                 association: 'show',
-                attributes: ['indexId'],
+
                 required: false,
                 where: {
                   '$roles.media_type$': MediaType.Show,
                 },
-                include: [
-                  {
-                    model: IndexMedia,
-                    as: 'indexMedia',
-                  },
-                ],
               },
             ],
           },
