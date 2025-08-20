@@ -71,34 +71,47 @@ const ImageOverlay = () => {
   return (
     <div
       className={`fixed inset-0 backdrop-blur-xs z-99 transition-all duration-200 ease-in-out
-        ${isVisible ? 'opacity-100 bg-cyan-950/80' : 'opacity-0 pointer-events-none'}`}
+    ${isVisible ? 'opacity-100 bg-cyan-950/80' : 'opacity-0 pointer-events-none'}`}
     >
-      <span
-        className={`flex flex-col h-full items-center align-middle justify-center cursor-pointer
-          transition-transform duration-250 ease-in-out
-          ${isVisible ? 'scale-100' : 'scale-85'}`}
-        onClick={clean}
-      >
+      <span className="h-full w-full">
         <span
-          className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
-            pointer-events-auto transition-all duration-300
-            ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
+          className={`flex h-full w-full items-center justify-center cursor-pointer p-[10px]
+        transition-transform duration-250 ease-in-out
+        ${isVisible ? 'scale-100' : 'scale-85'}`}
+          onClick={clean}
         >
-          <LazyImage
-            key={overlay.image}
-            aspect={AspectRatio.poster}
-            variant={ImageVariant.inline}
-            src={overlay.image}
-            className="rounded-md min-w-125 min-h-185 bg-gray-200 shadow/30 ring-1 ring-gray-350"
-          />
-          <span className="text-xs flex flex-row text-gray-500 font-semibold pr-3 items-center justify-end mt-3 gap-2 pointer-events-auto ">
-            <>{'Image Source:'}</>
-            <TMDBLogoHor
-              height={12}
-              url={TMDB_URL}
-              newTab={true}
-              title={'Open TMDB in a new tab'}
-            />
+          <span
+            className={`flex flex-col bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default
+    pointer-events-auto transition-all duration-300
+    w-auto max-w-[92vw] max-h-[calc(100vh-20px)]
+    ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
+          >
+            {/* IMAGE AREA */}
+            <div className="flex-1 min-h-0 p-2">
+              {/* This is the bounded box that defines the available space for the poster */}
+              <div className="relative h-full min-h-0 w-full flex items-center justify-center">
+                {/* Use a plain img first to rule out LazyImage internals */}
+                <img
+                  src={overlay.image}
+                  alt=""
+                  // Key constraints:
+                  // - Let the image size by its intrinsic ratio
+                  // - But never exceed the box in either dimension
+                  className="max-h-full max-w-full h-auto w-auto object-contain rounded-md bg-gray-200 ring-1 ring-gray-350"
+                  draggable={false}
+                />
+              </div>
+            </div>
+
+            <span className="flex-shrink-0 min-h-[28px] text-xs flex flex-row text-gray-500 font-semibold px-3 py-2 items-center justify-end gap-2 border-t border-gray-200">
+              Image Source:
+              <TMDBLogoHor
+                height={12}
+                url={TMDB_URL}
+                newTab
+                title="Open TMDB in a new tab"
+              />
+            </span>
           </span>
         </span>
       </span>
