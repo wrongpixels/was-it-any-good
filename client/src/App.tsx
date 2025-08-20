@@ -9,7 +9,7 @@ import { useAuth } from './hooks/use-auth';
 import SigningInPage from './components/common/status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
-import NavBar from './components/NavBar/RankingBar';
+import NavBar from './components/NavBar/NavBar';
 import ImageOverlay from './components/Overlay/ImageOverlay';
 import { routerPaths } from './utils/url-helper';
 import {

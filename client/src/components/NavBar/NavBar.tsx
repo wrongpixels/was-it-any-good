@@ -6,6 +6,7 @@ import ShowIcon from '../common/icons/ShowIcon';
 import StarIcon from '../common/icons/Rating/StarIcon';
 import CrownIcon from '../common/icons/Crown';
 import { styles } from '../../constants/tailwind-styles';
+import HomeIcon from '../common/icons/HomeIcon';
 
 interface LinkInfo {
   text: string;
@@ -19,7 +20,7 @@ const links: LinkInfo[] = [
   {
     text: 'Home',
     key: 'rb-home',
-    icon: <StarIcon width={15} />,
+    icon: <HomeIcon width={15} />,
     title: 'Home / Search',
     url: routerPaths.home,
   },

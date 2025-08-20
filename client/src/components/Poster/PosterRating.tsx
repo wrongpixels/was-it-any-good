@@ -63,11 +63,12 @@ const PosterRating = ({
             title={`${ratingTitle}${userRatingTitle}`}
             itemScope
             itemType="https://schema.org/AggregateRating"
+            className="cursor-help"
           >
             <AnimatedDiv
               pointerEvents="none"
               animKey={`${media.mediaType}-score-${media.id}`}
-              className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 cursor-default `}
+              className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 `}
               itemProp="ratingValue"
             >
               {rating}
