@@ -25,7 +25,10 @@ const PosterRating = ({
   if (isNaN(rating) || !media) {
     return null;
   }
-
+  const ratingTitle: string = `WIAG rating: ${rating}`;
+  const userRatingTitle: string = media.userRating
+    ? `\nYour rating: ${media.userRating.userScore}`
+    : '';
   const isSeason: boolean =
     media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
@@ -57,7 +60,7 @@ const PosterRating = ({
             </div>
           )}
           <span
-            title={rating.toString()}
+            title={`${ratingTitle}${userRatingTitle}`}
             itemScope
             itemType="https://schema.org/AggregateRating"
           >
