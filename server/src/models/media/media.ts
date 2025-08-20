@@ -43,7 +43,7 @@ import { calculateShowAverage } from '../../../../shared/util/rating-average-cal
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
@@ -222,7 +222,8 @@ class Media<
       constraints: false,
     });
   }
-  //A SQL approach using queries instead of 2 sequelize calls.
+  //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
+  //this counts every valid vote linked to the entry and calculates a new average
   static async refreshRatings(
     mediaId: number,
     mediaType: MediaType,
@@ -232,8 +233,8 @@ class Media<
       mediaType === MediaType.Show
         ? Show
         : mediaType === MediaType.Film
-          ? Film
-          : Season;
+        ? Film
+        : Season;
     const ratingTableName: string = Rating.tableName;
     const mediaTableName: string = model.tableName;
 
@@ -254,6 +255,7 @@ class Media<
       transaction,
     };
 
+    //the actual call to update the entry's 'rating' and 'totalVotes' after the calculation
     const [affectedCount, [updatedMedia]] = await model.refreshRating(
       values,
       options
@@ -261,9 +263,21 @@ class Media<
     if (affectedCount === 0 || !updatedMedia) {
       return DEF_RATING_STATS;
     }
-    //if show or season, we need both to calculate an average for indexMedia.
-    //indexMedia is needed so it can store the calculated average between
-    //seasons and using for ordering by rating without expensive calculations.
+    //we need to sync the linked indexMedia after each vote/unvote.
+    //searches and rankings read from indexMedia as a cached snapshot of the
+    //current average rating, so we don’t have to pull full Film/Show model entries
+    //or make the client do extra work.
+
+    //if it’s a Film, we simply sync its indexMedia rating and totalVotes.
+    if (updatedMedia instanceof Film) {
+      await updatedMedia.syncIndex(transaction);
+    }
+
+    //for Show or Season, we need to calculate again because indexMedia holds a Show’s real
+    //display average (Show rating + its Seasons). each entry (Show/Season) keeps track of its own
+    //rating and totalVotes, so we store this cached display average in the indexMedia, ready to read
+    //in the client without needing to fetch Seasons or doing calculations.
+
     if (updatedMedia instanceof Show) {
       await updatedMedia.reload({
         attributes: ['rating', 'baseRating', 'voteCount', 'indexId'],
@@ -278,6 +292,8 @@ class Media<
       });
       await updatedMedia.syncIndex(transaction);
     }
+    //for a Season vote, we need to fetch its parent Show and update its indexMedia, as voting
+    //a Season affects the weighted average of te Show
     if (updatedMedia instanceof Season) {
       const parentShow: Show | null = await Show.findByPk(updatedMedia.showId, {
         attributes: ['rating', 'baseRating', 'voteCount', 'indexId'],
@@ -337,6 +353,7 @@ class Media<
         this instanceof Show && !!this.seasons
           ? calculateShowAverage(this)
           : this.rating;
+      console.log(rating);
       await IndexMedia.update(
         {
           rating,

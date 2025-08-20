@@ -1,13 +1,8 @@
 import { Link } from 'react-router-dom';
 import { AuthorMedia } from '../../../../shared/types/roles';
-import { IndexMediaData, MediaResponse } from '../../../../shared/types/models';
+import { MediaResponse } from '../../../../shared/types/models';
 import { styles } from '../../constants/tailwind-styles';
-import {
-  buildMediaLink,
-  buildRouterMediaLink,
-  mediaTypeToDisplayName,
-  urlFromIndexMedia,
-} from '../../utils/url-helper';
+import { buildMediaLink, mediaTypeToDisplayName } from '../../utils/url-helper';
 import imageLinker from '../../../../shared/util/image-linker';
 import ScrollableDiv from '../common/ScrollableDiv';
 import Separator from '../common/Separator';
@@ -47,7 +42,7 @@ const PersonRoleCredits = ({ media, isFirst }: PersonRoleCreditsProps) => {
                   className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
                 />
               </div>
-              <IndexMediaRatingStars value={m.rating} />
+              <IndexMediaRatingStars value={m.indexMedia?.rating} />
             </div>
           </Link>
         ))}

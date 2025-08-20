@@ -27,10 +27,7 @@ export const buildFilmEntry = async (
   params: MediaQueryValues
 ): Promise<FilmResponse | null> => {
   const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
-  console.log('IMPORTANT 1!!!');
-  console.log(filmData.crew.filter((m) => m.name === 'Trey Parker'));
-  console.log(filmData.cast.filter((m) => m.name === 'Trey Parker'));
-  console.log('IMPORTANT 1!!!');
+
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
 
@@ -41,9 +38,8 @@ export const buildFilmEntry = async (
   if (!indexMedia?.id) {
     throw new CustomError('Error creating Index Media', 400);
   }
-  const indexId = indexMedia.id;
-
   const { scopeOptions, findOptions } = Film.buildMediaQueryOptions(params);
+  const indexId = indexMedia.id;
   const filmEntry: Film | null = await Film.scope(scopeOptions).create(
     buildFilm(filmData, indexId),
     {
@@ -55,6 +51,7 @@ export const buildFilmEntry = async (
   }
   console.log('Created film!');
   await buildCreditsAndGenres(filmEntry, filmData, params.transaction);
+  //we reload after creating the credits and season associations so the final entry is populated
   await filmEntry.reload({ ...findOptions });
   return toPlain(filmEntry);
 };
