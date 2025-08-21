@@ -12,6 +12,7 @@ export enum AspectRatio {
 export enum ImageVariant {
   default = 'default',
   inline = 'inline',
+  overlay = 'overlay',
 }
 
 interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -26,6 +27,29 @@ const LazyImage = ({
   ...props
 }: ImageProps) => {
   const [isLoading, setIsLoading] = useState(true);
+
+  if (variant === ImageVariant.overlay) {
+    return (
+      <>
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-md">
+            <LoadingSpinner className="w-8" />
+          </div>
+        )}
+        <img
+          {...props}
+          key={props.src}
+          loading="lazy"
+          className={mergeClassnames('transition-opacity', className)}
+          style={{
+            visibility: isLoading ? 'hidden' : 'visible',
+            opacity: isLoading ? 0 : 1,
+          }}
+          onLoad={() => setIsLoading(false)}
+        />
+      </>
+    );
+  }
 
   if (variant === ImageVariant.inline) {
     return (
