@@ -1,31 +1,54 @@
-import { SESSION_AUTH_ERROR } from '../../../shared/constants/error-constants';
+import {
+  NOT_FOUND_ERROR,
+  SESSION_AUTH_ERROR,
+} from '../../../shared/constants/error-constants';
+import { toFirstUpperCase } from '../../../shared/helpers/format-helper';
+
+type ErrorCode = string | number;
 
 class CustomError extends Error {
   status: number;
+  code?: ErrorCode;
+
   constructor(
     message: string = 'There was an error with the request',
     status: number = 500,
-    name: string = 'Error'
+    name: string = 'Error',
+    code?: ErrorCode
   ) {
     super(message);
     this.name = name;
     this.status = status;
+    if (code !== undefined) {
+      this.code = code;
+    }
   }
 }
 
 export class AuthError extends CustomError {
-  constructor(
-    message: string = 'Access not authorized.',
-    name: string = 'AuthError'
-  ) {
-    super(message, 401, name);
+  constructor(message: string = 'Access not authorized.', code?: ErrorCode) {
+    super(message, 401, 'AuthError', code);
   }
 }
 
 export class SessionAuthError extends AuthError {
   constructor(message: string = 'Session is no longer valid') {
-    console.log('called');
     super(message, SESSION_AUTH_ERROR);
+    this.name = 'SessionAuthError';
+  }
+}
+
+export class NotFoundError extends CustomError {
+  constructor(
+    contentName: string = 'Content',
+    code: ErrorCode = NOT_FOUND_ERROR
+  ) {
+    super(
+      `${toFirstUpperCase(contentName)} not found!`,
+      404,
+      'NotFoundError',
+      code
+    );
   }
 }
 

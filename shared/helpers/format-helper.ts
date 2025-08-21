@@ -2,8 +2,8 @@ export const getYearParenthesis = (
   dateString: string | null | undefined
 ): string => {
   const year: string = getYearString(dateString);
-  if (!year || year === '') {
-    return '';
+  if (!year || year === "") {
+    return "";
   }
   return `(${year})`;
 };
@@ -13,7 +13,7 @@ export const getYearString = (
 ): string => {
   const year: number | null = getYearNum(dateString);
   if (!year) {
-    return '';
+    return "";
   }
   return year.toString();
 };
@@ -30,4 +30,9 @@ export const getYearNum = (
 };
 
 export const isNumber = (value?: unknown): value is number =>
-  typeof value === 'number' && !isNaN(value);
+  typeof value === "number" && !isNaN(value);
+
+export const toFirstUpperCase = (text: string) => {
+  if (!text) return text;
+  return text[0].toUpperCase() + text.slice(1);
+};

@@ -20,6 +20,10 @@ export const apiPaths = {
     base: `${API_BASE}/people`,
     byId: (id: number | string) => `${apiPaths.people.base}/${id}`,
   },
+  genres: {
+    base: `${API_BASE}/genres`,
+    byId: (id: number | string) => `${apiPaths.genres.base}/${id}`,
+  },
   ratings: {
     base: `${API_BASE}/ratings`,
     matchById: (mediaType: MediaType, id: number) =>
