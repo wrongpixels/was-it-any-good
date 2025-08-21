@@ -1,3 +1,5 @@
+import Country, { CountryCode } from '../../../shared/types/countries';
+
 export const capitalize = (value: string): string =>
   `${value.charAt(0).toUpperCase()}${value.slice(1)}`;
 
@@ -18,7 +20,7 @@ interface BrowseTitleParameters {
   searchTerm?: string | null;
   queryType?: string[];
   genres?: string[];
-  countries?: string[];
+  countries?: CountryCode[];
   year?: string | null;
 }
 
@@ -38,9 +40,7 @@ export const getBrowseOperation = (params: BrowseTitleParameters): string => {
   if (genres.length > 0) {
     activeFilters.push(genres.length > 1 ? 'Genres' : 'Genre');
   }
-  if (countries.length > 0) {
-    activeFilters.push(countries.length > 1 ? 'Countries' : 'Country');
-  }
+
   if (year) {
     activeFilters.push('Year');
   }
@@ -49,6 +49,12 @@ export const getBrowseOperation = (params: BrowseTitleParameters): string => {
 
   if (searchTerm) {
     titleParts.push(`for "${searchTerm}"`);
+  }
+
+  if (countries.length > 0) {
+    titleParts.push(
+      `from ${countries.map((c: CountryCode) => Country[c]).join(' or ')}`
+    );
   }
 
   if (activeFilters.length > 0) {

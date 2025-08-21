@@ -18,6 +18,7 @@ import { normalizeQueryTypeParams } from '../utils/url-helper';
 import UrlQueryBuilder from '../utils/url-query-builder';
 import { useCallback, useMemo } from 'react';
 import { getBrowseOperation } from '../utils/common-format-helper';
+import { CountryCode, toCountryCodes } from '../../../shared/types/countries';
 
 //if the manager receives override params, they'll be used ignoring
 //equivalent url params.
@@ -49,13 +50,13 @@ const useUrlQueryManager = ({
     queryType
   );
   const genres: string[] = parameters.getAll('g');
-  const countries: string[] = parameters.getAll('c');
+  const countries: CountryCode[] = toCountryCodes(parameters.getAll('c'));
   const year = parameters.get('y');
   const orderBy: OrderBy | undefined = stringToOrderBy(
     parameters.get('orderby')
   );
 
-  //a string version of the operation based on the paramas "Browsing Shows by Genre" etc.
+  //a string version of the operation based on the params "Browsing Shows by Genre" etc.
   const operationString: string = getBrowseOperation({
     queryType,
     genres,
