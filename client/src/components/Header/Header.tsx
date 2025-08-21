@@ -1,9 +1,7 @@
-import { Link } from 'react-router-dom';
 import HeaderLogin from './HeaderLogin';
-import StarIcon from '../common/icons/Rating/StarIcon';
 import SearchField from './Search/SearchField';
-import { styles } from '../../constants/tailwind-styles';
 import { useState } from 'react';
+import HeaderLogo from './HeaderLogo';
 
 const HamburgerIcon = () => (
   <svg
@@ -34,27 +32,11 @@ const Header = () => {
               <SearchField />
             </div>
           </div>
-
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link to="/" className="flex items-center flex-shrink-0">
-              <span
-                className={`font-bold text-white text-2xl flex items-center pb-1 ${styles.shadow.textShadow}`}
-              >
-                {'WI'}
-                <span className="inline-flex items-center -mx-[2px] text-staryellow">
-                  <StarIcon width={27} />
-                </span>
-                {'G'}
-                <span className="font-normal italic ml-2 text-xs mt-1 text-amber-100 hidden sm:inline">
-                  {'Was It Any Good'}
-                </span>
-                <span className="font-medium italic ml-0.5 text-xl mt-1 hidden sm:inline">
-                  ?
-                </span>
-              </span>
-            </Link>
-          </div>
-
+          <HeaderLogo
+            className={
+              'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
+            }
+          />
           <div className="flex-1 flex justify-end">
             <div className="hidden lg:block">
               <HeaderLogin />
