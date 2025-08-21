@@ -12,6 +12,7 @@ import {
   OverrideParams,
 } from '../../../types/search-browse-types';
 import { setPageInfo } from '../../../utils/page-info-setter';
+import { useGenresQuery } from '../../../queries/genre-queries';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overriden with OverrideParams.
@@ -28,12 +29,13 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.query();
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
-  //verride params are passed here.
+  //override params are passed here.
   const {
     currentQuery,
     navigatePages,
     navigateToPage,
     currentPage,
+    genres,
     operationString,
   } = useUrlQueryManager({
     basePath,
@@ -44,6 +46,8 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
     isLoading,
     isError,
   } = useBrowseQuery(currentQuery);
+  const { data: genreResults, isLoading: genresLoading } =
+    useGenresQuery(genres);
   console.log(browseResults);
 
   //to avoid setting a url bigger than totalPages or less than 1
@@ -82,7 +86,9 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
           />
         </span>
       }
-      {isLoading && <SpinnerPage text={`Browsing WIAG...`} />}
+      {(isLoading || genresLoading) && (
+        <SpinnerPage text={`Browsing WIAG...`} />
+      )}
       <div className="flex flex-col flex-1 mt-1">
         <PageResults
           results={browseResults}

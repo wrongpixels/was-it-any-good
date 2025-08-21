@@ -12,7 +12,7 @@ import { GenreResponse } from '../../../shared/types/models';
 //so out "bulk" option simply calls the individual query multiple times to make things easier.
 
 const genreQueryOptions = (
-  genreId: number
+  genreId: number | string
 ): UseQueryOptions<GenreResponse, Error> => ({
   queryKey: ['genre', genreId],
   queryFn: () => getGenreById(genreId),
@@ -23,7 +23,7 @@ export const useGenreQuery = (
   genreId: number
 ): UseQueryResult<GenreResponse, Error> => useQuery(genreQueryOptions(genreId));
 
-export const useGenresQuery = (genreIds: number[]) =>
+export const useGenresQuery = (genreIds: number[] | string[]) =>
   useQueries({
     queries: genreIds.map((id) => genreQueryOptions(id)),
   });
