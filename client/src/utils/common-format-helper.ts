@@ -43,7 +43,7 @@ export const getBrowseOperation = ({
     activeFilters.push('Year');
   }
 
-  const titleParts: string[] = [''];
+  const titleParts: string[] = ['Browsing'];
 
   if (searchTerm) {
     titleParts.push(`for "${searchTerm}"`);
