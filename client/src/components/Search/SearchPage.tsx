@@ -18,7 +18,7 @@ import TrendingIcon from '../common/icons/TrendingIcon';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
 
-//SearchPage doesn't use states to track parameters and options, it relies on the active url and its queries.
+//SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
 //users can edit the url to get the same results and no API call takes place until Search form is submitted
 //or the searchTerm in the url changes.
@@ -28,18 +28,17 @@ interface SearchPageProps {
 }
 
 const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
-  //a hook shared with BrowsePage to interpret the active url as states
-  //and navigate to new queries and result pages based on active parameters
+  //a hook shared with BrowsePage that extracts and interprets active url params as state values
+  //it allows to navigate to new queries and pages based on active parameters
   const {
-    searchTerm,
+    urlParams,
     currentQuery,
     navigatePages,
     navigateToPage,
     navigateToQuery: navigateToNewTerm,
-    currentPage,
     queryTypeManager,
   } = useUrlQueryManager({ basePath: routerPaths.search.base });
-
+  const { searchTerm, currentPage } = urlParams;
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
 

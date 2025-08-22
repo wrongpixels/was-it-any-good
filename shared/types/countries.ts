@@ -196,9 +196,10 @@ enum Country {
 export type CountryCode = keyof typeof Country;
 export const VALID_COUNTRY_KEYS = new Set(Object.keys(Country));
 export const isCountryCode = (code: string): code is CountryCode =>
-  VALID_COUNTRY_KEYS.has(code);
-export const toCountryCodes = (input: string[]): CountryCode[] =>
-  input.filter(isCountryCode);
+  VALID_COUNTRY_KEYS.has(code.toUpperCase());
+
+export const toCountryCodes = (codes: string[]): CountryCode[] =>
+  codes.map((c: string) => c.toUpperCase()).filter(isCountryCode);
 
 export interface CountryValues {
   name: string;

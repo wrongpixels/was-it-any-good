@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { getGenreById } from '../services/genre-service';
 import { GenreResponse } from '../../../shared/types/models';
+import { combineQueryResults } from '../utils/query-helper';
 
 //we need to know our genre names by id in the Browse Page before accessing our results and
 //and also when having no results at all. TansTack takes care of individually caching them,
@@ -25,5 +26,6 @@ export const useGenreQuery = (
 
 export const useGenresQuery = (genreIds: number[] | string[]) =>
   useQueries({
-    queries: genreIds.map((id) => genreQueryOptions(id)),
+    queries: genreIds.map((id: number | string) => genreQueryOptions(id)),
+    combine: (results) => combineQueryResults<GenreResponse>(results),
   });

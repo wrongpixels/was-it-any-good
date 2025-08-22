@@ -13,6 +13,7 @@ import {
 } from '../../../types/search-browse-types';
 import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
+import { getBrowseOperation } from '../../../utils/common-format-helper';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overriden with OverrideParams.
@@ -30,24 +31,18 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
   //override params are passed here.
-  const {
-    currentQuery,
-    navigatePages,
-    navigateToPage,
-    currentPage,
-    genres,
-    operationString,
-  } = useUrlQueryManager({
-    basePath,
-    overrideParams,
-  });
+  const { urlParams, currentQuery, navigatePages, navigateToPage } =
+    useUrlQueryManager({
+      basePath,
+      overrideParams,
+    });
+  const { currentPage, genres } = urlParams;
   const {
     data: browseResults,
     isLoading,
     isError,
   } = useBrowseQuery(currentQuery);
-  const { data: genreResults, isLoading: genresLoading } =
-    useGenresQuery(genres);
+  const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
   console.log(browseResults);
 
   //to avoid setting a url bigger than totalPages or less than 1
@@ -64,6 +59,12 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   if (isError || browseResults === null) {
     return <ErrorPage />;
   }
+  //if genres are still loading, we set a default title.
+  //when populated, we will create a specific title with all our parameters
+
+  const operationString: string | undefined = isAnyLoading
+    ? undefined
+    : getBrowseOperation({ urlParams, genreResults });
 
   if (pageTitleOptions) {
     setPageInfo({
@@ -86,9 +87,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
           />
         </span>
       }
-      {(isLoading || genresLoading) && (
-        <SpinnerPage text={`Browsing WIAG...`} />
-      )}
+      {(isLoading || isAnyLoading) && <SpinnerPage text={`Browsing WIAG...`} />}
       <div className="flex flex-col flex-1 mt-1">
         <PageResults
           results={browseResults}

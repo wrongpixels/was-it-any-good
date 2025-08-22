@@ -4,6 +4,19 @@ import { API_BASE } from '../constants/url-constants';
 import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
+import { URLParameters } from '../types/search-browse-types';
+import { toCountryCodes } from '../../../shared/types/countries';
+import { stringToOrderBy, stringToSorting } from '../../../shared/types/browse';
+import {
+  UPARAM_COUNTRIES,
+  UPARAM_CURRENT_PAGE,
+  UPARAM_GENRES,
+  UPARAM_ORDER_BY,
+  UPARAM_QUERY_TYPE,
+  UPARAM_SEARCH_TERM,
+  UPARAM_SORT,
+  UPARAM_YEAR,
+} from '../constants/url-param-constants';
 
 export const apiPaths = {
   films: {
@@ -214,6 +227,15 @@ export const buildOwnUrl = (path: string = ''): string =>
 export const buildPathUrl = (path: string = ''): string =>
   `${window.location.pathname}${path}`;
 
+export const buildTMDBUrl = (
+  mediaType: MediaType,
+  path: string = ''
+): string => {
+  const url = TMDB_URL;
+  const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
+  return `${url}/${prefix}/${path}`;
+};
+
 export const mediaTypeToDisplayName = (mediaType: MediaType) => {
   switch (mediaType) {
     case MediaType.Film:
@@ -280,11 +302,15 @@ export const normalizeQueryTypeParams = (rawParams: string[]): SearchType[] => {
   return resultParams;
 };
 
-export const buildTMDBUrl = (
-  mediaType: MediaType,
-  path: string = ''
-): string => {
-  const url = TMDB_URL;
-  const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
-  return `${url}/${prefix}/${path}`;
-};
+export const extractURLParameters = (
+  parameters: URLSearchParams
+): URLParameters => ({
+  searchTerm: parameters.get(UPARAM_SEARCH_TERM),
+  currentPage: Number(parameters.get(UPARAM_CURRENT_PAGE)),
+  queryType: normalizeQueryTypeParams(parameters.getAll(UPARAM_QUERY_TYPE)),
+  genres: parameters.getAll(UPARAM_GENRES),
+  countries: toCountryCodes(parameters.getAll(UPARAM_COUNTRIES)),
+  year: parameters.get(UPARAM_YEAR),
+  orderBy: stringToOrderBy(parameters.get(UPARAM_ORDER_BY)),
+  sort: stringToSorting(parameters.get(UPARAM_SORT)),
+});
