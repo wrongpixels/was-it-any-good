@@ -133,9 +133,9 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
       {isHome && (
         <>
           <Instructions />
-          <span className="w-full -mt-14">
+          <span className="w-full -mt-4">
             <EntryTitle
-              title={'Trending'}
+              title={'Trending in TMDB'}
               icon={<TrendingIcon className={'text-gold'} height={24} />}
             />
           </span>
@@ -155,7 +155,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
               term={searchTerm || undefined}
               navigatePages={navigatePages}
               showNavBar={!isHome}
-              badgeType={isHome ? BadgeType.AddedBadge : BadgeType.None}
+              badgeType={BadgeType.AddedBadge}
             />
           </div>
         )}

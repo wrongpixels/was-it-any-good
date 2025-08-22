@@ -12,7 +12,7 @@ const Instructions = ({ condition: linkToSearch }: OptBoolProps) => {
         {linkToSearch ? (
           <Link to={routerPaths.search.base}>Search </Link>
         ) : (
-          <>Search </>
+          <>Click on it, Search </>
         )}
         <span>{'for it or type its TMDB id in the URL!'}</span>
       </span>

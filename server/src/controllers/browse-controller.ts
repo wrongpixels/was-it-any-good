@@ -57,9 +57,9 @@ router.get('/', async (req, res, next) => {
     };
 
     if (isMulti) {
-      //if is multi search, we filter Films and Shows directly, gather their indexIds, and finally we'll
+      //if is multi search, we filter Films and Shows directly, gather their indexIds, and finally
       //get the full IndexMedia entries from them applying proper limit, order and pagination
-      //this is not ideal, but sequelize has many inconsistencies and limitations when filtering nested 'includes' and
+      //this is not ideal, but sequelize has many limitations when filtering nested 'includes' and/or
       //combining tables, so this was the most readable, reliable and manageable approach using ORM.
 
       const filmFindOptions: FindOptions<Film> = {
@@ -122,7 +122,7 @@ router.get('/', async (req, res, next) => {
       };
       res.json(response);
     } else {
-      //if it's a single type query, we things are way more straightforward:
+      //if it's a single type query, things are way more straightforward:
       const isFilm: boolean = searchType === SearchType.Film;
       const { count, rows } = await IndexMedia.findAndCountAll({
         ...findAndCountOptions,
@@ -144,7 +144,7 @@ router.get('/', async (req, res, next) => {
       const response: IndexMediaResponse = {
         page: searchPage,
         totalResults: count,
-        //we consider no results a blank page 1
+        //we consider no results a blank page #1
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         indexMedia: toPlainArray(rows),
       };
