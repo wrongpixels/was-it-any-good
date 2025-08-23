@@ -43,9 +43,9 @@ const GenreSection = ({
             key={g.id}
             to={g.url}
             title={`Show more '${g.name}' ${mediaTypeToDisplayName(mediaType)}s`}
-            className={`${styles.animations.zoomOnHover}`}
+            className={`${styles.animations.zoomLessOnHover}`}
           >
-            <Bubble text={g.name} className="pt-0.25 pb-0.5" />
+            <Bubble text={g.name} type="media" className="pt-0.25 pb-0.5" />
           </Link>
         ))}
       </span>
