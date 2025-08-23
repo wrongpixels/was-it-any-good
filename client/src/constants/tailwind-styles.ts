@@ -58,7 +58,7 @@ export const styles = {
         const baseClasses = `${styles.poster.search.base}`;
 
         if (badgeType === BadgeType.AddedBadge) {
-          return `${baseClasses} from-green-100 via-green-100`;
+          return `${baseClasses} from-green-500/15`;
         }
         if (badgeType === BadgeType.None || index >= 4) {
           return `${baseClasses} from-gray-100`;

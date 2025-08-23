@@ -67,10 +67,13 @@
   --color-staryellow: #ccd45d;
   --color-starblue: #5d82c7;
   --color-stardark: #6682b6;
+  --color-stardarker: #4e6693;
 
   --color-starbright: #6d90d1;
   --color-starbrighter: #88aef3;
   --color-starbrightest: #a9c3f1;
+  --color-starsearch: #dbe4f4;
+  --color-starsearch-bright: #e0ecff;
 
   --color-starbutton: #7199e4;
   --color-button-green: #36b777;
