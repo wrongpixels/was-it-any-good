@@ -89,7 +89,7 @@
   --color-gold-bright: rgb(228, 208, 95);
   --color-bronze: rgb(190, 129, 48);
   --color-darkbronze: rgb(160, 114, 54);
-
+  --font-weight-midbold: 650;
   --text-regular: 0.907rem;
 
   --animate-d-ping: d-ping 0.8s ease-out;

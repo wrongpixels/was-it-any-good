@@ -31,7 +31,7 @@ const EntryTitle = ({
             <span className="inline-block align-middle mr-2">{icon}</span>
           )}
 
-          <span className="font-bold align-middle">{title}</span>
+          <span className="font-semibold align-middle">{title}</span>
 
           <span className="font-normal text-gray-400 align-middle">
             {date && ` ${getYearParenthesis(date)}`}
