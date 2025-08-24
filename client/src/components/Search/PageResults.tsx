@@ -69,13 +69,15 @@ const PageResults = ({
             </span>
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
-          <div className="absolute -translate-y-1">
-            <Dropdown
-              {...orderDropdown.getProps()}
-              options={sortByValues}
-              label="Sort by"
-            />
-          </div>
+          {showOrderOptions && (
+            <div className="absolute -translate-y-1">
+              <Dropdown
+                {...orderDropdown.getProps()}
+                options={sortByValues}
+                label="Sort by"
+              />
+            </div>
+          )}
         </>
       )}
       <span className="flex-1">
