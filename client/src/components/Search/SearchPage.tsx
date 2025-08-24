@@ -17,6 +17,8 @@ import EntryTitle from '../EntryTitle';
 import TrendingIcon from '../common/icons/TrendingIcon';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
+import useDropdown from '../../hooks/use-dropdown';
+import Dropdown from '../common/Dropdown';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -41,6 +43,10 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   const { searchTerm, currentPage } = urlParams;
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
+  const searchDropdown = useDropdown({
+    defaultValue: 'All media',
+    name: 'searchType',
+  });
 
   const {
     data: searchResults,
@@ -119,6 +125,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
 
   return (
     <div className="flex flex-col items-center gap-4 pt-5 flex-1">
+      <Dropdown {...searchDropdown.getProps() opt}
       <SearchInputField
         text={searchTerm || undefined}
         handleSearch={handleSearch}
