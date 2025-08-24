@@ -45,7 +45,7 @@ const PersonPage = (): JSX.Element | null => {
               (media: AuthorMedia, index: number) => (
                 <PersonRoleCredits
                   key={media.authorType}
-                  media={media}
+                  authorMedia={media}
                   isFirst={index === 0}
                 />
               )

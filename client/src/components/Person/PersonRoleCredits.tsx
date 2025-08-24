@@ -10,20 +10,24 @@ import LazyImage from '../common/LazyImage';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 
 interface PersonRoleCreditsProps {
-  media: AuthorMedia;
+  authorMedia: AuthorMedia;
   isFirst: boolean;
 }
 
-const PersonRoleCredits = ({ media, isFirst }: PersonRoleCreditsProps) => {
+const PersonRoleCredits = ({
+  authorMedia,
+  isFirst,
+}: PersonRoleCreditsProps) => {
+  const placeHolderCount: number = 4 - authorMedia.media.length;
   return (
     <div className="h-full">
       {!isFirst && <Separator className="w-full pb-2" />}
       <h2 className="text-left font-bold text-lg pb-1">
-        {`${media.authorType} (${media.media.length})`}
+        {`${authorMedia.authorType} (${authorMedia.media.length})`}
       </h2>
 
       <ScrollableDiv className="ml-4">
-        {media.media.map((m: MediaResponse) => (
+        {authorMedia.media.map((m: MediaResponse) => (
           <Link
             key={m.id}
             to={buildMediaLink(m)}
@@ -46,6 +50,13 @@ const PersonRoleCredits = ({ media, isFirst }: PersonRoleCreditsProps) => {
             </div>
           </Link>
         ))}
+        {placeHolderCount &&
+          [...Array(placeHolderCount)].map((_, i) => (
+            <span
+              key={i}
+              className="bg-gradient-to-t from-gray-200 to-gray-200/40  via-gray-200 w-42 rounded ring ring-gray-500/15"
+            ></span>
+          ))}
       </ScrollableDiv>
     </div>
   );
