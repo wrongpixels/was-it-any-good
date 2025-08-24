@@ -1,20 +1,22 @@
 import { ChangeEvent, useState } from 'react';
 
-const useDropdown = (
-  props: React.DetailedHTMLProps<
-    React.SelectHTMLAttributes<HTMLSelectElement>,
-    HTMLSelectElement
-  >
-) => {
-  const [value, setValue] = useState<string | number | readonly string[]>(
-    props.defaultValue || ''
-  );
+interface DropdownHookConfig {
+  name?: string;
+  defaultValue?: string;
+  disabled?: boolean;
+}
+
+//a hook to setup controlled dropdown hooks.
+//we set a "fake" defaultValue for clarity but we then
+//extract it from the props to avoid error messages (both value and defaultValue)
+const useDropdown = ({ defaultValue, ...props }: DropdownHookConfig) => {
+  const [value, setValue] = useState<string>(defaultValue || '');
 
   const onChange = (e: ChangeEvent<HTMLSelectElement>) =>
     setValue(e.target.value);
 
   const clean = () => setValue('');
-  const reset = () => setValue(props.defaultValue || '');
+  const reset = () => setValue(defaultValue || '');
 
   const getProps = () => ({ ...props, value, onChange });
 

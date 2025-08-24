@@ -10,6 +10,8 @@ import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
 import { OrderBy, orderByValues } from '../../../../shared/types/browse';
+import Dropdown from '../common/Dropdown';
+import useDropdown from '../../hooks/use-dropdown';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -32,7 +34,10 @@ const PageResults = ({
   if (!results) {
     return null;
   }
-
+  const orderDropdown = useDropdown({
+    name: 'orderBy',
+    defaultValue: OrderBy.Popularity,
+  });
   const searchTerm = (): JSX.Element => (
     <>
       {' for '}
@@ -64,18 +69,13 @@ const PageResults = ({
             </span>
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
-          <span className="absolute">
-            <select
-              value={'Hey'}
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
-            >
-              {orderByValues.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </span>
+          <div className="absolute -translate-y-1">
+            <Dropdown
+              {...orderDropdown.getProps()}
+              options={orderByValues}
+              label="Order"
+            />
+          </div>
         </>
       )}
       <span className="flex-1">
