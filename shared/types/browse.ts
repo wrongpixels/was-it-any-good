@@ -1,14 +1,14 @@
 export enum OrderBy {
-  Title = 'name',
-  Rating = 'rating',
-  Popularity = 'popularity',
-  Year = 'year',
+  Title = "name",
+  Rating = "rating",
+  Popularity = "popularity",
+  Year = "year",
 }
-const orderByValues: string[] = Object.values<string>(OrderBy);
+export const orderByValues: string[] = Object.values<string>(OrderBy);
 
 export enum Sorting {
-  descending = 'DESC',
-  ascending = 'ASC',
+  descending = "DESC",
+  ascending = "ASC",
 }
 const sortValues: string[] = Object.values<string>(Sorting);
 

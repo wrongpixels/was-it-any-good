@@ -9,6 +9,7 @@ import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
+import { OrderBy, orderByValues } from '../../../../shared/types/browse';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -17,6 +18,7 @@ interface PageResultsProps {
   title?: string;
   badgeType: BadgeType;
   showNavBar?: boolean;
+  showOrderOptions?: boolean;
 }
 
 const PageResults = ({
@@ -25,6 +27,7 @@ const PageResults = ({
   navigatePages,
   badgeType = BadgeType.None,
   showNavBar = true,
+  showOrderOptions = true,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
@@ -54,12 +57,26 @@ const PageResults = ({
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
-        <div className="relative w-full h-8 flex items-center">
-          <span className="w-full text-center text-lg">
-            {results.totalResults || 'No'} results <>{term && searchTerm()}</>
+        <>
+          <div className="relative w-full h-8 flex flex-row">
+            <span className="w-full text-center text-lg">
+              {results.totalResults || 'No'} results <>{term && searchTerm()}</>
+            </span>
+            <PageResultsNav results={results} navigatePages={navigatePages} />
+          </div>
+          <span className="absolute">
+            <select
+              value={'Hey'}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm"
+            >
+              {orderByValues.map((opt) => (
+                <option key={opt} value={opt}>
+                  {opt}
+                </option>
+              ))}
+            </select>
           </span>
-          <PageResultsNav results={results} navigatePages={navigatePages} />
-        </div>
+        </>
       )}
       <span className="flex-1">
         {results.indexMedia.length > 0 ? (

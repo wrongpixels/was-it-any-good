@@ -95,7 +95,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
           badgeType={
             !!overrideParams?.orderBy ? BadgeType.RankBadge : BadgeType.None
           }
-        ></PageResults>
+        />
       </div>
     </div>
   );
