@@ -4,7 +4,11 @@ import SpinnerPage from '../common/status/SpinnerPage';
 import { routerPaths } from '../../utils/url-helper';
 import PageResults from './PageResults';
 import SearchInputField from './SearchInput';
-import { SearchType } from '../../../../shared/types/search';
+import {
+  SearchDropDown,
+  searchDropdownOptions,
+  SearchType,
+} from '../../../../shared/types/search';
 import { ParamStructure } from '../../utils/search-param-manager';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
@@ -44,7 +48,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
   const searchDropdown = useDropdown({
-    defaultValue: 'All media',
+    defaultValue: SearchDropDown.All,
     name: 'searchType',
   });
 
@@ -125,18 +129,23 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
 
   return (
     <div className="flex flex-col items-center gap-4 pt-5 flex-1">
-      <Dropdown {...searchDropdown.getProps() opt}
-      <SearchInputField
-        text={searchTerm || undefined}
-        handleSearch={handleSearch}
-      />
-      {!isHome && (
+      <span className="flex flex-row gap-2">
+        <Dropdown
+          {...searchDropdown.getProps()}
+          options={searchDropdownOptions}
+        />
+        <SearchInputField
+          text={searchTerm || undefined}
+          handleSearch={handleSearch}
+        />
+      </span>
+      {/* !isHome && (
         <SearchParams
           ref={anchorRef}
           toggleParam={toggleParam}
           typeFilters={queryTypeManager}
         />
-      )}
+      )*/}
       {isHome && (
         <>
           <Instructions />

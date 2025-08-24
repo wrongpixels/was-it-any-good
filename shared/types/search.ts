@@ -21,6 +21,15 @@ export enum SearchType {
   Person = "person",
   Multi = "multi",
 }
+
+export enum SearchDropDown {
+  Films = "Films",
+  Shows = "Shows",
+  All = "All",
+}
+
+export const searchDropdownOptions: string[] = Object.values(SearchDropDown);
+
 export const searchTypes: string[] = Object.values(SearchType);
 
 export const arrayToSearchType = (array: string[]): SearchType | undefined => {
