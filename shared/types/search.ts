@@ -1,4 +1,4 @@
-import { MediaType } from './media';
+import { MediaType } from "./media";
 
 export const mediaTypesToSearchTypes = (
   mediaTypes: MediaType[] | undefined | null
@@ -16,10 +16,10 @@ export const mediaTypesToSearchTypes = (
   return validSearchTypes;
 };
 export enum SearchType {
-  Film = 'film',
-  Show = 'show',
-  Person = 'person',
-  Multi = 'multi',
+  Film = "film",
+  Show = "show",
+  Person = "person",
+  Multi = "multi",
 }
 export const searchTypes: string[] = Object.values(SearchType);
 
@@ -40,10 +40,10 @@ export const arrayToSearchType = (array: string[]): SearchType | undefined => {
 };
 
 export enum TMDBSearchType {
-  Movie = 'movie',
-  TV = 'tv',
-  Person = 'person',
-  Multi = 'multi',
+  Movie = "movie",
+  TV = "tv",
+  Person = "person",
+  Multi = "multi",
 }
 
 export const isValidSearchType = (value: string): boolean =>
@@ -64,5 +64,5 @@ export const mediaTypeToSearchType = (
   }
 };
 
-export type TMDBOrderByType = 'popularity' | 'title' | 'year' | 'rating';
-export type TMDBSortByType = 'desc' | 'asc';
+export type TMDBSortByType = "popularity" | "title" | "year" | "rating";
+export type TMDBSortDirType = "desc" | "asc";

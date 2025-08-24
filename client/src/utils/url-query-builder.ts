@@ -1,10 +1,17 @@
-import { OrderBy, Sorting } from '../../../shared/types/browse';
+import { SortBy, SortDir } from '../../../shared/types/browse';
 import { MediaType } from '../../../shared/types/media';
 import {
   isValidSearchType,
   mediaTypesToSearchTypes,
   mediaTypeToSearchType,
 } from '../../../shared/types/search';
+import {
+  UPARAM_COUNTRIES,
+  UPARAM_GENRES,
+  UPARAM_SORT_BY,
+  UPARAM_SORT_DIR,
+  UPARAM_YEAR,
+} from '../../../shared/constants/url-param-constants';
 
 class UrlQueryBuilder {
   private params: Array<[string, string]>;
@@ -78,29 +85,29 @@ class UrlQueryBuilder {
   }
 
   byCountry(value?: string) {
-    return this.addParam(value, 'c');
+    return this.addParam(value, UPARAM_COUNTRIES);
   }
 
   byCountries(value?: string[]) {
-    return this.addParams(value, 'c');
+    return this.addParams(value, UPARAM_COUNTRIES);
   }
 
   byGenre(value?: number | null) {
-    return this.addParam(value, 'g');
+    return this.addParam(value, UPARAM_GENRES);
   }
 
   byGenres(value?: string[]) {
-    return this.addParams(value, 'g');
+    return this.addParams(value, UPARAM_GENRES);
   }
   byYear(value?: number | string | null) {
-    return this.addParam(value, 'y');
+    return this.addParam(value, UPARAM_YEAR);
   }
-  orderBy(value?: OrderBy) {
-    return this.addParam(value, 'orderby');
+  sortBy(value?: SortBy) {
+    return this.addParam(value, UPARAM_SORT_BY);
   }
 
-  sortBy(value?: Sorting) {
-    return this.addParam(value, 'sort');
+  sortDir(value?: SortDir) {
+    return this.addParam(value, UPARAM_SORT_DIR);
   }
 
   toString() {

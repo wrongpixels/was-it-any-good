@@ -1,36 +1,36 @@
-export enum OrderBy {
+export enum SortBy {
   Title = "name",
   Rating = "rating",
   Popularity = "popularity",
   Year = "year",
 }
-export const orderByValues: string[] = Object.values<string>(OrderBy);
+export const sortByValues: string[] = Object.values<string>(SortBy);
 
-export enum Sorting {
+export enum SortDir {
   descending = "DESC",
   ascending = "ASC",
 }
-const sortValues: string[] = Object.values<string>(Sorting);
+const sortDirValues: string[] = Object.values<string>(SortDir);
 
-export const isOrderBy = (value: string): value is OrderBy =>
-  orderByValues.includes(value);
+export const isSortBy = (value: string): value is SortBy =>
+  sortByValues.includes(value);
 
-export const stringToOrderBy = (
+export const stringToSortBy = (
   value: string | undefined | null
-): OrderBy | undefined => {
-  if (!value || !isOrderBy(value)) {
+): SortBy | undefined => {
+  if (!value || !isSortBy(value)) {
     return undefined;
   }
   return value;
 };
 
-export const isSorting = (value: string): value is Sorting =>
-  sortValues.includes(value);
+export const isSortDir = (value: string): value is SortDir =>
+  sortDirValues.includes(value);
 
-export const stringToSorting = (
+export const stringToSortDir = (
   value: string | undefined | null
-): Sorting | undefined => {
-  if (!value || !isSorting(value)) {
+): SortDir | undefined => {
+  if (!value || !isSortDir(value)) {
     return undefined;
   }
   return value;

@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { OrderBy, Sorting } from '../../../shared/types/browse';
+import { SortBy, SortDir } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 import { CountryCode } from '../../../shared/types/countries';
 
@@ -7,8 +7,8 @@ import { CountryCode } from '../../../shared/types/countries';
 //so they can be used instead of the url equivalents
 export interface OverrideParams {
   basePath?: string;
-  orderBy?: OrderBy;
-  sort?: Sorting;
+  sortBy?: SortBy;
+  sortDir?: SortDir;
   searchType?: SearchType;
 }
 export interface URLParameters {
@@ -18,8 +18,8 @@ export interface URLParameters {
   genres: string[];
   countries: CountryCode[];
   year: string | null;
-  orderBy: OrderBy | undefined;
-  sort: Sorting | undefined;
+  sortBy: SortBy | undefined;
+  sortDir: SortDir | undefined;
 }
 export interface BrowsePageTitleOptions {
   title: string;

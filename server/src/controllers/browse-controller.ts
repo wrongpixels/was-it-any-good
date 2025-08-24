@@ -7,35 +7,46 @@ import { MediaType } from '../../../shared/types/media';
 import { CountryCode } from '../../../shared/types/countries';
 import { validateCountries } from '../factories/media-factory';
 import {
-  OrderBy,
-  Sorting,
-  stringToOrderBy,
-  stringToSorting,
+  SortBy,
+  SortDir,
+  stringToSortBy,
+  stringToSortDir,
 } from '../../../shared/types/browse';
 import { arrayToSearchType, SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { PAGE_LENGTH } from '../../../shared/types/search-browse';
+import {
+  UPARAM_COUNTRIES,
+  UPARAM_GENRES,
+  UPARAM_PAGE,
+  UPARAM_QUERY_TYPE,
+  UPARAM_SORT_BY,
+  UPARAM_SORT_DIR,
+  UPARAM_YEAR,
+} from '../../../shared/constants/url-param-constants';
 
 const router: Router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
     const searchType: SearchType =
-      arrayToSearchType(extractQuery(req.query.m)) ?? SearchType.Multi;
+      arrayToSearchType(extractQuery(req.query[UPARAM_QUERY_TYPE])) ??
+      SearchType.Multi;
     const isMulti: boolean = searchType === SearchType.Multi;
-    const searchPage: number = Number(req.query.page) || 1;
-    const genres: string[] = extractQuery(req.query.g);
+    const searchPage: number = Number(req.query[UPARAM_PAGE]) || 1;
+    const genres: string[] = extractQuery(req.query[UPARAM_GENRES]);
     const countries: CountryCode[] = validateCountries(
-      extractQuery(req.query.c)
+      extractQuery(req.query[UPARAM_COUNTRIES])
     ).filter((c: CountryCode) => c !== 'UNKNOWN');
-    const year: string | undefined = req.query.y?.toString();
-    const orderBy: OrderBy =
-      stringToOrderBy(req.query.orderby?.toString()) || OrderBy.Popularity;
-    const sort: Sorting =
-      stringToSorting(req.query.sort?.toString().toUpperCase()) ||
-      Sorting.descending;
+    const year: string | undefined = req.query[UPARAM_YEAR]?.toString();
+    const sortBy: SortBy =
+      stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
+      SortBy.Popularity;
+    const sortDir: SortDir =
+      stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
+      SortDir.descending;
 
     //shared filters for years and countries
     const whereOptions: WhereOptions = {};
@@ -43,14 +54,13 @@ router.get('/', async (req, res, next) => {
       whereOptions.releaseDate = {
         [Op.between]: [`${year}-01-01`, `${year}-12-31`],
       };
-      console.log(year);
     }
     if (countries.length > 0) {
       whereOptions.country = { [Op.overlap]: countries };
     }
     //pagination values
     const findAndCountOptions: FindAndCountOptions = {
-      order: [[orderBy, sort]],
+      order: [[sortBy, sortDir.toUpperCase()]],
       distinct: true,
       limit: PAGE_LENGTH,
       offset: PAGE_LENGTH * (searchPage - 1),

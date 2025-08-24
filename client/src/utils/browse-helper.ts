@@ -1,20 +1,20 @@
-import { OrderBy } from '../../../shared/types/browse';
+import { SortBy } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 
 export const getBrowseTitle = (
   searchType?: SearchType,
-  order?: OrderBy
+  order?: SortBy
 ): string => {
   if (!order || !searchType) {
     return 'Browsing Media';
   }
 
   const relationship: string =
-    order === OrderBy.Popularity
+    order === SortBy.Popularity
       ? 'Most Popular'
-      : order === OrderBy.Rating
+      : order === SortBy.Rating
         ? 'Top Rated'
-        : order === OrderBy.Year
+        : order === SortBy.Year
           ? 'by Year'
           : 'by Title';
 
@@ -27,7 +27,7 @@ export const getBrowseTitle = (
           ? 'Media'
           : 'People';
 
-  return order === OrderBy.Title || order === OrderBy.Year
+  return order === SortBy.Title || order === SortBy.Year
     ? `${media} &${relationship}`
     : `${relationship} ${media}`;
 };

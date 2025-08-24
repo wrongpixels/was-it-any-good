@@ -1,7 +1,7 @@
 import { BrowsePageProps } from '../components/Search/Browse/BrowsePage';
 import { routerPaths } from '../utils/url-helper';
 import { JSX } from 'react';
-import { OrderBy, Sorting } from '../../../shared/types/browse';
+import { SortBy, SortDir } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 import { OptIconProps } from '../types/common-props-types';
 import FilmIcon from '../components/common/icons/FilmIcon';
@@ -21,12 +21,12 @@ const defIconProps: OptIconProps = {
 
 const getIcon = (
   searchType: SearchType,
-  orderBy: OrderBy
+  sortBy: SortBy
 ): JSX.Element | undefined => {
-  switch (orderBy) {
-    case OrderBy.Popularity:
+  switch (sortBy) {
+    case SortBy.Popularity:
       return <StarIcon {...defIconProps} />;
-    case OrderBy.Rating: {
+    case SortBy.Rating: {
       switch (searchType) {
         case SearchType.Multi:
           return <CrownIcon {...defIconProps} />;
@@ -48,8 +48,8 @@ interface PageRouteBuilderProps {
   path: string;
   subtitle?: string;
   searchType?: SearchType;
-  orderBy?: OrderBy;
-  sort?: Sorting;
+  sortBy?: SortBy;
+  sortDir?: SortDir;
 }
 
 const buildPageRoute = ({
@@ -57,8 +57,8 @@ const buildPageRoute = ({
   path,
   subtitle,
   searchType = SearchType.Multi,
-  orderBy = OrderBy.Popularity,
-  sort = Sorting.descending,
+  sortBy = SortBy.Popularity,
+  sortDir = SortDir.descending,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
   return {
     path,
@@ -66,12 +66,12 @@ const buildPageRoute = ({
       pageTitleOptions: {
         title,
         subtitle,
-        icon: getIcon(searchType, orderBy),
+        icon: getIcon(searchType, sortBy),
       },
       overrideParams: {
-        orderBy,
+        sortBy,
         searchType,
-        sort,
+        sortDir,
         basePath: path,
       },
     },
@@ -89,20 +89,20 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     subtitle: 'Highest rated media in WIAG database',
 
     path: routerPaths.tops.multi.base(),
-    orderBy: OrderBy.Rating,
+    sortBy: SortBy.Rating,
   }),
   buildPageRoute({
     title: 'Top Rated Films',
     subtitle: 'Highest rated Films in WIAG database',
     path: routerPaths.tops.films.base(),
-    orderBy: OrderBy.Rating,
+    sortBy: SortBy.Rating,
     searchType: SearchType.Film,
   }),
   buildPageRoute({
     title: 'Top Rated TV Shows',
     subtitle: 'Highest rated Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
-    orderBy: OrderBy.Rating,
+    sortBy: SortBy.Rating,
     searchType: SearchType.Show,
   }),
 ];

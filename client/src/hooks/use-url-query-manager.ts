@@ -58,8 +58,8 @@ const useUrlQueryManager = ({
         .byCountries(urlParams.countries)
         .byYear(urlParams.year)
         .toPage(newPage)
-        .orderBy(overrideParams?.orderBy || urlParams.orderBy)
-        .sortBy(overrideParams?.sort || urlParams.sort)
+        .sortBy(overrideParams?.sortBy || urlParams.sortBy)
+        .sortDir(overrideParams?.sortDir || urlParams.sortDir)
         .toString();
 
       return url;

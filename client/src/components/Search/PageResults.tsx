@@ -9,7 +9,7 @@ import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
-import { OrderBy, orderByValues } from '../../../../shared/types/browse';
+import { SortBy, sortByValues } from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
 
@@ -35,8 +35,8 @@ const PageResults = ({
     return null;
   }
   const orderDropdown = useDropdown({
-    name: 'orderBy',
-    defaultValue: OrderBy.Popularity,
+    name: 'sortBy',
+    defaultValue: SortBy.Popularity,
   });
   const searchTerm = (): JSX.Element => (
     <>
@@ -72,8 +72,8 @@ const PageResults = ({
           <div className="absolute -translate-y-1">
             <Dropdown
               {...orderDropdown.getProps()}
-              options={orderByValues}
-              label="Order"
+              options={sortByValues}
+              label="Sort by"
             />
           </div>
         </>
