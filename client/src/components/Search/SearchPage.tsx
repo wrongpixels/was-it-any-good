@@ -76,7 +76,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   } else {
     setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
   }
-
+  /*
   const toggleParam = (param: ParamStructure) => {
     let alertMessage: string = '';
     if (param.applied && queryTypeManager.getApplied().length === 1) {
@@ -100,7 +100,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     queryTypeManager.toggleParam(param);
     console.log('refresh', param);
     handleSearch(searchTerm, true);
-  };
+  }; */
 
   const handleSearch = (
     newSearch: string | null,
