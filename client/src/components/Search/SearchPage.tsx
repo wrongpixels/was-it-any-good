@@ -8,13 +8,10 @@ import {
   SearchDropDown,
   searchDropdownOptions,
   searchDropToType,
-  SearchType,
 } from '../../../../shared/types/search';
-import { ParamStructure } from '../../utils/search-param-manager';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
-import SearchParams from './SearchParams';
 import useUrlQueryManager from '../../hooks/use-url-query-manager';
 import ErrorPage from '../common/status/ErrorPage';
 import { useTrendingQuery } from '../../queries/trending-queries';
