@@ -25,6 +25,23 @@ class ParamManager {
     this.params = newActiveParams;
   }
 
+  public toggleParamByName(paramToToggle: string): void {
+    const newActiveParams = this.params.map((p: ParamStructure) => {
+      if (p.name === paramToToggle) {
+        return { ...p, applied: !p.applied };
+      }
+      return p;
+    });
+    this.params = newActiveParams;
+  }
+
+  public clearAll(): void {
+    this.params = this.params.map((p: ParamStructure) => ({
+      ...p,
+      applied: false,
+    }));
+  }
+
   public getApplied(): ParamStructure[] {
     return this.params.filter((p: ParamStructure) => p.applied);
   }

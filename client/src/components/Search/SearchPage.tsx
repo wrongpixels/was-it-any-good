@@ -7,6 +7,7 @@ import SearchInputField from './SearchInput';
 import {
   SearchDropDown,
   searchDropdownOptions,
+  searchDropToType,
   SearchType,
 } from '../../../../shared/types/search';
 import { ParamStructure } from '../../utils/search-param-manager';
@@ -47,9 +48,19 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   const { searchTerm, currentPage } = urlParams;
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
+  const toggleParam = (param: string) => {
+    queryTypeManager.clearAll();
+    queryTypeManager.toggleParamByName(searchDropToType(param));
+    console.log('refresh', param, searchDropToType(param));
+    if (!urlParams.searchTerm) {
+      return;
+    }
+    handleSearch(searchTerm, true);
+  };
   const searchDropdown = useDropdown({
     defaultValue: SearchDropDown.All,
     name: 'searchType',
+    onChanged: toggleParam,
   });
 
   const {
@@ -76,31 +87,6 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   } else {
     setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
   }
-  /*
-  const toggleParam = (param: ParamStructure) => {
-    let alertMessage: string = '';
-    if (param.applied && queryTypeManager.getApplied().length === 1) {
-      alertMessage = 'Select at least one!';
-    }
-    if (param.name === SearchType.Person) {
-      alertMessage = `Search for People\nnot implemented yet! 😔`;
-    }
-
-    if (alertMessage) {
-      setNotification({
-        message: alertMessage,
-        anchorRef,
-      });
-      playAnim({
-        animationClass: 'animate-shake',
-        animKey: `search-param-${param.name}`,
-      });
-      return;
-    }
-    queryTypeManager.toggleParam(param);
-    console.log('refresh', param);
-    handleSearch(searchTerm, true);
-  }; */
 
   const handleSearch = (
     newSearch: string | null,

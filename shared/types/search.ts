@@ -28,6 +28,19 @@ export enum SearchDropDown {
   All = "All",
 }
 
+export const searchDropToType = (drop: SearchDropDown | string): SearchType => {
+  switch (drop) {
+    case SearchDropDown.All:
+      return SearchType.Multi;
+    case SearchDropDown.Films:
+      return SearchType.Film;
+    case SearchDropDown.Shows:
+      return SearchType.Show;
+    default:
+      return SearchType.Multi;
+  }
+};
+
 export const searchDropdownOptions: string[] = Object.values(SearchDropDown);
 
 export const searchTypes: string[] = Object.values(SearchType);
