@@ -1,4 +1,4 @@
-//a hook to disable events by name globally
+//a hook to disable events by name globally or on a target
 //the 'isBlocked' props boolean controls if the events are blocked or not
 import { useEffect } from 'react';
 
@@ -7,29 +7,34 @@ const blockEvent = (e: Event) => {
   e.stopPropagation();
 };
 
-const passiveOptions: AddEventListenerOptions = {
-  passive: false,
-};
+const passiveOptions: AddEventListenerOptions = { passive: false };
 
-const useEventBlocker = <K extends keyof WindowEventMap>(
+type Target = HTMLElement | Document | Window | null | undefined;
+
+const useEventBlocker = <K extends keyof DocumentEventMap>(
   isBlocked: boolean,
-  events: K[]
+  events: K[],
+  target: Target = window
 ) => {
   useEffect(() => {
-    if (!isBlocked) {
+    if (!isBlocked || !target) {
       return;
     }
 
-    events.forEach((event) => {
-      window.addEventListener(event, blockEvent, passiveOptions);
-    });
+    const add = (ev: K) =>
+      target.addEventListener(ev, blockEvent as EventListener, passiveOptions);
+    const remove = (ev: K) =>
+      target.removeEventListener(
+        ev,
+        blockEvent as EventListener,
+        passiveOptions
+      );
 
+    events.forEach(add);
     return () => {
-      events.forEach((event) => {
-        window.removeEventListener(event, blockEvent, passiveOptions);
-      });
+      events.forEach(remove);
     };
-  }, [isBlocked, events]);
+  }, [isBlocked, target, ...events]);
 };
 
 export default useEventBlocker;

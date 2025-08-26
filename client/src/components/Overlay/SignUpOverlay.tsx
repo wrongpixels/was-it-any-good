@@ -1,35 +1,31 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, JSX } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';
-import { useInputField } from '../../hooks/use-inputfield';
-import { InputField } from '../common/InputField';
+import SignUpForm from './SignUpForm';
 
 const ANIM_DURATION: number = 300;
 
-const SignUpOverlay = () => {
+const SignUpOverlay = (): JSX.Element | null => {
   const { overlay, clean } = useOverlay();
+
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
-  const userField = useInputField({
-    name: 'username',
-    placeholder: 'Username',
-  });
+  const backRef = useRef<HTMLDivElement | null>(null);
+  //we block events
 
-  useEventBlocker(overlay.active, [
-    'wheel',
-    'touchmove',
-    'keydown',
-    'mousedown',
-  ]);
-
+  useEventBlocker(
+    overlay.active && overlay.overlayType === OverlayType.SignUp,
+    ['wheel', 'touchmove'],
+    backRef.current
+  );
   const closeWithKey = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === ' ') {
+      if (e.key === 'Escape') {
+        e.preventDefault();
         clean();
       }
-      e.preventDefault();
     },
     [clean]
   );
@@ -67,12 +63,13 @@ const SignUpOverlay = () => {
     };
   }, [overlay.active, overlay.overlayType]);
 
-  if (!isMounted) {
+  if (!isMounted || overlay.overlayType !== OverlayType.SignUp) {
     return null;
   }
 
   return (
     <div
+      ref={backRef}
       className={`fixed inset-0 backdrop-blur-xs z-99 transition-opacity duration-200 ease-in-out  cursor-pointer ${
         isVisible
           ? 'opacity-100 bg-gray-400/80'
@@ -93,10 +90,9 @@ const SignUpOverlay = () => {
               overflow-hidden
               ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
           onClick={(e) => e.stopPropagation()}
-        ></div>
-        <form>
-          <InputField {...userField.getProps()} />
-        </form>
+        >
+          <SignUpForm />
+        </div>
       </div>
     </div>
   );

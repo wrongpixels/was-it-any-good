@@ -13,9 +13,8 @@ const ImageOverlay = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
-
-  // Hooks remain unchanged
-  useEventBlocker(overlay.active, [
+  //we block events
+  useEventBlocker(overlay.active && overlay.overlayType === OverlayType.Image, [
     'wheel',
     'touchmove',
     'keydown',
@@ -58,7 +57,7 @@ const ImageOverlay = () => {
     };
   }, [overlay.active, overlay.overlayType]);
 
-  if (!isMounted) {
+  if (!isMounted || overlay.overlayType !== OverlayType.Image) {
     return null;
   }
 
