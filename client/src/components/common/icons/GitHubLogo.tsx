@@ -7,7 +7,7 @@ const GitHubLogo = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
       url={url}
       newTab={newTab}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 98 96" // Added viewBox for proper scaling
+      viewBox="0 0 98 96"
       width={width}
       height={height}
     >

@@ -54,7 +54,7 @@ const PersonRoleCredits = ({
           [...Array(placeHolderCount)].map((_, i) => (
             <span
               key={i}
-              className="bg-gradient-to-t from-gray-200 to-gray-200/40  via-gray-200 w-42 rounded ring ring-gray-500/15"
+              className="bg-gradient-to-t from-gray-200/80 to-gray-200/40  via-gray-200/40 w-42 rounded border border-gray-500/30 border-dashed"
             ></span>
           ))}
       </ScrollableDiv>

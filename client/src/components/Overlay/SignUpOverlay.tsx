@@ -2,6 +2,8 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';
+import { useInputField } from '../../hooks/use-inputfield';
+import { InputField } from '../common/InputField';
 
 const ANIM_DURATION: number = 300;
 
@@ -10,6 +12,10 @@ const SignUpOverlay = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
+  const userField = useInputField({
+    name: 'username',
+    placeholder: 'Username',
+  });
 
   useEventBlocker(overlay.active, [
     'wheel',
@@ -67,21 +73,31 @@ const SignUpOverlay = () => {
 
   return (
     <div
-      className={`fixed inset-0 backdrop-blur-xs z-99 transition-all duration-200 ease-in-out
-        ${isVisible ? 'opacity-100 bg-gray-300' : 'opacity-0 pointer-events-none'}`}
+      className={`fixed inset-0 backdrop-blur-xs z-99 transition-opacity duration-200 ease-in-out  cursor-pointer ${
+        isVisible
+          ? 'opacity-100 bg-gray-400/80'
+          : 'opacity-0 pointer-events-none'
+      }`}
+      onClick={clean}
     >
-      <span
-        className={`flex flex-col h-full items-center align-middle justify-center cursor-pointer
-          transition-transform duration-250 ease-in-out
-          ${isVisible ? 'scale-100' : 'scale-85'}`}
-        onClick={clean}
+      <div
+        className={`flex h-full w-full items-center justify-center p-4 transition-transform duration-250 ease-in-out ${
+          isVisible ? 'scale-100' : 'scale-85'
+        }`}
       >
-        <span
-          className={`bg-gray-100 border-gray-100 border-14 rounded-lg drop-shadow-xl/60 cursor-default 
-            pointer-events-auto transition-all duration-300
-            ${isVisible ? 'opacity-100 scale-100  translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
-        ></span>
-      </span>
+        <div
+          className={`grid bg-gray-100 rounded-lg shadow-xl cursor-default
+              pointer-events-auto transition-all duration-300
+              max-h-[calc(100vh-32px)] w-fit max-w-[95vw]
+              grid-rows-[1fr_auto]
+              overflow-hidden
+              ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
+          onClick={(e) => e.stopPropagation()}
+        ></div>
+        <form>
+          <InputField {...userField.getProps()} />
+        </form>
+      </div>
     </div>
   );
 };

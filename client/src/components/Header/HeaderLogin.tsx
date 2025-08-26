@@ -55,7 +55,7 @@ const HeaderLogin = (): JSX.Element => {
           size="xs"
           type="submit"
           variant="accept"
-          onClick={() => openSignUpOverlay}
+          onClick={() => openSignUpOverlay()}
         >
           Sign Up
         </Button>
