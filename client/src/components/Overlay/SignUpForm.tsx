@@ -24,7 +24,9 @@ const SignUpForm = () => {
         {'Create your account!*'}
       </h1>
       <div className="absolute w-full flex justify-end mr-6 -mt-1 text-regular text-gray-400">
-        ✖
+        <span className="transition-all duration-150 w-6 h-6 rounded-full hover:bg-red-600/30 hover:text-white text-center cursor-pointer ">
+          ✖
+        </span>
       </div>
       <form className="flex flex-col gap-2 w-3xs items-center">
         <InputField {...userField.getProps()} className="h-8 w-3xs" />
