@@ -3,7 +3,11 @@ import Button from '../common/Button';
 import CreateIcon from '../common/icons/CreateIcon';
 import { InputField } from '../common/InputField';
 
-const SignUpForm = () => {
+interface SignUpFormProps {
+  clean: VoidFunction;
+}
+
+const SignUpForm = ({ clean }: SignUpFormProps) => {
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
@@ -23,10 +27,15 @@ const SignUpForm = () => {
       <h1 className="text-3xl font-semibold text-left w-full pt-5 pb-3 relative">
         {'Create your account!*'}
       </h1>
-      <div className="absolute w-full flex justify-end mr-6 -mt-1 text-regular text-gray-400">
-        <span className="transition-all duration-150 w-6 h-6 rounded-full hover:bg-red-600/30 hover:text-white text-center cursor-pointer ">
+      <div className="absolute right-2 top-2 text-gray-400">
+        <button
+          type="button"
+          onClick={() => clean()}
+          aria-label="Close"
+          className="flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 hover:bg-red-600/30 hover:text-white"
+        >
           ✖
-        </span>
+        </button>
       </div>
       <form className="flex flex-col gap-2 w-3xs items-center">
         <InputField {...userField.getProps()} className="h-8 w-3xs" />

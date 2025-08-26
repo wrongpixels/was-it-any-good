@@ -91,7 +91,7 @@ const SignUpOverlay = (): JSX.Element | null => {
               ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
           onClick={(e) => e.stopPropagation()}
         >
-          <SignUpForm />
+          <SignUpForm clean={clean} />
         </div>
       </div>
     </div>
