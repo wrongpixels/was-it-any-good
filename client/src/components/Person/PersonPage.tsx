@@ -6,7 +6,7 @@ import EntryTitle from '../EntryTitle';
 import PersonPagePoster from '../Poster/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
-import UserIcon from '../common/icons/UserIcon';
+import UserIcon from '../common/icons/IconUser';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');

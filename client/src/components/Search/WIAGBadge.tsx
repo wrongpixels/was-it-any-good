@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { styles } from '../../constants/tailwind-styles';
-import CheckIcon from '../common/icons/CheckIcon';
+import CheckIcon from '../common/icons/badges/IconCheck';
 
 const WIAGBadge = (): JSX.Element | null => {
   return (

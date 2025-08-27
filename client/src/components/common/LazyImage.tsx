@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
-import LoadingSpinner from './icons/LoadingSpinner';
+import LoadingSpinner from './icons/IconLoadingSpinner';
 
 export enum AspectRatio {
   square = 'aspect-square',

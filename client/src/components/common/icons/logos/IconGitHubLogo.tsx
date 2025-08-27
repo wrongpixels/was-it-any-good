@@ -1,5 +1,5 @@
-import { OptIconProps } from '../../../types/common-props-types';
-import SVG from '../SVG';
+import { OptIconProps } from '../../../../types/common-props-types';
+import SVG from '../../SVG';
 
 const GitHubLogo = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   <span {...rest}>

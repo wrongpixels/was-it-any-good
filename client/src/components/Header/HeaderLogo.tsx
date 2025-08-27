@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import StarIcon from '../common/icons/Rating/StarIcon';
+import StarIcon from '../common/icons/rating/IconStar';
 import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { routerPaths } from '../../utils/url-helper';

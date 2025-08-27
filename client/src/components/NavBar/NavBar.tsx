@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 import { routerPaths } from '../../utils/url-helper';
 import { Link } from 'react-router-dom';
-import FilmIcon from '../common/icons/FilmIcon';
-import ShowIcon from '../common/icons/ShowIcon';
-import StarIcon from '../common/icons/Rating/StarIcon';
-import CrownIcon from '../common/icons/Crown';
+import FilmIcon from '../common/icons/media/IconFilm';
+import ShowIcon from '../common/icons/media/IconShow';
+import StarIcon from '../common/icons/rating/IconStar';
+import CrownIcon from '../common/icons/badges/IconCrown';
 import { styles } from '../../constants/tailwind-styles';
-import HomeIcon from '../common/icons/HomeIcon';
+import HomeIcon from '../common/icons/IconHome';
 
 interface LinkInfo {
   text: string;

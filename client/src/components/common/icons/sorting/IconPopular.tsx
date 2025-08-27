@@ -1,4 +1,4 @@
-import { OptIconProps } from '../../../types/common-props-types';
+import { OptIconProps } from '../../../../types/common-props-types';
 
 const PopularIcon = ({ width, height, ...rest }: OptIconProps) => (
   <span {...rest}>

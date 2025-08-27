@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import LoadingSpinner from '../../../common/icons/LoadingSpinner';
+import LoadingSpinner from '../../../common/icons/IconLoadingSpinner';
 import { OptBoolProps } from '../../../../types/common-props-types';
 import Separator from '../../../common/Separator';
 

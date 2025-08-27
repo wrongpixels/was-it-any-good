@@ -1,6 +1,6 @@
 import { useInputField } from '../../hooks/use-inputfield';
 import Button from '../common/Button';
-import CreateIcon from '../common/icons/CreateIcon';
+import CreateIcon from '../common/icons/IconCreate';
 import { InputField } from '../common/InputField';
 
 interface SignUpFormProps {

@@ -1,4 +1,4 @@
-import { OptIconProps } from '../../../types/common-props-types';
+import { OptIconProps } from '../../../../types/common-props-types';
 
 const FilmIcon = ({ width, height = 18, ...rest }: OptIconProps) => (
   <span {...rest}>

@@ -4,10 +4,10 @@ import { JSX } from 'react';
 import { SortBy, SortDir } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 import { OptIconProps } from '../types/common-props-types';
-import FilmIcon from '../components/common/icons/FilmIcon';
-import ShowIcon from '../components/common/icons/ShowIcon';
-import StarIcon from '../components/common/icons/Rating/StarIcon';
-import CrownIcon from '../components/common/icons/Crown';
+import FilmIcon from '../components/common/icons/media/IconFilm';
+import ShowIcon from '../components/common/icons/media/IconShow';
+import StarIcon from '../components/common/icons/rating/IconStar';
+import CrownIcon from '../components/common/icons/badges/IconCrown';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;

@@ -1,5 +1,5 @@
-import { OptIconProps } from '../../../types/common-props-types';
-import SVG from '../SVG';
+import { OptIconProps } from '../../../../types/common-props-types';
+import SVG from '../../SVG';
 
 const CrownIcon = ({ width, height = 18, ...rest }: OptIconProps) => (
   <span {...rest}>

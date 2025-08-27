@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
-import TMDBLogoHor from '../common/icons/TMDB/TMDBLogoHor';
+import TMDBLogoHor from '../common/icons/logos/IconTMDBLogoHor';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';

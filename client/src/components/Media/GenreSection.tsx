@@ -1,7 +1,7 @@
 import { JSX, useMemo } from 'react';
 import { GenreResponse } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
-import IconForMediaType from '../common/icons/IconForMediaType';
+import IconForMediaType from '../common/icons/media/IconForMediaType';
 import { Link } from 'react-router-dom';
 import UrlQueryBuilder from '../../utils/url-query-builder';
 import { mediaTypeToDisplayName, routerPaths } from '../../utils/url-helper';
