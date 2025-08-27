@@ -58,7 +58,8 @@ Session.init(
       },
     },
     token: {
-      type: DataTypes.STRING,
+      //has to be TEXT or STRING usually comes short for tokens!
+      type: DataTypes.TEXT,
       unique: true,
     },
     username: {

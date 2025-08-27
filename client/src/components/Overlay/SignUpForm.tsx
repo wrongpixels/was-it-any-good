@@ -8,6 +8,9 @@ import { verifyCreateUserData } from '../../utils/create-user-verifier';
 import { AnimatedDiv } from '../common/AnimatedDiv';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useNotificationContext } from '../../context/NotificationProvider';
+import { useAuth } from '../../hooks/use-auth';
+import { useCreateUserMutation } from '../../mutations/user-mutations';
+import { VerifyCreateUser } from '../../../../shared/types/models';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -15,6 +18,8 @@ interface SignUpFormProps {
 
 const SignUpForm = ({ clean }: SignUpFormProps) => {
   const { playAnim } = useAnimEngine();
+  const { login } = useAuth();
+  const createUserMutation = useCreateUserMutation();
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const userField = useInputField({
     name: 'username',
@@ -34,12 +39,12 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   const { setNotification } = useNotificationContext();
   const submitCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const { isError, errorMessage } = verifyCreateUserData({
+    const userData: VerifyCreateUser = {
       username: userField.value,
       password: passwordField.value,
       email: emailField.value,
-    });
-    console.log(isError, errorMessage);
+    };
+    const { isError, errorMessage } = verifyCreateUserData(userData);
     if (isError) {
       setNotification({ message: errorMessage, anchorRef });
       playAnim({
@@ -48,6 +53,12 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       });
       return;
     }
+    createUserMutation.mutate(userData, {
+      onSuccess: async () => {
+        login({ username: userData.username, password: userData.password });
+        clean();
+      },
+    });
   };
   return (
     <div

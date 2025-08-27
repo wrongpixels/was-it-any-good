@@ -95,6 +95,7 @@ export interface VerifyCreateUser
     "pfp" | "name" | "isActive" | "lastActive" | "isAdmin"
   > {
   isAdmin?: boolean;
+  isActive?: boolean;
 }
 export interface CreateUserData extends Omit<UserData, "id"> {}
 

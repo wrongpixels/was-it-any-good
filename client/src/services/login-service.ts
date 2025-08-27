@@ -7,6 +7,7 @@ import { logoutClientSide } from '../utils/session-handler';
 export const doLogin = async (
   loginData: LoginData
 ): Promise<UserSessionData> => {
+  console.log(loginData);
   const { data }: AxiosResponse<UserSessionData> = await axios.post(
     apiPaths.auth.login(),
     loginData
