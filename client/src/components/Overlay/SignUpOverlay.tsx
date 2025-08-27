@@ -14,7 +14,6 @@ const SignUpOverlay = (): JSX.Element | null => {
   const hideTimerRef = useRef<number | null>(null);
   const backRef = useRef<HTMLDivElement | null>(null);
   //we block events
-
   useEventBlocker(
     overlay.active && overlay.overlayType === OverlayType.SignUp,
     ['wheel', 'touchmove'],

@@ -16,7 +16,7 @@ const Separator = ({
       className
     )}
   >
-    <span className="border-t border-gray-200 h-0" />
+    <span className="border-t border-black/7 h-0" />
     <span className="border-t border-white pt-1 h-0" />
   </div>
 );

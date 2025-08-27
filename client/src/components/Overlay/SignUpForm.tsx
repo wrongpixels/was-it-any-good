@@ -1,7 +1,9 @@
+import { PropsWithChildren } from 'react';
 import { useInputField } from '../../hooks/use-inputfield';
 import Button from '../common/Button';
 import IconCreate from '../common/icons/IconCreate';
 import { InputField } from '../common/InputField';
+import Separator from '../common/Separator';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -24,9 +26,10 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   });
   return (
     <div className="pt-3 pb-5 px-15 flex flex-col gap-3 items-center pointer-events-auto">
-      <h1 className="text-3xl font-semibold text-left w-full pt-5 pb-3 relative">
+      <h1 className="text-3xl font-semibold text-left w-full pt-5 relative">
         {'Create your account!*'}
       </h1>
+      <Separator margin={false} className="pb-2 text-gray-500" />
       <div className="absolute right-2 top-2 text-gray-400">
         <button
           type="button"
@@ -40,12 +43,13 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       <form className="flex flex-col gap-2 w-3xs items-center">
         <InputField {...userField.getProps()} className="h-8 w-3xs" />
         <InputField {...passwordField.getProps()} className="h-8 w-3xs" />
+        <SubSection>{'(At least 7 characters)'}</SubSection>
         <InputField {...emailField.getProps()} className="h-8 w-3xs" />
-        <div className="italic text-xs text-gray-400 flex flex-col text-center gap-2">
+        <SubSection>
           <div>
             {'* '}
             <span className="font-semibold">{'WIAG'}</span>
-            {' accounts are for demo purposes only, but '}
+            {' accounts are for demo purposes, yet '}
             <span className="font-semibold">
               {'all passwords are encrypted'}
             </span>
@@ -53,9 +57,9 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           <div>
             {'** '}
             <span className="font-semibold">{'E-mails are not verified'}</span>
-            {', feel free to make one up!'}
+            {', just make one up!'}
           </div>
-        </div>
+        </SubSection>
         <div className="flex justify-center">
           <Button
             type="submit"
@@ -71,5 +75,11 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     </div>
   );
 };
+
+const SubSection = ({ children }: PropsWithChildren) => (
+  <div className="italic text-xs text-gray-400 flex flex-col text-left gap-2 w-full">
+    {children}
+  </div>
+);
 
 export default SignUpForm;
