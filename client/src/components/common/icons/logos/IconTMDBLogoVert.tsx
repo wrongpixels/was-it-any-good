@@ -1,7 +1,7 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../SVG';
 
-const TMDBLogoVer = ({
+const IconTMDBLogoVert = ({
   width = 190.24,
   height = 81.52,
   newTab,
@@ -38,4 +38,4 @@ const TMDBLogoVer = ({
   </span>
 );
 
-export default TMDBLogoVer;
+export default IconTMDBLogoVert;

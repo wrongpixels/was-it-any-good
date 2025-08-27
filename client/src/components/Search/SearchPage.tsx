@@ -16,7 +16,7 @@ import useUrlQueryManager from '../../hooks/use-url-query-manager';
 import ErrorPage from '../common/status/ErrorPage';
 import { useTrendingQuery } from '../../queries/trending-queries';
 import EntryTitle from '../EntryTitle';
-import TrendingIcon from '../common/icons/sorting/IconTrending';
+import IconTrending from '../common/icons/sorting/IconTrending';
 import Instructions from '../common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
 import useDropdown from '../../hooks/use-dropdown';
@@ -135,7 +135,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           <span className="w-full -mt-4">
             <EntryTitle
               title={'Trending in TMDB'}
-              icon={<TrendingIcon className={'text-gold'} height={24} />}
+              icon={<IconTrending className={'text-gold'} height={24} />}
             />
           </span>
         </>

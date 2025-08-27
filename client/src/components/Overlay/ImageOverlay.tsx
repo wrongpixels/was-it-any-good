@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
 import LazyImage, { ImageVariant } from '../common/LazyImage';
-import TMDBLogoHor from '../common/icons/logos/IconTMDBLogoHor';
+import IconTMDBLogoHor from '../common/icons/logos/IconTMDBLogoHor';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';
@@ -95,7 +95,7 @@ const ImageOverlay = () => {
 
           <div className="flex-shrink-0 text-xs flex flex-row text-gray-500 font-semibold px-4 py-2 items-center justify-end gap-2">
             <span>Image Source:</span>
-            <TMDBLogoHor
+            <IconTMDBLogoHor
               height={10}
               url={TMDB_URL}
               newTab

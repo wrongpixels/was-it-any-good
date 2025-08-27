@@ -1,7 +1,13 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../SVG';
 
-const GitHubLogo = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
+const IconGitHubLogo = ({
+  width,
+  height,
+  url,
+  newTab,
+  ...rest
+}: OptIconProps) => (
   <span {...rest}>
     <SVG
       url={url}
@@ -21,4 +27,4 @@ const GitHubLogo = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   </span>
 );
 
-export default GitHubLogo;
+export default IconGitHubLogo;

@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 import { routerPaths } from '../../utils/url-helper';
 import { Link } from 'react-router-dom';
-import FilmIcon from '../common/icons/media/IconFilm';
-import ShowIcon from '../common/icons/media/IconShow';
-import StarIcon from '../common/icons/rating/IconStar';
-import CrownIcon from '../common/icons/badges/IconCrown';
+import IconFilm from '../common/icons/media/IconFilm';
+import IconShow from '../common/icons/media/IconShow';
+import IconStar from '../common/icons/rating/IconStar';
+import IconCrown from '../common/icons/badges/IconCrown';
 import { styles } from '../../constants/tailwind-styles';
-import HomeIcon from '../common/icons/IconHome';
+import IconHome from '../common/icons/IconHome';
 
 interface LinkInfo {
   text: string;
@@ -20,14 +20,14 @@ const links: LinkInfo[] = [
   {
     text: 'Home',
     key: 'rb-home',
-    icon: <HomeIcon width={15} />,
+    icon: <IconHome width={15} />,
     title: 'Home / Search',
     url: routerPaths.home,
   },
   {
     text: 'Popular',
     key: 'rb-popular',
-    icon: <StarIcon width={15} />,
+    icon: <IconStar width={15} />,
     title: 'Popular media',
     url: routerPaths.popular.multi.base(),
   },
@@ -35,21 +35,21 @@ const links: LinkInfo[] = [
     text: 'The Best',
     key: 'rb-best',
     title: 'Films and Shows by rating',
-    icon: <CrownIcon width={14} />,
+    icon: <IconCrown width={14} />,
     url: routerPaths.tops.multi.base(),
   },
   {
     text: 'Best Films',
     key: 'rb-best-films',
     title: 'Films by user rating',
-    icon: <FilmIcon height={14} />,
+    icon: <IconFilm height={14} />,
     url: routerPaths.tops.films.base(),
   },
   {
     text: 'Best Shows',
     key: 'rb-best-shows',
     title: 'Shows by user rating',
-    icon: <ShowIcon height={16} />,
+    icon: <IconShow height={16} />,
     url: routerPaths.tops.shows.base(),
   },
 ];

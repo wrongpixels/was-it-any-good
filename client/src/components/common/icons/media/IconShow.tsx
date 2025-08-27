@@ -1,6 +1,6 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 
-const ShowIcon = ({ width, height = 20, ...rest }: OptIconProps) => (
+const IconShow = ({ width, height = 20, ...rest }: OptIconProps) => (
   <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -19,4 +19,4 @@ const ShowIcon = ({ width, height = 20, ...rest }: OptIconProps) => (
     </svg>
   </span>
 );
-export default ShowIcon;
+export default IconShow;

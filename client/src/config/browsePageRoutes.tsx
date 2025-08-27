@@ -4,10 +4,10 @@ import { JSX } from 'react';
 import { SortBy, SortDir } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 import { OptIconProps } from '../types/common-props-types';
-import FilmIcon from '../components/common/icons/media/IconFilm';
-import ShowIcon from '../components/common/icons/media/IconShow';
-import StarIcon from '../components/common/icons/rating/IconStar';
-import CrownIcon from '../components/common/icons/badges/IconCrown';
+import IconFilm from '../components/common/icons/media/IconFilm';
+import IconShow from '../components/common/icons/media/IconShow';
+import IconStar from '../components/common/icons/rating/IconStar';
+import IconCrown from '../components/common/icons/badges/IconCrown';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -25,15 +25,15 @@ const getIcon = (
 ): JSX.Element | undefined => {
   switch (sortBy) {
     case SortBy.Popularity:
-      return <StarIcon {...defIconProps} />;
+      return <IconStar {...defIconProps} />;
     case SortBy.Rating: {
       switch (searchType) {
         case SearchType.Multi:
-          return <CrownIcon {...defIconProps} />;
+          return <IconCrown {...defIconProps} />;
         case SearchType.Film:
-          return <FilmIcon {...defIconProps} />;
+          return <IconFilm {...defIconProps} />;
         case SearchType.Show:
-          return <ShowIcon {...defIconProps} />;
+          return <IconShow {...defIconProps} />;
         default:
           return undefined;
       }

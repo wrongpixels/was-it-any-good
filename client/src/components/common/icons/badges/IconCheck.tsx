@@ -4,7 +4,7 @@ interface OptIconProps {
   [key: string]: any;
 }
 
-const CheckIcon = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
+const IconCheck = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
   <span {...rest} title="Added to WIAG database">
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -29,4 +29,4 @@ const CheckIcon = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
   </span>
 );
 
-export default CheckIcon;
+export default IconCheck;

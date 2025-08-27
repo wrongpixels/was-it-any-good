@@ -1,10 +1,7 @@
 import { OptIconProps } from '../../../types/common-props-types';
 import SVG from '../SVG';
 
-/**
- * A simple, filled home icon with a smaller, more proportional door cutout.
- */
-const HomeIcon = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
+const IconHome = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   <span {...rest}>
     <SVG
       url={url}
@@ -23,4 +20,4 @@ const HomeIcon = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   </span>
 );
 
-export default HomeIcon;
+export default IconHome;

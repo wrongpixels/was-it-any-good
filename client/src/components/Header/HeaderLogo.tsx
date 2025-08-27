@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import StarIcon from '../common/icons/rating/IconStar';
+import IconStar from '../common/icons/rating/IconStar';
 import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { routerPaths } from '../../utils/url-helper';
@@ -17,7 +17,7 @@ const HeaderLogo = (props: OptClassNameProps) => {
         >
           {'WI'}
           <span className="inline-flex items-center -mx-[2px] text-staryellow">
-            <StarIcon width={27} />
+            <IconStar width={27} />
           </span>
           {'G'}
           <span className="font-normal italic ml-2 text-xs mt-1 text-amber-100 hidden sm:inline">

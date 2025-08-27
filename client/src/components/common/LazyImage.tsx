@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
-import LoadingSpinner from './icons/IconLoadingSpinner';
+import IconLoadingSpinner from './icons/IconLoadingSpinner';
 
 export enum AspectRatio {
   square = 'aspect-square',
@@ -33,7 +33,7 @@ const LazyImage = ({
       <>
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded-md">
-            <LoadingSpinner className="w-8" />
+            <IconLoadingSpinner className="w-8" />
           </div>
         )}
         <img
@@ -56,7 +56,7 @@ const LazyImage = ({
       <div className="relative flex items-center">
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-200 rounded">
-            <LoadingSpinner className="w-4" />
+            <IconLoadingSpinner className="w-4" />
           </div>
         )}
         <img
@@ -74,7 +74,7 @@ const LazyImage = ({
     <div className={mergeClassnames('relative w-full', aspect)}>
       {isLoading && (
         <div className="absolute inset-0 flex items-center overflow-hidden justify-center bg-gray-100">
-          <LoadingSpinner className="w-8" />
+          <IconLoadingSpinner className="w-8" />
         </div>
       )}
       <img

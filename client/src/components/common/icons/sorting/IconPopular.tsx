@@ -1,6 +1,6 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 
-const PopularIcon = ({ width, height, ...rest }: OptIconProps) => (
+const IconPopular = ({ width, height, ...rest }: OptIconProps) => (
   <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -23,4 +23,4 @@ const PopularIcon = ({ width, height, ...rest }: OptIconProps) => (
   </span>
 );
 
-export default PopularIcon;
+export default IconPopular;

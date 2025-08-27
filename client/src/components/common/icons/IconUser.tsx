@@ -1,7 +1,7 @@
 import { OptIconProps } from '../../../types/common-props-types';
 import SVG from '../SVG';
 
-const UserIcon = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
+const IconUser = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   <span {...rest}>
     <SVG
       url={url}
@@ -17,4 +17,4 @@ const UserIcon = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
   </span>
 );
 
-export default UserIcon;
+export default IconUser;

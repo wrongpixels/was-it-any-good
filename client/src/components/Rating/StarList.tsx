@@ -1,4 +1,4 @@
-import StarIcon from '../common/icons/rating/IconStar';
+import IconStar from '../common/icons/rating/IconStar';
 import {
   RATING_DELAYS,
   RATING_DURATIONS,
@@ -31,7 +31,7 @@ const StarList = ({
     <div className={`inline-flex whitespace-nowrap`}>
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} className={getStarClassname(i)}>
-          <StarIcon width={width} interactive={interactive && !justVoted} />
+          <IconStar width={width} interactive={interactive && !justVoted} />
         </span>
       ))}
     </div>

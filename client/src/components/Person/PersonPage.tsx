@@ -6,7 +6,7 @@ import EntryTitle from '../EntryTitle';
 import PersonPagePoster from '../Poster/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
-import UserIcon from '../common/icons/IconUser';
+import IconUser from '../common/icons/IconUser';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -31,7 +31,7 @@ const PersonPage = (): JSX.Element | null => {
     <div className="flex flex-col flex-1 justify-center">
       <EntryTitle
         title={person.name}
-        icon={<UserIcon height={30} className="text-starblue" />}
+        icon={<IconUser height={30} className="text-starblue" />}
       />
       <div className="flex flex-row flex-1">
         <div className="w-40 mt-7 flex-shrink-0">

@@ -1,7 +1,7 @@
 import { OptClassNameProps } from '../../../types/common-props-types';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 
-const LoadingSpinner = (props: OptClassNameProps) => {
+const IconLoadingSpinner = (props: OptClassNameProps) => {
   return (
     <svg
       viewBox="0 0 16 16"
@@ -22,4 +22,4 @@ const LoadingSpinner = (props: OptClassNameProps) => {
     </svg>
   );
 };
-export default LoadingSpinner;
+export default IconLoadingSpinner;

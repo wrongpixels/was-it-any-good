@@ -1,6 +1,6 @@
 import { useInputField } from '../../hooks/use-inputfield';
 import Button from '../common/Button';
-import CreateIcon from '../common/icons/IconCreate';
+import IconCreate from '../common/icons/IconCreate';
 import { InputField } from '../common/InputField';
 
 interface SignUpFormProps {
@@ -63,7 +63,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           >
             {'Create'}
             <span className="absolute w-full">
-              <CreateIcon width={16} />
+              <IconCreate width={16} />
             </span>
           </Button>
         </div>

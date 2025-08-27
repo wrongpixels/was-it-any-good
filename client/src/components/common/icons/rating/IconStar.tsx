@@ -3,15 +3,15 @@ import { styles } from '../../../../constants/tailwind-styles';
 import { OptIconProps } from '../../../../types/common-props-types';
 import { mergeClassnames } from '../../../../utils/lib/tw-classname-merger';
 
-interface StarIconProps extends OptIconProps {
+interface IconStarProps extends OptIconProps {
   readonly interactive?: boolean;
 }
-const StarIcon = ({
+const IconStar = ({
   width = 24,
   interactive,
   defClassName,
   className,
-}: StarIconProps): JSX.Element => {
+}: IconStarProps): JSX.Element => {
   defClassName = `fill-current max-w-${width} ${interactive ? styles.animations.zoomMoreOnHover : ''}`;
   return (
     <svg
@@ -29,4 +29,4 @@ const StarIcon = ({
   );
 };
 
-export default StarIcon;
+export default IconStar;
