@@ -1,15 +1,21 @@
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 import { useInputField } from '../../hooks/use-inputfield';
 import Button from '../common/Button';
 import IconCreate from '../common/icons/IconCreate';
 import { InputField } from '../common/InputField';
 import Separator from '../common/Separator';
+import { verifyCreateUserData } from '../../utils/create-user-verifier';
+import { AnimatedDiv } from '../common/AnimatedDiv';
+import { useAnimEngine } from '../../context/AnimationProvider';
+import { useNotificationContext } from '../../context/NotificationProvider';
 
 interface SignUpFormProps {
   clean: VoidFunction;
 }
 
 const SignUpForm = ({ clean }: SignUpFormProps) => {
+  const { playAnim } = useAnimEngine();
+  const anchorRef = useRef<HTMLDivElement | null>(null);
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
@@ -24,8 +30,30 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     placeholder: 'E-mail**',
     type: 'email',
   });
+
+  const { setNotification } = useNotificationContext();
+  const submitCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { isError, errorMessage } = verifyCreateUserData({
+      username: userField.value,
+      password: passwordField.value,
+      email: emailField.value,
+    });
+    console.log(isError, errorMessage);
+    if (isError) {
+      setNotification({ message: errorMessage, anchorRef });
+      playAnim({
+        animKey: 'submit-user-button',
+        animationClass: 'animate-shake',
+      });
+      return;
+    }
+  };
   return (
-    <div className="pt-3 pb-5 px-15 flex flex-col gap-3 items-center pointer-events-auto">
+    <div
+      ref={anchorRef}
+      className="pt-3 pb-5 px-15 flex flex-col gap-3 items-center pointer-events-auto"
+    >
       <h1 className="text-3xl font-semibold text-left w-full pt-5 relative">
         {'Create your account!*'}
       </h1>
@@ -40,7 +68,10 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           ✖
         </button>
       </div>
-      <form className="flex flex-col gap-2 w-3xs items-center">
+      <form
+        className="flex flex-col gap-2 w-3xs items-center"
+        onSubmit={submitCreateUser}
+      >
         <InputField {...userField.getProps()} className="h-8 w-3xs" />
         <InputField {...passwordField.getProps()} className="h-8 w-3xs" />
         <SubSection>{'(At least 7 characters)'}</SubSection>
@@ -60,7 +91,10 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
             {', just make one up!'}
           </div>
         </SubSection>
-        <div className="flex justify-center">
+        <AnimatedDiv
+          animKey="submit-user-button"
+          className="flex justify-center"
+        >
           <Button
             type="submit"
             className="relative mt-2 w-23 justify-center pl-5"
@@ -70,7 +104,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
               <IconCreate width={16} />
             </span>
           </Button>
-        </div>
+        </AnimatedDiv>
       </form>
     </div>
   );

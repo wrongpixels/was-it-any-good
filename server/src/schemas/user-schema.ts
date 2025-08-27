@@ -3,8 +3,8 @@ import { CreateUser } from '../../../shared/types/models';
 
 const CreateUserSchema = z.object({
   name: z.string().nullable(),
-  username: z.string(),
-  password: z.string(),
+  username: z.string().min(4),
+  password: z.string().min(7),
   email: z.string().email(),
   pfp: z.string().url().email().nullable(),
   lastActive: z.date().nullable(),

@@ -31,6 +31,21 @@ Content-Type: application/json
  "lastActive": null
 }
 
+###CREATE USER
+POST http://localhost:6060/api/users
+Content-Type: application/json
+
+{
+  "name": "bes",
+ "username": "bes",
+ "password": "super", 
+ "isAdmin": false,
+ "isActive": true,
+ "email": "false@email.com",
+ "pfp": null,
+ "lastActive": null
+}
+
 ###DELETE VOTE
 DELETE  http://localhost:6060/api/ratings/1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwibmFtZSI6ImFkbWluIiwiaWQiOjcsImlzQWRtaW4iOnRydWUsImlzQWN0aXZlIjp0cnVlLCJsYXN0QWN0aXZlIjoiMjAyNS0wNi0yN1QyMTo0Nzo0NC41MDJaIiwiaWF0IjoxNzUxMDYwODY0fQ.UHfKT2k8VAjs1iTnJKUJc4l8XbvyFAB44HHpz1br2rQ
