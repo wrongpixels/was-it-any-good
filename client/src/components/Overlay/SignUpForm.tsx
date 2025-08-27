@@ -54,9 +54,10 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       ref={anchorRef}
       className="pt-3 pb-5 px-15 flex flex-col gap-3 items-center pointer-events-auto"
     >
-      <h1 className="text-3xl font-semibold text-left w-full pt-5 relative">
-        {'Create your account!*'}
-      </h1>
+      <div className="text-3xl font-semibold text-left flex flex-row pt-5 relative">
+        <h1>{'Create your account!'}</h1>
+        <span className="text-gray-400">*</span>
+      </div>
       <Separator margin={false} className="pb-2 text-gray-500" />
       <div className="absolute right-2 top-2 text-gray-400">
         <button
@@ -80,7 +81,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           <div>
             {'* '}
             <span className="font-semibold">{'WIAG'}</span>
-            {' accounts are for demo purposes, yet '}
+            {' accounts are for demo purposes and '}
             <span className="font-semibold">
               {'all passwords are encrypted'}
             </span>

@@ -1,8 +1,8 @@
-import { CreateUser } from '../../../shared/types/models';
+import { CreateUser, VerifyCreateUser } from '../../../shared/types/models';
 import { verifyCreateUserData } from '../utils/create-user-verifier';
 
-export const createUser = (createUser: CreateUser) => {
-  const { isError } = verifyCreateUserData(createUser);
+export const createUser = async (createUserData: VerifyCreateUser) => {
+  const { isError } = verifyCreateUserData(createUserData);
   if (isError) {
     return;
   }

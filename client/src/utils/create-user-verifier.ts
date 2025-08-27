@@ -1,4 +1,5 @@
 import { VerifyCreateUser } from '../../../shared/types/models';
+import { BLACKLISTED_USERNAMES } from '../constants/user-constants';
 
 export const verifyCreateUserData = ({
   username,
@@ -11,22 +12,20 @@ export const verifyCreateUserData = ({
   if (isAdmin) {
     errorMessage = 'Sorry, you cannot crack the user creation process!';
     isError = true;
-  }
-  if (!username || !password) {
+  } else if (!username || !password) {
     errorMessage = 'You need to provide both a username and a password';
     isError = true;
-  }
-  if (!email) {
-    errorMessage =
-      'You need to provide an e-mail address (we will not verify it, just make one up!)';
+  } else if (BLACKLISTED_USERNAMES.includes(username)) {
+    errorMessage = 'You cannot use that username!';
     isError = true;
-  }
-  if (username.length <= 4) {
-    errorMessage = 'The username has to be at least 7 characters long!';
+  } else if (username.length < 4) {
+    errorMessage = 'The username has to be at least 4 characters long!';
     isError = true;
-  }
-  if (password.length <= 7) {
-    errorMessage = 'The username has to be at least 7 characters long!';
+  } else if (password.length < 7) {
+    errorMessage = 'The password has to be at least 7 characters long!';
+    isError = true;
+  } else if (!email) {
+    errorMessage = 'Provide an e-mail address (just make one up!)';
     isError = true;
   }
   return { isError, errorMessage };
