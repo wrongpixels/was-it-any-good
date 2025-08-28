@@ -2,6 +2,7 @@ import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { APIError } from '../../../shared/types/errors';
 import CustomError from '../util/customError';
 import { DEF_API_ERROR } from '../../../shared/constants/error-constants';
+import { ValidationError } from 'sequelize';
 
 const errorHandler: ErrorRequestHandler = (
   err: Error,
@@ -18,9 +19,16 @@ const errorHandler: ErrorRequestHandler = (
     responseError.name = err.name;
     responseError.code = err.code;
   } else {
-    responseError.message = err.message;
-    responseError.name = err.name;
+    if (err instanceof ValidationError) {
+      responseError.name = 'ValidationError';
+      responseError.status = 400;
+      responseError.message = `${err.errors[0]?.path} already in use!`;
+    } else {
+      responseError.message = err.message;
+      responseError.name = err.name;
+    }
   }
+
   res.status(responseError.status).json(responseError);
 };
 

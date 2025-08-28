@@ -4,6 +4,7 @@ import {
   DEF_API_ERROR,
   SESSION_AUTH_ERROR,
 } from '../../../shared/constants/error-constants';
+import { capitalize } from './common-format-helper';
 
 export const isAPIError = (error: unknown): error is APIError => {
   return isAxiosError(error) && isAPIErrorType(extractAPIError(error));
@@ -18,6 +19,11 @@ export const getAPIError = (error: unknown): APIError | null => {
   }
   return null;
 };
+
+export const getAPIErrorMessage = (error: unknown): string =>
+  capitalize(
+    getAPIError(error)?.message || 'There was an error with the request.'
+  );
 
 export const isAPIErrorType = (error: unknown | null): error is APIError => {
   return (

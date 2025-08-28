@@ -13,6 +13,7 @@ import { useCreateUserMutation } from '../../mutations/user-mutations';
 import { VerifyCreateUser } from '../../../../shared/types/models';
 import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
 import DisabledDiv from '../common/DisabledDiv';
+import { getAPIError, getAPIErrorMessage } from '../../utils/error-handler';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -21,6 +22,7 @@ interface SignUpFormProps {
 const SignUpForm = ({ clean }: SignUpFormProps) => {
   const { playAnim } = useAnimEngine();
   const { login } = useAuth();
+  const { setNotification, setError } = useNotificationContext();
   const createUserMutation = useCreateUserMutation();
   const anchorRef = useRef<HTMLDivElement | null>(null);
 
@@ -39,7 +41,6 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     type: 'email',
   });
 
-  const { setNotification } = useNotificationContext();
   const submitCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const userData: VerifyCreateUser = {
@@ -68,6 +69,9 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           }
         );
         clean();
+      },
+      onError: (error: Error) => {
+        setError({ message: getAPIErrorMessage(error), anchorRef });
       },
     });
   };
