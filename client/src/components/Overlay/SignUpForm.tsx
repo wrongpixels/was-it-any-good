@@ -13,7 +13,7 @@ import { useCreateUserMutation } from '../../mutations/user-mutations';
 import { VerifyCreateUser } from '../../../../shared/types/models';
 import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
 import DisabledDiv from '../common/DisabledDiv';
-import { getAPIError, getAPIErrorMessage } from '../../utils/error-handler';
+import { getAPIErrorMessage } from '../../utils/error-handler';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -72,6 +72,10 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       },
       onError: (error: Error) => {
         setError({ message: getAPIErrorMessage(error), anchorRef });
+        playAnim({
+          animKey: 'submit-user-button',
+          animationClass: 'animate-shake',
+        });
       },
     });
   };

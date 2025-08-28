@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from 'react';
 
-interface DropdownHookConfig {
+interface DropdownHookConfig<T> {
   name?: string;
-  defaultValue?: string;
+  defaultValue?: T;
   disabled?: boolean;
   onChanged?: (newValue: string) => void;
 }
@@ -10,13 +10,12 @@ interface DropdownHookConfig {
 //a hook to setup controlled dropdown hooks.
 //we set a "fake" defaultValue for clarity but we then
 //extract it from the props to avoid error messages (both value and defaultValue)
-const useDropdown = ({
+const useDropdown = <T>({
   defaultValue,
   onChanged,
   ...props
-}: DropdownHookConfig) => {
-  const [value, setValue] = useState<string>(defaultValue || '');
-
+}: DropdownHookConfig<T>) => {
+  const [value, setValue] = useState<T | string>(defaultValue || '');
   const onChange = (e: ChangeEvent<HTMLSelectElement>): void => {
     setValue(e.target.value);
     onChanged?.(e.target.value);

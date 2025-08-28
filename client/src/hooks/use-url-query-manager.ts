@@ -27,6 +27,7 @@ interface NavigateToQueryOptions {
   page?: number;
   replace?: boolean;
   newTerm?: string;
+  overrideParams?: OverrideParams;
 }
 
 const useUrlQueryManager = ({
@@ -47,19 +48,27 @@ const useUrlQueryManager = ({
 
   //the function that generates a valid query from params
   const buildQuery = useCallback(
-    ({ newTerm: newQuery, newPage }: QueryOpts) => {
+    ({
+      newTerm: newQuery,
+      newPage,
+      overrideParams: localOverride,
+    }: QueryOpts) => {
       const url: string = queryBuilder
         .byTerm(newQuery || urlParams.searchTerm)
         .byTypes(queryTypeManager.getAppliedNames())
         //if we sent an override search type, it will replace the ones just added.
         //if undefined, it will just be skipped keeping them.
-        .byType(overrideParams?.searchType)
+        .byType(localOverride?.searchType || overrideParams?.searchType)
         .byGenres(urlParams.genres)
         .byCountries(urlParams.countries)
         .byYear(urlParams.year)
         .toPage(newPage)
-        .sortBy(overrideParams?.sortBy || urlParams.sortBy)
-        .sortDir(overrideParams?.sortDir || urlParams.sortDir)
+        .sortBy(
+          localOverride?.sortBy || overrideParams?.sortBy || urlParams.sortBy
+        )
+        .sortDir(
+          localOverride?.sortDir || overrideParams?.sortDir || urlParams.sortDir
+        )
         .toString();
 
       return url;
@@ -76,11 +85,20 @@ const useUrlQueryManager = ({
 
   //to build a new query with a new term, if provided, or reuse the current one.
   //if page is not provided, we default to page 1.
+  //an option to override queries is included.
   const navigateToQuery = useCallback(
-    ({ newTerm, page, replace = false }: NavigateToQueryOptions) => {
-      navigateTo(`${basePath}?${buildQuery({ newTerm, newPage: page })}`, {
-        replace,
-      });
+    ({
+      newTerm,
+      page,
+      replace = false,
+      overrideParams,
+    }: NavigateToQueryOptions) => {
+      navigateTo(
+        `${basePath}?${buildQuery({ newTerm, newPage: page, overrideParams })}`,
+        {
+          replace,
+        }
+      );
     },
     [navigateTo, basePath, buildQuery]
   );

@@ -12,19 +12,23 @@ import { BadgeType } from '../../types/search-browse-types';
 import { SortBy, sortByValues } from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
+import { SearchType } from '../../../../shared/types/search';
+import { queryTypeToDisplayName } from '../../utils/url-helper';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
   navigatePages: (movement: number) => void;
+  queryType: SearchType[];
   term?: string;
   title?: string;
   badgeType: BadgeType;
   showNavBar?: boolean;
   showOrderOptions?: boolean;
 }
-
+//we render here the results, shared between Search and Browse
 const PageResults = ({
   results,
+  queryType,
   term,
   navigatePages,
   badgeType = BadgeType.None,
@@ -41,11 +45,11 @@ const PageResults = ({
   const searchTerm = (): JSX.Element => (
     <>
       {' for '}
-      <span className="italic text-gray-500 font-normal pl-1">"{term}"</span>
+      <span className="italic text-gray-500 font-normal">"{term}"</span>
     </>
   );
   const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
-
+  //we memo the list of result Cards for performance
   const resultEntries: JSX.Element[] = useMemo(
     () =>
       results.indexMedia.map((im: IndexMediaData, index: number) => (
@@ -65,7 +69,10 @@ const PageResults = ({
         <>
           <div className="relative w-full h-8 flex flex-row">
             <span className="w-full text-center text-lg">
-              {results.totalResults || 'No'} results <>{term && searchTerm()}</>
+              {results.totalResults || 'No'}
+              {` ${queryTypeToDisplayName(queryType)} `}
+              {' results '}
+              <>{term && searchTerm()}</>
             </span>
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>

@@ -14,7 +14,7 @@ export interface OverrideParams {
 export interface URLParameters {
   searchTerm: string | null;
   currentPage: number;
-  queryType: string[];
+  queryType: SearchType[];
   genres: string[];
   countries: CountryCode[];
   year: string | null;
@@ -31,6 +31,7 @@ export interface BrowsePageTitleOptions {
 export interface QueryOpts {
   newTerm?: string;
   newPage?: number;
+  overrideParams?: OverrideParams;
 }
 
 export enum BadgeType {

@@ -8,6 +8,7 @@ import {
   SearchDropDown,
   searchDropdownOptions,
   searchDropToType,
+  SearchType,
 } from '../../../../shared/types/search';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
@@ -48,17 +49,17 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   const toggleParam = (param: string) => {
     queryTypeManager.clearAll();
     queryTypeManager.toggleParamByName(searchDropToType(param));
-    console.log('refresh', param, searchDropToType(param));
     if (!urlParams.searchTerm) {
       return;
     }
     handleSearch(searchTerm, true);
   };
-  const searchDropdown = useDropdown({
+  const searchDropdown = useDropdown<SearchDropDown>({
     defaultValue: SearchDropDown.All,
     name: 'searchType',
     onChanged: toggleParam,
   });
+  const searchType: SearchType = searchDropToType(searchDropdown.value);
 
   const {
     data: searchResults,
@@ -103,13 +104,20 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     navigateToNewTerm({
       newTerm: newSearch || undefined,
       replace: newSearch === searchTerm,
+      //if we  haven't searched anything, this is our first search, so we
+      //override the searchType with the active dropdown.
+      //once we have searched something, the query parameters will be applied automatically
+      overrideParams: !searchTerm
+        ? {
+            searchType,
+          }
+        : undefined,
     });
   };
 
   if (isError || searchResults === null) {
     <ErrorPage />;
   }
-
   return (
     <div className="flex flex-col items-center gap-4 pt-5 flex-1">
       <span className="flex flex-row gap-2">
@@ -122,13 +130,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           handleSearch={handleSearch}
         />
       </span>
-      {/* !isHome && (
-        <SearchParams
-          ref={anchorRef}
-          toggleParam={toggleParam}
-          typeFilters={queryTypeManager}
-        />
-      )*/}
+
       {isHome && (
         <>
           <Instructions />
@@ -150,6 +152,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
         {searchResults && (searchTerm || isHome) && (
           <div className="flex flex-1">
             <PageResults
+              queryType={urlParams.queryType}
               results={searchResults}
               term={searchTerm || undefined}
               navigatePages={navigatePages}

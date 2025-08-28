@@ -249,6 +249,20 @@ export const mediaTypeToDisplayName = (mediaType: MediaType) => {
   }
 };
 
+export const queryTypeToDisplayName = (searchType: SearchType[]) => {
+  if (searchType.length > 1 || searchType.length === 0) {
+    return '';
+  }
+  switch (searchType[0]) {
+    case SearchType.Film:
+      return 'Film';
+    case SearchType.Show:
+      return 'TV';
+    default:
+      return '';
+  }
+};
+
 //Normalizes media type search parameters (m=...) into unified values ('film' or 'show'),
 //handling various user inputs like 'movies', 'tv-shows', 'series' etc.
 //it also adds show and films by default if none is selected.
