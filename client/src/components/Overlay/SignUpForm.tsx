@@ -12,6 +12,7 @@ import { useAuth } from '../../hooks/use-auth';
 import { useCreateUserMutation } from '../../mutations/user-mutations';
 import { VerifyCreateUser } from '../../../../shared/types/models';
 import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
+import DisabledDiv from '../common/DisabledDiv';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -22,6 +23,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   const { login } = useAuth();
   const createUserMutation = useCreateUserMutation();
   const anchorRef = useRef<HTMLDivElement | null>(null);
+
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
@@ -56,14 +58,23 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     }
     createUserMutation.mutate(userData, {
       onSuccess: async () => {
-        login({ username: userData.username, password: userData.password });
+        login(
+          { username: userData.username, password: userData.password },
+          {
+            onSuccess: () =>
+              setNotification({
+                message: `Welcome to WIAG, ${userData.username}!`,
+              }),
+          }
+        );
         clean();
       },
     });
   };
   return (
-    <div
+    <DisabledDiv
       ref={anchorRef}
+      disabled={createUserMutation.isPending}
       className="pt-3 pb-5 px-15 flex flex-col gap-3 items-center pointer-events-auto"
     >
       <div className="text-3xl font-semibold text-left flex flex-row pt-5 relative">
@@ -109,12 +120,13 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           className="flex justify-center"
         >
           <Button
+            disabled={createUserMutation.isPending}
             type="submit"
             className="relative mt-2 w-23 justify-center pl-5"
           >
             {'Create'}
             <span className="absolute w-full ">
-              {!createUserMutation.isPending ? (
+              {createUserMutation.isPending ? (
                 <IconLoadingSpinner className="text-white" />
               ) : (
                 <IconCreate width={16} />
@@ -123,7 +135,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           </Button>
         </AnimatedDiv>
       </form>
-    </div>
+    </DisabledDiv>
   );
 };
 

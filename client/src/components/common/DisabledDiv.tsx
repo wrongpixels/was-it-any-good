@@ -3,6 +3,7 @@ import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
 interface DisabledDivProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled: boolean;
+  ref?: React.RefObject<HTMLDivElement | null>;
 }
 
 const DisabledDiv = ({
