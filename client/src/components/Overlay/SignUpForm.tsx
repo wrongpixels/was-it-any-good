@@ -11,6 +11,7 @@ import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAuth } from '../../hooks/use-auth';
 import { useCreateUserMutation } from '../../mutations/user-mutations';
 import { VerifyCreateUser } from '../../../../shared/types/models';
+import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -112,8 +113,12 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
             className="relative mt-2 w-23 justify-center pl-5"
           >
             {'Create'}
-            <span className="absolute w-full">
-              <IconCreate width={16} />
+            <span className="absolute w-full ">
+              {!createUserMutation.isPending ? (
+                <IconLoadingSpinner className="text-white" />
+              ) : (
+                <IconCreate width={16} />
+              )}
             </span>
           </Button>
         </AnimatedDiv>
