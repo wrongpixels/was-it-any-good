@@ -1,7 +1,7 @@
 import { JSX, useEffect } from 'react';
 import useHoverChecker from '../../../../hooks/use-hover-checker';
 import SelectedLine from '../../../common/SelectedLine';
-import SearchIcon from '../icons/SearchIcon';
+import SearchIcon from '../../../common/icons/SearchIcon';
 
 interface FirstSearchRowProps {
   searchValue: string;

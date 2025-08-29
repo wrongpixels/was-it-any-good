@@ -2,7 +2,7 @@ import { JSX, useEffect, useState } from 'react';
 import { useInputField } from '../../../hooks/use-inputfield';
 import SearchResults from './SearchResults';
 import { useSuggestionsQuery } from '../../../queries/suggestions-queries';
-import SearchIcon from './icons/SearchIcon';
+import SearchIcon from '../../common/icons/SearchIcon';
 import { InputField } from '../../common/InputField';
 import { styles } from '../../../constants/tailwind-styles';
 

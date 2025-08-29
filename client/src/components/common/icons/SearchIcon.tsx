@@ -1,4 +1,4 @@
-import { OptBoolProps } from '../../../../types/common-props-types';
+import { OptBoolProps } from '../../../types/common-props-types';
 interface SearchIconProps extends OptBoolProps {
   sizePadding?: number;
 }

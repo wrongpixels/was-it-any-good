@@ -1,6 +1,6 @@
 import { FormEvent, memo, useEffect } from 'react';
 import { InputField } from '../common/InputField';
-import SearchIcon from '../Header/Search/icons/SearchIcon';
+import SearchIcon from '../common/icons/SearchIcon';
 import { useInputField } from '../../hooks/use-inputfield';
 import { OptStringProps } from '../../types/common-props-types';
 import Button from '../common/Button';
