@@ -10,7 +10,13 @@ export enum SortDir {
   descending = "DESC",
   ascending = "ASC",
 }
-const sortDirValues: string[] = Object.values<string>(SortDir);
+export const sortDirValues: string[] = Object.values<string>(SortDir);
+
+export enum SortDirDropdown {
+  DESC = "Descending",
+  ASC = "Ascending",
+}
+export const sortDirDropdown: string[] = Object.values<string>(SortDirDropdown);
 
 export const isSortBy = (value: string): value is SortBy =>
   sortByValues.includes(value);

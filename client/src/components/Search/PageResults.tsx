@@ -8,17 +8,23 @@ import SearchCard from './SearchCard';
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
-import { BadgeType } from '../../types/search-browse-types';
-import { SortBy, sortByValues } from '../../../../shared/types/browse';
+import { BadgeType, URLParameters } from '../../types/search-browse-types';
+import {
+  SortBy,
+  sortByValues,
+  SortDirDropdown,
+  sortDirDropdown,
+} from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
-import { SearchType } from '../../../../shared/types/search';
 import { queryTypeToDisplayName } from '../../utils/url-helper';
+import IconDirectionAZ from '../common/icons/sorting/IconDirectionAZ';
+import IconDirectionZA from '../common/icons/sorting/IconDirectionZA';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
   navigatePages: (movement: number) => void;
-  queryType: SearchType[];
+  urlParams: URLParameters;
   term?: string;
   title?: string;
   badgeType: BadgeType;
@@ -28,7 +34,7 @@ interface PageResultsProps {
 //we render here the results, shared between Search and Browse
 const PageResults = ({
   results,
-  queryType,
+  urlParams,
   term,
   navigatePages,
   badgeType = BadgeType.None,
@@ -40,7 +46,12 @@ const PageResults = ({
   }
   const orderDropdown = useDropdown({
     name: 'sortBy',
-    defaultValue: SortBy.Popularity,
+    defaultValue: urlParams.sortBy || SortBy.Popularity,
+  });
+
+  const directionDropdown = useDropdown({
+    name: 'sortDir',
+    defaultValue: urlParams.sortDir || SortDirDropdown.DESC,
   });
   const searchTerm = (): JSX.Element => (
     <>
@@ -63,6 +74,8 @@ const PageResults = ({
     [results, badgeType]
   );
 
+  console.log(directionDropdown.value, urlParams.sortDir);
+
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
@@ -70,19 +83,31 @@ const PageResults = ({
           <div className="relative w-full h-8 flex flex-row">
             <span className="w-full text-center text-lg">
               {results.totalResults || 'No'}
-              {` ${queryTypeToDisplayName(queryType)} `}
+              {` ${queryTypeToDisplayName(urlParams.queryType)} `}
               {' results '}
               <>{term && searchTerm()}</>
             </span>
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
           {showOrderOptions && (
-            <div className="absolute -translate-y-1">
+            <div className="absolute -translate-y-1 flex flex-row gap-2 ">
               <Dropdown
                 {...orderDropdown.getProps()}
                 options={sortByValues}
                 label="Sort by"
               />
+              <Dropdown
+                {...directionDropdown.getProps()}
+                options={sortDirDropdown}
+                capitalizeOptions={false}
+                className="w-7.5 relative"
+              >
+                {(directionDropdown.value === SortDirDropdown.DESC && (
+                  <IconDirectionAZ className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
+                )) || (
+                  <IconDirectionZA className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
+                )}
+              </Dropdown>
             </div>
           )}
         </>

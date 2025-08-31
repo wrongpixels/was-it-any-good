@@ -90,7 +90,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
       <div className="flex flex-col flex-1 mt-1">
         <PageResults
           results={browseResults}
-          queryType={urlParams.queryType}
+          urlParams={urlParams}
           navigatePages={navigatePages}
           badgeType={
             !!overrideParams?.sortBy ? BadgeType.RankBadge : BadgeType.None
