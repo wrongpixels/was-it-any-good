@@ -58,7 +58,7 @@ const buildPageRoute = ({
   subtitle,
   searchType = SearchType.Multi,
   sortBy = SortBy.Popularity,
-  sortDir = SortDir.descending,
+  sortDir = SortDir.Descending,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
   return {
     path,

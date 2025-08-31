@@ -152,9 +152,10 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
         {searchResults && (searchTerm || isHome) && (
           <div className="flex flex-1">
             <PageResults
-              queryType={urlParams.queryType}
+              urlParams={urlParams}
               results={searchResults}
               term={searchTerm || undefined}
+              navigateToQuery={navigateToNewTerm}
               navigatePages={navigatePages}
               showNavBar={!isHome}
               badgeType={BadgeType.AddedBadge}

@@ -8,22 +8,33 @@ import SearchCard from './SearchCard';
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../common/Instructions';
-import { BadgeType, URLParameters } from '../../types/search-browse-types';
 import {
+  BadgeType,
+  OverrideParams,
+  URLParameters,
+} from '../../types/search-browse-types';
+import {
+  isSortBy,
+  isSortDir,
   SortBy,
   sortByValues,
+  SortDir,
   SortDirDropdown,
   sortDirDropdown,
+  sortDirDropdownToSortDir,
 } from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
 import { queryTypeToDisplayName } from '../../utils/url-helper';
 import IconDirectionAZ from '../common/icons/sorting/IconDirectionAZ';
 import IconDirectionZA from '../common/icons/sorting/IconDirectionZA';
+import { NavigateToQueryOptions } from '../../hooks/use-url-query-manager';
+import { replace } from 'react-router-dom';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
   navigatePages: (movement: number) => void;
+  navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;
   term?: string;
   title?: string;
@@ -36,6 +47,7 @@ const PageResults = ({
   results,
   urlParams,
   term,
+  navigateToQuery,
   navigatePages,
   badgeType = BadgeType.None,
   showNavBar = true,
@@ -44,14 +56,30 @@ const PageResults = ({
   if (!results) {
     return null;
   }
+  console.log(urlParams);
+  const submitFilter = (overrideParams: OverrideParams) => {
+    navigateToQuery({ replace: true, overrideParams });
+  };
+
+  const applySorByFilter = (newValue: string) =>
+    submitFilter({
+      sortBy: isSortBy(newValue) ? newValue : SortBy.Popularity,
+    });
+
+  const applySortDirFilter = (newValue: string) =>
+    submitFilter({
+      sortDir: sortDirDropdownToSortDir(newValue),
+    });
   const orderDropdown = useDropdown({
     name: 'sortBy',
     defaultValue: urlParams.sortBy || SortBy.Popularity,
+    onChanged: applySorByFilter,
   });
 
   const directionDropdown = useDropdown({
     name: 'sortDir',
     defaultValue: urlParams.sortDir || SortDirDropdown.DESC,
+    onChanged: applySortDirFilter,
   });
   const searchTerm = (): JSX.Element => (
     <>
@@ -73,9 +101,7 @@ const PageResults = ({
       )),
     [results, badgeType]
   );
-
-  console.log(directionDropdown.value, urlParams.sortDir);
-
+  console.log(directionDropdown.value);
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
@@ -99,10 +125,9 @@ const PageResults = ({
               <Dropdown
                 {...directionDropdown.getProps()}
                 options={sortDirDropdown}
-                capitalizeOptions={false}
                 className="w-7.5 relative"
               >
-                {(directionDropdown.value === SortDirDropdown.DESC && (
+                {(directionDropdown.value === SortDir.Descending && (
                   <IconDirectionAZ className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
                 )) || (
                   <IconDirectionZA className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />

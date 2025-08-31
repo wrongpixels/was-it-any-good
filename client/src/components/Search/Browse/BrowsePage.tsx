@@ -31,11 +31,16 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
   //override params are passed here.
-  const { urlParams, currentQuery, navigatePages, navigateToPage } =
-    useUrlQueryManager({
-      basePath,
-      overrideParams,
-    });
+  const {
+    urlParams,
+    currentQuery,
+    navigatePages,
+    navigateToPage,
+    navigateToQuery,
+  } = useUrlQueryManager({
+    basePath,
+    overrideParams,
+  });
   const { currentPage, genres } = urlParams;
   const {
     data: browseResults,
@@ -89,6 +94,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
       {(isLoading || isAnyLoading) && <SpinnerPage text={`Browsing WIAG...`} />}
       <div className="flex flex-col flex-1 mt-1">
         <PageResults
+          navigateToQuery={navigateToQuery}
           results={browseResults}
           urlParams={urlParams}
           navigatePages={navigatePages}

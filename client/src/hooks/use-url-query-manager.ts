@@ -23,7 +23,7 @@ interface UrlQueryManagerOptions {
   overrideParams?: OverrideParams;
 }
 
-interface NavigateToQueryOptions {
+export interface NavigateToQueryOptions {
   page?: number;
   replace?: boolean;
   newTerm?: string;
