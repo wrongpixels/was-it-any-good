@@ -78,7 +78,7 @@ export const styles = {
     poster: 'bg-gradient-to-t from-gray-200/60 via-white to-white',
   },
   buttons: {
-    blue: 'bg-starbutton border-1 border-black/15 text-white',
+    blue: 'bg-starbutton border-1 border-black/15 text-white hover:bg-starbrighter',
     dark: 'bg-cyan-800 hover:bg-cyan-600',
   },
   test: {

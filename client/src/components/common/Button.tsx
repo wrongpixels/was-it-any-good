@@ -11,6 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | 'dropdown';
   size?: 'sm' | 'md' | 'lg' | 'xs';
   extraClassNames?: string;
+  pressed?: boolean;
 }
 
 const colors = (variant: string): string => {
@@ -18,7 +19,7 @@ const colors = (variant: string): string => {
     case 'accept':
       return 'bg-button-green hover:bg-button-green-hover ring-gray-300 ring-1 text-white';
     case 'dropdown':
-      return 'bg-gray-200 hover:bg-button-gray-200 border-gray-400/50 border text-gray-600';
+      return 'bg-gray-200 hover:bg-button-gray-200 border-gray-400/50 border text-gray-600 hover:ring hover:ring-amber-200 focus:outline-none focus:ring focus:ring-sky-400 focus:ring-offset-0 active:outline-none active:ring active:ring-sky-300';
     case 'cancel':
       return 'bg-red-400 hover:bg-red-300 ring-gray-300 ring-1 text-white';
     case 'secondary':
@@ -49,6 +50,7 @@ const Button = ({
   variant = 'primary',
   size = 'md',
   className,
+
   ...props
 }: ButtonProps): JSX.Element | null => {
   if (!children) {

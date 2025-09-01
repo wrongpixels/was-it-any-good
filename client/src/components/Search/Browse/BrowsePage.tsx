@@ -44,7 +44,8 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const { currentPage, genres } = urlParams;
   const {
     data: browseResults,
-    isFetching: isLoading,
+    isFetching,
+    isLoading,
     isError,
   } = useBrowseQuery(currentQuery);
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
@@ -94,6 +95,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
       {(isLoading || isAnyLoading) && <SpinnerPage text={`Browsing WIAG...`} />}
       <div className="flex flex-col flex-1 mt-1">
         <PageResults
+          isLoading={isFetching}
           navigateToQuery={navigateToQuery}
           results={browseResults}
           urlParams={urlParams}

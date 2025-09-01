@@ -14,21 +14,20 @@ import {
   URLParameters,
 } from '../../types/search-browse-types';
 import {
+  invertSortDir,
   isSortBy,
   SortBy,
   sortByValues,
   SortDir,
-  SortDirDropdown,
-  sortDirDropdown,
-  sortDirDropdownToSortDir,
-  sortDirToSortDirDropdown,
 } from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
 import { queryTypeToDisplayName } from '../../utils/url-helper';
-import IconDirectionAZ from '../common/icons/sorting/IconDirectionAZ';
-import IconDirectionZA from '../common/icons/sorting/IconDirectionZA';
 import { NavigateToQueryOptions } from '../../hooks/use-url-query-manager';
+import Button from '../common/Button';
+import IconInvertSortDir from '../common/icons/sorting/IconInvertSortDir';
+import { styles } from '../../constants/tailwind-styles';
+import SpinnerPage from '../common/status/SpinnerPage';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -40,6 +39,7 @@ interface PageResultsProps {
   badgeType: BadgeType;
   showNavBar?: boolean;
   showOrderOptions?: boolean;
+  isLoading?: boolean;
 }
 //we render here the results, shared between Search and Browse
 const PageResults = ({
@@ -48,6 +48,7 @@ const PageResults = ({
   term,
   navigateToQuery,
   navigatePages,
+  isLoading,
   badgeType = BadgeType.None,
   showNavBar = true,
   showOrderOptions = true,
@@ -55,7 +56,6 @@ const PageResults = ({
   if (!results) {
     return null;
   }
-  console.log(urlParams);
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
   };
@@ -65,9 +65,10 @@ const PageResults = ({
       sortBy: isSortBy(newValue) ? newValue : SortBy.Popularity,
     });
 
-  const applySortDirFilter = (newValue: string) =>
+  const invertedSortDir: boolean = urlParams.sortDir === SortDir.Inverted;
+  const toggleSortDirFilter = () =>
     submitFilter({
-      sortDir: sortDirDropdownToSortDir(newValue),
+      sortDir: invertSortDir(urlParams.sortDir),
     });
   const orderDropdown = useDropdown({
     name: 'sortBy',
@@ -75,11 +76,6 @@ const PageResults = ({
     onChanged: applySorByFilter,
   });
 
-  const directionDropdown = useDropdown({
-    name: 'sortDir',
-    defaultValue: sortDirToSortDirDropdown(urlParams.sortDir),
-    onChanged: applySortDirFilter,
-  });
   const searchTerm = (): JSX.Element => (
     <>
       {' for '}
@@ -100,7 +96,6 @@ const PageResults = ({
       )),
     [results, badgeType]
   );
-  console.log(directionDropdown.value);
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
@@ -121,30 +116,32 @@ const PageResults = ({
                 options={sortByValues}
                 label="Sort by"
               />
-              <Dropdown
-                {...directionDropdown.getProps()}
-                options={sortDirDropdown}
-                className="w-7.5 relative"
+              <Button
+                title={
+                  invertedSortDir ? 'Set default order' : 'Invert default order'
+                }
+                variant="dropdown"
+                onClick={() => toggleSortDirFilter()}
+                className={`p-0 px-1 h-9.25 ${invertedSortDir ? `${styles.buttons.blue}` : ''}`}
               >
-                {(directionDropdown.value === SortDirDropdown.DESC && (
-                  <IconDirectionAZ className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
-                )) || (
-                  <IconDirectionZA className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
-                )}
-              </Dropdown>
+                <IconInvertSortDir width={16} />
+              </Button>
             </div>
           )}
         </>
       )}
-      <span className="flex-1">
-        {results.indexMedia.length > 0 ? (
-          <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
-        ) : (
-          <div className="h-64 w-full" aria-hidden="true">
-            <Instructions condition={true} />
-          </div>
-        )}
-      </span>
+      {(isLoading && <SpinnerPage text={`Browsing WIAG...`} />) || (
+        <span className="flex-1">
+          {results.indexMedia.length > 0 ? (
+            <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
+          ) : (
+            <div className="h-64 w-full" aria-hidden="true">
+              <Instructions condition={true} />
+            </div>
+          )}
+        </span>
+      )}
+
       {showNavBar && (
         <span className="relative w-full mt-5 mb-2 h-fit">
           <PageResultsNav results={results} navigatePages={navigatePages} />

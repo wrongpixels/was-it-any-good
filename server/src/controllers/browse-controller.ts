@@ -46,7 +46,7 @@ router.get('/', async (req, res, next) => {
       SortBy.Popularity;
     const sortDir: SortDir =
       stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
-      SortDir.Descending;
+      SortDir.Default;
 
     //shared filters for years and countries
     const whereOptions: WhereOptions = {};

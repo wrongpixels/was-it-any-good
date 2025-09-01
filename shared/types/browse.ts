@@ -7,14 +7,17 @@ export enum SortBy {
 export const sortByValues: string[] = Object.values<string>(SortBy);
 
 export enum SortDir {
-  Descending = "DESC",
-  Ascending = "ASC",
+  Default = "DESC",
+  Inverted = "ASC",
 }
 export const sortDirValues: string[] = Object.values<string>(SortDir);
 
+export const invertSortDir = (value: string | undefined): SortDir =>
+  value === SortDir.Inverted ? SortDir.Default : SortDir.Inverted;
+
 export enum SortDirDropdown {
-  DESC = "Descending",
-  ASC = "Ascending",
+  DESC = "Default",
+  ASC = "Inverted",
 }
 export const sortDirDropdown: string[] = Object.values(SortDirDropdown);
 
@@ -36,18 +39,18 @@ export const isSortDir = (value: string): value is SortDir =>
 export const sortDirDropdownToSortDir = (value: string) => {
   switch (value) {
     case SortDirDropdown.ASC:
-      return SortDir.Ascending;
+      return SortDir.Inverted;
     case SortDirDropdown.DESC:
     default:
-      return SortDir.Descending;
+      return SortDir.Default;
   }
 };
 
 export const sortDirToSortDirDropdown = (value: SortDir | undefined) => {
   switch (value) {
-    case SortDir.Ascending:
+    case SortDir.Inverted:
       return SortDirDropdown.ASC;
-    case SortDir.Descending:
+    case SortDir.Default:
     default:
       return SortDirDropdown.DESC;
   }
@@ -57,7 +60,7 @@ export const stringToSortDir = (
   value: string | undefined | null
 ): SortDir | undefined => {
   if (!value || !isSortDir(value)) {
-    return SortDir.Descending;
+    return SortDir.Default;
   }
   return value;
 };
