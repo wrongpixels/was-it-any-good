@@ -1,6 +1,6 @@
 import { JSX } from 'react';
 import { routerPaths } from '../../utils/url-helper';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import IconFilm from '../common/icons/media/IconFilm';
 import IconShow from '../common/icons/media/IconShow';
 import IconStar from '../common/icons/rating/IconStar';
@@ -53,27 +53,33 @@ const links: LinkInfo[] = [
     url: routerPaths.tops.shows.base(),
   },
 ];
+
 const NavBar = (): JSX.Element => {
   return (
-    <nav aria-label="NavBar" className="w-5xl min-w-xl px-3 py-1.5">
-      <ul className="flex flex-row items-center gap-1.5 text-sm">
+    <nav aria-label="NavBar" className="w-5xl min-w-xl px-3">
+      <ul className="flex flex-row items-center text-sm">
         {links.map((li, i) => (
           <li
             key={li.key}
-            className={`flex flex-row items-center gap-2 ${styles.animations.opacity70}`}
+            className={`flex flex-row items-center ${styles.animations.opacity70}`}
           >
-            <Link
+            <NavLink
               to={li.url}
-              className="flex flex-row items-center gap-1.5 text-gray-600"
               title={li.title}
+              className={({ isActive }) =>
+                `flex flex-row items-center gap-1.5 py-1.5 px-1.5 text-gray-600 ${
+                  isActive ? 'bg-gray-50 rounded-t-md ring-gray-300' : ''
+                }`
+              }
+              end={li.url === routerPaths.home}
             >
               {li.icon ?? null}
               <span className="text-starblue">{li.text}</span>
-            </Link>
+            </NavLink>
             {i < links.length - 1 && (
               <span
                 aria-hidden="true"
-                className="mx-0.5 inline-block h-3 w-px bg-gray-400 align-middle"
+                className="mx-0.5 inline-block h-3 w-px bg-gray-325 align-middle"
               />
             )}
           </li>
