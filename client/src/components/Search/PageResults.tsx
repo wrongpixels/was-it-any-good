@@ -130,7 +130,11 @@ const PageResults = ({
           )}
         </>
       )}
-      {(isLoading && <SpinnerPage text={`Browsing WIAG...`} />) || (
+      {(isLoading && (
+        <span className="flex-1">
+          <SpinnerPage text={`Browsing WIAG...`} className="flex-1" />
+        </span>
+      )) || (
         <span className="flex-1">
           {results.indexMedia.length > 0 ? (
             <div className="grid grid-cols-3 gap-4">{resultEntries}</div>

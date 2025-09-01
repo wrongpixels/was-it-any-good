@@ -57,8 +57,7 @@ const buildPageRoute = ({
   path,
   subtitle,
   searchType = SearchType.Multi,
-  sortBy = SortBy.Popularity,
-  sortDir = SortDir.Default,
+  sortBy = SortBy.Rating,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
   return {
     path,
@@ -69,9 +68,8 @@ const buildPageRoute = ({
         icon: getIcon(searchType, sortBy),
       },
       overrideParams: {
-        sortBy,
+        sortBy: sortBy === SortBy.Rating ? undefined : sortBy,
         searchType,
-        sortDir,
         basePath: path,
       },
     },
@@ -83,6 +81,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     title: 'Popular Media',
     subtitle: 'Most popular media in WIAG database',
     path: routerPaths.popular.multi.base(),
+    sortBy: SortBy.Popularity,
   }),
   buildPageRoute({
     title: 'Top Rated Media',
@@ -92,17 +91,15 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     sortBy: SortBy.Rating,
   }),
   buildPageRoute({
-    title: 'Top Rated Films',
-    subtitle: 'Highest rated Films in WIAG database',
+    title: 'Films',
+    subtitle: 'Films in WIAG database',
     path: routerPaths.tops.films.base(),
-    sortBy: SortBy.Rating,
     searchType: SearchType.Film,
   }),
   buildPageRoute({
-    title: 'Top Rated TV Shows',
-    subtitle: 'Highest rated Shows in WIAG database',
+    title: 'TV Shows',
+    subtitle: 'Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
-    sortBy: SortBy.Rating,
     searchType: SearchType.Show,
   }),
 ];

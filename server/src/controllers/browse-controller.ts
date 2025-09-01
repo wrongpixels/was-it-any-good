@@ -7,6 +7,7 @@ import { MediaType } from '../../../shared/types/media';
 import { CountryCode } from '../../../shared/types/countries';
 import { validateCountries } from '../factories/media-factory';
 import {
+  invertSortDir,
   SortBy,
   SortDir,
   stringToSortBy,
@@ -44,9 +45,14 @@ router.get('/', async (req, res, next) => {
     const sortBy: SortBy =
       stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
       SortBy.Popularity;
-    const sortDir: SortDir =
+
+    //DESC for strings is actually Z -> A, not really ideal for a default sorting.
+    //as all other SortBy are numbers, we simply invert this one
+    const defSortDir: SortDir =
       stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
       SortDir.Default;
+    const sortDir: SortDir =
+      sortBy === SortBy.Title ? invertSortDir(defSortDir) : defSortDir;
 
     //shared filters for years and countries
     const whereOptions: WhereOptions = {};
@@ -58,7 +64,6 @@ router.get('/', async (req, res, next) => {
     if (countries.length > 0) {
       whereOptions.country = { [Op.overlap]: countries };
     }
-    console.log(`Sorting by: ${sortBy}, Direction: ${sortDir}`);
 
     //pagination values
     const findAndCountOptions: FindAndCountOptions = {
