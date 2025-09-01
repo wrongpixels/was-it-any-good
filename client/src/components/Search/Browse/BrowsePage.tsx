@@ -44,7 +44,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   const { currentPage, genres } = urlParams;
   const {
     data: browseResults,
-    isLoading,
+    isFetching: isLoading,
     isError,
   } = useBrowseQuery(currentQuery);
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);

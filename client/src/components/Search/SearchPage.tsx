@@ -63,7 +63,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
 
   const {
     data: searchResults,
-    isLoading,
+    isFetching: isLoading,
     isError,
   } = !isHome
     ? useSearchQuery(currentQuery || '', searchTerm)

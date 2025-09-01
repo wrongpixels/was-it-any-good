@@ -46,7 +46,7 @@ router.get('/', async (req, res, next) => {
       SortBy.Popularity;
     const sortDir: SortDir =
       stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
-      SortDir.descending;
+      SortDir.Descending;
 
     //shared filters for years and countries
     const whereOptions: WhereOptions = {};
@@ -58,6 +58,8 @@ router.get('/', async (req, res, next) => {
     if (countries.length > 0) {
       whereOptions.country = { [Op.overlap]: countries };
     }
+    console.log(`Sorting by: ${sortBy}, Direction: ${sortDir}`);
+
     //pagination values
     const findAndCountOptions: FindAndCountOptions = {
       order: [[sortBy, sortDir.toUpperCase()]],

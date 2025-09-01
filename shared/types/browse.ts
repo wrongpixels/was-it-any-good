@@ -25,7 +25,7 @@ export const stringToSortBy = (
   value: string | undefined | null
 ): SortBy | undefined => {
   if (!value || !isSortBy(value)) {
-    return SortBy.Popularity;
+    return SortBy.Rating;
   }
   return value;
 };
@@ -40,6 +40,16 @@ export const sortDirDropdownToSortDir = (value: string) => {
     case SortDirDropdown.DESC:
     default:
       return SortDir.Descending;
+  }
+};
+
+export const sortDirToSortDirDropdown = (value: SortDir | undefined) => {
+  switch (value) {
+    case SortDir.Ascending:
+      return SortDirDropdown.ASC;
+    case SortDir.Descending:
+    default:
+      return SortDirDropdown.DESC;
   }
 };
 

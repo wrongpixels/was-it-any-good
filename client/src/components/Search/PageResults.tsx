@@ -15,13 +15,13 @@ import {
 } from '../../types/search-browse-types';
 import {
   isSortBy,
-  isSortDir,
   SortBy,
   sortByValues,
   SortDir,
   SortDirDropdown,
   sortDirDropdown,
   sortDirDropdownToSortDir,
+  sortDirToSortDirDropdown,
 } from '../../../../shared/types/browse';
 import Dropdown from '../common/Dropdown';
 import useDropdown from '../../hooks/use-dropdown';
@@ -29,7 +29,6 @@ import { queryTypeToDisplayName } from '../../utils/url-helper';
 import IconDirectionAZ from '../common/icons/sorting/IconDirectionAZ';
 import IconDirectionZA from '../common/icons/sorting/IconDirectionZA';
 import { NavigateToQueryOptions } from '../../hooks/use-url-query-manager';
-import { replace } from 'react-router-dom';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -78,7 +77,7 @@ const PageResults = ({
 
   const directionDropdown = useDropdown({
     name: 'sortDir',
-    defaultValue: urlParams.sortDir || SortDirDropdown.DESC,
+    defaultValue: sortDirToSortDirDropdown(urlParams.sortDir),
     onChanged: applySortDirFilter,
   });
   const searchTerm = (): JSX.Element => (
@@ -127,7 +126,7 @@ const PageResults = ({
                 options={sortDirDropdown}
                 className="w-7.5 relative"
               >
-                {(directionDropdown.value === SortDir.Descending && (
+                {(directionDropdown.value === SortDirDropdown.DESC && (
                   <IconDirectionAZ className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
                 )) || (
                   <IconDirectionZA className="w-3 text-gray-600 absolute bg-gray-200 translate-x-1 -translate-y-0.75 pointer-events-none" />
