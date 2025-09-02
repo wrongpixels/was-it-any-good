@@ -1,39 +1,60 @@
-# WIAG <i>("Was It Any Good?")</i>
+# WIAG ("Was It Any Good?")
 
 ## About
 
-WIAG is a full-stack rating platform to discover and review movies, TV shows and games. Unlike traditional systems, WIAG uses a dynamic scoring approach that combines overall impressions with individual components (seasons/DLC), calculating a final score that shows how quality varies over time.
+WIAG is a full-stack media rating platform built to address a common flaw in traditional review systems. It uses a dynamic scoring approach that combines a user's overall impression with their ratings of individual components (like seasons or DLC). The result is a more nuanced final score that accurately reflects how a piece of media's quality evolves over time.
 
-For example: Rate The Sopranos an '8' overall but Season 2 a '6' - WIAG considers both for the final score, while ignoring unwatched seasons.
+For example: A user can rate *The Sopranos* an '8' overall but give its second season a '6'. WIAG's algorithm considers both votes to calculate the final score, ignoring unwatched seasons.
 
-## Features
+---
 
-- 🎯 **Dynamic Ratings** - Score entire series and individual seasons/DLC with weighted calculations
-- 👤 **Users** - Accounts, friend following, and activity feeds
-- 📝 **Reviews & Comments** - Share detailed opinions and discuss with others
-- 🎬 **Media Library** - Comprehensive database of movies, TV shows, and games
-- 🔍 **Discovery** - Genre filters, search, and community-driven top charts
-- 📋 **Lists** - Auto-updating watchlists and custom collections
-- 🔄 **API Integration** - Real-time data from TMDB and IGDB
+## Features & Development Status
 
-## Technical Implementation
+The project is currently live with its core feature set, while social and community-oriented features are in active development.
 
-- **Backend:** Node.js, Express, TypeScript
-- **Frontend:** React, TanStack Query, TypeScript
-- **Database:** PostgreSQL with Sequelize ORM
-- **Authentication:** JWT for session management
-- **DevOps:** Automated CI/CD with GitHub Actions
-- **Styling:** Tailwind
+### ✅ Implemented & Live
 
-## Data Architecture
+*   **On-Demand Data Architecture:**
+    *   **Efficient Search:** Typeahead suggestions are generated from media previously searched by other users, significantly reducing external API calls.
+    *   **Live Entry Creation:** When a user selects a search result or provides a TMDB ID, the system fetches the data from the external API and transforms it into WIAG's own database structure on-the-fly. If the entry already exists, it is simply retrieved.
+    *   **Relational Data Growth:** When new media is added, all associated people also get created (or retrieved if already existing), and get linked with their specific roles. This allows the database to grow an interconnected network of media and talent organically.
+*   **Media Discovery:**
+    *   **Browse:** Explore the existing database with shortcuts for Popular and Top-rated Films, Shows, and overall media.
+    *   **Filter & Sort:** Filter media by Genre, Country, or Year, and sort results by Ranking, Popularity, Title or Release date.
+*   **Dynamic Rating System:** Users can create accounts and submit weighted ratings for Films, Shows and their individual seasons. All rating calculations happen in real-time and update instantly on the front end without a page refresh.
+*   **User Authentication:** Secure user registration, login, and session management using JSON Web Tokens (JWT).
 
-The project is built around a dynamic, self-populating database shared between Films, Shows and Games. Rather than mirroring external databases like TMDB, WIAG only consults them for gathering the information needed to create its own media entries (names, synopsis, years…).
+### ⏳ In Development / Planned
 
-- **On-Demand Data Handling:** When a user searches for media not present in WIAG's database, the system fetches the data from the appropriate external API in real-time.
-- **Smart Data Processing:** The incoming data is converted to match WIAG's database structure and added to it. People appearing across different media are automatically linked together, creating a connected network of cast, crew and their work.
-- **Efficient and Independent:** Once media is added to WIAG, it becomes fully independent from external sources. The database grows organically based on user interests, while maintaining consistent relationships between all entries.
+*   🎮 **Game Integration:** Adding IGDB API support to expand the library to video games and DLCs.
+*   👥 **Social Features:** Friend-following system and personalized activity feeds.
+*   📝 **Community Engagement:** Written reviews and comment sections.
+*   📋 **Collections:** Custom user-created lists and auto-updating watchlists.
 
-## Development
+---
+
+## Technical Architecture
+
+WIAG is more than a simple API client, it's an independent platform engineered for scalability and data integrity. The architecture was a primary focus of the project.
+
+1.  **Data Independence:** External APIs like TMDB are treated strictly as initial data sources. All information is transformed and stored in custom-designed, normalized data models. The platform is not dependent on the structure of any external API. Once a Film, Show or Person has been created, it becomes 100% independent of external APIs.
+
+2.  **Performance Optimization:** WIAG stores brief versions of all media returned from external API searches. This allows for instantaneous typeahead suggestions for subsequent users, minimizing latency and external API rate-limiting concerns.
+
+3.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
+
+### Tech Stack
+
+*   **Backend:** Node.js, Express, TypeScript
+*   **Frontend:** React, TypeScript, TanStack Query
+*   **Database:** PostgreSQL with Sequelize ORM
+*   **Styling:** Tailwind CSS
+*   **Authentication:** JWT (Session Management)
+*   **DevOps:** GitHub Actions for CI/CD
+
+---
+
+## Local Development
 
 ```bash
 # Clone the repository
