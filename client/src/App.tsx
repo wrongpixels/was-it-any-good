@@ -18,27 +18,33 @@ import {
 } from './config/browsePageRoutes';
 import Footer from './components/Footer/Footer';
 import SignUpOverlay from './components/Overlay/SignUpOverlay';
+import useScrollToTop from './hooks/use-scroll-to-top';
 
-const App = (): JSX.Element => (
-  <div className="w-full min-h-screen flex flex-col">
-    <Router>
-      <SignUpOverlay />
-      <ImageOverlay />
-      <Header />
-      <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
-        <NavBar />
-        <div className="p-4 flex flex-col flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
-          <AppBody />
+const App = (): JSX.Element => {
+  return (
+    <div className="w-full min-h-screen flex flex-col">
+      <Router>
+        <SignUpOverlay />
+        <ImageOverlay />
+        <Header />
+        <div className="flex flex-1 flex-col items-center bg-gray-200 box-border">
+          <NavBar />
+          <div className="p-4 flex flex-col flex-1 start-1 bg-gray-50 rounded shadow w-5xl min-w-xl ring ring-[#d6d6d6]">
+            <AppBody />
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </Router>
-  </div>
-);
+      </Router>
+    </div>
+  );
+};
 
-//auth sensitive
+//auth sensitive part of the app
 const AppBody = (): JSX.Element => {
+  //a hook to auto-scroll on url changes
+  useScrollToTop();
   const { isLoginPending } = useAuth();
+
   if (isLoginPending) {
     return <SigningInPage />;
   }

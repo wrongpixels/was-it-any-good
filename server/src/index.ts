@@ -51,7 +51,7 @@ app.all('/api/*apiRoute', (_req, _res, next) => {
 if (process.env.NODE_ENV === 'production') {
   const distPath: string = path.join(__dirname, '..', '..', 'client', 'dist');
   app.use(express.static(distPath));
-  app.get('/*clientRoute', (_req, res) => {
+  app.get('*', (_req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }

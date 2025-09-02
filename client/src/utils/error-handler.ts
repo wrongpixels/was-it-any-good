@@ -2,7 +2,6 @@ import { AxiosError, isAxiosError } from 'axios';
 import { APIError } from '../../../shared/types/errors';
 import {
   DEF_API_ERROR,
-  NOT_FOUND_ERROR,
   SESSION_AUTH_ERROR,
 } from '../../../shared/constants/error-constants';
 import { capitalize } from './common-format-helper';

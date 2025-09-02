@@ -56,7 +56,7 @@ const links: LinkInfo[] = [
 
 const NavBar = (): JSX.Element => {
   return (
-    <nav aria-label="NavBar" className="w-5xl min-w-xl px-3">
+    <nav aria-label="NavBar" className="w-5xl min-w-xl py-1 px-3">
       <ul className="flex flex-row items-center text-sm">
         {links.map((li, i) => (
           <li
@@ -67,8 +67,8 @@ const NavBar = (): JSX.Element => {
               to={li.url}
               title={li.title}
               className={({ isActive }) =>
-                `flex flex-row items-center gap-1.5 py-1.5 px-1.5 text-gray-600 ${
-                  isActive ? 'bg-gray-50 rounded-t-md ring-gray-300' : ''
+                `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
+                  isActive ? 'border-amber-400/70' : 'border-transparent'
                 }`
               }
               end={li.url === routerPaths.home}
