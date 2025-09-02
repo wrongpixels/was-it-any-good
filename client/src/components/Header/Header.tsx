@@ -29,7 +29,7 @@ const Header = () => {
         <div className="relative flex h-full w-full max-w-5xl items-center justify-between mx-auto px-4">
           <div className="flex-1 flex justify-start">
             <div className="hidden md:block">
-              <SearchField />
+              <SearchField fieldName="header" />
             </div>
           </div>
           <HeaderLogo
@@ -57,7 +57,7 @@ const Header = () => {
         <div className="absolute w-full bg-[#5980c7] shadow-lg md:hidden">
           <div className="p-4 flex flex-col gap-4">
             <HeaderLogin />
-            <SearchField />
+            <SearchField fieldName="header" />
           </div>
         </div>
       )}

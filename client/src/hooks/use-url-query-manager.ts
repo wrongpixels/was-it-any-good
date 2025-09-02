@@ -39,7 +39,10 @@ const useUrlQueryManager = ({
 
   //we extract and normalize all valid query params in the url
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
-  const urlParams: URLParameters = extractURLParameters(parameters);
+  const urlParams: URLParameters = extractURLParameters(
+    parameters,
+    overrideParams
+  );
 
   const queryTypeManager = new ParamManager(
     searchTypes.filter((t: string) => t !== SearchType.Multi),

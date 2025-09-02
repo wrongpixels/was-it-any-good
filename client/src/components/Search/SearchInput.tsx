@@ -5,6 +5,8 @@ import { useInputField } from '../../hooks/use-inputfield';
 import { OptStringProps } from '../../types/common-props-types';
 import Button from '../common/Button';
 import { AnimatedDiv } from '../common/AnimatedDiv';
+import useSuggestions from '../../hooks/use-suggestions';
+import SearchResults from '../Header/Search/SearchResults';
 
 interface SearchInputFieldProps extends OptStringProps {
   handleSearch: (newSearch: string | null) => void;
@@ -22,6 +24,9 @@ const SearchInputField = memo(
       searchField.setValue(searchTerm || '');
     }, [searchTerm]);
 
+    const { suggestions, isFetching, isDropdownVisible, setDropdownVisible } =
+      useSuggestions(searchField.value);
+
     const handleOnSearch = (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       handleSearch(searchField.value);
@@ -38,6 +43,19 @@ const SearchInputField = memo(
             {...searchField.getProps()}
             className="border pl-7 text-base py-1.5 w-100 shadow-md shadow-black/5"
           />
+          {searchField.value &&
+            searchField.value !== searchTerm &&
+            isDropdownVisible && (
+              <div className="absolute translate-y-10 z-1">
+                <SearchResults
+                  searchResults={suggestions}
+                  isLoading={isFetching}
+                  searchValue={searchField.value}
+                  onClose={() => setDropdownVisible(false)}
+                  cleanField={searchField.reset}
+                />
+              </div>
+            )}
           <AnimatedDiv animKey={'search-main-button'}>
             <Button type={'submit'} className="pr-3 h-9">
               <SearchIcon

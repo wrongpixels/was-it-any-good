@@ -1,26 +1,22 @@
-import { JSX, useEffect, useState } from 'react';
+import { JSX } from 'react';
 import { useInputField } from '../../../hooks/use-inputfield';
 import SearchResults from './SearchResults';
-import { useSuggestionsQuery } from '../../../queries/suggestions-queries';
 import SearchIcon from '../../common/icons/SearchIcon';
 import { InputField } from '../../common/InputField';
 import { styles } from '../../../constants/tailwind-styles';
+import useSuggestions from '../../../hooks/use-suggestions';
 
-const SearchField = (): JSX.Element => {
-  const [isDropdownVisible, setDropdownVisible] = useState(true);
+interface SearchFieldProps {
+  fieldName: string;
+}
+
+const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
   const searchField = useInputField({
-    name: 'mini-search',
+    name: `${fieldName}-search-suggestions`,
     placeholder: 'Films, shows...',
   });
-  const { data: suggestions, isLoading } = useSuggestionsQuery(
-    searchField.value
-  );
-
-  useEffect(() => {
-    if (searchField.value) {
-      setDropdownVisible(true);
-    }
-  }, [searchField.value, suggestions]);
+  const { suggestions, isFetching, isDropdownVisible, setDropdownVisible } =
+    useSuggestions(searchField.value);
 
   return (
     <div className="flex gap-2">
@@ -36,7 +32,7 @@ const SearchField = (): JSX.Element => {
         <div className="absolute translate-y-8 -translate-x-2.5">
           <SearchResults
             searchResults={suggestions}
-            isLoading={isLoading}
+            isLoading={isFetching}
             searchValue={searchField.value}
             onClose={() => setDropdownVisible(false)}
             cleanField={searchField.reset}

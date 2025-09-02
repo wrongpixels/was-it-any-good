@@ -119,7 +119,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     <ErrorPage />;
   }
   return (
-    <div className="flex flex-col items-center gap-4 pt-5 flex-1">
+    <div className="flex flex-col items-center gap-4 pt-4 flex-1">
       <span className="flex flex-row gap-2">
         <Dropdown
           {...searchDropdown.getProps()}

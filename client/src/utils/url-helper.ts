@@ -4,7 +4,7 @@ import { API_BASE } from '../constants/url-constants';
 import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
-import { URLParameters } from '../types/search-browse-types';
+import { OverrideParams, URLParameters } from '../types/search-browse-types';
 import { toCountryCodes } from '../../../shared/types/countries';
 import { stringToSortBy, stringToSortDir } from '../../../shared/types/browse';
 import {
@@ -317,7 +317,8 @@ export const normalizeQueryTypeParams = (rawParams: string[]): SearchType[] => {
 };
 
 export const extractURLParameters = (
-  parameters: URLSearchParams
+  parameters: URLSearchParams,
+  overrideParams?: OverrideParams
 ): URLParameters => ({
   searchTerm: parameters.get(UPARAM_SEARCH_TERM),
   currentPage: Number(parameters.get(UPARAM_PAGE)),
@@ -325,6 +326,8 @@ export const extractURLParameters = (
   genres: parameters.getAll(UPARAM_GENRES),
   countries: toCountryCodes(parameters.getAll(UPARAM_COUNTRIES)),
   year: parameters.get(UPARAM_YEAR),
-  sortBy: stringToSortBy(parameters.get(UPARAM_SORT_BY)),
-  sortDir: stringToSortDir(parameters.get(UPARAM_SORT_DIR)),
+  sortBy:
+    overrideParams?.sortBy ?? stringToSortBy(parameters.get(UPARAM_SORT_BY)),
+  sortDir:
+    overrideParams?.sortDir ?? stringToSortDir(parameters.get(UPARAM_SORT_DIR)),
 });
