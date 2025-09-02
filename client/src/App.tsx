@@ -56,7 +56,7 @@ const AppBody = (): JSX.Element => {
         <Route path={routerPaths.search.base} element={<SearchPage />} />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
 
-        {/*We've centralized all our top/most popular etc routes in a single array */}
+        {/*all our top/most popular etc routes live in a single array */}
         {browsePageRoutes.map((browseRoute: BrowsePageRouterData) => (
           <Route
             path={browseRoute.path}
