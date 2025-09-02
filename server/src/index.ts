@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
 import { PORT } from './util/config';
 import { initializeDB } from './util/db';
 import {
@@ -20,11 +21,14 @@ import {
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
+import { NotFoundError } from './util/customError';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(authHandler);
+
+//API Routes
 app.use('/api/films', filmsRouter);
 app.use('/api/shows', showsRouter);
 app.use('/api/genres', genresRouter);
@@ -39,6 +43,22 @@ app.use('/api/suggest', suggestionsRouter);
 app.use('/api/search', searchRouter);
 app.use('/api/trending', trendingRouter);
 app.use('/api/browse', browseRouter);
+
+app.all('/api/*apiRoute', (_req, _res, next) => {
+  next(new NotFoundError('API endpoint'));
+});
+
+if (process.env.NODE_ENV === 'production') {
+  const distPath: string = path.join(__dirname, '..', '..', 'client', 'dist');
+  app.use(express.static(distPath));
+  app.get('/*clientRoute', (_req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
+
+app.use((_req, _res, next) => {
+  next(new NotFoundError());
+});
 
 app.use(errorHandler);
 

@@ -7,23 +7,33 @@ import PersonPagePoster from '../Poster/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
 import IconUser from '../common/icons/IconUser';
+import NotFoundPage from '../common/status/NotFoundPage';
+import LoadingPage from '../common/status/LoadingPage';
+import { getAPIErrorMessage, isNotFoundError } from '../../utils/error-handler';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
   const personId: string | undefined = match?.params.id;
-  const { data: person, isError, isLoading, error } = usePersonQuery(personId);
+  const {
+    data: person,
+    isError,
+    isLoading,
+    isFetching,
+    error,
+  } = usePersonQuery(personId);
 
-  if (isLoading) {
-    setTitle('Loading...');
-    return <div>Loading person...</div>;
+  if (isFetching || isLoading) {
+    return <LoadingPage text="person" />;
   }
-  if (isError) {
+
+  if (!person || isError) {
+    console.log(error);
+    if (isNotFoundError(error)) {
+      setTitle('Person not found');
+      return <NotFoundPage text="person" />;
+    }
     setTitle('Error loading Person');
-    return <div>Error loading person: {`${error.message}`}</div>;
-  }
-  if (!person) {
-    setTitle('Person not found');
-    return <div>Person couldn't be found!</div>;
+    return <div>Error loading person: {`${getAPIErrorMessage(error)}`}</div>;
   }
 
   setTitle(person.name);

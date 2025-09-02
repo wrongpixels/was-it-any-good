@@ -2,6 +2,7 @@ import { AxiosError, isAxiosError } from 'axios';
 import { APIError } from '../../../shared/types/errors';
 import {
   DEF_API_ERROR,
+  NOT_FOUND_ERROR,
   SESSION_AUTH_ERROR,
 } from '../../../shared/constants/error-constants';
 import { capitalize } from './common-format-helper';
@@ -55,6 +56,9 @@ const getByStatusCode = (error: unknown, status: number): APIError | null => {
 
 export const isAuthError = (error: APIError | null): error is APIError =>
   error?.status === 401;
+
+export const isNotFoundError = (error: unknown): error is APIError =>
+  !!getByStatusCode(error, 404);
 
 export const getAuthError = (error: unknown): APIError | null =>
   getByStatusCode(error, 401);

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Person } from '../models';
-import CustomError from '../util/customError';
+import CustomError, { NotFoundError } from '../util/customError';
 import { PersonResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
 import { sortRoles } from '../services/people-service';
@@ -26,11 +26,11 @@ router.get(
       if (!id) {
         throw new CustomError('Wrong id format', 400);
       }
-      const person: Person | null =
-        await Person.scope('withMedia').findByPk(id);
+      const person: Person | null = await Person.scope('withMedia').findByPk(
+        id
+      );
       if (!person) {
-        res.json(null);
-        return;
+        throw new NotFoundError('Person');
       }
       const personData: PersonResponse = toPlain<Person>(person);
       //we sort indexMedia here by roles (Actor, Director…) because sequelize
