@@ -2,9 +2,9 @@
 
 ## About
 
-WIAG is a full-stack media rating platform built to address a common flaw in traditional review systems. It uses a dynamic scoring approach that combines a user's overall impression with their ratings of individual components (like seasons or DLC). The result is a more nuanced final score that accurately reflects how a piece of media's quality evolves over time.
+WIAG is a full-stack media rating platform built to address a common flaw in traditional review systems: It uses a dynamic scoring approach that combines a user's overall impression with their ratings of individual components (like seasons or DLC). The result is a more nuanced final score that accurately reflects how a piece of media's quality evolves over time.
 
-For example: A user can rate *The Sopranos* an '8' overall but give its second season a '6'. WIAG's algorithm considers both votes to calculate the final score, ignoring unwatched seasons.
+For example: A user can rate *The Sopranos* an '8' overall but give its second season a '6'. WIAG's algorithm will consider both votes to calculate the final score, ignoring unvoted seasons.
 
 ---
 
