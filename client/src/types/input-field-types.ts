@@ -15,6 +15,7 @@ export interface InputLogicProps {
 export interface InputFieldHookConfig extends InputLogicProps {
   label?: string;
   initialValue?: string;
+  rules?: InputFieldRules;
 }
 
 export interface InputFieldProps
@@ -23,10 +24,23 @@ export interface InputFieldProps
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
+export interface InputFieldRules {
+  minLength?: number;
+  maxLength?: number;
+  includeNumber?: boolean;
+}
 
+export interface InputFieldValidation {
+  isError: boolean;
+  isValidated: boolean;
+  errorMessage: string;
+}
 export interface InputFieldHookValues {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   reset: VoidFunction;
+  isError: boolean;
+  isValidated: boolean;
+  errorMessage: string;
   getProps: () => InputFieldProps;
 }

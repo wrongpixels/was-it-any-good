@@ -32,6 +32,7 @@ export const getYearNum = (
 export const isNumber = (value?: unknown): value is number =>
   typeof value === "number" && !isNaN(value);
 
+export const hasNumber = (text: string) => /\d/.test(text);
 export const toFirstUpperCase = (text: string) => {
   if (!text) return text;
   return text[0].toUpperCase() + text.slice(1);
