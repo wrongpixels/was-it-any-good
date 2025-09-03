@@ -63,7 +63,8 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
 
   const {
     data: searchResults,
-    isFetching: isLoading,
+    isFetching,
+    isLoading,
     isError,
   } = !isHome
     ? useSearchQuery(currentQuery || '', searchTerm)
@@ -142,27 +143,29 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           </span>
         </>
       )}
-      {isLoading && (
-        <SpinnerPage
-          text={isHome ? 'Loading...' : `Searching for "${searchTerm}"...`}
-          paddingTop={2}
-        />
-      )}
-      <span className="pt-1 w-full flex flex-1">
-        {searchResults && (searchTerm || isHome) && (
-          <div className="flex flex-1">
-            <PageResults
-              urlParams={urlParams}
-              results={searchResults}
-              term={searchTerm || undefined}
-              navigateToQuery={navigateToNewTerm}
-              navigatePages={navigatePages}
-              showNavBar={!isHome}
-              badgeType={BadgeType.AddedBadge}
-            />
-          </div>
+      {isLoading ||
+        (isFetching && (
+          <SpinnerPage
+            text={isHome ? 'Loading...' : `Searching for "${searchTerm}"...`}
+            paddingTop={2}
+          />
+        )) || (
+          <span className="pt-1 w-full flex flex-1">
+            {searchResults && (searchTerm || isHome) && (
+              <div className="flex flex-1">
+                <PageResults
+                  urlParams={urlParams}
+                  results={searchResults}
+                  term={searchTerm || undefined}
+                  navigateToQuery={navigateToNewTerm}
+                  navigatePages={navigatePages}
+                  showNavBar={!isHome}
+                  badgeType={BadgeType.AddedBadge}
+                />
+              </div>
+            )}
+          </span>
         )}
-      </span>
     </div>
   );
 };

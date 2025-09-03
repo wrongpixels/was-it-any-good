@@ -40,6 +40,7 @@
     "tailwindcss": "^4.1.10",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-remove-console": "^2.2.0"
   }
 }
