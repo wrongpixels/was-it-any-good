@@ -1,11 +1,12 @@
-interface OptIconProps {
-  width?: number | string;
-  height?: number | string;
-  [key: string]: any;
-}
+import { OptIconProps } from '../../../../types/common-props-types';
 
-const IconCheck = ({ width = 24, height = 24, ...rest }: OptIconProps) => (
-  <span {...rest} title="Added to WIAG database">
+const IconCheck = ({
+  width = 24,
+  height = 24,
+  title = 'Added to WIAG database',
+  ...rest
+}: OptIconProps) => (
+  <span {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"

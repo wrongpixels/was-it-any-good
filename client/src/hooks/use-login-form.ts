@@ -22,11 +22,19 @@ export const useLoginForm = (): LoginFormValues => {
   const userInput: InputFieldHookValues = useInputField({
     name: 'username',
     placeholder: 'User',
+    rules: {
+      minLength: 4,
+      maxLength: 20,
+    },
   });
   const passwordInput: InputFieldHookValues = useInputField({
     name: 'password',
     placeholder: 'Password',
     type: 'password',
+    rules: {
+      minLength: 8,
+      maxLength: 72,
+    },
   });
 
   const submitLogin = (e: React.FormEvent<HTMLFormElement>): void => {

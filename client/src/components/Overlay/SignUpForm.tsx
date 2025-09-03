@@ -14,6 +14,8 @@ import { VerifyCreateUser } from '../../../../shared/types/models';
 import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
 import DisabledDiv from '../common/DisabledDiv';
 import { getAPIErrorMessage } from '../../utils/error-handler';
+import { styles } from '../../constants/tailwind-styles';
+import IconCheck from '../common/icons/badges/IconCheck';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -88,6 +90,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       },
     });
   };
+  console.log(userField);
   return (
     <DisabledDiv
       ref={anchorRef}
@@ -113,10 +116,31 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         className="flex flex-col gap-2 w-3xs items-center"
         onSubmit={submitCreateUser}
       >
-        <InputField {...userField.getProps()} className="h-8 w-3xs" />
-        <InputField {...passwordField.getProps()} className="h-8 w-3xs" />
-        <SubSection>{'(At least 7 characters)'}</SubSection>
-        <InputField {...emailField.getProps()} className="h-8 w-3xs" />
+        <div className="relative">
+          <InputField
+            {...userField.getProps()}
+            className={`h-8 w-3xs ${styles.inputField.rules(userField.isError, userField.isSuccess)}`}
+          />
+          {userField.isSuccess && (
+            <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6">
+              <IconCheck title="" className="text-green-500" width={20} />
+            </span>
+          )}
+        </div>
+
+        {userField.isError && <SubSection>{userField.errorMessage}</SubSection>}
+        <div className="relative">
+          <InputField
+            {...passwordField.getProps()}
+            className={`h-8 w-3xs ${styles.inputField.rules(passwordField.isError, passwordField.isSuccess)}`}
+          />
+        </div>
+        {passwordField.isError && (
+          <SubSection>{passwordField.errorMessage}</SubSection>
+        )}
+        <div className="relative">
+          <InputField {...emailField.getProps()} className="h-8 w-3xs" />
+        </div>
         <SubSection>
           <div>
             {'* '}

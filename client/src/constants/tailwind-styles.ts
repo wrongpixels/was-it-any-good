@@ -41,6 +41,8 @@ export const styles = {
     header:
       'ring-0 hover:ring-1 ring-amber-200 py-1 focus:ring-2 focus:ring-sky-300 text-xs  h-7',
     search: 'border pl-7 text-base py-1.5 w-80 shadow-md shadow-black/5',
+    rules: (isError: boolean, isSuccess: boolean) =>
+      `${isError ? 'focus:ring-red-400 ring-red-400 focus:ring-red-400 ring-2' : isSuccess ? 'focus:ring-green-300 ring-green-300 ring-2' : ''}`,
   },
   poster: {
     regular: () =>

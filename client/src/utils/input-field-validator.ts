@@ -13,7 +13,7 @@ const validateRules = (
   input: string | null,
   rules?: InputFieldRules
 ): InputFieldValidation => {
-  if (!rules || !input || input.length < 2) {
+  if (!rules || !input || input.length < 1) {
     return INPUT_VALIDATION_SKIP;
   }
   if (!!rules.minLength) {
