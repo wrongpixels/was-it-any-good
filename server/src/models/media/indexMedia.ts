@@ -57,7 +57,7 @@ class IndexMedia extends Model<
   }
 
   getMediaId(): number | null {
-    return !this.addedToMedia ? null : (this.film?.id ?? this.show?.id ?? null);
+    return !this.addedToMedia ? null : this.film?.id ?? this.show?.id ?? null;
   }
 }
 
@@ -132,7 +132,7 @@ IndexMedia.init(
     },
   },
   {
-    modelName: 'index-media',
+    modelName: 'index_media',
     underscored: true,
     sequelize,
     //for setting a double unique
