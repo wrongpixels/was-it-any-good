@@ -29,11 +29,20 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
+    rules: {
+      minLength: 4,
+      maxLength: 20,
+    },
   });
   const passwordField = useInputField({
     name: 'password',
     placeholder: 'Password',
     type: 'password',
+    rules: {
+      minLength: 8,
+      maxLength: 72,
+      includeNumber: true,
+    },
   });
   const emailField = useInputField({
     name: 'email',

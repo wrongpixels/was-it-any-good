@@ -17,6 +17,10 @@ const validateRules = (
     return INPUT_VALIDATION_SKIP;
   }
   if (!!rules.minLength) {
+    //we don't allow negative numbers or 0.
+    if (rules.minLength < 1) {
+      rules.minLength = 1;
+    }
     if (input.length < rules.minLength)
       return {
         ...INPUT_VALIDATION_ERROR,
@@ -24,6 +28,14 @@ const validateRules = (
       };
   }
   if (!!rules.maxLength) {
+    //we don't allow negative numbers or 0.
+    if (rules.maxLength < 1) {
+      rules.maxLength = 1;
+    }
+    //we don't allow setting it bellow minLength if existing.
+    if (rules.minLength && rules.maxLength < rules.minLength) {
+      rules.maxLength = rules.minLength;
+    }
     if (input.length > rules.maxLength)
       return {
         ...INPUT_VALIDATION_ERROR,

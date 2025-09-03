@@ -22,6 +22,8 @@ export interface InputFieldProps
   extends InputLogicProps,
     InputPresentationProps {
   value: string;
+  maxlength?: number;
+  minlength?: number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 export interface InputFieldRules {

@@ -28,6 +28,8 @@ export const useInputField = ({
     placeholder,
     type,
     label,
+    maxlength: rules?.maxLength,
+    minlength: rules?.minLength,
   });
   //a custom solution to validate text input fields
   const { isError, isValidated, errorMessage }: InputFieldValidation =
