@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
   InputFieldHookConfig,
   InputFieldHookValues,
@@ -15,25 +15,47 @@ export const useInputField = ({
   type = 'text',
   label,
 }: InputFieldHookConfig): InputFieldHookValues => {
+  //the input field content state
   const [value, setValue] = useState(initialValue);
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value);
-  };
-  const reset = () => setValue(initialValue);
-
-  //a custom solution to validate text input fields.
-  const {
-    isError: errorDefault,
-    isSuccess: successDefault,
-    errorMessage: defErrorMessage,
-  }: InputFieldValidation = validateRules(value, rules);
 
   //the states to keep and update the isError, isSuccess and errorMessage.
   //we use the states from validation as defaults, but we can override them
   //with setIsError and setIsSuccess for async operations in the component.
-  const [isError, setIsError] = useState(errorDefault);
-  const [isSuccess, setIsSuccess] = useState(successDefault);
-  const [errorMessage, setErrorMessage] = useState(defErrorMessage);
+  const [isError, setIsError] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  //we run a custom solution to validate the rules.
+  let validatedData: InputFieldValidation = validateRules(value, rules);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    //while typing, we update the value
+    setValue(e.target.value);
+  };
+
+  //we apply the fresh validated results to the states so are always synched
+  useEffect(() => {
+    setIsError(validatedData.isError);
+    setIsSuccess(validatedData.isSuccess);
+    setErrorMessage(validatedData.errorMessage);
+    console.log(validatedData.isError);
+  }, [value]);
+
+  const reset = () => setValue(initialValue);
+
+  //a function to set errors easily
+  const setError = (message: string): void => {
+    setIsError(true);
+    setIsSuccess(false);
+    setErrorMessage(message);
+  };
+
+  //a function to set isSuccess easily
+  const setSuccess = (): void => {
+    setIsError(false);
+    setIsSuccess(true);
+    setErrorMessage('');
+  };
 
   const getProps = (): InputFieldProps => ({
     name,
@@ -56,8 +78,7 @@ export const useInputField = ({
     isError,
     isSuccess,
     errorMessage,
-    setIsError,
-    setIsSuccess,
-    setErrorMessage,
+    setError,
+    setSuccess,
   };
 };

@@ -89,10 +89,16 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         );
         clean();
       },
+      //on error, we print a notification and set the error status on affected fields
       onError: (error: Error) => {
         const message: string = getAPIErrorMessage(error);
-        if (message.toLowerCase().includes('username')) {
-          userField.setIsError(true);
+        const loweCaseMessage: string = message.toLowerCase();
+        if (loweCaseMessage.includes('username')) {
+          userField.setError(message);
+        } else if (loweCaseMessage.includes('email')) {
+          emailField.setError(message);
+        } else if (loweCaseMessage.includes('password')) {
+          passwordField.setError(message);
         }
         setError({ message, anchorRef });
         playAnim({
@@ -127,17 +133,19 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         className="flex flex-col gap-2 w-3xs items-center"
         onSubmit={submitCreateUser}
       >
+        {userField.isError && (
+          <ErrorSection>{userField.errorMessage}</ErrorSection>
+        )}
         <InputField {...userField.getProps()} className={'h-8 w-3xs'} />
-
-        {userField.isError && <SubSection>{userField.errorMessage}</SubSection>}
-        <InputField {...passwordField.getProps()} className={'h-8 w-3xs'} />
         {passwordField.isError && (
-          <SubSection>{passwordField.errorMessage}</SubSection>
+          <ErrorSection>{passwordField.errorMessage}</ErrorSection>
+        )}
+        <InputField {...passwordField.getProps()} className={'h-8 w-3xs'} />
+        {emailField.isError && (
+          <ErrorSection>{emailField.errorMessage}</ErrorSection>
         )}
         <InputField {...emailField.getProps()} className="h-8 w-3xs" />
-        {emailField.isError && (
-          <SubSection>{emailField.errorMessage}</SubSection>
-        )}
+
         <SubSection>
           <div>
             {'* '}
@@ -179,6 +187,12 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
 
 const SubSection = ({ children }: PropsWithChildren) => (
   <div className="italic text-xs text-gray-400 flex flex-col text-left gap-2 w-full">
+    {children}
+  </div>
+);
+
+const ErrorSection = ({ children }: PropsWithChildren) => (
+  <div className=" text-xs text-red-400 flex flex-col text-left gap-1 w-full h-1.5 -translate-y-1.25 font-semibold">
     {children}
   </div>
 );
