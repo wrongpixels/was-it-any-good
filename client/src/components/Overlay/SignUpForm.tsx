@@ -14,8 +14,6 @@ import { VerifyCreateUser } from '../../../../shared/types/models';
 import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
 import DisabledDiv from '../common/DisabledDiv';
 import { getAPIErrorMessage } from '../../utils/error-handler';
-import { styles } from '../../constants/tailwind-styles';
-import IconCheck from '../common/icons/badges/IconCheck';
 import { BLACKLISTED_USERNAMES } from '../../constants/user-constants';
 
 interface SignUpFormProps {
@@ -92,7 +90,11 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         clean();
       },
       onError: (error: Error) => {
-        setError({ message: getAPIErrorMessage(error), anchorRef });
+        const message: string = getAPIErrorMessage(error);
+        if (message.toLowerCase().includes('username')) {
+          userField.setIsError(true);
+        }
+        setError({ message, anchorRef });
         playAnim({
           animKey: 'submit-user-button',
           animationClass: 'animate-shake',

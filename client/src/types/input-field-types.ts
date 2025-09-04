@@ -48,5 +48,8 @@ export interface InputFieldHookValues {
   isError: boolean;
   isSuccess: boolean;
   errorMessage: string;
+  setIsError: (value: boolean) => void;
+  setIsSuccess: (value: boolean) => void;
+  setErrorMessage: (input: string) => void;
   getProps: () => InputFieldProps;
 }

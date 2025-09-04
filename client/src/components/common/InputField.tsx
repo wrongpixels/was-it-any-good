@@ -38,11 +38,16 @@ export const InputField = ({
         )}
         {...props}
       />
-      {!label && isSuccess && (
+      {(!label && isSuccess && (
         <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5">
           <IconCheck title="" className="text-green-500" width={20} />
         </span>
-      )}
+      )) ||
+        (isError && (
+          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5 text-red-400 font-bold">
+            ✖
+          </div>
+        ))}
     </div>
   );
 };

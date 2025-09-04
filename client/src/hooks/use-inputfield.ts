@@ -19,12 +19,21 @@ export const useInputField = ({
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
   };
-
   const reset = () => setValue(initialValue);
 
-  //a custom solution to validate text input fields
-  const { isError, isSuccess, errorMessage }: InputFieldValidation =
-    validateRules(value, rules);
+  //a custom solution to validate text input fields.
+  const {
+    isError: errorDefault,
+    isSuccess: successDefault,
+    errorMessage: defErrorMessage,
+  }: InputFieldValidation = validateRules(value, rules);
+
+  //the states to keep and update the isError, isSuccess and errorMessage.
+  //we use the states from validation as defaults, but we can override them
+  //with setIsError and setIsSuccess for async operations in the component.
+  const [isError, setIsError] = useState(errorDefault);
+  const [isSuccess, setIsSuccess] = useState(successDefault);
+  const [errorMessage, setErrorMessage] = useState(defErrorMessage);
 
   const getProps = (): InputFieldProps => ({
     name,
@@ -47,5 +56,8 @@ export const useInputField = ({
     isError,
     isSuccess,
     errorMessage,
+    setIsError,
+    setIsSuccess,
+    setErrorMessage,
   };
 };
