@@ -192,7 +192,7 @@ const SubSection = ({ children }: PropsWithChildren) => (
 );
 
 const ErrorSection = ({ children }: PropsWithChildren) => (
-  <div className=" text-xs text-red-400 flex flex-col text-left gap-1 w-full h-1.5 -translate-y-1.25 font-semibold">
+  <div className=" text-xs text-red-400 flex flex-col text-left gap-1 w-full h-1.5 -translate-y-1.25 font-semibold ">
     {children}
   </div>
 );
