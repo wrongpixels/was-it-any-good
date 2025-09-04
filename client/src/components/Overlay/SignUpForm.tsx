@@ -16,6 +16,7 @@ import DisabledDiv from '../common/DisabledDiv';
 import { getAPIErrorMessage } from '../../utils/error-handler';
 import { styles } from '../../constants/tailwind-styles';
 import IconCheck from '../common/icons/badges/IconCheck';
+import { BLACKLISTED_USERNAMES } from '../../constants/user-constants';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -28,12 +29,14 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   const createUserMutation = useCreateUserMutation();
   const anchorRef = useRef<HTMLDivElement | null>(null);
 
+  //custom input fields with validation
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
     rules: {
       minLength: 4,
       maxLength: 20,
+      blackList: BLACKLISTED_USERNAMES,
     },
   });
   const passwordField = useInputField({
@@ -50,7 +53,14 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     name: 'email',
     placeholder: 'E-mail**',
     type: 'email',
+    rules: {
+      maxLength: 72,
+      isEmail: true,
+    },
   });
+
+  const canSubmit: boolean =
+    userField.isSuccess && passwordField.isSuccess && emailField.isSuccess;
 
   const submitCreateUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,7 +100,6 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       },
     });
   };
-  console.log(userField);
   return (
     <DisabledDiv
       ref={anchorRef}
@@ -116,31 +125,17 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         className="flex flex-col gap-2 w-3xs items-center"
         onSubmit={submitCreateUser}
       >
-        <div className="relative">
-          <InputField
-            {...userField.getProps()}
-            className={`h-8 w-3xs ${styles.inputField.rules(userField.isError, userField.isSuccess)}`}
-          />
-          {userField.isSuccess && (
-            <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6">
-              <IconCheck title="" className="text-green-500" width={20} />
-            </span>
-          )}
-        </div>
+        <InputField {...userField.getProps()} className={'h-8 w-3xs'} />
 
         {userField.isError && <SubSection>{userField.errorMessage}</SubSection>}
-        <div className="relative">
-          <InputField
-            {...passwordField.getProps()}
-            className={`h-8 w-3xs ${styles.inputField.rules(passwordField.isError, passwordField.isSuccess)}`}
-          />
-        </div>
+        <InputField {...passwordField.getProps()} className={'h-8 w-3xs'} />
         {passwordField.isError && (
           <SubSection>{passwordField.errorMessage}</SubSection>
         )}
-        <div className="relative">
-          <InputField {...emailField.getProps()} className="h-8 w-3xs" />
-        </div>
+        <InputField {...emailField.getProps()} className="h-8 w-3xs" />
+        {emailField.isError && (
+          <SubSection>{emailField.errorMessage}</SubSection>
+        )}
         <SubSection>
           <div>
             {'* '}
@@ -161,7 +156,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
           className="flex justify-center"
         >
           <Button
-            disabled={createUserMutation.isPending}
+            disabled={!canSubmit || createUserMutation.isPending}
             type="submit"
             className="relative mt-2 w-23 justify-center pl-5"
           >

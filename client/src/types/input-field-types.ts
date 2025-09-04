@@ -24,11 +24,15 @@ export interface InputFieldProps
   value: string;
   maxLength?: number;
   minLength?: number;
+  isSuccess?: boolean;
+  isError?: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 export interface InputFieldRules {
   minLength?: number;
   maxLength?: number;
+  blackList?: string[];
+  isEmail?: boolean;
   includeNumber?: boolean;
 }
 

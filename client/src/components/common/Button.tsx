@@ -50,7 +50,7 @@ const Button = ({
   variant = 'primary',
   size = 'md',
   className,
-
+  disabled,
   ...props
 }: ButtonProps): JSX.Element | null => {
   if (!children) {
@@ -60,10 +60,11 @@ const Button = ({
   return (
     <button
       type="button"
+      disabled={disabled}
       {...props}
       className={mergeClassnames(
         `${colors(variant)} ${sizes(size)} rounded-sm px-2 drop-shadow-sm/20 font-medium leading-none`,
-        className
+        `${className} ${disabled ? 'opacity-50 animate-none cursor-not-allowed' : ''}`
       )}
     >
       {children}

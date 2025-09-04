@@ -1,4 +1,4 @@
-import { hasNumber } from '../../../shared/helpers/format-helper';
+import { hasNumber, isEmail } from '../../../shared/helpers/format-helper';
 import {
   INPUT_VALIDATION_SKIP,
   INPUT_VALIDATION_ERROR,
@@ -48,6 +48,23 @@ const validateRules = (
         ...INPUT_VALIDATION_ERROR,
         errorMessage: 'Use at least a number',
       };
+  }
+  if (!!rules.blackList) {
+    const lowerCase: string = input.toLowerCase();
+    if (rules.blackList.includes(lowerCase)) {
+      return {
+        ...INPUT_VALIDATION_ERROR,
+        errorMessage: 'You cannot use this word!',
+      };
+    }
+  }
+  if (!!rules.isEmail) {
+    if (!isEmail(input)) {
+      return {
+        ...INPUT_VALIDATION_ERROR,
+        errorMessage: 'Must be a valid e-mail format',
+      };
+    }
   }
   return INPUT_VALIDATION_SUCCESS;
 };

@@ -15,7 +15,7 @@ export const verifyCreateUserData = ({
   } else if (!username || !password) {
     errorMessage = 'You need to provide both a username and a password';
     isError = true;
-  } else if (BLACKLISTED_USERNAMES.includes(username)) {
+  } else if (BLACKLISTED_USERNAMES.includes(username.toLowerCase())) {
     errorMessage = 'You cannot use that username!';
     isError = true;
   } else if (username.length < 4) {

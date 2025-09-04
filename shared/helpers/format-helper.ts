@@ -32,8 +32,21 @@ export const getYearNum = (
 export const isNumber = (value?: unknown): value is number =>
   typeof value === "number" && !isNaN(value);
 
-export const hasNumber = (text: string) => /\d/.test(text);
-export const toFirstUpperCase = (text: string) => {
-  if (!text) return text;
-  return text[0].toUpperCase() + text.slice(1);
+export const hasNumber = (input: string): boolean => /\d/.test(input);
+
+export const isEmail = (input: string): boolean => {
+  if (!input || input.length < 6) {
+    return false;
+  }
+  const [account, domain]: string[] = input.split("@");
+  if (!account || !domain) {
+    return false;
+  }
+  const [provider, end]: string[] = domain.split(".");
+  return provider.length > 0 && end.length > 1;
+};
+
+export const toFirstUpperCase = (input: string) => {
+  if (!input) return input;
+  return input[0].toUpperCase() + input.slice(1);
 };
