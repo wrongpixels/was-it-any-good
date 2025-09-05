@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import useListNavigation from '../../../hooks/use-list-navigation';
-import Separator from '../../common/Separator';
-import SuggestionPoster from './components/SuggestionPoster';
-import FirstSearchRow from './rows/FirstSearchRow';
-import SearchRow from './rows/SearchRow';
+import SuggestionPoster from '../../Posters/SuggestionPoster';
+import FirstSearchRow from './Rows/FirstSearchRow';
+import SearchRow from './Rows/SearchRow';
 import { routerPaths, urlFromIndexMedia } from '../../../utils/url-helper';
-import LoadingSearchRow from './rows/LoadingSearchRow';
+import LoadingSearchRow from './Rows/LoadingSearchRow';
+import Separator from '../../Common/Separator';
 
 interface SearchResultsProps {
   searchValue: string;

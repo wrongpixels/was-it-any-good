@@ -1,12 +1,12 @@
 import { FormEvent, memo, useEffect } from 'react';
-import { InputField } from '../common/InputField';
-import SearchIcon from '../common/icons/SearchIcon';
+import { InputField } from '../Common/Custom/InputField';
 import { useInputField } from '../../hooks/use-inputfield';
 import { OptStringProps } from '../../types/common-props-types';
-import Button from '../common/Button';
-import { AnimatedDiv } from '../common/AnimatedDiv';
+import Button from '../Common/Custom/Button';
+import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import useSuggestions from '../../hooks/use-suggestions';
 import SearchResults from '../Header/Search/SearchResults';
+import SearchIcon from '../Common/Icons/SearchIcon';
 
 interface SearchInputFieldProps extends OptStringProps {
   handleSearch: (newSearch: string | null) => void;

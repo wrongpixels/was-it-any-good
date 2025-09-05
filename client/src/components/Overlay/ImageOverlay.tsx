@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useOverlay } from '../../context/OverlayProvider';
-import LazyImage, { ImageVariant } from '../common/LazyImage';
-import IconTMDBLogoHor from '../common/icons/logos/IconTMDBLogoHor';
+import LazyImage, { ImageVariant } from '../Common/Custom/LazyImage';
 import { TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
 import { OverlayType } from '../../types/overlay-types';
+import IconTMDBLogoHor from '../Common/Icons/Logos/IconTMDBLogoHor';
 
 const ANIM_DURATION: number = 300;
 

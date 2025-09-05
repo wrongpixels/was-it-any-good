@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import IconGitHubLogo from '../common/icons/logos/IconGitHubLogo';
+import IconGitHubLogo from '../Common/Icons/Logos/IconGitHubLogo';
 
 const Footer = () => {
   return (

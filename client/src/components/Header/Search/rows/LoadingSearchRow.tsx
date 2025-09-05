@@ -1,7 +1,7 @@
 import { JSX } from 'react';
-import IconLoadingSpinner from '../../../common/icons/IconLoadingSpinner';
 import { OptBoolProps } from '../../../../types/common-props-types';
-import Separator from '../../../common/Separator';
+import Separator from '../../../Common/Separator';
+import IconLoadingSpinner from '../../../Common/Icons/IconLoadingSpinner';
 
 const LoadingSearchRow = ({ condition }: OptBoolProps): JSX.Element | null => {
   if (!condition) {

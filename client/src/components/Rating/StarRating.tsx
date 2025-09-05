@@ -1,4 +1,4 @@
-import HoverMessage from '../notifications/HoverMessage';
+import HoverMessage from '../Notifications/HoverMessage';
 import { MediaType } from '../../../../shared/types/media';
 import StarList from './StarList';
 import { DEF_STAR_WIDTH } from '../../constants/ratings-constants';
@@ -10,7 +10,7 @@ import {
   useNotificationContext,
 } from '../../context/NotificationProvider';
 import { LOW_NOTIFICATION } from '../../constants/notification-constants';
-import { AnimatedDiv } from '../common/AnimatedDiv';
+import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 
 interface StarRatingProps {
   readonly starWidth?: number;

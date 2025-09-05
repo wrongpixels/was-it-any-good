@@ -1,8 +1,8 @@
 import { JSX } from 'react';
 import { useInputField } from '../../../hooks/use-inputfield';
 import SearchResults from './SearchResults';
-import SearchIcon from '../../common/icons/SearchIcon';
-import { InputField } from '../../common/InputField';
+import SearchIcon from '../../Common/Icons/SearchIcon';
+import { InputField } from '../../Common/Custom/InputField';
 import { styles } from '../../../constants/tailwind-styles';
 import useSuggestions from '../../../hooks/use-suggestions';
 

@@ -1,12 +1,12 @@
 import { JSX } from 'react';
 import { routerPaths } from '../../utils/url-helper';
 import { NavLink } from 'react-router-dom';
-import IconFilm from '../common/icons/media/IconFilm';
-import IconShow from '../common/icons/media/IconShow';
-import IconStar from '../common/icons/rating/IconStar';
-import IconCrown from '../common/icons/badges/IconCrown';
 import { styles } from '../../constants/tailwind-styles';
-import IconHome from '../common/icons/IconHome';
+import IconCrown from '../Common/Icons/Badges/IconCrown';
+import IconHome from '../Common/Icons/IconHome';
+import IconFilm from '../Common/Icons/Media/IconFilm';
+import IconShow from '../Common/Icons/Media/IconShow';
+import IconStar from '../Common/Icons/Ratings/IconStar';
 
 interface LinkInfo {
   text: string;

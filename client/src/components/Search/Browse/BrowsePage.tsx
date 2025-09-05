@@ -1,8 +1,8 @@
 import { useBrowseQuery } from '../../../queries/browse-queries';
-import PageResults from '../PageResults';
+import PageResults from '../Results/PageResults';
 import { routerPaths } from '../../../utils/url-helper';
-import SpinnerPage from '../../common/status/SpinnerPage';
-import ErrorPage from '../../common/status/ErrorPage';
+import SpinnerPage from '../../Common/Status/SpinnerPage';
+import ErrorPage from '../../Common/Status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
 import EntryTitle from '../../EntryTitle';

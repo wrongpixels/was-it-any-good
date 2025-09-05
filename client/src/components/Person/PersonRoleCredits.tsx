@@ -1,10 +1,10 @@
 import { AuthorMedia } from '../../../../shared/types/roles';
 import { MediaResponse } from '../../../../shared/types/models';
-import ScrollableDiv from '../common/ScrollableDiv';
-import Separator from '../common/Separator';
-import PersonRolePoster from '../Poster/PersonRolePoster';
-import PlaceholderPoster from '../Poster/PlaceholderPoster';
+import ScrollableDiv from '../Common/Custom/ScrollableDiv';
+import PersonRolePoster from '../Posters/PersonRolePoster';
+import PlaceholderPoster from '../Posters/PlaceholderPoster';
 import { PLACEHOLDER_COUNT_PERSON } from '../../constants/placeholder-results-constants';
+import Separator from '../Common/Separator';
 
 interface PersonRoleCreditsProps {
   authorMedia: AuthorMedia;

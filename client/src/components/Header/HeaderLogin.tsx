@@ -1,7 +1,7 @@
 import { JSX } from 'react';
-import Button from '../common/Button';
+import Button from '../Common/Custom/Button';
 import { useLoginForm } from '../../hooks/use-login-form';
-import { InputField } from '../common/InputField';
+import { InputField } from '../Common/Custom/InputField';
 import { styles } from '../../constants/tailwind-styles';
 import { useOverlay } from '../../context/OverlayProvider';
 

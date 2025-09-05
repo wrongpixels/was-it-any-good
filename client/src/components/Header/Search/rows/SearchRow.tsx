@@ -1,9 +1,9 @@
 import { JSX, useEffect } from 'react';
 import { IndexMediaData } from '../../../../../../shared/types/models';
 import useHoverChecker from '../../../../hooks/use-hover-checker';
-import SelectedLine from '../../../common/SelectedLine';
-import IconForMediaType from '../../../common/icons/media/IconForMediaType';
+import SelectedLine from '../../../Common/SelectedLine';
 import { mediaTypeToDisplayName } from '../../../../utils/url-helper';
+import IconForMediaType from '../../../Common/Icons/Media/IconForMediaType';
 
 interface SearchRowProps {
   indexMedia: IndexMediaData;

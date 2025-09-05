@@ -2,18 +2,19 @@ import { JSX } from 'react';
 import { IndexMediaResponse } from '../../../../shared/types/models';
 
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
-import PageResultsNav from './PageResultsNav';
-import Instructions from '../common/Instructions';
+import Instructions from '../Common/Instructions';
 import {
   BadgeType,
   OverrideParams,
   URLParameters,
 } from '../../types/search-browse-types';
 import { NavigateToQueryOptions } from '../../hooks/use-url-query-manager';
-import SpinnerPage from '../common/status/SpinnerPage';
-import PageResultsSort from './PageResultsSort';
-import PageResultsTitle from './PageResultsTitle';
-import SearchCards from './SearchCards';
+import SpinnerPage from '../Common/Status/SpinnerPage';
+
+import SearchCards from './Cards/SearchCards';
+import PageResultsNav from './Results/PageResultsNav';
+import PageResultsSort from './Results/PageResultsSort';
+import PageResultsTitle from './Results/PageResultsTitle';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -42,6 +43,7 @@ const PageResults = ({
   if (!results) {
     return null;
   }
+  isLoading = true;
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
   };

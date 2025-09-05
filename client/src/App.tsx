@@ -6,7 +6,7 @@ import Header from './components/Header/Header';
 import PersonPage from './components/Person/PersonPage';
 import NotFound from './components/NotFound';
 import { useAuth } from './hooks/use-auth';
-import SigningInPage from './components/common/status/SigningInPage';
+import SigningInPage from './components/Common/Status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
 import NavBar from './components/NavBar/NavBar';

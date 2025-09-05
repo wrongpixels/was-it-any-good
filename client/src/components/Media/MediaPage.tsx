@@ -1,9 +1,9 @@
 import { JSX } from 'react';
 import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
-import MediaPagePoster from '../Poster/MediaPagePoster';
+import MediaPagePoster from '../Posters/MediaPagePoster';
 import MediaHeader from './MediaHeader';
-import SeasonsEntry from './SeasonsEntry';
+import SeasonsSection from './Sections/SeasonsSection';
 import { useParams } from 'react-router-dom';
 import {
   useMediaByIdQuery,
@@ -16,14 +16,14 @@ import {
   UNKNOWN_CREW,
   DEF_CREW_TV,
 } from '../../../../shared/defaults/media-defaults';
-import CrewEntrySection from '../CrewEntrySection';
-import CastEntrySection from '../CasEntrySection';
-import LoadingPage from '../common/status/LoadingPage';
-import ErrorPage from '../common/status/ErrorPage';
+import CrewEntrySection from './Sections/People/CrewEntrySection';
+import CastEntrySection from './Sections/People/CastEntrySection';
+import LoadingPage from '../Common/Status/LoadingPage';
+import ErrorPage from '../Common/Status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
 import { mediaTypeToDisplayName } from '../../utils/url-helper';
-import Synopsis from './Synopsis';
+import SynopsisSections from './Sections/SynopsisSection';
 import { isShow } from '../../utils/ratings-helper';
 
 interface MediaPage {
@@ -74,7 +74,7 @@ const MediaPage = ({
         <div className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
           {
-            <Synopsis
+            <SynopsisSections
               title="Synopsis"
               content={media.description}
               mediaType={mediaType}
@@ -118,7 +118,7 @@ const MediaPage = ({
           <MediaPagePoster media={media} />
         </div>
       </div>
-      {media.mediaType === MediaType.Show && <SeasonsEntry show={media} />}
+      {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">
         <CastEntrySection title="Cast" cast={media.cast || UNKNOWN_CAST} />
       </div>

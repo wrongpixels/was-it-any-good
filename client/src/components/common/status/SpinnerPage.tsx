@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { OptStringProps } from '../../../types/common-props-types';
 import { setTitle } from '../../../utils/page-info-setter';
-import IconLoadingSpinner from '../icons/IconLoadingSpinner';
+import IconLoadingSpinner from '../Icons/IconLoadingSpinner';
 
 interface SpinnerPageProps extends OptStringProps {
   spinnerColor?: string;

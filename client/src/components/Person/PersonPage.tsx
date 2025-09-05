@@ -3,13 +3,13 @@ import { PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
-import PersonPagePoster from '../Poster/PersonPagePoster';
+import PersonPagePoster from '../Posters/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
-import IconUser from '../common/icons/IconUser';
-import NotFoundPage from '../common/status/NotFoundPage';
-import LoadingPage from '../common/status/LoadingPage';
+import NotFoundPage from '../Common/Status/NotFoundPage';
+import LoadingPage from '../Common/Status/LoadingPage';
 import { getAPIErrorMessage, isNotFoundError } from '../../utils/error-handler';
+import IconUser from '../Common/Icons/IconUser';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');

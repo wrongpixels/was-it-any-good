@@ -1,9 +1,10 @@
 import { JSX } from 'react';
 import { buildTMDBorIMDBUrl } from '../../services/media-service';
 import { MediaType } from '../../../../shared/types/media';
-import IconIMDBLogo from '../common/icons/logos/IconIMDBLogo';
+
 import { OptIconProps } from '../../types/common-props-types';
-import IconTMDBLogoVert from '../common/icons/logos/IconTMDBLogoVert';
+import IconIMDBLogo from '../Common/Icons/Logos/IconIMDBLogo';
+import IconTMDBLogoVert from '../Common/Icons/Logos/IconTMDBLogoVert';
 
 interface ExternalIconProps {
   tmdb: boolean;

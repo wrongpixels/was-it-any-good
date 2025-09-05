@@ -2,8 +2,8 @@ import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { capitalize } from '../../utils/common-format-helper';
 import ParamManager, { ParamStructure } from '../../utils/search-param-manager';
-import { AnimatedDiv } from '../common/AnimatedDiv';
-import Button from '../common/Button';
+import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
+import Button from '../Common/Custom/Button';
 
 interface SearchParamsProps extends OptClassNameProps {
   toggleParam: (param: ParamStructure) => void;

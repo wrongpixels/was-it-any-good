@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { routerPaths } from '../../utils/url-helper';
-import IconStarLogo from '../common/icons/logos/IconStarLogo';
+import IconStarLogo from '../Common/Icons/Logos/IconStarLogo';
 
 const HeaderLogo = (props: OptClassNameProps) => {
   return (

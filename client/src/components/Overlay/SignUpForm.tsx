@@ -1,20 +1,20 @@
 import { PropsWithChildren, useRef } from 'react';
 import { useInputField } from '../../hooks/use-inputfield';
-import Button from '../common/Button';
-import IconCreate from '../common/icons/IconCreate';
-import { InputField } from '../common/InputField';
-import Separator from '../common/Separator';
+import Button from '../Common/Custom/Button';
+import { InputField } from '../Common/Custom/InputField';
 import { verifyCreateUserData } from '../../utils/create-user-verifier';
-import { AnimatedDiv } from '../common/AnimatedDiv';
+import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAuth } from '../../hooks/use-auth';
 import { useCreateUserMutation } from '../../mutations/user-mutations';
 import { VerifyCreateUser } from '../../../../shared/types/models';
-import IconLoadingSpinner from '../common/icons/IconLoadingSpinner';
-import DisabledDiv from '../common/DisabledDiv';
+import DisabledDiv from '../Common/Custom/DisabledDiv';
 import { getAPIErrorMessage } from '../../utils/error-handler';
 import { BLACKLISTED_USERNAMES } from '../../constants/user-constants';
+import IconCreate from '../Common/Icons/IconCreate';
+import Separator from '../Common/Separator';
+import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
 
 interface SignUpFormProps {
   clean: VoidFunction;

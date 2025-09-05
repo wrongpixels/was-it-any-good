@@ -1,6 +1,6 @@
 import { MediaResponse } from '../../../../shared/types/models';
-import GenreSection from './GenreSection';
-import MediaTitle from './MediaTitle';
+import GenreSection from './Sections/GenreSection';
+import MediaTitle from './Sections/MediaTitle';
 
 interface MediaHeaderProps {
   media: MediaResponse;

@@ -2,8 +2,8 @@ import { JSX, PropsWithChildren } from 'react';
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
 import { getYearParenthesis } from '../../../shared/helpers/format-helper';
-import CountryFlags from './Media/MediaCountryFlags';
-import Separator from './common/Separator';
+import CountryFlags from './Media/Sections/MediaCountryFlags';
+import Separator from './Common/Separator';
 
 export interface EntryTitleProps extends PropsWithChildren {
   title?: string | undefined;
@@ -30,9 +30,7 @@ const EntryTitle = ({
           {icon && (
             <span className="inline-block align-middle mr-2">{icon}</span>
           )}
-
           <span className="font-semibold align-middle">{title}</span>
-
           <span className="font-normal text-gray-400 align-middle">
             {date && ` ${getYearParenthesis(date)}`}
           </span>

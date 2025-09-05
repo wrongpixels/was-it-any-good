@@ -1,8 +1,8 @@
 import { JSX, useEffect } from 'react';
 import { setPageInfo } from '../../utils/page-info-setter';
-import SpinnerPage from '../common/status/SpinnerPage';
+import SpinnerPage from '../Common/Status/SpinnerPage';
 import { routerPaths } from '../../utils/url-helper';
-import PageResults from './PageResults';
+import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
 import {
   SearchDropDown,
@@ -14,14 +14,14 @@ import { useNotificationContext } from '../../context/NotificationProvider';
 import { useAnimEngine } from '../../context/AnimationProvider';
 import { useSearchQuery } from '../../queries/search-queries';
 import useUrlQueryManager from '../../hooks/use-url-query-manager';
-import ErrorPage from '../common/status/ErrorPage';
+import ErrorPage from '../Common/Status/ErrorPage';
 import { useTrendingQuery } from '../../queries/trending-queries';
 import EntryTitle from '../EntryTitle';
-import IconTrending from '../common/icons/sorting/IconTrending';
-import Instructions from '../common/Instructions';
+import Instructions from '../Common/Instructions';
 import { BadgeType } from '../../types/search-browse-types';
 import useDropdown from '../../hooks/use-dropdown';
-import Dropdown from '../common/Dropdown';
+import Dropdown from '../Common/Custom/Dropdown';
+import IconTrending from '../Common/Icons/Sorting/IconTrending';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
