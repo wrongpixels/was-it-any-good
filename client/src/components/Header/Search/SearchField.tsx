@@ -20,13 +20,13 @@ const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
 
   return (
     <div className="flex gap-2">
-      <SearchIcon
-        condition={!!searchField.value}
-        className="absolute text-gray-400 ml-0.5 my-0.5"
-      />
       <InputField
         {...searchField.getProps()}
-        className={`pl-7 ${styles.inputField.header}`}
+        className={`pl-7 ${styles.inputField.header} relative`}
+      />
+      <SearchIcon
+        condition={!!searchField.value}
+        className="absolute text-gray-400 ml-0.5 my-0.75"
       />
       {searchField.value && isDropdownVisible && (
         <div className="absolute translate-y-8 -translate-x-2.5">

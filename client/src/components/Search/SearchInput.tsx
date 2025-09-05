@@ -34,10 +34,6 @@ const SearchInputField = memo(
 
     return (
       <div className="relative">
-        <SearchIcon
-          className="absolute left-0.6 top-1/2 -translate-y-1/2 text-gray-400 mt-0.5"
-          sizePadding={5}
-        />
         <form onSubmit={handleOnSearch} className="flex flex-row gap-2">
           <InputField
             {...searchField.getProps()}
@@ -56,6 +52,10 @@ const SearchInputField = memo(
                 />
               </div>
             )}
+          <SearchIcon
+            className="absolute left-0.6 top-1/2 -translate-y-1/2 text-gray-400"
+            sizePadding={5}
+          />
           <AnimatedDiv animKey={'search-main-button'}>
             <Button type={'submit'} className="pr-3 h-9">
               <SearchIcon

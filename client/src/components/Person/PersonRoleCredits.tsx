@@ -1,13 +1,9 @@
-import { Link } from 'react-router-dom';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import { MediaResponse } from '../../../../shared/types/models';
-import { styles } from '../../constants/tailwind-styles';
-import { buildMediaLink, mediaTypeToDisplayName } from '../../utils/url-helper';
-import imageLinker from '../../../../shared/util/image-linker';
 import ScrollableDiv from '../common/ScrollableDiv';
 import Separator from '../common/Separator';
-import LazyImage from '../common/LazyImage';
-import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
+import PersonRolePoster from '../Poster/PersonRolePoster';
+import PlaceholderPoster from '../Poster/PlaceholderPoster';
 
 interface PersonRoleCreditsProps {
   authorMedia: AuthorMedia;
@@ -18,7 +14,7 @@ const PersonRoleCredits = ({
   authorMedia,
   isFirst,
 }: PersonRoleCreditsProps) => {
-  const placeHolderCount: number = 4 - authorMedia.media.length;
+  const placeholderCount: number = 4 - authorMedia.media.length;
   return (
     <div className="h-full">
       {!isFirst && <Separator className="w-full pb-2" />}
@@ -28,35 +24,9 @@ const PersonRoleCredits = ({
 
       <ScrollableDiv className="ml-4">
         {authorMedia.media.map((m: MediaResponse) => (
-          <Link
-            key={m.id}
-            to={buildMediaLink(m)}
-            title={`${m.name} (${mediaTypeToDisplayName(m.mediaType)})`}
-            className="flex"
-          >
-            <div className={`${styles.poster.animated()} w-35 `}>
-              <span className="text-sm text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 ">
-                <span className="line-clamp-2 leading-tight">{m.name}</span>
-              </span>
-
-              <div className="flex-1 relative">
-                <LazyImage
-                  src={imageLinker.getPosterImage(m.image)}
-                  alt={m.name}
-                  className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
-                />
-              </div>
-              <IndexMediaRatingStars value={m.indexMedia?.rating} />
-            </div>
-          </Link>
+          <PersonRolePoster mediaResponse={m} key={m.id} />
         ))}
-        {placeHolderCount &&
-          [...Array(placeHolderCount)].map((_, i) => (
-            <span
-              key={i}
-              className="bg-gradient-to-t from-gray-200/80 to-gray-200/40  via-gray-200/40 w-42 rounded border border-gray-500/30 border-dashed"
-            ></span>
-          ))}
+        <PlaceholderPoster placeholderCount={placeholderCount} />
       </ScrollableDiv>
     </div>
   );
