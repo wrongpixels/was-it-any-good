@@ -103,9 +103,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
               results={browseResults}
               urlParams={urlParams}
               navigatePages={navigatePages}
-              badgeType={
-                !!overrideParams?.sortBy ? BadgeType.RankBadge : BadgeType.None
-              }
+              badgeType={BadgeType.RankBadge}
             />
           </div>
         </>

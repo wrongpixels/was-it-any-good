@@ -68,7 +68,9 @@ const NavBar = (): JSX.Element => {
               title={li.title}
               className={({ isActive }) =>
                 `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
-                  isActive ? 'border-amber-400/70' : 'border-transparent'
+                  isActive
+                    ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/35 to-transparent via-amber-200/10'
+                    : 'border-transparent'
                 }`
               }
               end={li.url === routerPaths.home}

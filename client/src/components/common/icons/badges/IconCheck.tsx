@@ -6,7 +6,7 @@ const IconCheck = ({
   title = 'Added to WIAG database',
   ...rest
 }: OptIconProps) => (
-  <span {...rest}>
+  <span title={title} {...rest}>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
