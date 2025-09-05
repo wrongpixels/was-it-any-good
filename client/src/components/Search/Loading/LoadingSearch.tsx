@@ -1,32 +1,39 @@
 import { styles } from '../../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../../types/common-props-types';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
+import SpinnerPage from '../../Common/Status/SpinnerPage';
 
 interface LoadingCardsProps extends OptClassNameProps {
   placeholderCount?: number;
   showNavBar?: boolean;
+  loadTitle?: string;
 }
 
 const LoadingCards = ({
   placeholderCount = 21,
   className,
   showNavBar,
+  loadTitle = 'Searching',
 }: LoadingCardsProps) => {
-  const gridClassName = 'grid grid-cols-3 gap-4';
+  const gridClassName = 'grid grid-cols-3 gap-4 animate-pulse';
 
   return (
-    <div className="animate-pulse ">
+    <div>
       {showNavBar && (
         <div className="grid grid-cols-3 pb-4.5 items-center">
-          <div className="h-9.5 flex flex-row gap-2 items-center">
+          <div className="h-9.5 flex flex-row gap-2 items-center animate-pulse">
             <span className={`w-13 h-5 rounded-full ${styles.loadingMedia}`} />
             <span className={`w-23.5 h-full ${styles.loadingMedia}`} />
             <span className={`w-6.5 h-full ${styles.loadingMedia}`} />
           </div>
-          <div
-            className={`w-45 h-6 rounded-full ${styles.loadingMedia} justify-self-center`}
-          />
-          <div className="h-8 flex flex-row gap-1.5 items-center justify-self-end mr-0.25">
+          <div className={'justify-self-center'}>
+            <SpinnerPage
+              text={`${loadTitle}...`}
+              paddingTop={0}
+              className="-translate-y-0.5 text-lg"
+            />
+          </div>
+          <div className="h-8 flex flex-row gap-1.5 items-center justify-self-end mr-0.25 animate-pulse">
             <span className={`w-22 h-5 rounded-full ${styles.loadingMedia}`} />
             <span className={`w-8 h-full ${styles.loadingMedia}`} />
             <span className={`w-8 h-full ${styles.loadingMedia}`} />

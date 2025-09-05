@@ -145,11 +145,8 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
         </>
       )}
 
-      {((isLoading || isFetching) && <LoadingCards />) || (
+      {((isLoading || isFetching) && <LoadingCards showNavBar={!isHome} />) || (
         <>
-          {searchTerm === 'fargo' && (
-            <LoadingCards showNavBar={searchTerm === 'fargo'} />
-          )}
           <span className="pt-1 w-full flex flex-1">
             {searchResults && (searchTerm || isHome) && (
               <div className="flex flex-1">

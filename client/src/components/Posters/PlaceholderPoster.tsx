@@ -7,7 +7,7 @@ interface PlaceholderPosterProps extends OptClassNameProps {
 }
 
 const defClassName: string =
-  'bg-gradient-to-t from-gray-200 to-gray-200/40  via-gray-200/40 w-42 rounded border border-gray-500/50 border-dashed';
+  'bg-gradient-to-t from-gray-200 to-gray-200/40 via-gray-200/40 w-42 rounded border border-gray-500/50 border-dashed';
 
 const PlaceholderPoster = ({
   placeholderCount = 1,

@@ -1,7 +1,7 @@
 //number of results per row
 export const RESULTS_ROW_SEARCH: number = 3;
 
-const SEARCH_CARD_HEIGHT: number = 45;
+const SEARCH_CARD_HEIGHT: number = 48;
 const SEARCH_CARD_WIDTH: number = 50;
 const PERSON_ROLE_CARD_WIDTH: number = 35;
 
