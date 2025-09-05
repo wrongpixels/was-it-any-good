@@ -1,7 +1,6 @@
 import { useBrowseQuery } from '../../../queries/browse-queries';
 import PageResults from '../Results/PageResults';
 import { routerPaths } from '../../../utils/url-helper';
-import SpinnerPage from '../../Common/Status/SpinnerPage';
 import ErrorPage from '../../Common/Status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
@@ -14,9 +13,10 @@ import {
 import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
 import { getBrowseOperation } from '../../../utils/common-format-helper';
+import LoadingCards from '../Loading/LoadingSearch';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
-//it can be used combining url queries, which can be overriden with OverrideParams.
+//it can be used combining url queries, which can be overridden with OverrideParams.
 //when an override params is provided, the equivalent url one will be ignored.
 //this way, the component can also be used for our 'top shows/films/media' etc pages
 //while still being compatible with the other params introduced in the url
@@ -92,19 +92,24 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
           />
         </span>
       }
-      {(isLoading || isAnyLoading) && <SpinnerPage text={`Browsing WIAG...`} />}
-      <div className="flex flex-col flex-1 mt-1">
-        <PageResults
-          isLoading={isFetching}
-          navigateToQuery={navigateToQuery}
-          results={browseResults}
-          urlParams={urlParams}
-          navigatePages={navigatePages}
-          badgeType={
-            !!overrideParams?.sortBy ? BadgeType.RankBadge : BadgeType.None
-          }
-        />
-      </div>
+      {((isLoading || isFetching) && (
+        <LoadingCards showNavBar={true} loadTitle={'Browsing WIAG...'} />
+      )) || (
+        <>
+          <div className="flex flex-col flex-1 mt-1">
+            <PageResults
+              isLoading={isFetching}
+              navigateToQuery={navigateToQuery}
+              results={browseResults}
+              urlParams={urlParams}
+              navigatePages={navigatePages}
+              badgeType={
+                !!overrideParams?.sortBy ? BadgeType.RankBadge : BadgeType.None
+              }
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -22,6 +22,7 @@ import useDropdown from '../../hooks/use-dropdown';
 import Dropdown from '../Common/Custom/Dropdown';
 import IconTrending from '../Common/Icons/Sorting/IconTrending';
 import LoadingCards from './Loading/LoadingSearch';
+import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -120,6 +121,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   if (isError || searchResults === null) {
     <ErrorPage />;
   }
+
   return (
     <div className="flex flex-col items-center gap-4 pt-4 flex-1">
       <span className="flex flex-row gap-2">
@@ -139,7 +141,13 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           <span className="w-full -mt-4">
             <EntryTitle
               title={'Trending in TMDB'}
-              icon={<IconTrending className={'text-gold'} height={24} />}
+              icon={
+                isFetching || isLoading ? (
+                  <IconLoadingSpinner className="mx-1 h-4.5" />
+                ) : (
+                  <IconTrending className={'text-gold'} height={24} />
+                )
+              }
             />
           </span>
         </>
