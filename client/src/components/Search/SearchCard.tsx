@@ -18,6 +18,7 @@ import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 import Bubble from '../common/Bubble';
 import WIAGBadge from './WIAGBadge';
 import { BadgeType } from '../../types/search-browse-types';
+import { SEARCH_CARD_W } from '../../constants/results-constants';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -61,7 +62,7 @@ const SearchCard = ({
       className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <span className="w-50 h-auto relative">
+      <span className={`${SEARCH_CARD_W} h-auto relative`}>
         <LazyImage
           aspect={AspectRatio.poster}
           src={imageLinker.getPosterImage(media.image)}

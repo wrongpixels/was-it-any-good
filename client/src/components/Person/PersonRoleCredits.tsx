@@ -4,6 +4,7 @@ import ScrollableDiv from '../common/ScrollableDiv';
 import Separator from '../common/Separator';
 import PersonRolePoster from '../Poster/PersonRolePoster';
 import PlaceholderPoster from '../Poster/PlaceholderPoster';
+import { PLACEHOLDER_COUNT_PERSON } from '../../constants/placeholder-results-constants';
 
 interface PersonRoleCreditsProps {
   authorMedia: AuthorMedia;
@@ -14,7 +15,8 @@ const PersonRoleCredits = ({
   authorMedia,
   isFirst,
 }: PersonRoleCreditsProps) => {
-  const placeholderCount: number = 4 - authorMedia.media.length;
+  const placeholderCount: number =
+    PLACEHOLDER_COUNT_PERSON - authorMedia.media.length;
   return (
     <div className="h-full">
       {!isFirst && <Separator className="w-full pb-2" />}

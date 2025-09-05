@@ -6,6 +6,7 @@ import { buildMediaLink, mediaTypeToDisplayName } from '../../utils/url-helper';
 import LazyImage from '../common/LazyImage';
 import IndexMediaRatingStars from '../IndexMedia/IndexMediaRatingStars';
 import { MediaResponse } from '../../../../shared/types/models';
+import { PERSON_ROLE_CARD_W } from '../../constants/results-constants';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;
@@ -21,7 +22,9 @@ const PersonRolePoster = ({
       title={`${mediaResponse.name} (${mediaTypeToDisplayName(mediaResponse.mediaType)})`}
       className="flex"
     >
-      <div className={`${styles.poster.animated()} w-35 `}>
+      <div
+        className={`${styles.poster.animated()} ${PERSON_ROLE_CARD_W} pb-0.5`}
+      >
         <span className="text-sm text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 ">
           <span className="line-clamp-2 leading-tight">
             {mediaResponse.name}

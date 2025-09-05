@@ -13,7 +13,7 @@ const PlaceholderPoster = ({
   placeholderCount = 1,
   className,
 }: PlaceholderPosterProps): JSX.Element | null => {
-  if (!placeholderCount) {
+  if (!placeholderCount || placeholderCount < 0) {
     return null;
   }
   return (

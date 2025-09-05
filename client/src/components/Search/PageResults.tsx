@@ -1,9 +1,5 @@
-import { JSX, useMemo } from 'react';
-import {
-  IndexMediaData,
-  IndexMediaResponse,
-} from '../../../../shared/types/models';
-import SearchCard from './SearchCard';
+import { JSX } from 'react';
+import { IndexMediaResponse } from '../../../../shared/types/models';
 
 import { PAGE_LENGTH } from '../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
@@ -17,6 +13,7 @@ import { NavigateToQueryOptions } from '../../hooks/use-url-query-manager';
 import SpinnerPage from '../common/status/SpinnerPage';
 import PageResultsSort from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
+import SearchCards from './SearchCards';
 
 interface PageResultsProps {
   results: IndexMediaResponse | undefined;
@@ -51,19 +48,6 @@ const PageResults = ({
 
   const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
 
-  //we memo the list of result Cards for performance
-  const resultEntries: JSX.Element[] = useMemo(
-    () =>
-      results.indexMedia.map((im: IndexMediaData, index: number) => (
-        <SearchCard
-          key={im.id}
-          media={im}
-          index={index + indexOffset}
-          badgeType={badgeType}
-        />
-      )),
-    [results, badgeType]
-  );
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
@@ -90,7 +74,11 @@ const PageResults = ({
       )) || (
         <span className="flex-1">
           {results.indexMedia.length > 0 ? (
-            <div className="grid grid-cols-3 gap-4">{resultEntries}</div>
+            <SearchCards
+              indexMedia={results.indexMedia}
+              indexOffset={indexOffset}
+              badgeType={badgeType}
+            />
           ) : (
             <div className="h-64 w-full" aria-hidden="true">
               <Instructions condition={true} />
