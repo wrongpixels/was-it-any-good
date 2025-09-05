@@ -103,6 +103,16 @@
       opacity: 0;
     }
   }
+
+  --animate-pulse: pulse 0.8s ease-in-out infinite;
+  @keyframes d-ping {
+    0% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
   --animate-bounce-once: bounce-once 1.3s ease-in-out;
   @keyframes bounce-once {
     0% {

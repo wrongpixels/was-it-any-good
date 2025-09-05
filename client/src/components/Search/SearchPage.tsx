@@ -1,6 +1,5 @@
 import { JSX, useEffect } from 'react';
 import { setPageInfo } from '../../utils/page-info-setter';
-import SpinnerPage from '../Common/Status/SpinnerPage';
 import { routerPaths } from '../../utils/url-helper';
 import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
@@ -22,6 +21,7 @@ import { BadgeType } from '../../types/search-browse-types';
 import useDropdown from '../../hooks/use-dropdown';
 import Dropdown from '../Common/Custom/Dropdown';
 import IconTrending from '../Common/Icons/Sorting/IconTrending';
+import LoadingCards from './Loading/LoadingSearch';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -69,6 +69,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
   } = !isHome
     ? useSearchQuery(currentQuery || '', searchTerm)
     : useTrendingQuery();
+
   //to avoid setting a url page number above totalPages or less than 1
   //this is also protected in the backend
   useEffect(() => {
@@ -143,13 +144,9 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           </span>
         </>
       )}
-      {isLoading ||
-        (isFetching && (
-          <SpinnerPage
-            text={isHome ? 'Loading...' : `Searching for "${searchTerm}"...`}
-            paddingTop={2}
-          />
-        )) || (
+
+      {((isLoading || isFetching) && <LoadingCards />) || (
+        <>
           <span className="pt-1 w-full flex flex-1">
             {searchResults && (searchTerm || isHome) && (
               <div className="flex flex-1">
@@ -165,7 +162,8 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
               </div>
             )}
           </span>
-        )}
+        </>
+      )}
     </div>
   );
 };

@@ -59,7 +59,7 @@ const SearchCard = ({
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} h-48`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className={`${SEARCH_CARD_W} h-auto relative`}>

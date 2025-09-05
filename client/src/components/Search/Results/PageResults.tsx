@@ -42,7 +42,6 @@ const PageResults = ({
   if (!results) {
     return null;
   }
-  isLoading = true;
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
   };
