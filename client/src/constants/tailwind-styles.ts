@@ -44,6 +44,8 @@ export const styles = {
     rules: (isError: boolean, isSuccess: boolean) =>
       `${isError ? 'focus:ring-red-400 ring-red-400 focus:ring-red-400 ring-2' : isSuccess ? 'focus:ring-green-300 ring-green-300 ring-2' : ''}`,
   },
+  loadingMedia:
+    'rounded bg-gradient-to-t from-gray-300 to-gray-300 via-gray-300/70 shadow',
   poster: {
     regular: () =>
       `bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-default`,
@@ -52,6 +54,7 @@ export const styles = {
       `${styles.animations.posterZoom} ${styles.poster.regular()} cursor-pointer`,
 
     media: `${transitions.slow} ring-1 ring-gray-325 hover:scale-101 cursor-pointer`,
+
     suggestions:
       'bg-white border-6 border-white rounded-sm min-w-42 min-h-58 shadow-sm ring-1 ring-gray-300 flex flex-col items-center',
     search: {

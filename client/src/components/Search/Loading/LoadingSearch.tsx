@@ -1,27 +1,48 @@
+import { styles } from '../../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../../types/common-props-types';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 
 interface LoadingCardsProps extends OptClassNameProps {
   placeholderCount?: number;
+  showNavBar?: boolean;
 }
 
 const LoadingCards = ({
   placeholderCount = 21,
   className,
+  showNavBar,
 }: LoadingCardsProps) => {
   const gridClassName = 'grid grid-cols-3 gap-4';
 
   return (
-    <div className={mergeClassnames(gridClassName, className)}>
-      {[...Array(placeholderCount)].map((_, i) => (
-        <LoadingCard key={i} />
-      ))}
+    <div className="animate-pulse ">
+      {showNavBar && (
+        <div className="grid grid-cols-3 pb-4.5 items-center">
+          <div className="h-9.5 flex flex-row gap-2 items-center">
+            <span className={`w-13 h-5 rounded-full ${styles.loadingMedia}`} />
+            <span className={`w-23.5 h-full ${styles.loadingMedia}`} />
+            <span className={`w-6.5 h-full ${styles.loadingMedia}`} />
+          </div>
+          <div
+            className={`w-45 h-6 rounded-full ${styles.loadingMedia} justify-self-center`}
+          />
+          <div className="h-8 flex flex-row gap-1.5 items-center justify-self-end mr-0.25">
+            <span className={`w-22 h-5 rounded-full ${styles.loadingMedia}`} />
+            <span className={`w-8 h-full ${styles.loadingMedia}`} />
+            <span className={`w-8 h-full ${styles.loadingMedia}`} />
+          </div>
+        </div>
+      )}
+      <div className={mergeClassnames(gridClassName, className)}>
+        {[...Array(placeholderCount)].map((_, i) => (
+          <LoadingCard key={i} />
+        ))}
+      </div>
     </div>
   );
 };
 export const LoadingCard = () => {
-  const cardClassName =
-    'relative h-48 w-77.5 animate-pulse rounded bg-gradient-to-t from-gray-300 to-gray-300 via-gray-300/70 shadow';
+  const cardClassName = `relative h-48 w-77.5 ${styles.loadingMedia}`;
   return (
     <div className={cardClassName}>
       <LoadingCardContent />
