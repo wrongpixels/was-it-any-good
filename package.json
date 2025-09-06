@@ -11,7 +11,8 @@
     "build:client": "npm run build -w client",
     "build:server": "npm run build -w server",
     "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
-    "deploy": "npm run build && echo 'Ready for deployment'"
+    "deploy": "npm run build && echo 'Ready for deployment'",
+    "start": "node server/dist/index.js"
   },
   "devDependencies": {
     "concurrently": "^8.0.0"
