@@ -20,13 +20,14 @@ FROM node:20-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
+RUN apk add --no-cache tini
 
-RUN addgroup --system --grid 1001 nodejs
+RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 node
 
 COPY --from=builder --chown=node:nodejs /app/client/dist ./client/dist
 COPY --from=builder --chown=node:nodejs /app/server/dist ./server/dist
-COPY --from=builder --chown=nodejs:node /app/server/package*.json ./server/
+COPY --from=builder --chown=node:nodejs /app/server/package*.json ./server/
 
 WORKDIR /app/server
 RUN npm ci --omit=dev
