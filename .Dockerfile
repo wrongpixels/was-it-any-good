@@ -25,9 +25,11 @@ RUN apk add --no-cache tini
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 node
 
-COPY --from=builder --chown=node:nodejs /app/client/dist ./client/dist
-COPY --from=builder --chown=node:nodejs /app/server/dist ./server/dist
-COPY --from=builder --chown=node:nodejs /app/server/package*.json ./server/
+#copying just the content of the dist folder to avoid ugly nested structures
+COPY --from=builder --chown=node:nodejs /app/server/dist/server/src/. /app/server/src/
+#client dist goes to dist
+COPY --from=builder --chown=node:nodejs /app/client/dist/. /app/client/dist/
+COPY --from=builder --chown=node:nodejs /app/server/package*.json /app/server/
 
 WORKDIR /app/server
 RUN npm ci --omit=dev
@@ -35,5 +37,5 @@ RUN npm ci --omit=dev
 USER node
 EXPOSE 6060
 
-CMD ["tini", "--", "node", "dist/index.js"]
+CMD ["tini", "--", "node", "src/index.js"]
 
