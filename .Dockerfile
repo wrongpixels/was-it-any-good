@@ -29,22 +29,24 @@ RUN adduser --system --uid 1001 node
 COPY --from=builder --chown=node:nodejs /app/server/dist/server/src/. /app/server/src/
 #client dist goes to dist
 COPY --from=builder --chown=node:nodejs /app/client/dist /app/client/dist
-#and package json goes to the root to make our scripts run properly
-COPY --from=builder --chown=node:nodejs /app/server/package*.json /app/
+#we add shared
+COPY --from=builder --chown=node:nodejs /app/server/dist/shared /app/shared
+#server package json for dependencies
+COPY --from=builder --chown=node:nodejs /app/server/package*.json /app/server/
+#and the root package to start the monorepo from
+COPY --from=builder --chown=node:nodejs /app/package*.json /app/
 
-WORKDIR /app/server
+#we install the server dependencies
+RUN cd /app/server && npm ci --omit=dev
 
-RUN echo "=== FINAL FILE STRUCTURE ===" && \
-    ls -la /app && \
-    echo "=== /app/server ===" && \
-    ls -la /app/server && \
-    echo "=== /app/server/src ===" && \
-    ls -la /app/server/src
-
-RUN npm ci --omit=dev
+#and we add an entrypoint that prints our structure (railway will ignore our logs on build)
+COPY --chown=node:nodejs server/entrypoint.sh /app/server/entrypoint.sh
+RUN chmod +x /app/server/entrypoint.sh
 
 USER node
 EXPOSE 6060
 
-CMD ["tini", "--", "node", "src/index.js"]
+#we run both the entrypoint and our index
+CMD ["tini", "--", "/app/server/entrypoint.sh", "node", "/app/server/src/index.js"]
+
 
