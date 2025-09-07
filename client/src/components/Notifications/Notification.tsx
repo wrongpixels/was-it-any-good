@@ -43,11 +43,11 @@ const NotificationAlert = ({
       });
     });
 
-    timeoutToFadeout = setTimeout(
+    timeoutToFadeout = window.setTimeout(
       () => setStatus(NotiStatus.Expiring),
       duration
     );
-    timeoutToStop = setTimeout(() => {
+    timeoutToStop = window.setTimeout(() => {
       setStatus(NotiStatus.Expired);
       onComplete?.();
     }, duration + DEF_NOTIFICATION_OUT_TIME);
