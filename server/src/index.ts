@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
+
 import { PORT } from './util/config';
 import { initializeDB } from './util/db';
 import {
@@ -49,10 +50,17 @@ app.all('/api/*rest', (_req, _res, next) => {
 });
 
 if (process.env.NODE_ENV === 'production') {
-  const distPath: string = path.join(__dirname, '..', '..', 'client', 'dist');
+  //absolute path to 'app/client/dist' so it works both locally and in railway,
+  //where we extract 'app/server/dist/server' into just 'app/server'
+  const projectRoot = process.cwd();
+  const distPath = path.join(projectRoot, 'client', 'dist');
+  const indexPath = path.join(distPath, 'index.html');
+
+  console.log(`[SERVER] Project root (from process.cwd()): ${projectRoot}`);
+  console.log(`[SERVER] Serving static files from: ${distPath}`);
   app.use(express.static(distPath));
   app.get('/*rest', (_req, res) => {
-    res.sendFile(path.join(distPath, 'index.html'));
+    res.sendFile(indexPath);
   });
 }
 
