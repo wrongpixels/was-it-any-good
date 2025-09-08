@@ -1,5 +1,7 @@
 # WIAG ("Was It Any Good?")
-
+Currently deployed at:
+- [wiag.up.railway.app](https://wiag.up.railway.app)
+- [wiag.io](https://wiag.io)
 ## About
 
 WIAG is a full-stack media rating platform built to address a common flaw in traditional review systems: It uses a dynamic scoring approach that combines a user's overall impression with their ratings of individual components (like seasons or DLC). The result is a more nuanced final score that accurately reflects how a piece of media's quality evolves over time.
@@ -8,6 +10,7 @@ For example: A user can rate *The Sopranos* an '8' overall but give its second s
 
 ---
 
+  
 ## Features & Development Status
 
 The project is currently live with its core feature set, while social and community-oriented features are in active development.
