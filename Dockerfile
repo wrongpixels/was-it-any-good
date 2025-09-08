@@ -10,6 +10,9 @@ COPY server/package.json ./server/
 RUN npm ci
 COPY . .
 
+RUN npm run lint -w client
+RUN npm run lint -w server
+
 RUN npm run build -w client
 RUN npm run build -w server
 
