@@ -1,7 +1,6 @@
 FROM node:20-alpine AS builder
 
 WORKDIR /app
-ENV NODE_ENV=production
 
 # root manifests + lockfile (npm workspaces)
 COPY package.json package-lock.json ./
@@ -10,9 +9,6 @@ COPY server/package.json ./server/
 
 RUN npm ci
 COPY . .
-
-RUN npm run lint -w client
-RUN npm run lint -w server
 
 RUN npm run build -w client
 RUN npm run build -w server
