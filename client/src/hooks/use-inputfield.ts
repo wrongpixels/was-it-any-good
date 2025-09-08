@@ -27,6 +27,7 @@ export const useInputField = ({
 
   //we run a custom solution to validate the rules.
   let validatedData: InputFieldValidation = validateRules(value, rules);
+  console.log(validatedData);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     //while typing, we update the value
@@ -38,7 +39,6 @@ export const useInputField = ({
     setIsError(validatedData.isError);
     setIsSuccess(validatedData.isSuccess);
     setErrorMessage(validatedData.errorMessage);
-    console.log(validatedData.isError);
   }, [value]);
 
   const reset = () => setValue(initialValue);
@@ -66,6 +66,7 @@ export const useInputField = ({
     label,
     isError,
     isSuccess,
+    visualValidation: rules?.visualValidation,
     maxLength: rules?.maxLength,
     minLength: rules?.minLength,
   });

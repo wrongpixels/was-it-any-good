@@ -13,6 +13,7 @@ export const InputField = ({
   label,
   labelClassName,
   className,
+  visualValidation = false,
   isError = false,
   isSuccess = false,
   ...props
@@ -33,21 +34,22 @@ export const InputField = ({
       <input
         id={name}
         className={mergeClassnames(
-          `pl-1 py-0.5 pr-1 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue ${styles.inputField.rules(isError, isSuccess)}`,
+          `pl-1 py-0.5 pr-1 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue ${styles.inputField.rules(visualValidation && isError, visualValidation && isSuccess)}`,
           className
         )}
         {...props}
       />
-      {(!label && isSuccess && (
-        <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5">
-          <IconCheck title="" className="text-green-500" width={20} />
-        </span>
-      )) ||
-        (isError && (
-          <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5 text-red-400 font-bold">
+      {!label &&
+        visualValidation &&
+        (isSuccess ? (
+          <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5">
+            <IconCheck title="" className="text-green-500" width={20} />
+          </span>
+        ) : isError ? (
+          <span className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-6.5 text-red-400 font-bold">
             ✖
-          </div>
-        ))}
+          </span>
+        ) : null)}
     </div>
   );
 };

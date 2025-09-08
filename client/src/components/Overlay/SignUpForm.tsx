@@ -35,6 +35,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       minLength: 4,
       maxLength: 20,
       blackList: BLACKLISTED_USERNAMES,
+      visualValidation: true
     },
   });
   const passwordField = useInputField({
@@ -45,6 +46,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       minLength: 8,
       maxLength: 72,
       includeNumber: true,
+      visualValidation: true
     },
   });
   const emailField = useInputField({
@@ -54,6 +56,7 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
     rules: {
       maxLength: 72,
       isEmail: true,
+      visualValidation: true
     },
   });
 
