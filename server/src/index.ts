@@ -44,14 +44,14 @@ app.use('/api/search', searchRouter);
 app.use('/api/trending', trendingRouter);
 app.use('/api/browse', browseRouter);
 
-app.all('/api/*apiRoute', (_req, _res, next) => {
+app.all('/api/*rest', (_req, _res, next) => {
   next(new NotFoundError('API endpoint'));
 });
 
 if (process.env.NODE_ENV === 'production') {
   const distPath: string = path.join(__dirname, '..', '..', 'client', 'dist');
   app.use(express.static(distPath));
-  app.get('*', (_req, res) => {
+  app.get('*/rest', (_req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
   });
 }
