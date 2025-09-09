@@ -43,17 +43,18 @@ const PersonPage = (): JSX.Element | null => {
         title={person.name}
         icon={<IconUser height={30} className="text-starblue" />}
       />
-      <div className="flex flex-row flex-1">
-        <div className="w-40 mt-7 flex-shrink-0">
-          <PersonPagePoster
-            title={person.name}
-            src={person.image}
-            alt={person.name}
-            extraInfo={person.sortedRoles?.mainRoles.join(', ')}
-          />
+      <div className="flex flex-col md:flex-row flex-1">
+        <div className="w-full md:w-auto flex flex-row justify-center">
+          <div className="w-50 md:w-40 mt-3 md:mt-7 md:mb-0 mb-7 md:flex-shrink-0 align-middle">
+            <PersonPagePoster
+              title={person.name}
+              src={person.image}
+              alt={person.name}
+              extraInfo={person.sortedRoles?.mainRoles.join(', ')}
+            />
+          </div>
         </div>
-
-        <div className="flex-1 border-l border-gray-200 ml-10 pl-4 overflow-auto">
+        <div className="flex-1 border-l border-gray-200 md:ml-10 pl-4 overflow-auto">
           <div className="flex flex-col gap-2 -mt-2">
             {person.sortedRoles?.mediaByRole.map(
               (media: AuthorMedia, index: number) => (

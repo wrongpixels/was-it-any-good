@@ -28,7 +28,11 @@ const PersonRoleCredits = ({
         {authorMedia.media.map((m: MediaResponse) => (
           <PersonRolePoster mediaResponse={m} key={m.id} />
         ))}
-        <PlaceholderPoster placeholderCount={placeholderCount} />
+        <PlaceholderPoster
+          placeholderCount={placeholderCount}
+          className="hidden sm:block"
+        />
+        <PlaceholderPoster placeholderCount={1} className="block sm:hidden" />
       </ScrollableDiv>
     </div>
   );

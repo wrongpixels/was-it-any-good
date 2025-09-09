@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import RatingPoster from './PosterRating';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
@@ -31,4 +31,4 @@ const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
   );
 };
 
-export default MediaPagePoster;
+export default memo(MediaPagePoster);

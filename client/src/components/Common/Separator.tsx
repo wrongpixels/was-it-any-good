@@ -12,7 +12,7 @@ const Separator = ({
 }: SeparatorProps): JSX.Element => (
   <div
     className={mergeClassnames(
-      `h-0 w-full flex flex-col ${margin ? 'mt-3' : ''}`,
+      `h-0 w-full flex flex-col ${margin ? 'sm:mt-3 mt-2' : ''}`,
       className
     )}
   >

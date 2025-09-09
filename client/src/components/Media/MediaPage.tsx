@@ -70,9 +70,10 @@ const MediaPage = ({
   const show = isShow(media);
   return (
     <div>
-      <div className="flex flex-row gap-8">
-        <div className="flex-1 overflow-x-hidden">
+      <div className="flex flex-col md:flex-row gap-8">
+        <span className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />
+
           {
             <SynopsisSections
               title="Synopsis"
@@ -113,10 +114,10 @@ const MediaPage = ({
               </div>
             )}
           </div>
-        </div>
-        <div className="w-50">
+        </span>
+        <span className="w-50 hidden md:block">
           <MediaPagePoster media={media} />
-        </div>
+        </span>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">
