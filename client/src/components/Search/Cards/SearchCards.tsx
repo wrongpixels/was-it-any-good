@@ -12,7 +12,7 @@ interface SearchCardsProps {
 }
 
 const cardsClassName =
-  'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 place-items-center';
+  'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 place-items-center w-full';
 
 //we memo the SearchCards of the page for performance
 const SearchCards = ({
@@ -33,7 +33,7 @@ const SearchCards = ({
       ))}
       <PlaceholderPoster
         placeholderCount={placeholderCount}
-        className={'w-full max-w-90 h-full hidden md:block'}
+        className={'w-full max-w-90 h-full hidden sm:block'}
       />
     </div>
   );

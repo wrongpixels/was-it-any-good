@@ -4,7 +4,7 @@ import { routerPaths } from '../../utils/url-helper';
 
 const Instructions = ({ condition: linkToSearch }: OptBoolProps) => {
   return (
-    <span className="text-center flex flex-col align-middle justify-center text-sm text-gray-400">
+    <span className="text-center flex flex-col align-middle justify-center text-xs sm:text-sm text-gray-400">
       <span className="font-medium">
         {'Want to add a Show or Film to WIAG?'}
       </span>
