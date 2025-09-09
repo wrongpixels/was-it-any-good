@@ -2,8 +2,8 @@ import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../Custom/SVG';
 
 const IconTMDBLogoVert = ({
-  width = 190.24,
-  height = 81.52,
+  width,
+  height,
   newTab,
   url,
   ...rest

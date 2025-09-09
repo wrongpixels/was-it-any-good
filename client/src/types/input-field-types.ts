@@ -22,6 +22,7 @@ export interface InputFieldProps
   extends InputLogicProps,
     InputPresentationProps {
   value: string;
+  visualValidation?: boolean;
   maxLength?: number;
   minLength?: number;
   isSuccess?: boolean;
@@ -34,6 +35,7 @@ export interface InputFieldRules {
   blackList?: string[];
   isEmail?: boolean;
   includeNumber?: boolean;
+  visualValidation?: boolean;
 }
 
 export interface InputFieldValidation {

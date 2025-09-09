@@ -38,7 +38,6 @@ export const useInputField = ({
     setIsError(validatedData.isError);
     setIsSuccess(validatedData.isSuccess);
     setErrorMessage(validatedData.errorMessage);
-    console.log(validatedData.isError);
   }, [value]);
 
   const reset = () => setValue(initialValue);
@@ -66,6 +65,7 @@ export const useInputField = ({
     label,
     isError,
     isSuccess,
+    visualValidation: rules?.visualValidation,
     maxLength: rules?.maxLength,
     minLength: rules?.minLength,
   });

@@ -56,8 +56,8 @@ const links: LinkInfo[] = [
 
 const NavBar = (): JSX.Element => {
   return (
-    <nav aria-label="NavBar" className="w-5xl min-w-xl py-1 px-3">
-      <ul className="flex flex-row items-center text-sm">
+    <nav aria-label="NavBar" className={`${styles.contentWidth} my-1`}>
+      <ul className="flex flex-row items-center text-xs md:text-sm">
         {links.map((li, i) => (
           <li
             key={li.key}

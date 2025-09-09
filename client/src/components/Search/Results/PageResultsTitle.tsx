@@ -17,7 +17,7 @@ const PageResultsTitle = ({
     <span className="w-full text-center text-lg">
       {totalResults || 'No'}
       {` ${queryTypeToDisplayName(queryType)} `}
-      {' results '}
+      {` ${totalResults !== 1 ? 'results' : 'result'} `}
       <SearchTerm term={term} />
     </span>
   );

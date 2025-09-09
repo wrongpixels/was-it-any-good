@@ -1,5 +1,5 @@
 import express from 'express';
-import cors from 'cors';
+//import cors from 'cors';
 import path from 'path';
 
 import { PORT } from './util/config';
@@ -25,7 +25,8 @@ import { authHandler } from './middleware/auth-handler';
 import { NotFoundError } from './util/customError';
 
 const app = express();
-app.use(cors());
+//Not needed yet
+//app.use(cors());
 app.use(express.json());
 app.use(authHandler);
 
