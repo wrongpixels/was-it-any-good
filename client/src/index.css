@@ -2,12 +2,18 @@
 
 @layer base {
   html {
+    min-height: 100%;
     overflow-y: scroll;
   }
 
   body {
     margin: 0;
-    color: #575757;
+    min-height: 100%;
+    color: #575757;            
+    background-color: #e6e6e6; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1 {
@@ -35,31 +41,25 @@
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
     font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      color: rgba(255, 255, 255, 0.87);
+      background-color: #111827; 
+    }
+    a:hover {
+      color: #6d90cf;
+    }
   }
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
-
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      background-color: #ffffff;
-    }
-    a:hover {
-      color: #6d90cf;
-    }
   }
 }
 
@@ -105,7 +105,7 @@
   }
 
   --animate-pulse: pulse 0.8s ease-in-out infinite;
-  @keyframes d-ping {
+  @keyframes pulse {
     0% {
       opacity: 0.5;
     }
@@ -113,6 +113,7 @@
       opacity: 1;
     }
   }
+
   --animate-bounce-once: bounce-once 1.3s ease-in-out;
   @keyframes bounce-once {
     0% {
@@ -132,6 +133,7 @@
       transform: translateY(0);
     }
   }
+
   --animate-shake: animate-shake 0.4s ease-in-out;
   @keyframes animate-shake {
     0% {

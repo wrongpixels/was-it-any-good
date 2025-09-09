@@ -16,7 +16,7 @@ import { BadgeType } from '../../../types/search-browse-types';
 import { SEARCH_CARD_W } from '../../../constants/results-constants';
 import StarRatingIndexMedia from '../../Rating/StarRatingIndexMedia';
 import Bubble from '../../Common/Custom/Bubble';
-import LazyImage, { AspectRatio } from '../../Common/Custom/LazyImage';
+import LazyImage, { AspectRatio, ImageVariant } from '../../Common/Custom/LazyImage';
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
 
@@ -59,15 +59,16 @@ const SearchCard = ({
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} h-48`}
+      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <span className={`${SEARCH_CARD_W} h-auto relative`}>
+      <span className={'relative rounded'}>
         <LazyImage
+          variant={ImageVariant.inline}
           aspect={AspectRatio.poster}
           src={imageLinker.getPosterImage(media.image)}
           alt={media.name}
-          className={'drop-shadow ring-1 ring-gray-300'}
+          className={'drop-shadow ring-1 ring-gray-300 rounded w-42'}
         />
         {getBadge(realBadgeType, index)}
       </span>
