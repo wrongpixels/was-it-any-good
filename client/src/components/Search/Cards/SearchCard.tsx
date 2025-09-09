@@ -13,7 +13,6 @@ import { getMediaGenres } from '../../../utils/index-media-helper';
 import { GenreUrlMap } from '../../../utils/genre-mapper';
 import React from 'react';
 import { BadgeType } from '../../../types/search-browse-types';
-import { SEARCH_CARD_W } from '../../../constants/results-constants';
 import StarRatingIndexMedia from '../../Rating/StarRatingIndexMedia';
 import Bubble from '../../Common/Custom/Bubble';
 import LazyImage, { AspectRatio, ImageVariant } from '../../Common/Custom/LazyImage';
