@@ -18,6 +18,7 @@ const transitions = {
 };
 
 export const styles = {
+  contentWidth: 'w-full max-w-screen-lg md:mx-auto px-4 sm:px-6 lg:px-8',
   hyperlink: 'text-starblue hover:text-hoverblue',
   animations: {
     opacity70: `${transitions.slower} opacity-70 hover:opacity-100`,

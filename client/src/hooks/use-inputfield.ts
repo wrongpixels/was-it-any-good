@@ -27,7 +27,6 @@ export const useInputField = ({
 
   //we run a custom solution to validate the rules.
   let validatedData: InputFieldValidation = validateRules(value, rules);
-  console.log(validatedData);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     //while typing, we update the value
