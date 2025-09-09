@@ -43,7 +43,7 @@
     font-weight: 400;
     font-synthesis: none;
   }
-
+/*
   @media (prefers-color-scheme: dark) {
     body {
       color: rgba(255, 255, 255, 0.87);
@@ -53,7 +53,7 @@
       color: #6d90cf;
     }
   }
-
+*/
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
