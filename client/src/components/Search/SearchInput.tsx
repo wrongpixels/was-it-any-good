@@ -37,7 +37,7 @@ const SearchInputField = memo(
         <form onSubmit={handleOnSearch} className="flex flex-row gap-2">
           <InputField
             {...searchField.getProps()}
-            className="border pl-7 text-base py-1.5 w-100 shadow-md shadow-black/5"
+            className="border pl-7 h-9 text-xs sm:text-base py-1.5 w-50 sm:w-100 shadow-md shadow-black/5"
           />
           {searchField.value &&
             searchField.value !== searchTerm &&

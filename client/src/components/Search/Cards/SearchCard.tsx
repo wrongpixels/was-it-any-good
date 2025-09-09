@@ -58,7 +58,7 @@ const SearchCard = ({
   return (
     <Link
       to={urlFromIndexMedia(media)}
-      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover}`}
+      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className={'relative rounded'}>

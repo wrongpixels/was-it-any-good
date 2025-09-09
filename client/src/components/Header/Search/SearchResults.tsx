@@ -83,7 +83,7 @@ const SearchResults = ({
           </div>
         )}
       </div>
-      <div className="absolute left-full ml-2 min-h-60 h-full flex items-center ">
+      <div className="absolute left-full ml-2 min-h-60 h-full items-center hidden sm:flex">
         <div className="flex-shrink-0">
           <SuggestionPoster media={mediaToShow} />
         </div>

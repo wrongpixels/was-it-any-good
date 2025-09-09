@@ -72,7 +72,7 @@ const PageResults = ({
           <SpinnerPage text={`Browsing WIAG...`} className="flex-1" />
         </span>
       )) || (
-        <span className="flex-1">
+        <span className="flex flex-1">
           {results.indexMedia.length > 0 ? (
             <SearchCards
               indexMedia={results.indexMedia}

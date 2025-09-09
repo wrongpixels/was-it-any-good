@@ -14,7 +14,7 @@ const PageResultsTitle = ({
   queryType,
 }: PageResultsTitleProps): JSX.Element => {
   return (
-    <span className="w-full text-center text-lg">
+    <span className="w-full text-center text-lg sm:block hidden">
       {totalResults || 'No'}
       {` ${queryTypeToDisplayName(queryType)} `}
       {` ${totalResults !== 1 ? 'results' : 'result'} `}

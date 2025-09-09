@@ -4,7 +4,6 @@ import { IndexMediaData } from '../../../../../shared/types/models';
 import { BadgeType } from '../../../types/search-browse-types';
 import { PLACEHOLDER_COUNT_SEARCH } from '../../../constants/placeholder-results-constants';
 import PlaceholderPoster from '../../Posters/PlaceholderPoster';
-import { SEARCH_CARD_H } from '../../../constants/results-constants';
 
 interface SearchCardsProps {
   indexMedia: IndexMediaData[];
@@ -12,8 +11,8 @@ interface SearchCardsProps {
   badgeType: BadgeType;
 }
 
-const cardsClassName: string =
-  'grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3';
+const cardsClassName =
+  'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 place-items-center';
 
 //we memo the SearchCards of the page for performance
 const SearchCards = ({
@@ -34,7 +33,7 @@ const SearchCards = ({
       ))}
       <PlaceholderPoster
         placeholderCount={placeholderCount}
-        className={`w-auto ${SEARCH_CARD_H}`}
+        className={'w-full max-w-90 h-full hidden md:block'}
       />
     </div>
   );
