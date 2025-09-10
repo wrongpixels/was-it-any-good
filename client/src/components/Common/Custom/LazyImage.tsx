@@ -40,7 +40,7 @@ const LazyImage = ({
           {...props}
           key={props.src}
           loading="lazy"
-          className={mergeClassnames('transition-opacity', className)}
+          className={mergeClassnames('transition-opacity duration-300', className)}
           style={{
             visibility: isLoading ? 'hidden' : 'visible',
             opacity: isLoading ? 0 : 1,
@@ -63,31 +63,39 @@ const LazyImage = ({
           {...props}
           key={props.src}
           loading="lazy"
-          className={mergeClassnames('rounded-xs', className)}
+          className={mergeClassnames('rounded-xs transition-opacity duration-300', className)}
           onLoad={() => setIsLoading(false)}
         />
       </div>
     );
   }
 
-  return (
-    <div className={mergeClassnames('relative w-full', aspect)}>
-      {isLoading && (
-        <div className="absolute inset-0 flex items-center overflow-hidden justify-center bg-gray-100">
+return (
+  <div className={mergeClassnames('relative w-full aspect-[221/330]', aspect)}>
+    {isLoading && (
+      <>
+        <img
+          src="/placeholder.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover rounded-sm"
+        />
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100/70">
           <IconLoadingSpinner className="w-8" />
         </div>
+      </>
+    )}
+    <img
+      {...props}
+      loading="lazy"
+      className={mergeClassnames(
+        'absolute inset-0 w-full h-full object-cover rounded-sm transition-opacity duration-300',
+        className
       )}
-      <img
-        {...props}
-        loading="lazy"
-        className={mergeClassnames(
-          'absolute inset-0 w-full h-full object-cover rounded-sm',
-          className
-        )}
-        onLoad={() => setIsLoading(false)}
-      />
-    </div>
-  );
+      style={{ opacity: isLoading ? 0 : 1 }}
+      onLoad={() => setIsLoading(false)}
+    />
+  </div>
+)
 };
 
 export default LazyImage;

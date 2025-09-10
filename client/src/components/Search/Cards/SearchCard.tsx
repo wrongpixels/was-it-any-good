@@ -67,7 +67,7 @@ const SearchCard = ({
           aspect={AspectRatio.poster}
           src={imageLinker.getPosterImage(media.image)}
           alt={media.name}
-          className={'drop-shadow ring-1 ring-gray-300 rounded w-42'}
+          className={'drop-shadow ring-1 ring-gray-300 rounded w-42 h-40'}
         />
         {getBadge(realBadgeType, index)}
       </span>
