@@ -15,7 +15,10 @@ import React from 'react';
 import { BadgeType } from '../../../types/search-browse-types';
 import StarRatingIndexMedia from '../../Rating/StarRatingIndexMedia';
 import Bubble from '../../Common/Custom/Bubble';
-import LazyImage, { AspectRatio, ImageVariant } from '../../Common/Custom/LazyImage';
+import LazyImage, {
+  AspectRatio,
+  ImageVariant,
+} from '../../Common/Custom/LazyImage';
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
 
@@ -67,7 +70,7 @@ const SearchCard = ({
           aspect={AspectRatio.poster}
           src={imageLinker.getPosterImage(media.image)}
           alt={media.name}
-          className={'drop-shadow ring-1 ring-gray-300 rounded w-42 h-40'}
+          className={'drop-shadow ring-1 ring-gray-300 rounded w-47 h-43'}
         />
         {getBadge(realBadgeType, index)}
       </span>
