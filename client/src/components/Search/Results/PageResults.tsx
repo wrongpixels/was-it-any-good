@@ -11,7 +11,7 @@ import {
 } from '../../../types/search-browse-types';
 import { NavigateToQueryOptions } from '../../../hooks/use-url-query-manager';
 import SpinnerPage from '../../Common/Status/SpinnerPage';
-import PageResultsSort from './PageResultsSort';
+import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 
@@ -24,7 +24,7 @@ interface PageResultsProps {
   title?: string;
   badgeType: BadgeType;
   showNavBar?: boolean;
-  showSortOptions?: boolean;
+  overrideSortOptions?: OverrideSortOptions;
   isLoading?: boolean;
 }
 //we render here the results, shared between Search and Browse
@@ -37,11 +37,12 @@ const PageResults = ({
   isLoading,
   badgeType = BadgeType.None,
   showNavBar = true,
-  showSortOptions = true,
+  overrideSortOptions,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
   }
+
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
   };
@@ -61,7 +62,7 @@ const PageResults = ({
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
           <PageResultsSort
-            showSortOptions={showSortOptions}
+            overrideSortOptions={overrideSortOptions}
             urlParams={urlParams}
             submitFilter={submitFilter}
           />
@@ -72,19 +73,21 @@ const PageResults = ({
           <SpinnerPage text={`Browsing WIAG...`} className="flex-1" />
         </span>
       )) || (
-        <span className="flex flex-1">
-          {results.indexMedia.length > 0 ? (
-            <SearchCards
-              indexMedia={results.indexMedia}
-              indexOffset={indexOffset}
-              badgeType={badgeType}
-            />
-          ) : (
-            <div className="h-64 w-full" aria-hidden="true">
-              <Instructions condition={true} />
-            </div>
-          )}
-        </span>
+        <div className="flex flex-col h-full">
+          <div className="flex-1">
+            {results.indexMedia.length > 0 ? (
+              <SearchCards
+                indexMedia={results.indexMedia}
+                indexOffset={indexOffset}
+                badgeType={badgeType}
+              />
+            ) : (
+              <div className="h-64 w-full" aria-hidden="true">
+                <Instructions condition={true} />
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
       {showNavBar && (

@@ -35,8 +35,8 @@ const useUrlQueryManager = ({
   overrideParams,
 }: UrlQueryManagerOptions) => {
   const navigateTo = useNavigate();
-  const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder();
 
+  const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder(overrideParams);
   //we extract and normalize all valid query params in the url
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const urlParams: URLParameters = extractURLParameters(
@@ -56,7 +56,14 @@ const useUrlQueryManager = ({
       newPage,
       overrideParams: localOverride,
     }: QueryOpts) => {
+      console.log(
+        localOverride?.searchType,
+        overrideParams?.searchType,
+        queryTypeManager.getAppliedNames()
+      );
+
       const url: string = queryBuilder
+        .clean()
         .byTerm(newQuery || urlParams.searchTerm)
         .byTypes(queryTypeManager.getAppliedNames())
         //if we sent an override search type, it will replace the ones just added.

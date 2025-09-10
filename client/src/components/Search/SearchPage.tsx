@@ -23,6 +23,7 @@ import Dropdown from '../Common/Custom/Dropdown';
 import IconTrending from '../Common/Icons/Sorting/IconTrending';
 import LoadingCards from './Loading/LoadingSearch';
 import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
+import { OVERRIDE_SORT_SEARCH } from '../../constants/search-browse-constants';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -140,7 +141,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           <Instructions />
           <span className="w-full -mt-4">
             <EntryTitle
-              title={'Trending in TMDB'}
+              title={'Trending on TMDB'}
               icon={
                 isFetching || isLoading ? (
                   <IconLoadingSpinner className="mx-1 h-4.5" />
@@ -166,6 +167,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
                   navigatePages={navigatePages}
                   showNavBar={!isHome}
                   badgeType={BadgeType.AddedBadge}
+                  overrideSortOptions={OVERRIDE_SORT_SEARCH}
                 />
               </div>
             )}

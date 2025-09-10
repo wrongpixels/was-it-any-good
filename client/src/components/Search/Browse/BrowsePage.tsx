@@ -14,6 +14,7 @@ import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
 import { getBrowseOperation } from '../../../utils/common-format-helper';
 import LoadingCards from '../Loading/LoadingSearch';
+import { overrideParamsToOverrideSort } from '../../../utils/browse-helper';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -82,7 +83,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   }
 
   return (
-    <div key={currentQuery} className="flex flex-col flex-1">
+    <div key={currentQuery} className="flex flex-col h-full">
       {
         <span className="mb-2">
           <EntryTitle
@@ -93,10 +94,14 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
         </span>
       }
       {((isLoading || isFetching) && (
-        <LoadingCards showNavBar={true} loadTitle={'Browsing WIAG...'} />
+        <LoadingCards
+          showNavBar={true}
+          loadTitle={'Browsing WIAG...'}
+          placeholderCount={browseResults?.indexMedia.length}
+        />
       )) || (
         <>
-          <div className="flex flex-col flex-1 mt-1">
+          <div className="flex flex-col flex-1 mt-1 h-full">
             <PageResults
               isLoading={isFetching}
               navigateToQuery={navigateToQuery}
@@ -104,6 +109,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
               urlParams={urlParams}
               navigatePages={navigatePages}
               badgeType={BadgeType.RankBadge}
+              overrideSortOptions={overrideParamsToOverrideSort(overrideParams)}
             />
           </div>
         </>

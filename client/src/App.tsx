@@ -30,8 +30,8 @@ const App = (): JSX.Element => {
 
         <div className="flex flex-1 flex-col min-h-0 box-border mx-2">
           <NavBar />
-          <div className="flex flex-col flex-1 min-h-0 bg-gray-50 rounded shadow ring ring-[#d6d6d6] w-full max-w-5xl mx-auto">
-            <div className="flex-1 min-h-0 ">
+          <div className="flex flex-col flex-1 min-h-0 bg-gray-50 rounded shadow ring ring-[#d6d6d6] w-full max-w-5xl mx-auto h-full">
+            <div className="flex-1 min-h-0 h-full">
               <AppBody />
             </div>
           </div>
@@ -52,7 +52,7 @@ const AppBody = (): JSX.Element => {
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 p-8 pt-4 ">
+    <div className="flex flex-col h-full min-h-0 p-8 pt-4 ">
       <Routes>
         <Route path="/" element={<SearchPage isHome={true} />} />
         <Route path={routerPaths.search.base} element={<SearchPage />} />
