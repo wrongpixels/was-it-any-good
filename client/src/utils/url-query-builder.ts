@@ -6,8 +6,14 @@ import {
   mediaTypeToSearchType,
 } from '../../../shared/types/search';
 import {
+  DEF_SEARCH_TYPE,
+  DEF_SORT_BY,
+  DEF_SORT_DIR,
   UPARAM_COUNTRIES,
   UPARAM_GENRES,
+  UPARAM_PAGE,
+  UPARAM_QUERY_TYPE,
+  UPARAM_SEARCH_TERM,
   UPARAM_SORT_BY,
   UPARAM_SORT_DIR,
   UPARAM_YEAR,
@@ -19,6 +25,12 @@ class UrlQueryBuilder {
   constructor() {
     this.params = [];
   }
+  //we need to call this before every new construction to ensure
+  //we are not reusing previous ones
+  clean(): this {
+    this.params.length = 0;
+    return this;
+  }
 
   private addParam(
     param: string | number | null | undefined,
@@ -27,7 +39,7 @@ class UrlQueryBuilder {
   ): this {
     if (param !== null && param !== undefined && param !== '') {
       const paramStr = param.toString();
-      if (key === 'm') {
+      if (key === UPARAM_QUERY_TYPE) {
         if (!isValidSearchType(paramStr)) {
           return this;
         }
@@ -56,32 +68,34 @@ class UrlQueryBuilder {
   }
 
   byTerm(value: string | number | null) {
-    return this.addParam(value, 'q');
+    return this.addParam(value, UPARAM_SEARCH_TERM);
   }
 
   byType(value?: string) {
-    return this.addParam(value, 'm');
+    return value === DEF_SEARCH_TYPE
+      ? this.addParam(value, UPARAM_QUERY_TYPE)
+      : this.addParam(value, UPARAM_QUERY_TYPE);
   }
 
   toPage(value: number | string = 1) {
     console.log('value is', value);
     const numValue: number = Number(value);
-    if (!numValue || numValue < 1 || Number.isNaN(numValue)) {
-      return this;
+    if (!numValue || numValue <= 1 || Number.isNaN(numValue)) {
+      return this.addParam('', UPARAM_PAGE);
     }
-    return this.addParam(Math.min(numValue, 500), 'page');
+    return this.addParam(Math.min(numValue, 500), UPARAM_PAGE);
   }
 
   byTypes(value?: string[]) {
-    return this.addParams(value, 'm');
+    return this.addParams(value, UPARAM_QUERY_TYPE);
   }
 
   byMediaType(value?: MediaType) {
-    return this.addParam(mediaTypeToSearchType(value), 'm');
+    return this.addParam(mediaTypeToSearchType(value), UPARAM_QUERY_TYPE);
   }
 
   byMediaTypes(value?: MediaType[]) {
-    return this.addParams(mediaTypesToSearchTypes(value), 'm');
+    return this.addParams(mediaTypesToSearchTypes(value), UPARAM_QUERY_TYPE);
   }
 
   byCountry(value?: string) {
@@ -103,11 +117,15 @@ class UrlQueryBuilder {
     return this.addParam(value, UPARAM_YEAR);
   }
   sortBy(value?: SortBy) {
-    return this.addParam(value, UPARAM_SORT_BY);
+    return value === DEF_SORT_BY
+      ? this.addParam('', UPARAM_SORT_BY)
+      : this.addParam(value, UPARAM_SORT_BY);
   }
 
   sortDir(value?: SortDir) {
-    return this.addParam(value, UPARAM_SORT_DIR);
+    return value === DEF_SORT_DIR
+      ? this.addParam('', UPARAM_SORT_DIR)
+      : this.addParam(value, UPARAM_SORT_DIR);
   }
 
   toString() {

@@ -57,6 +57,7 @@ const useUrlQueryManager = ({
       overrideParams: localOverride,
     }: QueryOpts) => {
       const url: string = queryBuilder
+        .clean()
         .byTerm(newQuery || urlParams.searchTerm)
         .byTypes(queryTypeManager.getAppliedNames())
         //if we sent an override search type, it will replace the ones just added.

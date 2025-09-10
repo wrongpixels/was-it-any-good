@@ -94,7 +94,11 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
         </span>
       }
       {((isLoading || isFetching) && (
-        <LoadingCards showNavBar={true} loadTitle={'Browsing WIAG...'} />
+        <LoadingCards
+          showNavBar={true}
+          loadTitle={'Browsing WIAG...'}
+          placeholderCount={browseResults?.indexMedia.length}
+        />
       )) || (
         <>
           <div className="flex flex-col flex-1 mt-1 h-full">
