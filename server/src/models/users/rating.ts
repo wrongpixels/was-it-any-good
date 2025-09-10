@@ -44,11 +44,19 @@ class Rating extends Model<
       },
       constraints: false,
     });
+    this.belongsTo(Season, {
+      foreignKey: 'mediaId',
+      scope: {
+        mediaType: MediaType.Season,
+      },
+      constraints: false,
+    });
     this.belongsTo(User, {
       foreignKey: 'userId',
       constraints: false,
     });
     this.belongsTo(Show, {
+      as: 'parentShow',
       foreignKey: 'showId',
       constraints: false,
     });

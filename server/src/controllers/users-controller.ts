@@ -1,7 +1,14 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { User } from '../models';
-import CustomError from '../util/customError';
-import { CreateUserData, UserData } from '../../../shared/types/models';
+import { Rating, User } from '../models';
+import CustomError, {
+  NotFoundError,
+  WrongFormatError,
+} from '../util/customError';
+import {
+  CreateUserData,
+  RatingData,
+  UserData,
+} from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
 
 const router: Router = express.Router();
@@ -56,18 +63,52 @@ router.put(
   }
 );
 
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
+    if (!id) {
+      throw new WrongFormatError();
+    }
     const user: UserData | null = await User.findByPk(id, {
       attributes: ['id', 'username', 'lastActive'],
-      raw: true,
     });
     if (!user) {
-      res.json(null);
-      return;
+      throw new NotFoundError('User');
     }
     res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get('/:id/votes', async (req: Request, res, next) => {
+  try {
+    const id: string = req.params.id;
+    if (!id) {
+      throw new WrongFormatError();
+    }
+    //only the active user or an admin can access the votes
+    /*    if (id !== req.activeUser?.id.toString() && !req.activeUser?.isAdmin) {
+      throw new AuthError();
+    }*/
+    const ratings: RatingData[] = await Rating.findAll({
+      where: {
+        userId: id,
+      },
+      include: [
+        {
+          association: 'film',
+        },
+        {
+          association: 'show',
+        },
+        {
+          association: 'season',
+        },
+      ],
+    });
+
+    res.json(ratings);
   } catch (error) {
     next(error);
   }

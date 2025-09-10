@@ -95,7 +95,7 @@ class UrlQueryBuilder {
   toPage(value: number | string = 1) {
     console.log('value is', value);
     const numValue: number = Number(value);
-    if (!numValue || numValue <= 1 || Number.isNaN(numValue)) {
+    if (!numValue || numValue < 1 || Number.isNaN(numValue)) {
       return this;
     }
     return this.addParam(Math.min(numValue, 500), UPARAM_PAGE);

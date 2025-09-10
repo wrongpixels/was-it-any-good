@@ -43,7 +43,7 @@ import { calculateShowAverage } from '../../../../shared/util/rating-average-cal
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
-  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>
+  TCreation extends InferCreationAttributes<Media<TAttributes, TCreation>>,
 > extends Model<TAttributes, TCreation> {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
@@ -213,6 +213,8 @@ class Media<
       },
       constraints: false,
     });
+    //a special Rating association to return the active user rating
+    //directly with the media
     this.hasOne(Rating, {
       foreignKey: 'mediaId',
       as: 'userRating',
@@ -233,8 +235,8 @@ class Media<
       mediaType === MediaType.Show
         ? Show
         : mediaType === MediaType.Film
-        ? Film
-        : Season;
+          ? Film
+          : Season;
     const ratingTableName: string = Rating.tableName;
     const mediaTableName: string = model.tableName;
 

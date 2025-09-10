@@ -1,6 +1,7 @@
 import {
   NOT_FOUND_ERROR,
   SESSION_AUTH_ERROR,
+  WRONG_FORMAT_ERROR,
 } from '../../../shared/constants/error-constants';
 import { toFirstUpperCase } from '../../../shared/helpers/format-helper';
 
@@ -35,6 +36,12 @@ export class SessionAuthError extends AuthError {
   constructor(message: string = 'Session is no longer valid') {
     super(message, SESSION_AUTH_ERROR);
     this.name = 'SessionAuthError';
+  }
+}
+
+export class WrongFormatError extends CustomError {
+  constructor(code: ErrorCode = WRONG_FORMAT_ERROR) {
+    super('The format of the URL is not valid!', 400, 'WrongFormatError', code);
   }
 }
 

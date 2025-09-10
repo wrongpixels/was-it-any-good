@@ -2,6 +2,7 @@ import { APIError } from "../types/errors";
 
 export const SESSION_AUTH_ERROR: string = "SESSION_EXPIRED";
 export const NOT_FOUND_ERROR: string = "NOT_FOUND";
+export const WRONG_FORMAT_ERROR: string = "WRONG_ID";
 
 export const DEF_API_ERROR: APIError = {
   name: "Error",
