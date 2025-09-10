@@ -9,6 +9,12 @@ export interface OptClassNameProps {
   key?: string | number;
 }
 
+export interface ToggleLinkBaseProps {
+  to?: string;
+  newTab?: boolean;
+  enabled?: boolean;
+}
+
 export interface MediaTypeProps extends OptClassNameProps {
   mediaType?: MediaType;
 }

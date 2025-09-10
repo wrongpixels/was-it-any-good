@@ -30,7 +30,7 @@ const ExternalLogo = ({
 
   return (
     <>
-      {(tmdb && <IconTMDBLogoVert {...logoProps} />) || (
+      {(tmdb && <IconTMDBLogoVert {...logoProps} width={35} />) || (
         <IconIMDBLogo {...logoProps} />
       )}
     </>
