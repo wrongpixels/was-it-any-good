@@ -4,6 +4,7 @@ import {
   isValidSearchType,
   mediaTypesToSearchTypes,
   mediaTypeToSearchType,
+  SearchType,
 } from '../../../shared/types/search';
 import {
   DEF_SEARCH_TYPE,
@@ -18,18 +19,32 @@ import {
   UPARAM_SORT_DIR,
   UPARAM_YEAR,
 } from '../../../shared/constants/url-param-constants';
+import { OverrideParams } from '../types/search-browse-types';
 
 class UrlQueryBuilder {
   private params: Array<[string, string]>;
+  private defSortBy: SortBy;
+  private defSortDir: SortDir;
+  private defSearchType: SearchType;
 
-  constructor() {
+  //we pass our override params to avoid setting them in the url when not needed
+  //for example, a '/top/films' url doesn't need to use 'sort=rating' and 'm=film'
+  constructor(overrideParams?: OverrideParams) {
     this.params = [];
+    this.defSortBy = DEF_SORT_BY;
+    this.defSortDir = DEF_SORT_DIR;
+    this.defSearchType = DEF_SEARCH_TYPE;
+    //  console.log(overrideParams?.searchType);
   }
   //we need to call this before every new construction to ensure
   //we are not reusing previous ones
   clean(): this {
     this.params.length = 0;
     return this;
+  }
+
+  private deleteParamByKey(key: string) {
+    this.params = this.params.filter(([k]) => k !== key);
   }
 
   private addParam(
@@ -72,8 +87,11 @@ class UrlQueryBuilder {
   }
 
   byType(value?: string) {
-    return value === DEF_SEARCH_TYPE
-      ? this.addParam(value, UPARAM_QUERY_TYPE)
+    if (value) {
+      this.deleteParamByKey(UPARAM_QUERY_TYPE);
+    }
+    return value === this.defSearchType
+      ? this
       : this.addParam(value, UPARAM_QUERY_TYPE);
   }
 
@@ -81,7 +99,7 @@ class UrlQueryBuilder {
     console.log('value is', value);
     const numValue: number = Number(value);
     if (!numValue || numValue <= 1 || Number.isNaN(numValue)) {
-      return this.addParam('', UPARAM_PAGE);
+      return this;
     }
     return this.addParam(Math.min(numValue, 500), UPARAM_PAGE);
   }
@@ -117,14 +135,14 @@ class UrlQueryBuilder {
     return this.addParam(value, UPARAM_YEAR);
   }
   sortBy(value?: SortBy) {
-    return value === DEF_SORT_BY
-      ? this.addParam('', UPARAM_SORT_BY)
+    return value === this.defSortBy
+      ? this
       : this.addParam(value, UPARAM_SORT_BY);
   }
 
   sortDir(value?: SortDir) {
-    return value === DEF_SORT_DIR
-      ? this.addParam('', UPARAM_SORT_DIR)
+    return value === this.defSortDir
+      ? this
       : this.addParam(value, UPARAM_SORT_DIR);
   }
 

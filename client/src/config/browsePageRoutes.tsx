@@ -82,13 +82,14 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     subtitle: 'Most popular media in WIAG database',
     path: routerPaths.popular.multi.base(),
     sortBy: SortBy.Popularity,
+    searchType: SearchType.Multi,
   }),
   buildPageRoute({
     title: 'Top Rated Media',
     subtitle: 'Highest rated media in WIAG database',
-
     path: routerPaths.tops.multi.base(),
     sortBy: SortBy.Rating,
+    searchType: SearchType.Multi,
   }),
   buildPageRoute({
     title: 'Films',
