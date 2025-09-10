@@ -36,7 +36,7 @@ const useUrlQueryManager = ({
 }: UrlQueryManagerOptions) => {
   const navigateTo = useNavigate();
 
-  const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder(overrideParams);
+  const queryBuilder: UrlQueryBuilder = new UrlQueryBuilder();
   //we extract and normalize all valid query params in the url
   const [parameters]: [URLSearchParams, SetURLSearchParams] = useSearchParams();
   const urlParams: URLParameters = extractURLParameters(

@@ -19,7 +19,6 @@ import {
   UPARAM_SORT_DIR,
   UPARAM_YEAR,
 } from '../../../shared/constants/url-param-constants';
-import { OverrideParams } from '../types/search-browse-types';
 
 class UrlQueryBuilder {
   private params: Array<[string, string]>;
@@ -27,9 +26,7 @@ class UrlQueryBuilder {
   private defSortDir: SortDir;
   private defSearchType: SearchType;
 
-  //we pass our override params to avoid setting them in the url when not needed
-  //for example, a '/top/films' url doesn't need to use 'sort=rating' and 'm=film'
-  constructor(overrideParams?: OverrideParams) {
+  constructor() {
     this.params = [];
     this.defSortBy = DEF_SORT_BY;
     this.defSortDir = DEF_SORT_DIR;
