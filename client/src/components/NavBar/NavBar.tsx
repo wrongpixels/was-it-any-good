@@ -6,7 +6,6 @@ import IconCrown from '../Common/Icons/Badges/IconCrown';
 import IconHome from '../Common/Icons/IconHome';
 import IconFilm from '../Common/Icons/Media/IconFilm';
 import IconShow from '../Common/Icons/Media/IconShow';
-import IconStar from '../Common/Icons/Ratings/IconStar';
 
 interface LinkInfo {
   text: string;
@@ -23,14 +22,14 @@ const links: LinkInfo[] = [
     icon: <IconHome width={15} />,
     title: 'Home / Search',
     url: routerPaths.home,
-  },
+  } /*
   {
     text: 'Popular',
     key: 'rb-popular',
     icon: <IconStar width={15} />,
     title: 'Popular media',
     url: routerPaths.popular.multi.base(),
-  },
+  },*/,
   {
     text: 'The Best',
     key: 'rb-best',
