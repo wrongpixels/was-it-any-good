@@ -46,6 +46,9 @@ export interface RatingData {
   userScore: number;
   mediaType: MediaType;
   showId?: number;
+  show?: ShowResponse;
+  film?: FilmResponse;
+  season?: SeasonResponse;
 }
 
 export interface RatingStats {

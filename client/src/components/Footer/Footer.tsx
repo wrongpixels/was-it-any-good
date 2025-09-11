@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 import IconGitHubLogo from '../Common/Icons/Logos/IconGitHubLogo';
 import { styles } from '../../constants/tailwind-styles';
 import IconTMDBLogoVert from '../Common/Icons/Logos/IconTMDBLogoVert';
+import {
+  GITHUB_REPO_URL,
+  TMDB_URL,
+} from '../../../../shared/constants/url-constants';
 
 const Footer = () => {
   return (
@@ -10,7 +14,7 @@ const Footer = () => {
     >
       <span>
         <Link
-          to={'https://github.com/wrongpixels'}
+          to={GITHUB_REPO_URL}
           target="_blank"
           className="flex flex-row gap-0.5 items-center"
         >
@@ -23,17 +27,11 @@ const Footer = () => {
           </span>
         </Link>
       </span>
-      <span>
-        <Link
-          to={'https://themoviedb.org'}
-          target="_blank"
-          className="flex flex-row gap-2 items-center"
-        >
-          <span className="font-medium text-gray-500 text-xs">
-            {'Images and data:'}
-          </span>
-          <IconTMDBLogoVert height={14} />
-        </Link>
+      <span className="flex flex-row gap-2 items-center">
+        <span className="font-medium text-gray-500 text-xs">
+          {'Images and data:'}
+        </span>
+        <IconTMDBLogoVert height={14} url={TMDB_URL} />
       </span>
     </footer>
   );

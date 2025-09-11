@@ -1,10 +1,16 @@
 export enum SortBy {
+  Date = "updatedAt",
   Title = "name",
   Rating = "rating",
   Popularity = "popularity",
   Year = "year",
 }
-export const sortByValues: string[] = Object.values<string>(SortBy);
+//by default, we exclude the Date option, it should only be available
+//on User Votes and other special cases
+export const sortByValues: string[] = Object.values<string>(SortBy).filter(
+  (s: string) => s !== SortBy.Date
+);
+export const sortByUserValues: string[] = Object.values<string>(SortBy);
 
 export enum SortDir {
   Default = "DESC",
