@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { IndexMediaResponse } from '../../../shared/types/models';
+import { IndexMediaResults } from '../../../shared/types/models';
 import { Film, IndexMedia, Show } from '../models';
 import { FindOptions, Op } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
@@ -81,7 +81,7 @@ router.get('/', async (req, res, next) => {
           },
         ],
       });
-      const response: IndexMediaResponse = {
+      const response: IndexMediaResults = {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page 1
@@ -109,7 +109,7 @@ router.get('/', async (req, res, next) => {
         ],
       });
 
-      const response: IndexMediaResponse = {
+      const response: IndexMediaResults = {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page #1

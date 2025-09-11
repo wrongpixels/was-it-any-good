@@ -1,6 +1,6 @@
-import { IndexMediaResponse } from '../../../shared/types/models';
+import { IndexMediaResults } from '../../../shared/types/models';
 import { apiPaths } from '../utils/url-helper';
 import { getFromAPI } from './common-service';
 
 export const getBrowseResults = async (browseQuery: string) =>
-  await getFromAPI<IndexMediaResponse>(apiPaths.browse.byQuery(browseQuery));
+  await getFromAPI<IndexMediaResults>(apiPaths.browse.byQuery(browseQuery));

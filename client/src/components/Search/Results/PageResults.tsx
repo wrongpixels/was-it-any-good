@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { IndexMediaResponse } from '../../../../../shared/types/models';
+import { IndexMediaResults } from '../../../../../shared/types/models';
 
 import { PAGE_LENGTH } from '../../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
@@ -16,7 +16,7 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 
 interface PageResultsProps {
-  results: IndexMediaResponse | undefined;
+  results: IndexMediaResults | undefined;
   navigatePages: (movement: number) => void;
   navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;

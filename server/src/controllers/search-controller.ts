@@ -4,7 +4,7 @@ import { createIndexForShowBulk } from '../factories/show-factory';
 
 import {
   CreateIndexMedia,
-  IndexMediaResponse,
+  IndexMediaResults,
 } from '../../../shared/types/models';
 import { arrayToTMDBSearchTypes, extractQuery } from '../util/search-helpers';
 import { TMDBSearchType } from '../../../shared/types/search';
@@ -193,7 +193,7 @@ router.get('/', async (req: Request, res, next) => {
       },
     });
 
-    const indexMediaResponse: IndexMediaResponse = {
+    const indexMediaResponse: IndexMediaResults = {
       indexMedia: toPlainArray(populatedEntries),
       //we consider no results a blank page 1
       totalPages: searchResult.total_pages || 1,

@@ -31,14 +31,20 @@ export interface IndexMediaData extends CreateIndexMedia {
   film?: FilmResponse;
   show?: ShowResponse;
 }
-
-export interface IndexMediaResponse {
+//for browse/search results
+interface BrowseResults {
   page: number;
   totalPages: number;
   totalResults: number;
+}
+
+export interface IndexMediaResults extends BrowseResults {
   indexMedia: IndexMediaData[];
 }
 
+export interface RatingResults extends BrowseResults {
+  ratings: RatingData[];
+}
 export interface RatingData {
   id: number;
   userId: number;
