@@ -32,7 +32,7 @@ class Rating extends Model<
     this.belongsTo(Film, {
       foreignKey: 'mediaId',
       scope: {
-        media_type: MediaType.Film,
+        mediaType: MediaType.Film,
       },
       constraints: false,
     });
@@ -40,14 +40,14 @@ class Rating extends Model<
     this.belongsTo(Show, {
       foreignKey: 'mediaId',
       scope: {
-        media_type: MediaType.Show,
+        mediaType: MediaType.Show,
       },
       constraints: false,
     });
     this.belongsTo(Season, {
       foreignKey: 'mediaId',
       scope: {
-        media_type: MediaType.Season,
+        mediaType: MediaType.Season,
       },
       constraints: false,
     });

@@ -6,6 +6,7 @@ import { Rating } from '../models';
 import { toPlainArray } from '../util/model-helpers';
 import { extractURLParams } from '../util/url-param-extractor';
 import { PAGE_LENGTH } from '../../../shared/types/search-browse';
+import { SortBy } from '../../../shared/types/browse';
 
 const router: Router = express.Router();
 
@@ -16,7 +17,12 @@ router.get(
   '/votes',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { searchPage, where, findAndCountOptions } = extractURLParams(req);
+      const { searchPage, sortBy, sortDir, findAndCountOptions } =
+        extractURLParams(req);
+      //SortBy rating must point to Rating's userScore
+      if (sortBy === SortBy.Rating) {
+        findAndCountOptions.order = [[SortBy.UserScore, sortDir.toUpperCase()]];
+      }
       const { rows: ratings, count } = await Rating.findAndCountAll({
         where: {
           userId: 10,
@@ -25,15 +31,12 @@ router.get(
         include: [
           {
             association: 'film',
-            where,
           },
           {
             association: 'show',
-            where,
           },
           {
             association: 'season',
-            where,
           },
         ],
       });

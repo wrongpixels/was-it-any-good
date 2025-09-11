@@ -19,6 +19,6 @@ export interface URLParameters {
   genres: string[];
   countries: CountryCode[];
   year: string | null;
-  sortBy: SortBy | undefined;
-  sortDir: SortDir | undefined;
+  sortBy: SortBy;
+  sortDir: SortDir;
 }

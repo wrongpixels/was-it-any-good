@@ -15,6 +15,8 @@ import {
   UPARAM_SEARCH_TERM,
   UPARAM_SORT_DIR,
   UPARAM_YEAR,
+  DEF_SORT_BY,
+  DEF_SORT_DIR,
 } from '../../../shared/constants/url-param-constants';
 import {
   OverrideParams,
@@ -330,7 +332,11 @@ export const extractURLParameters = (
   countries: toCountryCodes(parameters.getAll(UPARAM_COUNTRIES)),
   year: parameters.get(UPARAM_YEAR),
   sortBy:
-    overrideParams?.sortBy ?? stringToSortBy(parameters.get(UPARAM_SORT_BY)),
+    overrideParams?.sortBy ??
+    stringToSortBy(parameters.get(UPARAM_SORT_BY)) ??
+    DEF_SORT_BY,
   sortDir:
-    overrideParams?.sortDir ?? stringToSortDir(parameters.get(UPARAM_SORT_DIR)),
+    overrideParams?.sortDir ??
+    stringToSortDir(parameters.get(UPARAM_SORT_DIR)) ??
+    DEF_SORT_DIR,
 });
