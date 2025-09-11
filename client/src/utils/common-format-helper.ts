@@ -1,6 +1,6 @@
 import Country, { CountryCode } from '../../../shared/types/countries';
 import { GenreResponse } from '../../../shared/types/models';
-import { URLParameters } from '../types/search-browse-types';
+import { URLParameters } from '../../../shared/types/search-browse';
 
 export const capitalize = (value: string): string =>
   `${value.charAt(0).toUpperCase()}${value.slice(1)}`;

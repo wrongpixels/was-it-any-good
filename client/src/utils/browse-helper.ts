@@ -1,8 +1,8 @@
 import { SortBy } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
+import { OverrideParams } from '../../../shared/types/search-browse';
 import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
 import { OVERRIDE_SORT_POPULARITY } from '../constants/search-browse-constants';
-import { OverrideParams } from '../types/search-browse-types';
 
 //a function to transform OverrideParams into specific OverrideSortOptions
 //For example: Override Popularity -> We can only sort by it

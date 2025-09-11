@@ -45,7 +45,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     navigateToQuery: navigateToNewTerm,
     queryTypeManager,
   } = useUrlQueryManager({ basePath: routerPaths.search.base });
-  const { searchTerm, currentPage } = urlParams;
+  const { searchTerm, searchPage } = urlParams;
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
   const toggleParam = (param: string) => {
@@ -78,8 +78,8 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     if (
       !isHome &&
       !!currentQuery &&
-      (currentPage <= 0 ||
-        (searchResults && searchResults.totalPages < Number(currentPage)))
+      (searchPage <= 0 ||
+        (searchResults && searchResults.totalPages < Number(searchPage)))
     ) {
       navigateToPage(searchResults?.totalPages || 1);
     }

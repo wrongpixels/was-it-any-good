@@ -19,21 +19,21 @@ router.get(
       const { searchPage, where, findAndCountOptions } = extractURLParams(req);
       const { rows: ratings, count } = await Rating.findAndCountAll({
         where: {
-          userId: req.activeUser?.id || 10,
+          userId: 10,
         },
-        // ...findAndCountOptions,
+        ...findAndCountOptions,
         include: [
           {
             association: 'film',
-            //where,
+            where,
           },
           {
             association: 'show',
-            // where,
+            where,
           },
           {
             association: 'season',
-            // where,
+            where,
           },
         ],
       });

@@ -6,15 +6,15 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { SearchType, searchTypes } from '../../../shared/types/search';
-import {
-  OverrideParams,
-  QueryOpts,
-  URLParameters,
-} from '../types/search-browse-types';
+import { QueryOpts } from '../types/search-browse-types';
 import ParamManager from '../utils/search-param-manager';
 import { extractURLParameters } from '../utils/url-helper';
 import UrlQueryBuilder from '../utils/url-query-builder';
 import { useCallback, useMemo } from 'react';
+import {
+  OverrideParams,
+  URLParameters,
+} from '../../../shared/types/search-browse';
 
 //if the manager receives override params, they'll be used ignoring
 //equivalent url params.
@@ -88,8 +88,8 @@ const useUrlQueryManager = ({
 
   //the current query after filtering invalid params
   const currentQuery: string = useMemo(
-    () => buildQuery({ newPage: urlParams.currentPage }),
-    [buildQuery, urlParams.currentPage]
+    () => buildQuery({ newPage: urlParams.searchPage }),
+    [buildQuery, urlParams.searchPage]
   );
   console.log(currentQuery);
 
@@ -129,10 +129,10 @@ const useUrlQueryManager = ({
   //to move pages in any direction (-2, 1...)
   const navigatePages = useCallback(
     (movement: number) => {
-      const nextPosition: number = (urlParams.currentPage || 1) + movement;
+      const nextPosition: number = (urlParams.searchPage || 1) + movement;
       navigateToPage(nextPosition);
     },
-    [urlParams.currentPage, navigateToPage]
+    [urlParams.searchPage, navigateToPage]
   );
 
   return useMemo(
