@@ -1,17 +1,11 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { Rating, User } from '../models';
+import { User } from '../models';
 import CustomError, {
-  AuthError,
   NotFoundError,
   WrongFormatError,
 } from '../util/customError';
-import {
-  CreateUserData,
-  RatingData,
-  UserData,
-} from '../../../shared/types/models';
+import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
-import { toPlainArray } from '../util/model-helpers';
 
 const router: Router = express.Router();
 
@@ -41,39 +35,6 @@ router.get('/:id', async (req: Request, res, next) => {
       throw new NotFoundError('User');
     }
     res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get('/:id/votes', async (req: Request, res, next) => {
-  try {
-    const id: string = req.params.id;
-    if (!id) {
-      throw new WrongFormatError();
-    }
-    //only the active user or an admin can access the votes
-    if (id !== req.activeUser?.id.toString() && !req.activeUser?.isAdmin) {
-      throw new AuthError();
-    }
-    const ratings: Rating[] = await Rating.findAll({
-      where: {
-        userId: id,
-      },
-      include: [
-        {
-          association: 'film',
-        },
-        {
-          association: 'show',
-        },
-        {
-          association: 'season',
-        },
-      ],
-    });
-    const ratingsResponse: RatingData[] = toPlainArray(ratings);
-    res.json(ratingsResponse);
   } catch (error) {
     next(error);
   }

@@ -27,8 +27,14 @@ class CustomError extends Error {
 }
 
 export class AuthError extends CustomError {
-  constructor(message: string = 'Access not authorized.', code?: ErrorCode) {
+  constructor(message: string = 'Authentication required.', code?: ErrorCode) {
     super(message, 401, 'AuthError', code);
+  }
+}
+
+export class ForbiddenError extends CustomError {
+  constructor(message: string = 'Access not authorized.', code?: ErrorCode) {
+    super(message, 403, 'ForbiddenError', code);
   }
 }
 
