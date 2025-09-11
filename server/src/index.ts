@@ -24,7 +24,7 @@ import {
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
 import { NotFoundError } from './util/customError';
-import { authRequired } from './middleware/auth-required';
+import { authRequired } from './middleware/auth-requirements';
 
 const app = express();
 //Not needed yet

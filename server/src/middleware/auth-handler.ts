@@ -7,12 +7,6 @@ import { ActiveUserSchema } from '../schemas/user-schema';
 import { Session, User } from '../models';
 import { SessionAuthError } from '../util/customError';
 
-declare module 'express' {
-  interface Request {
-    activeUser?: ActiveUser;
-  }
-}
-
 export const authHandler = async (
   req: Request,
   _res: Response,
