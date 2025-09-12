@@ -3,9 +3,10 @@
 import express, { Request, Response, NextFunction, Router } from 'express';
 import { extractURLParams } from '../util/url-param-extractor';
 import { PAGE_LENGTH } from '../../../shared/types/search-browse';
-import { SortBy, SortDir } from '../../../shared/types/browse';
-import { SearchType } from '../../../shared/types/search';
-import { sequelize } from '../util/db';
+import { SortBy } from '../../../shared/types/browse';
+import { Rating } from '../models';
+import { RatingData, RatingResults } from '../../../shared/types/models';
+import { toPlainArray } from '../util/model-helpers';
 
 const router: Router = express.Router();
 
@@ -16,36 +17,35 @@ router.get(
   '/votes',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { searchPage, searchType, sortBy, sortDir, findAndCountOptions } =
+      const { searchPage, sortBy, sortDir, findAndCountOptions } =
         extractURLParams(req);
       //SortBy rating must point to Rating's userScore
       if (sortBy === SortBy.Rating) {
         findAndCountOptions.order = [[SortBy.UserScore, sortDir.toUpperCase()]];
       }
       const userId: number = 10;
-      /*
+
       const { rows: ratings, count } = await Rating.findAndCountAll({
         where: {
-          userId: 10,
+          userId,
         },
         ...findAndCountOptions,
+        include: {
+          association: 'indexMedia',
+        },
       });
 
-      const cleanRatings: RatingData[] = toPlainArray(ratings).map(
-        (r: RatingData) => ({
-          ...r,
-          film: r.mediaType === MediaType.Film ? r.film : undefined,
-          show: r.mediaType === MediaType.Show ? r.show : undefined,
-          season: r.mediaType === MediaType.Season ? r.season : undefined,
-        })
-      );
+      const cleanRatings: RatingData[] = toPlainArray(ratings);
 
       const ratingsResults: RatingResults = {
         page: searchPage,
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         totalResults: count,
         ratings: cleanRatings,
-      }; */
+      };
+      res.json(ratingsResults);
+
+      /*
       const limit = PAGE_LENGTH;
       const offset = PAGE_LENGTH * (searchPage - 1);
       const sortColumn =
@@ -177,8 +177,8 @@ router.get(
           type: 'SELECT',
         }),
       ]);
-
-      /* // Transform results to camelCase for your API
+*/
+      /*
       const formattedResults = results.map((row) => ({
         rating: {
           id: row.rating_id,
@@ -199,14 +199,14 @@ router.get(
             showName: row.show_name,
           }),
         },
-      })); */
+      }));
 
       res.json({
         ratings: results,
         count: countResult[0],
         page: searchPage,
         pageSize: PAGE_LENGTH,
-      });
+      }); */
     } catch (error) {
       next(error);
     }

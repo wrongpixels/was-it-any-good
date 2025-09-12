@@ -1,6 +1,11 @@
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
-import { CreateRating, RatingData } from '../../../shared/types/models';
+import {
+  CreateRating,
+  MediaResponse,
+  RatingData,
+  SeasonResponse,
+} from '../../../shared/types/models';
 import { useAnimEngine } from '../context/AnimationProvider';
 import {
   useVoteMutation,
@@ -8,8 +13,7 @@ import {
 } from '../mutations/rating-mutations';
 
 export const useRatingMutations = (
-  mediaId: number,
-  mediaType: MediaType,
+  media: MediaResponse | SeasonResponse,
   userRating: RatingData | null,
   onVote?: () => void
 ) => {
@@ -19,15 +23,16 @@ export const useRatingMutations = (
 
   const handleVote = (rating: UserVote, showId?: number): void => {
     const ratingData: CreateRating = {
-      mediaId,
-      mediaType,
+      indexId: media.indexId,
+      mediaId: media.id,
+      mediaType: media.mediaType,
       userScore: rating,
       showId,
     };
     voteMutation.mutate(ratingData);
     onVote?.();
     playAnim({
-      animKey: `${mediaType}-score-${mediaId}`,
+      animKey: `${media.mediaType}-score-${media.id}`,
       animationClass: 'animate-bounce-once',
     });
     if (showId)
@@ -42,7 +47,7 @@ export const useRatingMutations = (
       unVoteMutation.mutate(userRating);
       onVote?.();
       playAnim({
-        animKey: `${mediaType}-score-${mediaId}`,
+        animKey: `${media.mediaType}-score-${media.id}`,
         animationClass: 'animate-d-ping',
       });
       if (showId)

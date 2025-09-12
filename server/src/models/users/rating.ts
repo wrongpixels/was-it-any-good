@@ -10,7 +10,7 @@ import {
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
-import { Film, Season, Show, User } from '..';
+import { Film, IndexMedia, Season, Show, User } from '..';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 
@@ -23,12 +23,17 @@ class Rating extends Model<
   declare mediaType: MediaType;
   declare mediaId: number;
   declare showId?: number;
+  declare indexId: number;
   declare userScore: number;
   //Fields for accessing the SQL results
   declare count?: number;
   declare total?: number;
 
   static associate() {
+    this.belongsTo(IndexMedia, {
+      as: 'indexMedia',
+      foreignKey: 'indexId',
+    });
     /*
     this.belongsTo(Film, {
       as: 'film',
@@ -152,6 +157,14 @@ Rating.init(
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
+    },
+    indexId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id',
+      },
     },
     userId: {
       type: DataTypes.INTEGER,

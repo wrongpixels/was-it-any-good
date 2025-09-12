@@ -63,7 +63,7 @@ export const getAuthError = (error: unknown): APIError | null =>
   getByStatusCode(error, 401);
 
 export const isSessionAuthError = (error: unknown): boolean =>
-  getAuthError(error)?.name === SESSION_AUTH_ERROR;
+  getAuthError(error)?.code === SESSION_AUTH_ERROR;
 
 export const formatToAPIError = (error: unknown): APIError => {
   const apiError: APIError | null = getAPIError(error);
@@ -75,9 +75,9 @@ export const formatToAPIError = (error: unknown): APIError => {
     return newError;
   }
   if (error instanceof AxiosError) {
-    (newError.name = error.response?.statusText || error.name),
+    ((newError.name = error.response?.statusText || error.name),
       (newError.message = error.message),
-      (newError.status = error.response?.status || newError.status);
+      (newError.status = error.response?.status || newError.status));
   } else {
     newError.name = error.name;
     newError.message = error.message;

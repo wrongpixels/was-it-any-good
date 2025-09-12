@@ -50,6 +50,7 @@ export interface RatingResults extends BrowseResults {
 }
 export interface RatingData {
   id: number;
+  indexId: number;
   userId: number;
   mediaId: number;
   userScore: number;
@@ -169,6 +170,8 @@ export interface BaseResponse {
 
 export interface SeasonResponse extends BaseResponse {
   index: number;
+  indexId: number;
+
   episodeCount: number;
   showId: number;
   mediaType: MediaType.Season;

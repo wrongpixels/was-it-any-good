@@ -23,7 +23,6 @@ import { reorderSeasons } from '../../../../shared/helpers/media-helper';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare mediaType: MediaType.Show;
-  declare indexId: number;
   declare parentalGuide: keyof typeof FilmParental | null;
   declare lastAirDate: string | null;
   declare episodeCount: number;
@@ -67,10 +66,6 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
 Show.init(
   {
     ...Media.baseInit(),
-    indexId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     mediaType: {
       type: DataTypes.STRING,
       defaultValue: MediaType.Show,

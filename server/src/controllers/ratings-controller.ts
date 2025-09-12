@@ -13,18 +13,21 @@ import { Media, Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
 import { MediaType } from '../../../shared/types/media';
 import { stringToMediaType } from '../../../shared/helpers/media-helper';
-import { adminRequired, authRequired } from '../middleware/auth-requirements';
+import { authRequired } from '../middleware/auth-requirements';
 
 const router: Router = express.Router();
 
-router.get('/', adminRequired, async (_req, res, next) => {
-  try {
-    const allRatings: RatingData[] = await Rating.findAll({ raw: true });
-    res.json(allRatings);
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  /* adminRequired,*/ async (_req, res, next) => {
+    try {
+      const allRatings: RatingData[] = await Rating.findAll({ raw: true });
+      res.json(allRatings);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post(
   '/',

@@ -17,23 +17,17 @@ export const useRatingInteractions = (
   sendPosterNotification: (message: string) => void,
   defaultRating: number
 ) => {
-  const { id: mediaId, mediaType, userRating = null } = media;
+  const { mediaType, userRating = null } = media;
   const showId: number | undefined =
     mediaType === MediaType.Season ? media.showId : undefined;
 
-  const { handleVote, handleUnvote } = useRatingMutations(
-    mediaId,
-    mediaType,
-    userRating
-  );
+  const { handleVote, handleUnvote } = useRatingMutations(media, userRating);
   const [hoverScore, setHoverScore] = useState<UserVote>(UserVote.None);
   const [status, setStatus] = useState<InteractionStatus>('idle');
   const [justVoted, setJustVoted] = useState(false);
   const { session } = useAuth();
   const { playAnim } = useAnimEngine();
 
-  // This function is a pure calculation and isn't returned, so it doesn't
-  // strictly need useCallback. It's fine as is.
   const calculateNewRating = (x: number, width: number): UserVote => {
     const starsWidth: number = starWidth * 5;
     const paddingWidth: number = width - starsWidth;
@@ -48,15 +42,10 @@ export const useRatingInteractions = (
     return numToVote(rating);
   };
 
-  // This is an internal helper, but since it's used by a memoized callback (handleClick),
-  // it's good practice to memoize it as well to keep dependencies stable.
   const handleVoteAnimation = useCallback(() => {
     setJustVoted(true);
     setTimeout(() => setJustVoted(false), 400);
-  }, []); // No dependencies from the render scope
-
-  // --- OPTIMIZATION 1: Memoize all handler functions ---
-  // This ensures that the `handlers` object we return is stable.
+  }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -71,7 +60,7 @@ export const useRatingInteractions = (
       setStatus('hovering');
     },
     [status, starWidth, userRating]
-  ); // Add all dependencies the function uses
+  );
 
   const handleClick = useCallback((): void => {
     if (status === 'locked') {
@@ -118,10 +107,6 @@ export const useRatingInteractions = (
     setStatus('idle');
   }, []);
 
-  // --- OPTIMIZATION 2: Memoize the created objects ---
-  // This ensures that if the inputs to these objects don't change, the objects
-  // themselves are not recreated.
-
   const state = useMemo(
     () => ({
       hoverRating: hoverScore,
@@ -151,10 +136,6 @@ export const useRatingInteractions = (
       }),
     [hoverScore, userRating, defaultRating, status]
   );
-
-  // --- OPTIMIZATION 3: Memoize the final return value ---
-  // This is the most important step. It guarantees that the hook's consumer
-  // will only re-render when one of the memoized objects actually changes.
   return useMemo(
     () => ({
       state,
