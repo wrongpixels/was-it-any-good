@@ -103,6 +103,7 @@ Show.init(
             attributes: [
               'id',
               'index',
+              'indexId',
               'name',
               'originalName',
               'description',

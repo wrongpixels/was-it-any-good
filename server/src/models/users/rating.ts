@@ -161,10 +161,6 @@ Rating.init(
     indexId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      references: {
-        model: 'users',
-        key: 'id',
-      },
     },
     userId: {
       type: DataTypes.INTEGER,

@@ -17,6 +17,7 @@ export const useRatingMutations = (
   userRating: RatingData | null,
   onVote?: () => void
 ) => {
+  console.log(media);
   const voteMutation = useVoteMutation();
   const unVoteMutation = useUnvoteMutation();
   const { playAnim } = useAnimEngine();
