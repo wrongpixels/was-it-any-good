@@ -14,6 +14,8 @@ export interface MediaRoleResponse {
 
 export interface CreateIndexMedia {
   tmdbId: number;
+  //optional field for seasons
+  showId?: number;
   addedToMedia: boolean;
   country: CountryCode[];
   name: string;
@@ -30,6 +32,7 @@ export interface IndexMediaData extends CreateIndexMedia {
   id: number;
   film?: FilmResponse;
   show?: ShowResponse;
+  season?: SeasonResponse;
 }
 //for browse/search results
 interface BrowseResults {

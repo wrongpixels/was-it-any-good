@@ -14,19 +14,24 @@ import {
   TMDBIndexShow,
   TMDBIndexShowArraySchema,
 } from '../schemas/tmdb-index-media-schemas';
-import { FilmData, ShowData } from '../types/media/media-types';
+import { FilmData, SeasonData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
 import { Transaction } from 'sequelize';
 
 export const mediaDataToCreateIndexMedia = (
-  data: FilmData | ShowData
+  data: FilmData | ShowData | SeasonData,
+  showName: string = ''
 ): CreateIndexMedia => ({
   tmdbId: data.tmdbId,
   image: data.image,
   addedToMedia: true,
   year: getYearNum(data.releaseDate),
   country: data.countries,
-  name: data.name,
+  //for seasons, we override the name to contain the parent show's for sorting reasons
+  name:
+    data.mediaType === MediaType.Season
+      ? `${showName}: S${data.index}`
+      : data.name,
   rating: data.rating,
   baseRating: data.baseRating,
   voteCount: data.voteCount,
@@ -88,4 +93,15 @@ export const upsertIndexMedia = async (
 ): Promise<IndexMedia | null> => {
   const [indexEntry] = await IndexMedia.upsert(data, { transaction });
   return indexEntry;
+};
+
+export const bulkCreateIndexMedia = async (
+  indexMedia: CreateIndexMedia[],
+  transaction?: Transaction
+): Promise<IndexMedia[]> => {
+  return await IndexMedia.bulkCreate(indexMedia, {
+    updateOnDuplicate: ['popularity', 'name', 'image', 'baseRating'],
+    returning: true,
+    transaction,
+  });
 };
