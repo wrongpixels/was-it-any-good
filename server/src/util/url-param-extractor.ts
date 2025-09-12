@@ -55,16 +55,18 @@ export const extractURLParams = (
   ).filter((c: CountryCode) => c !== 'UNKNOWN');
   const year: string | null = req.query[UPARAM_YEAR]?.toString() || null;
   const sortBy: SortBy =
-    stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
     overrideParams?.sortBy ||
+    stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
     DEF_SORT_BY;
+
+  console.log(sortBy);
 
   //DESC for strings is actually Z -> A, not really ideal for a default sorting.
   //as all other SortBy are numbers, we simply invert this one
   const defaultSortDir: SortDir =
-    stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
-    overrideParams?.sortDir ||
-    DEF_SORT_DIR;
+    stringToSortDir(
+      overrideParams?.sortDir || req.query[UPARAM_SORT_DIR]?.toString()
+    ) || DEF_SORT_DIR;
   const sortDir: SortDir =
     sortBy === SortBy.Title ? invertSortDir(defaultSortDir) : defaultSortDir;
 

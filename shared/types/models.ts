@@ -42,6 +42,9 @@ interface BrowseResults {
 }
 
 export interface IndexMediaResults extends BrowseResults {
+  totalFilms?: number;
+  totalShows?: number;
+  totalSeasons?: number;
   indexMedia: IndexMediaData[];
 }
 

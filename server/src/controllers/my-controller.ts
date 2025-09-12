@@ -18,12 +18,13 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { searchPage, sortBy, sortDir, findAndCountOptions } =
-        extractURLParams(req);
+        extractURLParams(req, { sortBy: SortBy.VoteDate });
       //SortBy rating must point to Rating's userScore
       if (sortBy === SortBy.Rating) {
         findAndCountOptions.order = [[SortBy.UserScore, sortDir.toUpperCase()]];
       }
-      const userId: number = 10;
+      console.log(sortBy);
+      const userId: number = 1;
 
       const { rows: ratings, count } = await Rating.findAndCountAll({
         where: {
