@@ -29,6 +29,7 @@ class Rating extends Model<
   declare total?: number;
 
   static associate() {
+    /*
     this.belongsTo(Film, {
       as: 'film',
       foreignKey: 'mediaId',
@@ -42,7 +43,7 @@ class Rating extends Model<
       as: 'show',
       foreignKey: 'mediaId',
       scope: {
-        mediaType: MediaType.Show,
+        media_type: MediaType.Show,
       },
       constraints: false,
     });
@@ -50,10 +51,10 @@ class Rating extends Model<
       as: 'season',
       foreignKey: 'mediaId',
       scope: {
-        mediaType: MediaType.Season,
+        media_type: MediaType.Season,
       },
       constraints: false,
-    });
+    });*/
     this.belongsTo(User, {
       foreignKey: 'userId',
       constraints: false,

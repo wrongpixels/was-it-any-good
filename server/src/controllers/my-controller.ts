@@ -1,12 +1,13 @@
 //endpoint for logged in user related requests.
 
 import express, { Request, Response, NextFunction, Router } from 'express';
-import { RatingResults } from '../../../shared/types/models';
+import { RatingData, RatingResults } from '../../../shared/types/models';
 import { Rating } from '../models';
 import { toPlainArray } from '../util/model-helpers';
 import { extractURLParams } from '../util/url-param-extractor';
 import { PAGE_LENGTH } from '../../../shared/types/search-browse';
 import { SortBy } from '../../../shared/types/browse';
+import { MediaType } from '../../../shared/types/media';
 
 const router: Router = express.Router();
 
@@ -28,23 +29,22 @@ router.get(
           userId: 10,
         },
         ...findAndCountOptions,
-        include: [
-          {
-            association: 'film',
-          },
-          {
-            association: 'show',
-          },
-          {
-            association: 'season',
-          },
-        ],
       });
+
+      const cleanRatings: RatingData[] = toPlainArray(ratings).map(
+        (r: RatingData) => ({
+          ...r,
+          film: r.mediaType === MediaType.Film ? r.film : undefined,
+          show: r.mediaType === MediaType.Show ? r.show : undefined,
+          season: r.mediaType === MediaType.Season ? r.season : undefined,
+        })
+      );
+
       const ratingsResults: RatingResults = {
         page: searchPage,
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         totalResults: count,
-        ratings: toPlainArray(ratings),
+        ratings: cleanRatings,
       };
       res.json(ratingsResults);
     } catch (error) {
