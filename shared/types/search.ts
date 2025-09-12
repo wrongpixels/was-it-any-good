@@ -19,6 +19,7 @@ export enum SearchType {
   Film = "film",
   Show = "show",
   Person = "person",
+  Season = "season",
   Multi = "multi",
 }
 
