@@ -7,7 +7,7 @@ import {
 } from '../services/index-media-service';
 import { CreateIndexMedia, IndexMediaData } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
-import CustomError from '../util/customError';
+import CustomError, { NotFoundError } from '../util/customError';
 
 const router = express.Router();
 
@@ -24,8 +24,7 @@ router.get('/:id', async (req: Request, res, next) => {
       raw: true,
     });
     if (!entry) {
-      res.json(null);
-      return;
+      throw new NotFoundError();
     }
     res.json(entry);
   } catch (error) {

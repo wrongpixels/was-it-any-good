@@ -12,6 +12,7 @@ import suggestionsRouter from './suggestions-controller';
 import searchRouter from './search-controller';
 import trendingRouter from './trending-controller';
 import browseRouter from './browse-controller';
+import myRouter from './my-controller';
 
 export {
   filmsRouter,
@@ -28,4 +29,5 @@ export {
   searchRouter,
   browseRouter,
   trendingRouter,
+  myRouter,
 };

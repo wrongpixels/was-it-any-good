@@ -8,48 +8,57 @@ import {
   RatingStats,
   RemoveRatingResponse,
 } from '../../../shared/types/models';
-import CustomError from '../util/customError';
+import CustomError, { AuthError } from '../util/customError';
 import { Media, Rating } from '../models';
 import { isAuthorizedUser } from '../util/session-verifier';
 import { MediaType } from '../../../shared/types/media';
 import { stringToMediaType } from '../../../shared/helpers/media-helper';
+import { authRequired } from '../middleware/auth-requirements';
 
 const router: Router = express.Router();
 
-router.get('/', async (_req, res, next) => {
-  try {
-    const allRatings: RatingData[] = await Rating.findAll({ raw: true });
-    res.json(allRatings);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post('/', async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.activeUser?.isValid) {
-      throw new CustomError('Unauthorized', 401);
+router.get(
+  '/',
+  /* adminRequired,*/ async (_req, res, next) => {
+    try {
+      const allRatings: RatingData[] = await Rating.findAll({ raw: true });
+      res.json(allRatings);
+    } catch (error) {
+      next(error);
     }
-    const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
-    const ratingData: CreateRatingData = {
-      ...reqRating,
-      userId: req.activeUser.id,
-    };
-    const [ratingEntry, created]: [Rating, boolean | null] =
-      await Rating.upsert(ratingData);
-    const ratingStats: RatingStats = await Media.refreshRatings(
-      ratingEntry.mediaId,
-      ratingEntry.mediaType
-    );
-    const ratingResponse: CreateRatingResponse = {
-      ...ratingEntry.get({ plain: true }),
-      ratingStats,
-    };
-    res.status(created ? 201 : 200).json(ratingResponse);
-  } catch (error) {
-    next(error);
   }
-});
+);
+
+router.post(
+  '/',
+  authRequired,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //merely for TS, the middleware already did the job
+      if (!req.activeUser) {
+        throw new AuthError();
+      }
+      const reqRating: CreateRating = CreateRatingSchema.parse(req.body);
+      const ratingData: CreateRatingData = {
+        ...reqRating,
+        userId: req.activeUser?.id,
+      };
+      const [ratingEntry, created]: [Rating, boolean | null] =
+        await Rating.upsert(ratingData);
+      const ratingStats: RatingStats = await Media.refreshRatings(
+        ratingEntry.mediaId,
+        ratingEntry.mediaType
+      );
+      const ratingResponse: CreateRatingResponse = {
+        ...ratingEntry.get({ plain: true }),
+        ratingStats,
+      };
+      res.status(created ? 201 : 200).json(ratingResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 router.get(
   '/match/:media/:mediaId',

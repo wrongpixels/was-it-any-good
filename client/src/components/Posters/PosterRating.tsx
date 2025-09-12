@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import { MediaType } from '../../../../shared/types/media';
 import StarRating from '../Rating/StarRating';
@@ -97,4 +97,4 @@ const RatingPoster = ({
   );
 };
 
-export default RatingPoster;
+export default memo(RatingPoster);

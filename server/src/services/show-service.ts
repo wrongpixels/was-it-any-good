@@ -23,11 +23,12 @@ import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
 import { tmdbPaths } from '../util/url-helper';
-import { ShowResponse } from '../../../shared/types/models';
+import { CreateIndexMedia, ShowResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
 import {
   upsertIndexMedia,
   mediaDataToCreateIndexMedia,
+  bulkCreateIndexMedia,
 } from './index-media-service';
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
 import { reorderSeasons } from '../../../shared/helpers/media-helper';
@@ -59,9 +60,29 @@ export const buildShowEntry = async (
     throw new CustomError('Show could not be created', 400);
   }
   console.log('Created show!');
-  const seasons: CreateSeason[] = showData.seasons.map((s: SeasonData) =>
-    buildSeason(s, showEntry)
+  //we bulk create the season entries and their indexMedia
+
+  //indexMedia have to be created first so we can assign their ids to the Season entry
+  const createSeasonsIndexMedia: CreateIndexMedia[] = showData.seasons.map(
+    (s: SeasonData) => mediaDataToCreateIndexMedia(s, showData.name)
   );
+  //and we save them in the db
+  const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+    createSeasonsIndexMedia,
+    params.transaction
+  );
+
+  const seasons: CreateSeason[] = showData.seasons.map((s: SeasonData) =>
+    buildSeason(
+      s,
+      showEntry,
+      //we find the matching indexMedia entry by tmdbId and we pass it to link them.
+      //If any match fails, buildSeason will throw an error.
+      seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
+    )
+  );
+
+  //and we finally create the seasons in the db
   await Season.bulkCreate(seasons, {
     ignoreDuplicates: true,
     transaction: params.transaction,
@@ -133,9 +154,16 @@ export const buildShow = (showData: ShowData, indexId: number): CreateShow => ({
 
 const buildSeason = (
   seasonData: SeasonData,
-  showEntry: Show
-): CreateSeason => ({
-  ...seasonData,
-  showId: showEntry.id,
-  country: showEntry.country,
-});
+  showEntry: Show,
+  indexMedia?: IndexMedia
+): CreateSeason => {
+  if (!indexMedia?.id) {
+    throw new CustomError('Error creating Index Media', 400);
+  }
+  return {
+    ...seasonData,
+    showId: showEntry.id,
+    country: showEntry.country,
+    indexId: indexMedia?.id,
+  };
+};

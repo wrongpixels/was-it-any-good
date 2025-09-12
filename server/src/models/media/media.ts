@@ -48,7 +48,7 @@ class Media<
   declare id: CreationOptional<number>;
   declare tmdbId: number;
   declare imdbId?: string;
-  declare indexId?: number;
+  declare indexId: number;
   declare name: string;
   declare originalName: string;
   declare sortName: string;
@@ -81,6 +81,10 @@ class Media<
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
+      },
+      indexId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
       tmdbId: {
         type: DataTypes.INTEGER,

@@ -9,13 +9,14 @@ import {
 import { styles } from '../../../constants/tailwind-styles';
 import Button from '../../Common/Custom/Button';
 import Dropdown from '../../Common/Custom/Dropdown';
-import {
-  OverrideParams,
-  URLParameters,
-} from '../../../types/search-browse-types';
+import {} from '../../../types/search-browse-types';
 import useDropdown from '../../../hooks/use-dropdown';
 import IconInvertSortDir from '../../Common/Icons/Sorting/IconInvertSortDir';
 import DisabledDiv from '../../Common/Custom/DisabledDiv';
+import {
+  OverrideParams,
+  URLParameters,
+} from '../../../../../shared/types/search-browse';
 
 export interface OverrideSortOptions {
   //to hide the sort dropdown (like in Home)

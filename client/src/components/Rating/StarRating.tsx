@@ -2,7 +2,7 @@ import HoverMessage from '../Notifications/HoverMessage';
 import { MediaType } from '../../../../shared/types/media';
 import StarList from './StarList';
 import { DEF_STAR_WIDTH } from '../../constants/ratings-constants';
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import { useRatingInteractions } from '../../hooks/use-rating-interaction';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import {
@@ -93,4 +93,4 @@ const StarRating = ({
     </div>
   );
 };
-export default StarRating;
+export default memo(StarRating);

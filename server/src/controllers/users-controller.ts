@@ -1,14 +1,10 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { Rating, User } from '../models';
+import { User } from '../models';
 import CustomError, {
   NotFoundError,
   WrongFormatError,
 } from '../util/customError';
-import {
-  CreateUserData,
-  RatingData,
-  UserData,
-} from '../../../shared/types/models';
+import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
 
 const router: Router = express.Router();
@@ -25,6 +21,25 @@ router.get('/', async (req: Request, res, next) => {
     next(error);
   }
 });
+
+router.get('/:id', async (req: Request, res, next) => {
+  try {
+    const id: string = req.params.id;
+    if (!id) {
+      throw new WrongFormatError();
+    }
+    const user: UserData | null = await User.findByPk(id, {
+      attributes: ['id', 'username', 'lastActive'],
+    });
+    if (!user) {
+      throw new NotFoundError('User');
+    }
+    res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.put(
   '/:id/activate',
   async (
@@ -62,57 +77,6 @@ router.put(
     }
   }
 );
-
-router.get('/:id', async (req: Request, res, next) => {
-  try {
-    const id: string = req.params.id;
-    if (!id) {
-      throw new WrongFormatError();
-    }
-    const user: UserData | null = await User.findByPk(id, {
-      attributes: ['id', 'username', 'lastActive'],
-    });
-    if (!user) {
-      throw new NotFoundError('User');
-    }
-    res.json(user);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.get('/:id/votes', async (req: Request, res, next) => {
-  try {
-    const id: string = req.params.id;
-    if (!id) {
-      throw new WrongFormatError();
-    }
-    //only the active user or an admin can access the votes
-    /*    if (id !== req.activeUser?.id.toString() && !req.activeUser?.isAdmin) {
-      throw new AuthError();
-    }*/
-    const ratings: RatingData[] = await Rating.findAll({
-      where: {
-        userId: id,
-      },
-      include: [
-        {
-          association: 'film',
-        },
-        {
-          association: 'show',
-        },
-        {
-          association: 'season',
-        },
-      ],
-    });
-
-    res.json(ratings);
-  } catch (error) {
-    next(error);
-  }
-});
 
 router.post('/', async (req, res, next) => {
   try {

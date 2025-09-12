@@ -1,14 +1,14 @@
 import { JSX } from 'react';
-import { IndexMediaResponse } from '../../../../../shared/types/models';
+import { IndexMediaResults } from '../../../../../shared/types/models';
 
-import { PAGE_LENGTH } from '../../../../../shared/types/search-browse';
+import {
+  OverrideParams,
+  PAGE_LENGTH,
+  URLParameters,
+} from '../../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
 import Instructions from '../../Common/Instructions';
-import {
-  BadgeType,
-  OverrideParams,
-  URLParameters,
-} from '../../../types/search-browse-types';
+import { BadgeType } from '../../../types/search-browse-types';
 import { NavigateToQueryOptions } from '../../../hooks/use-url-query-manager';
 import SpinnerPage from '../../Common/Status/SpinnerPage';
 import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
@@ -16,7 +16,7 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 
 interface PageResultsProps {
-  results: IndexMediaResponse | undefined;
+  results: IndexMediaResults | undefined;
   navigatePages: (movement: number) => void;
   navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;

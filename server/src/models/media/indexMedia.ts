@@ -7,7 +7,7 @@ import {
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db';
-import { Film, Show } from '..';
+import { Film, Season, Show } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 
 //stores TMDB media metadata and maps TMDB ids to internal media ids (if they exist).
@@ -20,6 +20,8 @@ class IndexMedia extends Model<
 > {
   declare id: CreationOptional<number>;
   declare tmdbId: number;
+  //only for Seasons
+  declare showId?: number;
   declare addedToMedia: boolean;
   declare name: string;
   declare image: string;
@@ -32,6 +34,7 @@ class IndexMedia extends Model<
   declare mediaType: MediaType;
   declare film?: Film;
   declare show?: Show;
+  declare season?: Season;
 
   static associate() {
     this.hasOne(Film, {
@@ -54,10 +57,20 @@ class IndexMedia extends Model<
         media_type: MediaType.Show,
       },
     });
+    this.hasOne(Season, {
+      foreignKey: 'indexId',
+      constraints: false,
+      as: 'season',
+      scope: {
+        //we're forced to snake_case it as sequelize won't convert it
+        //automatically when used in buildIncludeOptions()
+        media_type: MediaType.Season,
+      },
+    });
   }
 
   getMediaId(): number | null {
-    return !this.addedToMedia ? null : this.film?.id ?? this.show?.id ?? null;
+    return !this.addedToMedia ? null : (this.film?.id ?? this.show?.id ?? null);
   }
 }
 

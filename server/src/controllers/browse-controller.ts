@@ -1,77 +1,28 @@
 import express, { Router } from 'express';
-import { extractQuery } from '../util/search-helpers';
-import { IndexMediaResponse } from '../../../shared/types/models';
+import { IndexMediaResults } from '../../../shared/types/models';
 import { Film, IndexMedia, Show } from '../models';
-import { FindAndCountOptions, FindOptions, Op, WhereOptions } from 'sequelize';
+import { FindOptions, Op } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
-import { CountryCode } from '../../../shared/types/countries';
-import { validateCountries } from '../factories/media-factory';
-import {
-  invertSortDir,
-  SortBy,
-  SortDir,
-  stringToSortBy,
-  stringToSortDir,
-} from '../../../shared/types/browse';
-import { arrayToSearchType, SearchType } from '../../../shared/types/search';
+import { SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { PAGE_LENGTH } from '../../../shared/types/search-browse';
-import {
-  UPARAM_COUNTRIES,
-  UPARAM_GENRES,
-  UPARAM_PAGE,
-  UPARAM_QUERY_TYPE,
-  UPARAM_SORT_BY,
-  UPARAM_SORT_DIR,
-  UPARAM_YEAR,
-} from '../../../shared/constants/url-param-constants';
+import { extractURLParams } from '../util/url-param-extractor';
 
 const router: Router = express.Router();
 
 router.get('/', async (req, res, next) => {
   try {
-    const searchType: SearchType =
-      arrayToSearchType(extractQuery(req.query[UPARAM_QUERY_TYPE])) ??
-      SearchType.Multi;
-    const isMulti: boolean = searchType === SearchType.Multi;
-    const searchPage: number = Number(req.query[UPARAM_PAGE]) || 1;
-    const genres: string[] = extractQuery(req.query[UPARAM_GENRES]);
-    const countries: CountryCode[] = validateCountries(
-      extractQuery(req.query[UPARAM_COUNTRIES])
-    ).filter((c: CountryCode) => c !== 'UNKNOWN');
-    const year: string | undefined = req.query[UPARAM_YEAR]?.toString();
-    const sortBy: SortBy =
-      stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
-      SortBy.Popularity;
-
-    //DESC for strings is actually Z -> A, not really ideal for a default sorting.
-    //as all other SortBy are numbers, we simply invert this one
-    const defSortDir: SortDir =
-      stringToSortDir(req.query[UPARAM_SORT_DIR]?.toString()) ||
-      SortDir.Default;
-    const sortDir: SortDir =
-      sortBy === SortBy.Title ? invertSortDir(defSortDir) : defSortDir;
-
-    //shared filters for years and countries
-    const whereOptions: WhereOptions = {};
-    if (year) {
-      whereOptions.releaseDate = {
-        [Op.between]: [`${year}-01-01`, `${year}-12-31`],
-      };
-    }
-    if (countries.length > 0) {
-      whereOptions.country = { [Op.overlap]: countries };
-    }
-
-    //pagination values
-    const findAndCountOptions: FindAndCountOptions = {
-      order: [[sortBy, sortDir.toUpperCase()]],
-      distinct: true,
-      limit: PAGE_LENGTH,
-      offset: PAGE_LENGTH * (searchPage - 1),
-    };
+    //we extract the queries we received and the prebuilt options
+    const {
+      searchType,
+      searchPage,
+      isMulti,
+      genres,
+      where,
+      findAndCountOptions,
+    } = extractURLParams(req);
 
     if (isMulti) {
       //if is multi search, we filter Films and Shows directly, gather their indexIds, and finally
@@ -84,7 +35,7 @@ router.get('/', async (req, res, next) => {
         raw: true,
         attributes: ['indexId'],
 
-        where: whereOptions,
+        where,
         include: buildIncludeOptions(genres, MediaType.Film, true),
       };
       const showFindOptions: FindOptions = {
@@ -130,7 +81,7 @@ router.get('/', async (req, res, next) => {
           },
         ],
       });
-      const response: IndexMediaResponse = {
+      const response: IndexMediaResults = {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page 1
@@ -149,7 +100,7 @@ router.get('/', async (req, res, next) => {
             association: isFilm ? 'film' : 'show',
             attributes: ['id', 'rating'],
             required: true,
-            where: whereOptions,
+            where,
             include: buildIncludeOptions(
               genres,
               isFilm ? MediaType.Film : MediaType.Show
@@ -158,7 +109,7 @@ router.get('/', async (req, res, next) => {
         ],
       });
 
-      const response: IndexMediaResponse = {
+      const response: IndexMediaResults = {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page #1

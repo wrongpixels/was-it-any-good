@@ -8,13 +8,13 @@ import EntryTitle from '../../EntryTitle';
 import {
   BadgeType,
   BrowsePageTitleOptions,
-  OverrideParams,
 } from '../../../types/search-browse-types';
 import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
 import { getBrowseOperation } from '../../../utils/common-format-helper';
 import LoadingCards from '../Loading/LoadingSearch';
 import { overrideParamsToOverrideSort } from '../../../utils/browse-helper';
+import { OverrideParams } from '../../../../../shared/types/search-browse';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -42,7 +42,7 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
     basePath,
     overrideParams,
   });
-  const { currentPage, genres } = urlParams;
+  const { searchPage, genres } = urlParams;
   const {
     data: browseResults,
     isFetching,
@@ -55,8 +55,8 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
   //this is also protected in the backend
   useEffect(() => {
     if (
-      currentPage < 0 ||
-      (browseResults && browseResults.totalPages < Number(currentPage))
+      searchPage < 0 ||
+      (browseResults && browseResults.totalPages < Number(searchPage))
     ) {
       navigateToPage(browseResults?.totalPages || 1);
     }

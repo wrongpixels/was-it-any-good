@@ -86,6 +86,7 @@ const updateUserRating = (
       id: -1,
       userId: -1,
       userScore: newScore,
+      indexId: media.indexId,
       mediaId: media.id,
       mediaType: media.mediaType,
     };

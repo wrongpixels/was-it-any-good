@@ -1,6 +1,6 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db';
-import { Film, Media, Rating, Show } from '..';
+import { Film, IndexMedia, Media, Rating, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
 import {
@@ -19,7 +19,11 @@ class Season extends Media<
   declare episodeCount: number;
 
   static associate() {
-    Season.hasMany(Rating, {
+    this.belongsTo(IndexMedia, {
+      foreignKey: 'indexId',
+      as: 'indexMedia',
+    });
+    this.hasMany(Rating, {
       foreignKey: 'mediaId',
       as: 'ratings',
       scope: {
@@ -27,7 +31,7 @@ class Season extends Media<
       },
       constraints: false,
     });
-    Season.hasOne(Rating, {
+    this.hasOne(Rating, {
       foreignKey: 'mediaId',
       as: 'userRating',
       scope: {
@@ -94,6 +98,6 @@ Season.init(
     },
   }
 );
-export type CreateSeason = Omit<InferAttributes<Season>, 'id' | 'indexId'>;
+export type CreateSeason = Omit<InferAttributes<Season>, 'id'>;
 
 export default Season;

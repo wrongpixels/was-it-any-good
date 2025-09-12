@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { IndexMediaResponse } from '../../../../../shared/types/models';
+import { IndexMediaResults } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import Button from '../../Common/Custom/Button';
 import DisabledDiv from '../../Common/Custom/DisabledDiv';
@@ -8,7 +8,7 @@ import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 import React from 'react';
 
 interface PageResultsNavProps extends OptClassNameProps {
-  results: IndexMediaResponse;
+  results: IndexMediaResults;
   navigatePages: (page: number) => void;
 }
 

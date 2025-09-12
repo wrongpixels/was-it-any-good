@@ -4,7 +4,7 @@ import { createIndexForShowBulk } from '../factories/show-factory';
 
 import {
   CreateIndexMedia,
-  IndexMediaResponse,
+  IndexMediaResults,
 } from '../../../shared/types/models';
 import { arrayToTMDBSearchTypes, extractQuery } from '../util/search-helpers';
 import { TMDBSearchType } from '../../../shared/types/search';
@@ -17,6 +17,7 @@ import {
 import { toPlainArray } from '../util/model-helpers';
 import { Op } from 'sequelize';
 import { fetchSearchFromTMDBAndParse } from '../services/search-service';
+import { bulkCreateIndexMedia } from '../services/index-media-service';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -173,11 +174,7 @@ router.get('/', async (req: Request, res, next) => {
     ];
 
     //we bulk create or update if existing, returning so we know the involved ids
-    const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
-      updateOnDuplicate: ['popularity', 'image', 'baseRating'],
-      returning: true,
-    });
-
+    const entries: IndexMedia[] = await bulkCreateIndexMedia(indexMedia);
     const ids = entries.map((i: IndexMedia) => i.id);
 
     //we find them again to get the show/film ids and the genres of the
@@ -193,7 +190,7 @@ router.get('/', async (req: Request, res, next) => {
       },
     });
 
-    const indexMediaResponse: IndexMediaResponse = {
+    const indexMediaResponse: IndexMediaResults = {
       indexMedia: toPlainArray(populatedEntries),
       //we consider no results a blank page 1
       totalPages: searchResult.total_pages || 1,

@@ -4,7 +4,7 @@ import { createIndexForShowBulk } from '../factories/show-factory';
 
 import {
   CreateIndexMedia,
-  IndexMediaResponse,
+  IndexMediaResults,
 } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
 import {
@@ -86,7 +86,7 @@ router.get('/', async (_req: Request, res, next) => {
       },
     });
 
-    const indexMediaResponse: IndexMediaResponse = {
+    const indexMediaResponse: IndexMediaResults = {
       indexMedia: toPlainArray(populatedEntries),
       //we consider no results a blank page 1
       totalPages: searchResult.total_pages || 1,

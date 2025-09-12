@@ -14,6 +14,8 @@ export interface MediaRoleResponse {
 
 export interface CreateIndexMedia {
   tmdbId: number;
+  //optional field for seasons
+  showId?: number;
   addedToMedia: boolean;
   country: CountryCode[];
   name: string;
@@ -30,22 +32,36 @@ export interface IndexMediaData extends CreateIndexMedia {
   id: number;
   film?: FilmResponse;
   show?: ShowResponse;
+  season?: SeasonResponse;
 }
-
-export interface IndexMediaResponse {
+//for browse/search results
+interface BrowseResults {
   page: number;
   totalPages: number;
   totalResults: number;
+}
+
+export interface IndexMediaResults extends BrowseResults {
+  totalFilms?: number;
+  totalShows?: number;
+  totalSeasons?: number;
   indexMedia: IndexMediaData[];
 }
 
+export interface RatingResults extends BrowseResults {
+  ratings: RatingData[];
+}
 export interface RatingData {
   id: number;
+  indexId: number;
   userId: number;
   mediaId: number;
   userScore: number;
   mediaType: MediaType;
   showId?: number;
+  show?: ShowResponse;
+  film?: FilmResponse;
+  season?: SeasonResponse;
 }
 
 export interface RatingStats {
@@ -157,6 +173,8 @@ export interface BaseResponse {
 
 export interface SeasonResponse extends BaseResponse {
   index: number;
+  indexId: number;
+
   episodeCount: number;
   showId: number;
   mediaType: MediaType.Season;
