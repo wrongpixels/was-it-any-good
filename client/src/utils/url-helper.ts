@@ -76,6 +76,10 @@ export const apiPaths = {
     base: `${API_BASE}/browse`,
     byQuery: (query: string) => `${apiPaths.browse.base}?${query}`,
   },
+  my: {
+    base: `${API_BASE}/my`,
+    votes: () => `${apiPaths.my.base}/votes`,
+  },
 };
 export const routerPaths = {
   home: '/',
@@ -152,6 +156,10 @@ export const routerPaths = {
       withQuery: (query: string) =>
         `${routerPaths.popular.multi.query()}${query}`,
     },
+  },
+  my: {
+    base: '/my',
+    votes: () => `${routerPaths.my.base}/votes`,
   },
   trending: {
     base: '/trending',

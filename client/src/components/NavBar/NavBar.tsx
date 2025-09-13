@@ -6,6 +6,8 @@ import IconCrown from '../Common/Icons/Badges/IconCrown';
 import IconHome from '../Common/Icons/IconHome';
 import IconFilm from '../Common/Icons/Media/IconFilm';
 import IconShow from '../Common/Icons/Media/IconShow';
+import IconStar from '../Common/Icons/Ratings/IconStar';
+import { useAuth } from '../../hooks/use-auth';
 
 interface LinkInfo {
   text: string;
@@ -54,24 +56,30 @@ const links: LinkInfo[] = [
 ];
 
 const NavBar = (): JSX.Element => {
+  let activeTab: boolean = false;
+  const auth = useAuth();
   return (
-    <nav aria-label="NavBar" className={`${styles.contentWidth} my-1`}>
+    <nav
+      aria-label="NavBar"
+      className={`${styles.contentWidth} my-1 flex flex-row w-full`}
+    >
       <ul className="flex flex-row items-center text-xs md:text-sm">
         {links.map((li, i) => (
           <li
             key={li.key}
-            className={`flex flex-row items-center ${styles.animations.opacity70}`}
+            className={`flex flex-row items-center  ${styles.animations.opacity70}`}
           >
             <NavLink
               to={li.url}
               title={li.title}
-              className={({ isActive }) =>
-                `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
-                  isActive
+              className={({ isActive }) => {
+                activeTab = isActive;
+                return `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
+                  activeTab
                     ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/30 to-transparent via-amber-200/10'
                     : 'border-transparent'
-                }`
-              }
+                }`;
+              }}
               end={li.url === routerPaths.home}
             >
               {li.icon ?? null}
@@ -86,6 +94,27 @@ const NavBar = (): JSX.Element => {
           </li>
         ))}
       </ul>
+      {auth.session && (
+        <span
+          className={`ml-auto text-end text-xs md:text-sm h-full items-center  ${styles.animations.opacity70}`}
+        >
+          <NavLink
+            to={routerPaths.my.votes()}
+            title={'My votes'}
+            className={({ isActive }) =>
+              `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
+                isActive
+                  ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/30 to-transparent via-amber-200/10'
+                  : 'border-transparent'
+              }`
+            }
+            end={routerPaths.my.votes() === routerPaths.my.votes()}
+          >
+            {<IconStar width={16} />}
+            <span className="text-starblue">{'My Votes'}</span>
+          </NavLink>
+        </span>
+      )}
     </nav>
   );
 };
