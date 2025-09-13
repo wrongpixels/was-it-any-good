@@ -43,6 +43,7 @@ router.get(
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         totalResults: count,
         ratings: cleanRatings,
+        resultsType: 'votes',
       };
       res.json(ratingsResults);
 

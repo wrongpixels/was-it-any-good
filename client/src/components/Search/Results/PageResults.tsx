@@ -1,5 +1,9 @@
 import { JSX } from 'react';
-import { IndexMediaResults } from '../../../../../shared/types/models';
+import {
+  IndexMediaResults,
+  RatingData,
+  RatingResults,
+} from '../../../../../shared/types/models';
 
 import {
   OverrideParams,
@@ -16,7 +20,7 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 
 interface PageResultsProps {
-  results: IndexMediaResults | undefined;
+  results: IndexMediaResults | RatingResults | undefined;
   navigatePages: (movement: number) => void;
   navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;
@@ -75,12 +79,24 @@ const PageResults = ({
       )) || (
         <div className="flex flex-col h-full">
           <div className="flex-1">
-            {results.indexMedia.length > 0 ? (
+            {results.resultsType === 'browse' &&
+            results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />
+            ) : results.resultsType === 'votes' &&
+              results.ratings.length > 0 ? (
+              <div>
+                {results.ratings.map((r: RatingData) => (
+                  <div key={r.id}>
+                    {r.indexMedia?.name}
+                    {' - '}
+                    {r.userScore}
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="h-64 w-full" aria-hidden="true">
                 <Instructions condition={true} />

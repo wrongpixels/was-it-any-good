@@ -70,6 +70,7 @@ export const apiPaths = {
     base: `${API_BASE}/search`,
     byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
+
   trending: `${API_BASE}/trending`,
 
   browse: {
@@ -78,7 +79,10 @@ export const apiPaths = {
   },
   my: {
     base: `${API_BASE}/my`,
-    votes: () => `${apiPaths.my.base}/votes`,
+    votes: {
+      base: () => `${apiPaths.my.base}/votes`,
+      byQuery: (query: string) => `${apiPaths.my.votes.base()}?${query}`,
+    },
   },
 };
 export const routerPaths = {
@@ -159,7 +163,11 @@ export const routerPaths = {
   },
   my: {
     base: '/my',
-    votes: () => `${routerPaths.my.base}/votes`,
+    votes: {
+      base: () => `${routerPaths.my.base}/votes`,
+      query: () => `${routerPaths.my.votes.base}?`,
+      byQuery: (query: string) => `${routerPaths.my.votes.query()}${query}`,
+    },
   },
   trending: {
     base: '/trending',

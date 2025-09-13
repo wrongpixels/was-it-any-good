@@ -92,6 +92,7 @@ router.get('/', async (_req: Request, res, next) => {
       totalPages: searchResult.total_pages || 1,
       page: searchResult.page,
       totalResults: searchResult.total_results,
+      resultsType: 'browse',
     };
     res.json(indexMediaResponse);
   } catch (error) {

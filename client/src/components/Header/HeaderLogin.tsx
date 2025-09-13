@@ -20,7 +20,7 @@ const HeaderLogin = (): JSX.Element => {
       <div className="flex gap-2 items-center font-normal ">
         <div className="flex items-center gap-4 text-sm ">
           <Link
-            to={routerPaths.my.votes()}
+            to={routerPaths.my.votes.base()}
             className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright hover:text-white"
           >
             <IMG

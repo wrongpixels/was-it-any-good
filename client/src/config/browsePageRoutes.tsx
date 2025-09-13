@@ -8,6 +8,7 @@ import IconCrown from '../components/Common/Icons/Badges/IconCrown';
 import IconFilm from '../components/Common/Icons/Media/IconFilm';
 import IconShow from '../components/Common/Icons/Media/IconShow';
 import IconStar from '../components/Common/Icons/Ratings/IconStar';
+import { QueryToUse } from '../types/search-browse-types';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -51,6 +52,7 @@ interface PageRouteBuilderProps {
   searchType?: SearchType;
   sortBy?: SortBy;
   sortDir?: SortDir;
+  queryToUse?: QueryToUse;
 }
 
 const buildPageRoute = ({
@@ -58,6 +60,7 @@ const buildPageRoute = ({
   path,
   subtitle,
   icon,
+  queryToUse,
   searchType = SearchType.Multi,
   sortBy = SortBy.Rating,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
@@ -74,10 +77,13 @@ const buildPageRoute = ({
         searchType,
         basePath: path,
       },
+      queryToUse,
     },
   };
 };
-
+//creates a series of Browse routes directly within App.tsx with
+//options for different titles, icons and even queries
+//example: top/shows, popular/media or my/votes
 export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: 'Popular Media',
@@ -107,7 +113,8 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   }),
   buildPageRoute({
     title: 'Your Votes',
-    path: routerPaths.my.votes(),
+    queryToUse: 'votes',
+    path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar className="text-starbright" />,
   }),

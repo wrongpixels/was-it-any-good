@@ -8,6 +8,7 @@ import EntryTitle from '../../EntryTitle';
 import {
   BadgeType,
   BrowsePageTitleOptions,
+  QueryToUse,
 } from '../../../types/search-browse-types';
 import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
@@ -15,6 +16,7 @@ import { getBrowseOperation } from '../../../utils/common-format-helper';
 import LoadingCards from '../Loading/LoadingSearch';
 import { overrideParamsToOverrideSort } from '../../../utils/browse-helper';
 import { OverrideParams } from '../../../../../shared/types/search-browse';
+import { useMyVotesQuery } from '../../../queries/my-votes-queries';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -25,9 +27,14 @@ import { OverrideParams } from '../../../../../shared/types/search-browse';
 export interface BrowsePageProps {
   overrideParams?: OverrideParams;
   pageTitleOptions?: BrowsePageTitleOptions;
+  queryToUse?: QueryToUse;
 }
 
-const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
+const BrowsePage = ({
+  overrideParams,
+  pageTitleOptions,
+  queryToUse = 'browse',
+}: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.base;
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
@@ -48,8 +55,12 @@ const BrowsePage = ({ overrideParams, pageTitleOptions }: BrowsePageProps) => {
     isFetching,
     isLoading,
     isError,
-  } = useBrowseQuery(currentQuery);
+  } = queryToUse === 'votes'
+    ? useMyVotesQuery(currentQuery)
+    : useBrowseQuery(currentQuery);
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
+
+  console.log(browseResults);
 
   //to avoid setting a url bigger than totalPages or less than 1
   //this is also protected in the backend
