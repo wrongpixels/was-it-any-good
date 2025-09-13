@@ -4,6 +4,8 @@ import {
   useVerticalScroll,
 } from '../../../hooks/use-verticall-scroll';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
+import IconArrowRight from '../Icons/Arrows/IconArrowRight';
+import IconArrowLeft from '../Icons/Arrows/IconArrowLeft';
 
 //a custom div to convert long lists into horizontal scrollable areas with the mousewheel.
 //default fade color and size is overriden with classnames merged with tailwind merge
@@ -37,12 +39,12 @@ const ScrollableDiv = ({
             />
             <div
               className={
-                'absolute flex h-full items-center align-middle -translate-x-2 z-10'
+                'absolute flex h-full items-center align-middle -translate-x-2 z-10 '
               }
             >
               <div
                 className={
-                  'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20  text-center text-5xl text-gray-400 cursor-pointer hover:-translate-x-0.75'
+                  'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20  text-center text-gray-400 cursor-pointer hover:-translate-x-0.75'
                 }
                 onMouseDown={() => {
                   reference.current?.scrollBy({
@@ -52,13 +54,12 @@ const ScrollableDiv = ({
                   });
                 }}
               >
-                <span
+                <IconArrowLeft
+                  width={25}
                   className={
-                    'flex items-center h-full w-full align-middle justify-center -translate-y-1 -translate-x-0.75'
+                    'flex items-center h-full w-full align-middle justify-center'
                   }
-                >
-                  🢐
-                </span>
+                />
               </div>
             </div>
           </>
@@ -80,7 +81,7 @@ const ScrollableDiv = ({
               >
                 <div
                   className={
-                    'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20 right-1 text-center text-5xl text-gray-400 cursor-pointer hover:translate-x-0.75'
+                    'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20 right-1 text-center text-gray-400 cursor-pointer hover:translate-x-0.75'
                   }
                   onMouseDown={() => {
                     reference.current?.scrollBy({
@@ -92,10 +93,15 @@ const ScrollableDiv = ({
                 >
                   <span
                     className={
-                      'flex items-center h-full w-full align-middle justify-center -translate-y-1 translate-x-0.75'
+                      'flex items-center h-full w-full align-middle justify-center'
                     }
                   >
-                    🢒
+                    <IconArrowRight
+                      width={25}
+                      className={
+                        'flex items-center h-full w-full align-middle justify-center'
+                      }
+                    />
                   </span>
                 </div>
               </div>
