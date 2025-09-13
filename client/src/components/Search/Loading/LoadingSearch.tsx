@@ -21,8 +21,8 @@ const LoadingCards = ({
   return (
     <div>
       {showNavBar && (
-        <div className="grid grid-cols-3 pb-4.5 items-center w-full">
-          <div className="h-9.5 flex-row gap-2 items-center animate-pulse hidden md:flex">
+        <div className="sm:grid sm:grid-cols-3 pb-4.5 items-center w-full">
+          <div className="h-9.5 flex-row gap-2 items-center animate-pulse hidden md:flex w-full">
             <span className={`w-13 h-5 rounded-full ${styles.loadingMedia}`} />
             <span className={`w-23.5 h-full ${styles.loadingMedia}`} />
             <span className={`w-6.5 h-full ${styles.loadingMedia}`} />
@@ -31,7 +31,7 @@ const LoadingCards = ({
             <SpinnerPage
               text={`${loadTitle}...`}
               paddingTop={0}
-              className="-translate-y-0.5 text-sm md:text-lg"
+              className="-translate-y-0.5 text-base md:text-lg"
             />
           </div>
           <div className="h-8 hidden flex-row gap-1.5 items-center justify-self-end mr-0.25 animate-pulse md:flex">
