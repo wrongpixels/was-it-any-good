@@ -12,9 +12,6 @@ export const getMediaId = (indexMedia: IndexMediaData): number | null => {
 
     case MediaType.Show:
       return indexMedia.show?.id ?? null;
-    case MediaType.Season:
-      return indexMedia.season?.showId ?? null;
-
     default:
       return null;
   }

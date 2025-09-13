@@ -23,9 +23,8 @@ const VerticalMediaPoster = ({
   image,
   mediaType,
   rating,
-  userRating,
+  //userRating,
 }: VerticalMediaPosterProps): JSX.Element => {
-  console.log(userRating);
   return (
     <Link
       to={url}

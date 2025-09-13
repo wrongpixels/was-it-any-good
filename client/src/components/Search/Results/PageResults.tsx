@@ -19,7 +19,10 @@ import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
-import { urlFromIndexMedia } from '../../../utils/url-helper';
+import {
+  urlFromIndexMedia,
+  urlFromRatingData,
+} from '../../../utils/url-helper';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -90,14 +93,14 @@ const PageResults = ({
               />
             ) : results.resultsType === 'votes' &&
               results.ratings.length > 0 ? (
-              <div>
+              <div className="grid grid-cols-5 gap-6">
                 {results.ratings.map(
                   (r: RatingData) =>
                     r.indexMedia && (
                       <VerticalMediaPoster
                         key={r.id}
                         name={r.indexMedia.name}
-                        url={urlFromIndexMedia(r.indexMedia)}
+                        url={urlFromRatingData(r)}
                         image={r.indexMedia.image}
                         mediaType={r.mediaType}
                         rating={r.userScore}

@@ -1,7 +1,11 @@
 import { MediaType } from '../../../shared/types/media';
 import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
-import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
+import {
+  IndexMediaData,
+  MediaResponse,
+  RatingData,
+} from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
 import { toCountryCodes } from '../../../shared/types/countries';
@@ -233,8 +237,16 @@ export const buildRouterMediaLink = (
   }
 };
 
+export const urlFromRatingData = (rating: RatingData): string => {
+  return buildRouterMediaLink(
+    rating.mediaType,
+    rating.mediaType === MediaType.Season ? rating.showId : rating.mediaId
+  );
+};
+
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
   const mediaId: number | null = getMediaId(im);
+  console.log(mediaId, im);
   return mediaId
     ? buildRouterMediaLink(im.mediaType, mediaId)
     : buildRouterMediaLink(im.mediaType, im.tmdbId, true);

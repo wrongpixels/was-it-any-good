@@ -108,7 +108,11 @@ const BrowsePage = ({
         <LoadingCards
           showNavBar={true}
           loadTitle={'Browsing WIAG...'}
-          placeholderCount={browseResults?.indexMedia.length}
+          placeholderCount={
+            browseResults?.resultsType === 'browse'
+              ? browseResults?.indexMedia.length
+              : browseResults?.ratings.length
+          }
         />
       )) || (
         <>
