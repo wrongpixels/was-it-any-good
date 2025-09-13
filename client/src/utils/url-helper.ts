@@ -222,6 +222,12 @@ export const buildRouterMediaLink = (
         : useTMDB
           ? routerPaths.shows.byTMDBId(id)
           : routerPaths.shows.byId(id);
+    case MediaType.Season:
+      return !id
+        ? routerPaths.shows.base
+        : useTMDB
+          ? routerPaths.shows.byTMDBId(id)
+          : routerPaths.shows.byId(id);
     default:
       throw new Error(`Unsupported media type: ${mediaType}`);
   }

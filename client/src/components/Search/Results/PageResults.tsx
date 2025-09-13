@@ -18,6 +18,8 @@ import SpinnerPage from '../../Common/Status/SpinnerPage';
 import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
+import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
+import { urlFromIndexMedia } from '../../../utils/url-helper';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -89,13 +91,19 @@ const PageResults = ({
             ) : results.resultsType === 'votes' &&
               results.ratings.length > 0 ? (
               <div>
-                {results.ratings.map((r: RatingData) => (
-                  <div key={r.id}>
-                    {r.indexMedia?.name}
-                    {' - '}
-                    {r.userScore}
-                  </div>
-                ))}
+                {results.ratings.map(
+                  (r: RatingData) =>
+                    r.indexMedia && (
+                      <VerticalMediaPoster
+                        key={r.id}
+                        name={r.indexMedia.name}
+                        url={urlFromIndexMedia(r.indexMedia)}
+                        image={r.indexMedia.image}
+                        mediaType={r.mediaType}
+                        rating={r.userScore}
+                      />
+                    )
+                )}
               </div>
             ) : (
               <div className="h-64 w-full" aria-hidden="true">
