@@ -4,6 +4,10 @@ import { useLoginForm } from '../../hooks/use-login-form';
 import { InputField } from '../Common/Custom/InputField';
 import { styles } from '../../constants/tailwind-styles';
 import { useOverlay } from '../../context/OverlayProvider';
+import IMG from '../Common/Custom/IMG';
+import { DEF_IMAGE_PERSON } from '../../../../shared/defaults/media-defaults';
+import { routerPaths } from '../../utils/url-helper';
+import { Link } from 'react-router';
 
 const HeaderLogin = (): JSX.Element => {
   const { session, handleLogout, submitLogin, passwordInput, userInput } =
@@ -14,13 +18,17 @@ const HeaderLogin = (): JSX.Element => {
   if (session) {
     return (
       <div className="flex gap-2 items-center font-normal ">
-        <div className="flex items-center gap-2  text-sm ">
-          <span className="text-gray-100 flex flex-row gap-1">
-            @
-            <span className="text-amber-100 font-semibold">
-              {session.username}
-            </span>
-          </span>
+        <div className="flex items-center gap-4 text-sm ">
+          <Link
+            to={routerPaths.my.votes()}
+            className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright hover:text-white"
+          >
+            <IMG
+              src={DEF_IMAGE_PERSON}
+              className={'w-5 rounded border-2 border-gray-300'}
+            />
+            <span className=" font-semibold">{session.username}</span>
+          </Link>
           <Button
             size="xs"
             variant="cancel"
