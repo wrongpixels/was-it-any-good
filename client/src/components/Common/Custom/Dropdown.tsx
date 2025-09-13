@@ -22,8 +22,8 @@ const Dropdown = ({
   ...props
 }: DropdownProps): JSX.Element => {
   return (
-    <div className="flex flex-row gap-2 items-center ">
-      {label && <span className="">{label}</span>}
+    <div className="flex flex-row gap-2 items-center text-sm">
+      {label && <span className="hidden md:block">{label}</span>}
       <select {...props} className={mergeClassnames(defClassName, className)}>
         {options &&
           options.map((o: string, i: number) => (

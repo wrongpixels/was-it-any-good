@@ -46,6 +46,7 @@ const getIcon = (
 interface PageRouteBuilderProps {
   title: string;
   path: string;
+  icon?: JSX.Element;
   subtitle?: string;
   searchType?: SearchType;
   sortBy?: SortBy;
@@ -56,6 +57,7 @@ const buildPageRoute = ({
   title,
   path,
   subtitle,
+  icon,
   searchType = SearchType.Multi,
   sortBy = SortBy.Rating,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
@@ -65,7 +67,7 @@ const buildPageRoute = ({
       pageTitleOptions: {
         title,
         subtitle,
-        icon: getIcon(searchType, sortBy),
+        icon: icon ?? getIcon(searchType, sortBy),
       },
       overrideParams: {
         sortBy: sortBy === SortBy.Rating ? undefined : sortBy,
@@ -102,5 +104,11 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     subtitle: 'Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
     searchType: SearchType.Show,
+  }),
+  buildPageRoute({
+    title: 'Your Votes',
+    path: routerPaths.my.votes(),
+    searchType: SearchType.Multi,
+    icon: <IconStar className="text-starbright" />,
   }),
 ];

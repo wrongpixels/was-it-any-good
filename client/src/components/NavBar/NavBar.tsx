@@ -83,7 +83,7 @@ const NavBar = (): JSX.Element => {
               end={li.url === routerPaths.home}
             >
               {li.icon ?? null}
-              <span className="text-starblue">{li.text}</span>
+              <span className="text-starblue hidden sm:block">{li.text}</span>
             </NavLink>
             {i < links.length - 1 && (
               <span
