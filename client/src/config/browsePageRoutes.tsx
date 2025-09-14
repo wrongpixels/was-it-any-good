@@ -124,11 +124,12 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     searchType: SearchType.Show,
   }),
   buildPageRoute({
-    title: 'Your Votes',
+    title: 'My Votes',
     queryToUse: 'votes',
     path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar className="text-starbright" />,
+    sortBy: SortBy.VoteDate,
     overrideSortOptions: {
       overrideOptions: sortByUserValues,
     },

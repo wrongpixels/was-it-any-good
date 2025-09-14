@@ -365,11 +365,11 @@ export const extractURLParameters = (
   countries: toCountryCodes(parameters.getAll(UPARAM_COUNTRIES)),
   year: parameters.get(UPARAM_YEAR),
   sortBy:
-    overrideParams?.sortBy ??
     stringToSortBy(parameters.get(UPARAM_SORT_BY)) ??
+    overrideParams?.sortBy ??
     DEF_SORT_BY,
   sortDir:
-    overrideParams?.sortDir ??
     stringToSortDir(parameters.get(UPARAM_SORT_DIR)) ??
+    overrideParams?.sortDir ??
     DEF_SORT_DIR,
 });
