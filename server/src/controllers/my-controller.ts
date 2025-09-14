@@ -8,6 +8,7 @@ import { Rating } from '../models';
 import { RatingData, RatingResults } from '../../../shared/types/models';
 import { toPlainArray } from '../util/model-helpers';
 import { AuthError } from '../util/customError';
+import { getMyVotesOrder } from '../services/my-service';
 
 const router: Router = express.Router();
 
@@ -22,11 +23,12 @@ router.get(
         throw new AuthError();
       }
       const { searchPage, sortBy, sortDir, findAndCountOptions } =
-        extractURLParams(req, { sortBy: SortBy.VoteDate });
+        extractURLParams(req);
       //SortBy rating must point to Rating's userScore
       if (sortBy === SortBy.Rating) {
         findAndCountOptions.order = [[SortBy.UserScore, sortDir.toUpperCase()]];
       }
+      findAndCountOptions.order = getMyVotesOrder(sortBy, sortDir);
       console.log(sortBy);
       const userId: number = req.activeUser.id;
 
@@ -34,10 +36,10 @@ router.get(
         where: {
           userId,
         },
-        ...findAndCountOptions,
         include: {
           association: 'indexMedia',
         },
+        ...findAndCountOptions,
       });
 
       const cleanRatings: RatingData[] = toPlainArray(ratings);

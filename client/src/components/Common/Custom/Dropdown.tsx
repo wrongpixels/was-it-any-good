@@ -1,7 +1,10 @@
 import { JSX } from 'react';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 import { toFirstUpperCase } from '../../../../../shared/helpers/format-helper';
-import { DropdownOption } from '../../../../../shared/types/common';
+import {
+  DropdownOption,
+  extractDropdownOption,
+} from '../../../../../shared/types/common';
 
 interface DropdownProps
   extends React.DetailedHTMLProps<
@@ -29,12 +32,11 @@ const Dropdown = ({
       <select {...props} className={mergeClassnames(defClassName, className)}>
         {options &&
           options.map((o: DropdownOption, i: number) => {
-            const display: string = Array.isArray(o) ? o[1] : o;
-            const value: string = Array.isArray(o) ? o[0] : o;
+            const [value, display]: [string, string] = extractDropdownOption(o);
             return (
               <option
                 key={`${i}-${value}`}
-                value={o}
+                value={value}
                 className="text-gray-700 bg-white shadow"
               >
                 {!capitalizeOptions ? display : toFirstUpperCase(display)}

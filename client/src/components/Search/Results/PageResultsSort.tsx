@@ -17,7 +17,11 @@ import {
   OverrideParams,
   URLParameters,
 } from '../../../../../shared/types/search-browse';
-import { DropdownOption } from '../../../../../shared/types/common';
+import {
+  DropdownOption,
+  getDropdownValue,
+} from '../../../../../shared/types/common';
+import { DEF_SORT_BY } from '../../../../../shared/constants/url-param-constants';
 
 //a special set of rules to override the default sort options in the BrowsePage
 export interface OverrideSortOptions {
@@ -60,17 +64,20 @@ const PageResultsSort = ({
 
   //if we provided a default values, we'll use it, if not, if we provided
   //a valid array of options, we'll use index 0, if not, our global defaults
-  const defaultOption: string | [string, string] =
+  const defaultOption: DropdownOption =
     overrideSortOptions?.defaultOption ??
     overrideSortOptions?.overrideOptions?.[0] ??
     (urlParams.sortBy || SortBy.Popularity);
 
   const invertedSortDir: boolean = urlParams.sortDir === SortDir.Inverted;
 
-  const applySortBy = (newValue: string) =>
+  const applySortBy = (newValue: DropdownOption): void => {
+    console.log('New value:', newValue);
+    const value: string = getDropdownValue(newValue);
     submitFilter({
-      sortBy: isSortBy(newValue) ? newValue : SortBy.Popularity,
+      sortBy: isSortBy(value) ? value : DEF_SORT_BY,
     });
+  };
 
   const toggleSortDir = () =>
     submitFilter({
@@ -80,7 +87,10 @@ const PageResultsSort = ({
   const orderDropdown = useDropdown({
     name: 'sortBy',
     defaultValue: defaultOption,
-    onChanged: overrideSortOptions?.overrideOptions ? undefined : applySortBy,
+    onChanged:
+      overrideSortOptions?.overrideOptions?.length === 1
+        ? undefined
+        : applySortBy,
   });
   return (
     <div className="absolute -translate-y-1 flex flex-row gap-2 ">

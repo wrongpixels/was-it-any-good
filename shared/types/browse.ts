@@ -1,5 +1,7 @@
-import { DropdownOption } from "./common";
+import { DropdownOption, getDropdownValue } from "./common";
 
+//our SortBy options. The string of the enum parallels the field of the
+//table, so it can be applied directly on sequelize options
 export enum SortBy {
   VoteDate = "updatedAt",
   Title = "name",
@@ -8,14 +10,22 @@ export enum SortBy {
   Popularity = "popularity",
   Year = "year",
 }
+//The Dropdown Values for our SortBy, to assign them better Display names.
 //by default, we exclude the VoteDate option, it should only be available
 //on User Votes and other special cases
-export const sortByValues: string[] = Object.values<string>(SortBy).filter(
-  (s: string) => s !== SortBy.VoteDate && s !== SortBy.UserScore
-);
+export const sortByValues: DropdownOption[] = [
+  [SortBy.Title, "Title"],
+  [SortBy.Rating, "Rating"],
+  [SortBy.Popularity, "Popularity"],
+  [SortBy.Year, "Year"],
+];
+
 export const sortByUserValues: DropdownOption[] = [
   [SortBy.VoteDate, "Vote date"],
-  ...sortByValues,
+  [SortBy.UserScore, "Rating"],
+  ...sortByValues.filter(
+    (d: DropdownOption) => getDropdownValue(d) !== SortBy.Rating
+  ),
 ];
 
 export enum SortDir {
@@ -34,7 +44,7 @@ export enum SortDirDropdown {
 export const sortDirDropdown: string[] = Object.values(SortDirDropdown);
 
 export const isSortBy = (value: string): value is SortBy =>
-  sortByValues.includes(value);
+  Object.values<string>(SortBy).includes(value);
 
 export const stringToSortBy = (
   value: string | undefined | null

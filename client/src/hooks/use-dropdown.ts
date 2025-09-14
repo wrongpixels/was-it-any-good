@@ -1,8 +1,9 @@
 import { ChangeEvent, useState } from 'react';
+import { DropdownOption, getDropdownValue } from '../../../shared/types/common';
 
-interface DropdownHookConfig<T> {
+interface DropdownHookConfig {
   name?: string;
-  defaultValue?: T;
+  defaultValue?: DropdownOption;
   disabled?: boolean;
   onChanged?: (newValue: string) => void;
 }
@@ -10,12 +11,14 @@ interface DropdownHookConfig<T> {
 //a hook to setup controlled dropdown hooks.
 //we set a "fake" defaultValue for clarity but we then
 //extract it from the props to avoid error messages (both value and defaultValue)
-const useDropdown = <T>({
+const useDropdown = ({
   defaultValue,
   onChanged,
   ...props
-}: DropdownHookConfig<T>) => {
-  const [value, setValue] = useState<T | string>(defaultValue || '');
+}: DropdownHookConfig) => {
+  const [value, setValue] = useState<DropdownOption>(
+    defaultValue ? getDropdownValue(defaultValue) : ''
+  );
   const onChange = (e: ChangeEvent<HTMLSelectElement>): void => {
     setValue(e.target.value);
     onChanged?.(e.target.value);
@@ -23,7 +26,7 @@ const useDropdown = <T>({
 
   const clean = () => setValue('');
   const reset = () => setValue(defaultValue || '');
-
+  console.log(value);
   const getProps = () => ({ ...props, value, onChange });
 
   return { value, setValue, reset, clean, getProps };
