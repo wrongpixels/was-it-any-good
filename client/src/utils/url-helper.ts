@@ -1,7 +1,11 @@
 import { MediaType } from '../../../shared/types/media';
 import { TMDB_URL } from '../../../shared/constants/url-constants';
 import { API_BASE } from '../constants/url-constants';
-import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
+import {
+  IndexMediaData,
+  MediaResponse,
+  RatingData,
+} from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
 import { toCountryCodes } from '../../../shared/types/countries';
@@ -70,6 +74,7 @@ export const apiPaths = {
     base: `${API_BASE}/search`,
     byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
+
   trending: `${API_BASE}/trending`,
 
   browse: {
@@ -78,7 +83,10 @@ export const apiPaths = {
   },
   my: {
     base: `${API_BASE}/my`,
-    votes: () => `${apiPaths.my.base}/votes`,
+    votes: {
+      base: () => `${apiPaths.my.base}/votes`,
+      byQuery: (query: string) => `${apiPaths.my.votes.base()}?${query}`,
+    },
   },
 };
 export const routerPaths = {
@@ -159,7 +167,11 @@ export const routerPaths = {
   },
   my: {
     base: '/my',
-    votes: () => `${routerPaths.my.base}/votes`,
+    votes: {
+      base: () => `${routerPaths.my.base}/votes`,
+      query: () => `${routerPaths.my.votes.base}?`,
+      byQuery: (query: string) => `${routerPaths.my.votes.query()}${query}`,
+    },
   },
   trending: {
     base: '/trending',
@@ -214,9 +226,22 @@ export const buildRouterMediaLink = (
         : useTMDB
           ? routerPaths.shows.byTMDBId(id)
           : routerPaths.shows.byId(id);
+    case MediaType.Season:
+      return !id
+        ? routerPaths.shows.base
+        : useTMDB
+          ? routerPaths.shows.byTMDBId(id)
+          : routerPaths.shows.byId(id);
     default:
       throw new Error(`Unsupported media type: ${mediaType}`);
   }
+};
+
+export const urlFromRatingData = (rating: RatingData): string => {
+  return buildRouterMediaLink(
+    rating.mediaType,
+    rating.mediaType === MediaType.Season ? rating.showId : rating.mediaId
+  );
 };
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {

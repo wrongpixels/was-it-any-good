@@ -1,5 +1,9 @@
 import { JSX } from 'react';
-import { IndexMediaResults } from '../../../../../shared/types/models';
+import {
+  IndexMediaResults,
+  RatingData,
+  RatingResults,
+} from '../../../../../shared/types/models';
 
 import {
   OverrideParams,
@@ -14,9 +18,11 @@ import SpinnerPage from '../../Common/Status/SpinnerPage';
 import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
+import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
+import { urlFromRatingData } from '../../../utils/url-helper';
 
 interface PageResultsProps {
-  results: IndexMediaResults | undefined;
+  results: IndexMediaResults | RatingResults | undefined;
   navigatePages: (movement: number) => void;
   navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;
@@ -58,6 +64,7 @@ const PageResults = ({
               totalResults={results.totalResults}
               queryType={urlParams.queryType}
               term={term}
+              resultsType={results.resultsType}
             />
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
@@ -75,12 +82,31 @@ const PageResults = ({
       )) || (
         <div className="flex flex-col h-full">
           <div className="flex-1">
-            {results.indexMedia.length > 0 ? (
+            {results.resultsType === 'browse' &&
+            results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />
+            ) : results.resultsType === 'votes' &&
+              results.ratings.length > 0 ? (
+              <div className="grid grid-cols-5 gap-6">
+                {results.ratings.map(
+                  (r: RatingData) =>
+                    r.indexMedia && (
+                      <VerticalMediaPoster
+                        key={r.id}
+                        name={r.indexMedia.name}
+                        url={urlFromRatingData(r)}
+                        image={r.indexMedia.image}
+                        mediaType={r.mediaType}
+                        rating={r.userScore}
+                        isVote={true}
+                      />
+                    )
+                )}
+              </div>
             ) : (
               <div className="h-64 w-full" aria-hidden="true">
                 <Instructions condition={true} />

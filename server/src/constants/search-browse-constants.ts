@@ -5,4 +5,5 @@ export const EMPTY_RESULTS: IndexMediaResults = {
   totalResults: 0,
   totalPages: 0,
   indexMedia: [],
+  resultsType: 'browse',
 };

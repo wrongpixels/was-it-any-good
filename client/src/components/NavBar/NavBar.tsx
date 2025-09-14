@@ -99,7 +99,7 @@ const NavBar = (): JSX.Element => {
           className={`ml-auto text-end text-xs md:text-sm h-full items-center  ${styles.animations.opacity70}`}
         >
           <NavLink
-            to={routerPaths.my.votes()}
+            to={routerPaths.my.votes.base()}
             title={'My votes'}
             className={({ isActive }) =>
               `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
@@ -108,7 +108,7 @@ const NavBar = (): JSX.Element => {
                   : 'border-transparent'
               }`
             }
-            end={routerPaths.my.votes() === routerPaths.my.votes()}
+            end={routerPaths.my.votes.base() === routerPaths.my.votes.base()}
           >
             {<IconStar width={16} />}
             <span className="text-starblue">{'My Votes'}</span>

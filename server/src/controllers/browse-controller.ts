@@ -87,6 +87,7 @@ router.get('/', async (req, res, next) => {
         //we consider no results a blank page 1
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         indexMedia: toPlainArray(rows),
+        resultsType: 'browse',
       };
       res.json(response);
     } else {
@@ -115,6 +116,7 @@ router.get('/', async (req, res, next) => {
         //we consider no results a blank page #1
         totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
         indexMedia: toPlainArray(rows),
+        resultsType: 'browse',
       };
       res.json(response);
     }

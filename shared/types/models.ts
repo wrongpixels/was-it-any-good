@@ -34,22 +34,28 @@ export interface IndexMediaData extends CreateIndexMedia {
   show?: ShowResponse;
   season?: SeasonResponse;
 }
+
+export type BrowseResultsType = "browse" | "votes";
+
 //for browse/search results
 interface BrowseResults {
   page: number;
   totalPages: number;
   totalResults: number;
-}
-
-export interface IndexMediaResults extends BrowseResults {
+  resultsType: BrowseResultsType;
   totalFilms?: number;
   totalShows?: number;
   totalSeasons?: number;
+}
+
+export interface IndexMediaResults extends BrowseResults {
   indexMedia: IndexMediaData[];
+  resultsType: "browse";
 }
 
 export interface RatingResults extends BrowseResults {
   ratings: RatingData[];
+  resultsType: "votes";
 }
 export interface RatingData {
   id: number;
@@ -58,6 +64,7 @@ export interface RatingData {
   mediaId: number;
   userScore: number;
   mediaType: MediaType;
+  indexMedia?: IndexMediaData;
   showId?: number;
   show?: ShowResponse;
   film?: FilmResponse;

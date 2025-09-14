@@ -1,5 +1,8 @@
 import { JSX } from 'react';
-import { IndexMediaResults } from '../../../../../shared/types/models';
+import {
+  IndexMediaResults,
+  RatingResults,
+} from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import Button from '../../Common/Custom/Button';
 import DisabledDiv from '../../Common/Custom/DisabledDiv';
@@ -10,7 +13,7 @@ import IconArrowLeft from '../../Common/Icons/Arrows/IconArrowLeft';
 import IconArrowRight from '../../Common/Icons/Arrows/IconArrowRight';
 
 interface PageResultsNavProps extends OptClassNameProps {
-  results: IndexMediaResults;
+  results: IndexMediaResults | RatingResults;
   navigatePages: (page: number) => void;
 }
 
