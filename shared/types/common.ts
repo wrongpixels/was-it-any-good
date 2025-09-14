@@ -11,6 +11,22 @@ export type Image = string;
 
 export type DropdownOption = string | [string, string];
 
+//functions to extract the Value and Display name of a DropdownOption
+export const extractDropdownOption = (
+  dropdownOption: DropdownOption
+): [string, string] =>
+  Array.isArray(dropdownOption)
+    ? [dropdownOption[0], dropdownOption[1]]
+    : [dropdownOption, dropdownOption];
+
+export const getDropdownValue = (dropdownOption: DropdownOption): string => {
+  return Array.isArray(dropdownOption) ? dropdownOption[0] : dropdownOption;
+};
+
+export const getDropdownDisplay = (dropdownOption: DropdownOption): string => {
+  return Array.isArray(dropdownOption) ? dropdownOption[1] : dropdownOption;
+};
+
 export enum UserVote {
   None = 0,
   Unvote = -1,

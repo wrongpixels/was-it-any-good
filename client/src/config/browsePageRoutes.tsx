@@ -111,12 +111,16 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     title: 'Films',
     subtitle: 'Films in WIAG database',
     path: routerPaths.tops.films.base(),
+    sortBy: SortBy.Rating,
+
     searchType: SearchType.Film,
   }),
   buildPageRoute({
     title: 'TV Shows',
     subtitle: 'Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
+    sortBy: SortBy.Rating,
+
     searchType: SearchType.Show,
   }),
   buildPageRoute({
@@ -127,7 +131,6 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     icon: <IconStar className="text-starbright" />,
     overrideSortOptions: {
       overrideOptions: sortByUserValues,
-      defaultOption: SortBy.VoteDate,
     },
   }),
 ];

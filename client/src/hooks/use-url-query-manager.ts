@@ -80,9 +80,9 @@ const useUrlQueryManager = ({
           localOverride?.sortDir || overrideParams?.sortDir || urlParams.sortDir
         )
         .toString();
-
       return url;
     },
+
     [urlParams, queryTypeManager, overrideParams, queryBuilder]
   );
 
