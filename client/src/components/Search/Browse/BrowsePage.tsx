@@ -14,9 +14,9 @@ import { setPageInfo } from '../../../utils/page-info-setter';
 import { useGenresQuery } from '../../../queries/genre-queries';
 import { getBrowseOperation } from '../../../utils/common-format-helper';
 import LoadingCards from '../Loading/LoadingSearch';
-import { overrideParamsToOverrideSort } from '../../../utils/browse-helper';
 import { OverrideParams } from '../../../../../shared/types/search-browse';
 import { useMyVotesQuery } from '../../../queries/my-votes-queries';
+import { OverrideSortOptions } from '../Results/PageResultsSort';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -26,12 +26,14 @@ import { useMyVotesQuery } from '../../../queries/my-votes-queries';
 
 export interface BrowsePageProps {
   overrideParams?: OverrideParams;
+  overrideSortOptions?: OverrideSortOptions;
   pageTitleOptions?: BrowsePageTitleOptions;
   queryToUse?: QueryToUse;
 }
 
 const BrowsePage = ({
   overrideParams,
+  overrideSortOptions,
   pageTitleOptions,
   queryToUse = 'browse',
 }: BrowsePageProps) => {
@@ -124,7 +126,7 @@ const BrowsePage = ({
               urlParams={urlParams}
               navigatePages={navigatePages}
               badgeType={BadgeType.RankBadge}
-              overrideSortOptions={overrideParamsToOverrideSort(overrideParams)}
+              overrideSortOptions={overrideSortOptions}
             />
           </div>
         </>

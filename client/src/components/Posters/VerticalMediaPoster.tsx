@@ -14,6 +14,7 @@ interface VerticalMediaPosterProps {
   mediaType: MediaType;
   rating?: number;
   userRating?: number;
+  isVote?: boolean;
 }
 
 //the Poster component for vertical media cards
@@ -23,6 +24,7 @@ const VerticalMediaPoster = ({
   image,
   mediaType,
   rating,
+  isVote,
   //userRating,
 }: VerticalMediaPosterProps): JSX.Element => {
   return (
@@ -32,8 +34,8 @@ const VerticalMediaPoster = ({
       className="flex"
     >
       <div className={`${styles.poster.animated()} w-35 pb-0.5`}>
-        <span className="text-sm text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 ">
-          <span className={'line-clamp-2 leading-tight w-35'}>{name}</span>
+        <span className="text-xs text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 py-1">
+          <span className={'line-clamp-1 leading-tight w-35'}>{name}</span>
         </span>
 
         <div className="flex-1 relative">
@@ -43,7 +45,7 @@ const VerticalMediaPoster = ({
             className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
           />
         </div>
-        <StarRatingIndexMedia value={rating} />
+        <StarRatingIndexMedia rating={rating} isVote={isVote} />
       </div>
     </Link>
   );

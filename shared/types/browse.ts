@@ -1,3 +1,5 @@
+import { DropdownOption } from "./common";
+
 export enum SortBy {
   VoteDate = "updatedAt",
   Title = "name",
@@ -11,7 +13,10 @@ export enum SortBy {
 export const sortByValues: string[] = Object.values<string>(SortBy).filter(
   (s: string) => s !== SortBy.VoteDate && s !== SortBy.UserScore
 );
-export const sortByUserValues: string[] = Object.values<string>(SortBy);
+export const sortByUserValues: DropdownOption[] = [
+  [SortBy.VoteDate, "Vote date"],
+  ...sortByValues,
+];
 
 export enum SortDir {
   Default = "DESC",

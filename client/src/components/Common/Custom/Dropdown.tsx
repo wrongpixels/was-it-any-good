@@ -1,6 +1,7 @@
 import { JSX } from 'react';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 import { toFirstUpperCase } from '../../../../../shared/helpers/format-helper';
+import { DropdownOption } from '../../../../../shared/types/common';
 
 interface DropdownProps
   extends React.DetailedHTMLProps<
@@ -8,7 +9,8 @@ interface DropdownProps
     HTMLSelectElement
   > {
   label?: string;
-  options?: string[];
+  //we accept options as simple strings or pairs with display name
+  options?: DropdownOption[];
   capitalizeOptions?: boolean;
 }
 const defClassName: string =
@@ -22,19 +24,23 @@ const Dropdown = ({
   ...props
 }: DropdownProps): JSX.Element => {
   return (
-    <div className="flex flex-row gap-2 items-center text-sm">
+    <div className="flex flex-row gap-2 items-center text-sm sm:text-base">
       {label && <span className="hidden md:block">{label}</span>}
       <select {...props} className={mergeClassnames(defClassName, className)}>
         {options &&
-          options.map((o: string, i: number) => (
-            <option
-              key={`${i}-${o}`}
-              value={o}
-              className="text-gray-700 bg-white shadow"
-            >
-              {!capitalizeOptions ? o : toFirstUpperCase(o)}
-            </option>
-          ))}
+          options.map((o: DropdownOption, i: number) => {
+            const display: string = Array.isArray(o) ? o[1] : o;
+            const value: string = Array.isArray(o) ? o[0] : o;
+            return (
+              <option
+                key={`${i}-${value}`}
+                value={o}
+                className="text-gray-700 bg-white shadow"
+              >
+                {!capitalizeOptions ? display : toFirstUpperCase(display)}
+              </option>
+            );
+          })}
       </select>
       {children}
     </div>

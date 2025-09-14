@@ -246,7 +246,6 @@ export const urlFromRatingData = (rating: RatingData): string => {
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
   const mediaId: number | null = getMediaId(im);
-  console.log(mediaId, im);
   return mediaId
     ? buildRouterMediaLink(im.mediaType, mediaId)
     : buildRouterMediaLink(im.mediaType, im.tmdbId, true);

@@ -10,10 +10,12 @@ import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 interface DisplayRatingProps extends OptClassNameProps {
   readonly rating: number;
   readonly starWidth?: number;
+  readonly isVote?: boolean;
 }
 
 const DisplayRating = ({
   rating,
+  isVote,
   starWidth = DEF_STAR_WIDTH,
   ...props
 }: DisplayRatingProps): JSX.Element => {
@@ -36,7 +38,9 @@ const DisplayRating = ({
           className="absolute top-0 left-0 overflow-hidden"
           style={{ width: widthPercentage }}
         >
-          <div className={RATING_COLORS.default}>
+          <div
+            className={isVote ? RATING_COLORS.selected : RATING_COLORS.default}
+          >
             <StarList
               width={starWidth}
               justVoted={false}

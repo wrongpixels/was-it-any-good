@@ -9,6 +9,8 @@ export const DEF_OFFSET: offset = {
 };
 export type Image = string;
 
+export type DropdownOption = string | [string, string];
+
 export enum UserVote {
   None = 0,
   Unvote = -1,

@@ -98,7 +98,7 @@ const SearchCard = ({
           </span>
         </span>
         <div className="grow" />
-        <StarRatingIndexMedia value={average} />
+        <StarRatingIndexMedia rating={average} />
       </div>
     </Link>
   );

@@ -1,7 +1,11 @@
 import { BrowsePageProps } from '../components/Search/Browse/BrowsePage';
 import { routerPaths } from '../utils/url-helper';
 import { JSX } from 'react';
-import { SortBy, SortDir } from '../../../shared/types/browse';
+import {
+  SortBy,
+  sortByUserValues,
+  SortDir,
+} from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
 import { OptIconProps } from '../types/common-props-types';
 import IconCrown from '../components/Common/Icons/Badges/IconCrown';
@@ -9,6 +13,7 @@ import IconFilm from '../components/Common/Icons/Media/IconFilm';
 import IconShow from '../components/Common/Icons/Media/IconShow';
 import IconStar from '../components/Common/Icons/Ratings/IconStar';
 import { QueryToUse } from '../types/search-browse-types';
+import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -53,6 +58,7 @@ interface PageRouteBuilderProps {
   sortBy?: SortBy;
   sortDir?: SortDir;
   queryToUse?: QueryToUse;
+  overrideSortOptions?: OverrideSortOptions;
 }
 
 const buildPageRoute = ({
@@ -61,6 +67,7 @@ const buildPageRoute = ({
   subtitle,
   icon,
   queryToUse,
+  overrideSortOptions,
   searchType = SearchType.Multi,
   sortBy = SortBy.Rating,
 }: PageRouteBuilderProps): BrowsePageRouterData => {
@@ -72,6 +79,7 @@ const buildPageRoute = ({
         subtitle,
         icon: icon ?? getIcon(searchType, sortBy),
       },
+      overrideSortOptions,
       overrideParams: {
         sortBy: sortBy === SortBy.Rating ? undefined : sortBy,
         searchType,
@@ -117,5 +125,9 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar className="text-starbright" />,
+    overrideSortOptions: {
+      overrideOptions: sortByUserValues,
+      defaultOption: SortBy.VoteDate,
+    },
   }),
 ];

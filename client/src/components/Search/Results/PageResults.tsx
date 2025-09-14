@@ -19,10 +19,7 @@ import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
-import {
-  urlFromIndexMedia,
-  urlFromRatingData,
-} from '../../../utils/url-helper';
+import { urlFromRatingData } from '../../../utils/url-helper';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -67,6 +64,7 @@ const PageResults = ({
               totalResults={results.totalResults}
               queryType={urlParams.queryType}
               term={term}
+              resultsType={results.resultsType}
             />
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
@@ -104,6 +102,7 @@ const PageResults = ({
                         image={r.indexMedia.image}
                         mediaType={r.mediaType}
                         rating={r.userScore}
+                        isVote={true}
                       />
                     )
                 )}

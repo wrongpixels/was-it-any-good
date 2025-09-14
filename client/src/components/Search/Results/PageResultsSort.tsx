@@ -17,13 +17,17 @@ import {
   OverrideParams,
   URLParameters,
 } from '../../../../../shared/types/search-browse';
+import { DropdownOption } from '../../../../../shared/types/common';
 
+//a special set of rules to override the default sort options in the BrowsePage
 export interface OverrideSortOptions {
   //to hide the sort dropdown (like in Home)
   hideSortBar?: boolean;
   //to replace the default Sort options with a cosmetic custom one,
   //like for TMDB search (Relevance) and hardcoded sorting pages like Tops (always Rating)
-  overrideOption?: string;
+  defaultOption?: string;
+  overrideOptions?: DropdownOption[];
+
   //to disable the SortBy dropdown
   canSort?: boolean;
   //to disable the invert button in certain cases (TMDB Search)
@@ -49,16 +53,17 @@ const PageResultsSort = ({
   const canInvert: boolean = overrideSortOptions?.canInvert ?? true;
   const canSort: boolean = overrideSortOptions?.canSort ?? true;
 
-  const overrideOption: string | undefined =
-    overrideSortOptions?.overrideOption;
-
   //we use the default universal params, but if we override them correctly,
   //we'll use them instead
-  const sortOptions: string[] = overrideOption
-    ? [overrideOption]
-    : sortByValues;
-  const defaultOption: string =
-    overrideOption ?? (urlParams.sortBy || SortBy.Popularity);
+  const sortOptions: DropdownOption[] =
+    overrideSortOptions?.overrideOptions ?? sortByValues;
+
+  //if we provided a default values, we'll use it, if not, if we provided
+  //a valid array of options, we'll use index 0, if not, our global defaults
+  const defaultOption: string | [string, string] =
+    overrideSortOptions?.defaultOption ??
+    overrideSortOptions?.overrideOptions?.[0] ??
+    (urlParams.sortBy || SortBy.Popularity);
 
   const invertedSortDir: boolean = urlParams.sortDir === SortDir.Inverted;
 
@@ -75,7 +80,7 @@ const PageResultsSort = ({
   const orderDropdown = useDropdown({
     name: 'sortBy',
     defaultValue: defaultOption,
-    onChanged: overrideOption ? undefined : applySortBy,
+    onChanged: overrideSortOptions?.overrideOptions ? undefined : applySortBy,
   });
   return (
     <div className="absolute -translate-y-1 flex flex-row gap-2 ">

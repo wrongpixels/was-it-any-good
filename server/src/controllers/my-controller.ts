@@ -7,6 +7,7 @@ import { SortBy } from '../../../shared/types/browse';
 import { Rating } from '../models';
 import { RatingData, RatingResults } from '../../../shared/types/models';
 import { toPlainArray } from '../util/model-helpers';
+import { AuthError } from '../util/customError';
 
 const router: Router = express.Router();
 
@@ -17,6 +18,9 @@ router.get(
   '/votes',
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      if (!req.activeUser) {
+        throw new AuthError();
+      }
       const { searchPage, sortBy, sortDir, findAndCountOptions } =
         extractURLParams(req, { sortBy: SortBy.VoteDate });
       //SortBy rating must point to Rating's userScore
@@ -24,7 +28,7 @@ router.get(
         findAndCountOptions.order = [[SortBy.UserScore, sortDir.toUpperCase()]];
       }
       console.log(sortBy);
-      const userId: number = 1;
+      const userId: number = req.activeUser.id;
 
       const { rows: ratings, count } = await Rating.findAndCountAll({
         where: {

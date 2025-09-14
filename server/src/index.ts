@@ -24,6 +24,7 @@ import {
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
 import { NotFoundError } from './util/customError';
+import { authRequired } from './middleware/auth-requirements';
 //import { authRequired } from './middleware/auth-requirements';
 
 const app = express();
@@ -37,7 +38,7 @@ app.use('/api/films', filmsRouter);
 app.use('/api/shows', showsRouter);
 app.use('/api/genres', genresRouter);
 app.use('/api/users', usersRouter);
-app.use('/api/my', /*authRequired,*/ myRouter);
+app.use('/api/my', authRequired, myRouter);
 app.use('/api/auth/login', loginRouter);
 app.use('/api/auth/logout', logoutRouter);
 app.use('/api/auth/sessions', sessionsRouter);
