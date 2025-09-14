@@ -124,7 +124,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     searchType: SearchType.Show,
   }),
   buildPageRoute({
-    title: 'My Votes',
+    title: 'My Ratings',
     queryToUse: 'votes',
     path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,

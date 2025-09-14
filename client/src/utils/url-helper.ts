@@ -26,6 +26,7 @@ import {
   OverrideParams,
   URLParameters,
 } from '../../../shared/types/search-browse';
+import { getDropdownValue } from '../../../shared/types/common';
 
 export const apiPaths = {
   films: {
@@ -365,7 +366,7 @@ export const extractURLParameters = (
   countries: toCountryCodes(parameters.getAll(UPARAM_COUNTRIES)),
   year: parameters.get(UPARAM_YEAR),
   sortBy:
-    stringToSortBy(parameters.get(UPARAM_SORT_BY)) ??
+    stringToSortBy(getDropdownValue(parameters.get(UPARAM_SORT_BY))) ??
     overrideParams?.sortBy ??
     DEF_SORT_BY,
   sortDir:

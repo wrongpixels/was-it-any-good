@@ -100,7 +100,7 @@ const NavBar = (): JSX.Element => {
         >
           <NavLink
             to={routerPaths.my.votes.base()}
-            title={'My votes'}
+            title={'My Ratings'}
             className={({ isActive }) =>
               `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
                 isActive
@@ -111,7 +111,7 @@ const NavBar = (): JSX.Element => {
             end={routerPaths.my.votes.base() === routerPaths.my.votes.base()}
           >
             {<IconStar width={16} />}
-            <span className="text-starblue">{'My Votes'}</span>
+            <span className="text-starblue">{'My Ratings'}</span>
           </NavLink>
         </span>
       )}

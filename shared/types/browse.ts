@@ -21,7 +21,7 @@ export const sortByValues: DropdownOption[] = [
 ];
 
 export const sortByUserValues: DropdownOption[] = [
-  [SortBy.VoteDate, "Vote date"],
+  [SortBy.VoteDate, "Date"],
   [SortBy.UserScore, "Rating"],
   ...sortByValues.filter(
     (d: DropdownOption) => getDropdownValue(d) !== SortBy.Rating

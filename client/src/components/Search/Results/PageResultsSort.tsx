@@ -65,9 +65,10 @@ const PageResultsSort = ({
   //if we provided a default values, we'll use it, if not, if we provided
   //a valid array of options, we'll use index 0, if not, our global defaults
   const defaultOption: DropdownOption =
+    urlParams.sortBy ??
     overrideSortOptions?.defaultOption ??
     overrideSortOptions?.overrideOptions?.[0] ??
-    (urlParams.sortBy || SortBy.Popularity);
+    DEF_SORT_BY;
 
   const invertedSortDir: boolean = urlParams.sortDir === SortDir.Inverted;
 
