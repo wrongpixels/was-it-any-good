@@ -3,6 +3,7 @@ import { Genre } from '../models';
 import { GenreResponse } from '../../../shared/types/models';
 import { FindOptions } from 'sequelize';
 import { NotFoundError } from '../util/customError';
+import idFormatChecker from '../middleware/id-format-checker';
 
 const router: Router = express.Router();
 
@@ -25,6 +26,7 @@ router.get(
 
 router.get(
   '/:id',
+  idFormatChecker,
   async (
     req: Request,
     res: Response<GenreResponse | null>,

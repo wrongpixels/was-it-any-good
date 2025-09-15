@@ -164,6 +164,6 @@ const buildSeason = (
     ...seasonData,
     showId: showEntry.id,
     country: showEntry.country,
-    indexId: indexMedia?.id,
+    indexId: indexMedia.id,
   };
 };

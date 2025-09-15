@@ -6,6 +6,7 @@ import CustomError, {
 } from '../util/customError';
 import { CreateUserData, UserData } from '../../../shared/types/models';
 import { validateAndBuildUserData } from '../services/user-service';
+import idFormatChecker from '../middleware/id-format-checker';
 
 const router: Router = express.Router();
 
@@ -22,7 +23,7 @@ router.get('/', async (req: Request, res, next) => {
   }
 });
 
-router.get('/:id', async (req: Request, res, next) => {
+router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
     if (!id) {
@@ -42,6 +43,7 @@ router.get('/:id', async (req: Request, res, next) => {
 
 router.put(
   '/:id/activate',
+  idFormatChecker,
   async (
     req: Request<{ id: string }, unknown, { activate: boolean }>,
     res: Response,

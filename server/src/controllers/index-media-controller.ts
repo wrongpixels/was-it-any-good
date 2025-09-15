@@ -8,10 +8,11 @@ import {
 import { CreateIndexMedia, IndexMediaData } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
 import CustomError, { NotFoundError } from '../util/customError';
+import idFormatChecker from '../middleware/id-format-checker';
 
 const router = express.Router();
 
-router.get('/:id', async (req: Request, res, next) => {
+router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
     if (Number.isNaN(id)) {
