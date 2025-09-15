@@ -11,7 +11,7 @@ export const authRequired = (
   req: Request,
   _res: Response,
   next: NextFunction
-) => {
+): void => {
   if (!req.activeUser?.isValid) {
     throw new AuthError();
   }
@@ -23,7 +23,7 @@ export const adminRequired = (
   req: Request,
   _res: Response,
   next: NextFunction
-) => {
+): void => {
   if (!req.activeUser?.isAdmin) {
     throw new ForbiddenError();
   }

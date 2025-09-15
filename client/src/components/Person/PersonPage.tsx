@@ -6,10 +6,12 @@ import EntryTitle from '../EntryTitle';
 import PersonPagePoster from '../Posters/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
 import PersonRoleCredits from './PersonRoleCredits';
-import NotFoundPage from '../Common/Status/NotFoundPage';
 import LoadingPage from '../Common/Status/LoadingPage';
-import { getAPIErrorMessage, isNotFoundError } from '../../utils/error-handler';
+import { isNotFoundError } from '../../utils/error-handler';
 import IconUser from '../Common/Icons/IconUser';
+import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
+import MediaMissing from '../Media/MediaMissing';
+import ErrorPage from '../Common/Status/ErrorPage';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -22,18 +24,19 @@ const PersonPage = (): JSX.Element | null => {
     error,
   } = usePersonQuery(personId);
 
+  if (personId && isNaN(Number(personId))) {
+    return <WrongIdFormatPage />;
+  }
+
   if (isFetching || isLoading) {
     return <LoadingPage text="person" />;
   }
 
   if (!person || isError) {
-    console.log(error);
     if (isNotFoundError(error)) {
-      setTitle('Person not found');
-      return <NotFoundPage text="person" />;
+      return <MediaMissing mediaId={personId} contentType={'Person'} />;
     }
-    setTitle('Error loading Person');
-    return <div>Error loading person: {`${getAPIErrorMessage(error)}`}</div>;
+    return <ErrorPage context={'loading Person'} error={error?.message} />;
   }
 
   setTitle(person.name);

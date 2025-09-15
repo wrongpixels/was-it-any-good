@@ -7,6 +7,7 @@ export const usePersonQuery = (
 ): UseQueryResult<PersonResponse, Error> =>
   useQuery({
     queryKey: ['people', `${id}`],
+    retry: false,
     queryFn: () => getPersonById(id!),
     enabled: !!id,
   });

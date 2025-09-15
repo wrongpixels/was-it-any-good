@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import { Person } from '../models';
-import CustomError, { NotFoundError } from '../util/customError';
+import { NotFoundError } from '../util/customError';
 import { PersonResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
 import { sortRoles } from '../services/people-service';
+import idFormatChecker from '../middleware/id-format-checker';
 const router = express.Router();
 
 router.get('/', async (_req, res, next) => {
@@ -20,15 +21,12 @@ router.get('/', async (_req, res, next) => {
 
 router.get(
   '/:id',
+  idFormatChecker,
   async (req: Request, res: Response<PersonResponse | null>, next) => {
     try {
       const id: string = req.params.id;
-      if (!id) {
-        throw new CustomError('Wrong id format', 400);
-      }
-      const person: Person | null = await Person.scope('withMedia').findByPk(
-        id
-      );
+      const person: Person | null =
+        await Person.scope('withMedia').findByPk(id);
       if (!person) {
         throw new NotFoundError('Person');
       }

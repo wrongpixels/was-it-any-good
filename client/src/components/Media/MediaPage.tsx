@@ -25,6 +25,9 @@ import { AuthContextValues } from '../../context/AuthProvider';
 import { mediaTypeToDisplayName } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
 import { isShow } from '../../utils/ratings-helper';
+import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
+import { isNotFoundError } from '../../utils/error-handler';
+import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -47,25 +50,31 @@ const MediaPage = ({
     : useMediaByIdQuery(mediaId, mediaType);
 
   if (mediaId && isNaN(Number(mediaId))) {
-    setTitle('Wrong id format');
-    return (
-      <div className="flex flex-col items-center justify-center w-full font-medium text-2xl gap-4 whitespace-pre-line">
-        Wrong ID format!
-        <div className="text-lg font-normal">Ids can only have numbers</div>
-      </div>
-    );
+    return <WrongIdFormatPage />;
   }
   if (isFetching || isLoginPending) {
-    return <LoadingPage text={mediaType} />;
-  }
-  if (isError) {
-    return (
-      <ErrorPage context={`loading the ${mediaType}`} error={error.message} />
+    return tmdb ? (
+      <CreatingMediaPage text={mediaType} />
+    ) : (
+      <LoadingPage text={mediaType} />
     );
   }
-  if (!media) {
-    return <MediaMissing mediaId={mediaId} mediaType={mediaType} tmdb={tmdb} />;
+  if (isError || !media) {
+    if (isNotFoundError(error)) {
+      return (
+        <MediaMissing
+          mediaId={mediaId}
+          mediaType={mediaType}
+          contentType={mediaType}
+          tmdb={tmdb}
+        />
+      );
+    }
+    return (
+      <ErrorPage context={`loading the ${mediaType}`} error={error?.message} />
+    );
   }
+
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
   const show = isShow(media);
   return (

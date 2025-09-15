@@ -8,6 +8,7 @@ export const useCreateUserMutation = (): UseMutationResult<
   VerifyCreateUser
 > => {
   return useMutation({
+    retry: false,
     mutationFn: (verifiedUserData: VerifyCreateUser) =>
       createUser(verifiedUserData),
   });
