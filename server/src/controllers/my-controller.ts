@@ -45,6 +45,11 @@ router.get(
         },
         include: {
           association: 'indexMedia',
+          include: [
+            {
+              association: 'season',
+            },
+          ],
         },
         ...findAndCountOptions,
       });

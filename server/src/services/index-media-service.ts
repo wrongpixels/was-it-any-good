@@ -30,7 +30,7 @@ export const mediaDataToCreateIndexMedia = (
   //for seasons, we override the name to contain the parent show's for sorting reasons
   name:
     data.mediaType === MediaType.Season
-      ? `${showName}: S${data.index}`
+      ? `${showName}: Season ${data.index}`
       : data.name,
   rating: data.rating,
   baseRating: data.baseRating,

@@ -110,23 +110,43 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: 'Films',
     subtitle: 'Films in WIAG database',
-    path: routerPaths.tops.films.base(),
+    path: routerPaths.films.page,
     sortBy: SortBy.Rating,
     searchType: SearchType.Film,
   }),
   buildPageRoute({
     title: 'TV Shows',
     subtitle: 'Shows in WIAG database',
+    path: routerPaths.shows.page,
+    sortBy: SortBy.Rating,
+    searchType: SearchType.Show,
+  }),
+  buildPageRoute({
+    title: 'Top Films',
+    subtitle: 'Best Films in WIAG database',
+    path: routerPaths.tops.films.base(),
+    sortBy: SortBy.Rating,
+    searchType: SearchType.Film,
+    overrideSortOptions: {
+      overrideOptions: [SortBy.Rating],
+    },
+  }),
+  buildPageRoute({
+    title: 'Top TV Shows',
+    subtitle: 'Best Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
     sortBy: SortBy.Rating,
     searchType: SearchType.Show,
+    overrideSortOptions: {
+      overrideOptions: [SortBy.Rating],
+    },
   }),
   buildPageRoute({
     title: 'My Ratings',
     queryToUse: 'votes',
     path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,
-    icon: <IconStar className="text-starbright" />,
+    icon: <IconStar {...defIconProps} />,
     sortBy: SortBy.VoteDate,
     overrideSortOptions: {
       overrideOptions: sortByUserValues,

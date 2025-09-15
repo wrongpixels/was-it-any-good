@@ -93,6 +93,7 @@ export const routerPaths = {
   home: '/',
   films: {
     base: '/film',
+    page: '/films',
     idParam: () => `${routerPaths.films.base}/:id`,
     TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
@@ -100,6 +101,7 @@ export const routerPaths = {
   },
   shows: {
     base: '/show',
+    page: '/shows',
     idParam: () => `${routerPaths.shows.base}/:id`,
     TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,

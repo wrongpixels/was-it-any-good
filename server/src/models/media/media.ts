@@ -9,9 +9,9 @@ import {
   FindOptions,
   Op,
   Transaction,
-  Includeable,
   WhereOptions,
   ScopeOptions,
+  Includeable,
 } from 'sequelize';
 import {
   Film,
@@ -33,7 +33,7 @@ import {
   MediaQueryValues,
   MediaQueryOptions,
 } from '../../types/media/media-types';
-import { getUserRatingInclude } from '../../constants/scope-attributes';
+import { getUserRatingIncludeable } from '../../constants/scope-attributes';
 import CustomError from '../../util/customError';
 import {
   RatingUpdateOptions,
@@ -223,7 +223,7 @@ class Media<
       foreignKey: 'mediaId',
       as: 'userRating',
       scope: {
-        mediaType,
+        media_type: mediaType,
       },
       constraints: false,
     });
@@ -392,7 +392,10 @@ class Media<
     unscoped,
     transaction,
   }: MediaQueryValues): MediaQueryOptions {
-    const include: Includeable[] = getUserRatingInclude(mediaType, activeUser);
+    const include: Includeable[] = getUserRatingIncludeable(
+      mediaType,
+      activeUser
+    );
     const scopeOptions: (string | ScopeOptions)[] = unscoped
       ? []
       : ['withCredits'];
@@ -401,7 +404,7 @@ class Media<
       scopeOptions.push({
         method: [
           'withSeasons',
-          getUserRatingInclude(MediaType.Season, activeUser),
+          getUserRatingIncludeable(MediaType.Season, activeUser),
         ],
       });
     }

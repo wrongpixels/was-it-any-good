@@ -42,16 +42,16 @@ const links: LinkInfo[] = [
   {
     text: 'Films',
     key: 'rb-films',
-    title: 'Films by user rating',
+    title: 'Browse Films',
     icon: <IconFilm height={14} />,
-    url: routerPaths.tops.films.base(),
+    url: routerPaths.films.page,
   },
   {
     text: 'TV Shows',
     key: 'rb-shows',
-    title: 'Shows by user rating',
+    title: 'Browse TV Shows',
     icon: <IconShow height={16} />,
-    url: routerPaths.tops.shows.base(),
+    url: routerPaths.shows.page,
   },
 ];
 

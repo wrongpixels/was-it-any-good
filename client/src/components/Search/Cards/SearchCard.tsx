@@ -2,7 +2,10 @@ import { JSX, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
-import { getMediaAverageRating } from '../../../utils/ratings-helper';
+import {
+  getIndexMediaUserRating,
+  getMediaAverageRating,
+} from '../../../utils/ratings-helper';
 import {
   mediaTypeToDisplayName,
   urlFromIndexMedia,
@@ -98,7 +101,10 @@ const SearchCard = ({
           </span>
         </span>
         <div className="grow" />
-        <StarRatingIndexMedia rating={average} />
+        <StarRatingIndexMedia
+          rating={average}
+          userRating={getIndexMediaUserRating(media)}
+        />
       </div>
     </Link>
   );

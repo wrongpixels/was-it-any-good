@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import { IndexMediaResults } from '../../../shared/types/models';
 import { Film, IndexMedia, Show } from '../models';
 import { FindOptions, Op } from 'sequelize';
@@ -12,7 +12,7 @@ import { extractURLParams } from '../util/url-param-extractor';
 
 const router: Router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     //we extract the queries we received and the prebuilt options
     const {
@@ -72,12 +72,22 @@ router.get('/', async (req, res, next) => {
           {
             association: 'film',
             attributes: ['id', 'rating'],
-            include: buildIncludeOptions(undefined, MediaType.Film),
+            include: buildIncludeOptions(
+              undefined,
+              MediaType.Film,
+              false,
+              req.activeUser
+            ),
           },
           {
             association: 'show',
             attributes: ['id', 'rating'],
-            include: buildIncludeOptions(undefined, MediaType.Show),
+            include: buildIncludeOptions(
+              undefined,
+              MediaType.Show,
+              false,
+              req.activeUser
+            ),
           },
         ],
       });
@@ -104,7 +114,9 @@ router.get('/', async (req, res, next) => {
             where,
             include: buildIncludeOptions(
               genres,
-              isFilm ? MediaType.Film : MediaType.Show
+              isFilm ? MediaType.Film : MediaType.Show,
+              false,
+              req.activeUser
             ),
           },
         ],

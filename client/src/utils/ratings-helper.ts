@@ -1,4 +1,5 @@
 import { UserVote } from '../../../shared/types/common';
+import { MediaType } from '../../../shared/types/media';
 import {
   IndexMediaData,
   MediaResponse,
@@ -194,3 +195,10 @@ export const getMediaAverageRating = (
   }
   return calculateAverage(media);
 };
+
+export const getIndexMediaUserRating = (
+  indexMedia: IndexMediaData
+): RatingData | undefined =>
+  indexMedia.mediaType === MediaType.Film
+    ? (indexMedia.film?.userRating ?? undefined)
+    : (indexMedia.show?.userRating ?? undefined);

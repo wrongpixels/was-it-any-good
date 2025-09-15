@@ -1,6 +1,8 @@
 import { formatDate } from '../../../../../shared/helpers/format-helper';
+import { MediaType } from '../../../../../shared/types/media';
 import { RatingData } from '../../../../../shared/types/models';
 import { urlFromRatingData } from '../../../utils/url-helper';
+import Tag from '../../Common/Custom/Tag';
 import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
 
 interface RatingCardsProps {
@@ -23,9 +25,17 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
               isVote={true}
             />
             {showDate && r.updatedAt && (
-              <div className="absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 right-3 top-9 shadow/60">
-                {formatDate(r.updatedAt)}
-              </div>
+              <Tag
+                className="right-3 top-9"
+                text={formatDate(r.updatedAt)}
+                title={`Voted ${formatDate(r.updatedAt)}`}
+              />
+            )}
+            {r.indexMedia.mediaType === MediaType.Season && (
+              <Tag
+                className="bg-button-green left-3 bottom-17.5"
+                text={`Season ${r.indexMedia.season?.index ?? ''}`}
+              />
             )}
           </span>
         )
