@@ -3,6 +3,7 @@ import CustomError from '../util/customError';
 import { IndexMedia } from '../models';
 import { Op } from 'sequelize';
 import { IndexMediaData } from '../../../shared/types/models';
+import { MediaType } from '../../../shared/types/media';
 const router = express.Router();
 
 router.get('/', async (req, res, next) => {
@@ -14,6 +15,9 @@ router.get('/', async (req, res, next) => {
     const searchTerm: string = suggestion.trim();
     const matches: IndexMediaData[] = await IndexMedia.findAll({
       where: {
+        mediaType: {
+          [Op.not]: MediaType.Season,
+        },
         name: {
           [Op.iLike]: `${searchTerm.length > 2 ? '%' : ''}${searchTerm}%`,
         },
