@@ -1,7 +1,7 @@
 //import type { Request, Response } from 'express';
 import express, { Request, Router } from 'express';
 import { Show } from '../models';
-import CustomError from '../util/customError';
+import CustomError, { NotFoundError } from '../util/customError';
 import { buildShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db';
 import { Transaction } from 'sequelize';
@@ -19,10 +19,6 @@ router.get('/', async (_req, res, next) => {
       order: [['id', 'ASC']],
       raw: true,
     });
-    if (!showEntries) {
-      res.json(null);
-      return;
-    }
     res.json(showEntries);
   } catch (error) {
     next(error);
@@ -41,8 +37,7 @@ router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
       plainData: true,
     });
     if (!showEntry) {
-      res.json(null);
-      return;
+      throw new NotFoundError('Show');
     }
     res.json(showEntry);
   } catch (error) {
@@ -76,8 +71,7 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
         console.log('Rolling back');
         if (error instanceof AxiosError && error.status === 404) {
           //if it's a 404 Axios error, it means the logic run fine but the show doesn't exist in TMDB.
-          res.json(null);
-          return;
+          throw new NotFoundError('Show');
         }
         throw error;
       }
@@ -85,8 +79,7 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
       console.log(showEntry);
     }
     if (!showEntry) {
-      res.json(null);
-      return;
+      throw new NotFoundError('Show');
     }
     res.json(showEntry);
   } catch (error) {

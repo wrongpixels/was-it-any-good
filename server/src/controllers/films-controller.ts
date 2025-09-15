@@ -1,6 +1,6 @@
 //import type { Request, Response } from 'express';
 import express, { Request, Router } from 'express';
-import CustomError from '../util/customError';
+import CustomError, { NotFoundError } from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db';
@@ -15,10 +15,6 @@ const router: Router = express.Router();
 router.get('/', async (_req, res, next) => {
   try {
     const filmEntires: FilmResponse[] = await Film.findAll({ raw: true });
-    if (!filmEntires) {
-      res.json(null);
-      return;
-    }
     res.json(filmEntires);
   } catch (error) {
     next(error);
@@ -38,8 +34,7 @@ router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
     });
 
     if (!filmEntry) {
-      res.json(null);
-      return;
+      throw new NotFoundError('Film');
     }
     res.json(filmEntry);
   } catch (error) {
@@ -76,15 +71,13 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
         console.log('Rolling back');
         if (error instanceof AxiosError && error.status === 404) {
           //if it's a 404 Axios error, the film doesn't exist in TMDB.
-          res.json(null);
-          return;
+          throw new NotFoundError('Film');
         }
         throw error;
       }
     }
     if (!filmEntry) {
-      res.json(null);
-      return;
+      throw new NotFoundError('Film');
     }
     res.json(filmEntry);
   } catch (error) {

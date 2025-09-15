@@ -25,6 +25,7 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
 
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, id, false),
+    retry: false,
     gcTime: Infinity,
     enabled: !!id && !isNaN(Number(id)),
     select: (data) => (data ? transformCredits(data) : null),
@@ -53,6 +54,7 @@ export const useMediaByTMDBQuery = (
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, tmdbId, true),
     enabled: !!tmdbId && !isNaN(Number(tmdbId)),
+    retry: false,
     queryFn: async () => {
       const data = await getMediaByTMDBId(tmdbId, mediaType);
       const media: MediaResponse | null = data ? transformCredits(data) : null;
@@ -76,6 +78,7 @@ export const useMediaByTMDBQuery = (
   const queryKey = getActiveMediaKey(mediaType, id || 0, false);
   const idQuery = useQuery({
     queryKey,
+    retry: false,
     queryFn: () => {
       //this placeholder query is empty but useless, so we remove it
       queryClient.removeQueries({
