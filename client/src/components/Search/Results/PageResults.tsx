@@ -1,13 +1,12 @@
 import { JSX } from 'react';
 import {
   IndexMediaResults,
-  RatingData,
   RatingResults,
 } from '../../../../../shared/types/models';
 
 import {
   OverrideParams,
-  PAGE_LENGTH,
+  PAGE_LENGTH_BROWSE,
   URLParameters,
 } from '../../../../../shared/types/search-browse';
 import PageResultsNav from './PageResultsNav';
@@ -18,8 +17,8 @@ import SpinnerPage from '../../Common/Status/SpinnerPage';
 import PageResultsSort, { OverrideSortOptions } from './PageResultsSort';
 import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
-import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
-import { urlFromRatingData } from '../../../utils/url-helper';
+import RatingCards from '../Cards/RatingCards';
+import { SortBy } from '../../../../../shared/types/browse';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -30,6 +29,7 @@ interface PageResultsProps {
   title?: string;
   badgeType: BadgeType;
   showNavBar?: boolean;
+  overrideParams?: OverrideParams;
   overrideSortOptions?: OverrideSortOptions;
   isLoading?: boolean;
 }
@@ -44,6 +44,7 @@ const PageResults = ({
   badgeType = BadgeType.None,
   showNavBar = true,
   overrideSortOptions,
+  overrideParams,
 }: PageResultsProps): JSX.Element | null => {
   if (!results) {
     return null;
@@ -53,7 +54,11 @@ const PageResults = ({
     navigateToQuery({ replace: true, overrideParams });
   };
 
-  const indexOffset: number = (results.page - 1) * PAGE_LENGTH + 1;
+  const indexOffset: number = (results.page - 1) * PAGE_LENGTH_BROWSE + 1;
+  const resultsPageLength: number =
+    results.resultsType === 'browse'
+      ? results.indexMedia.length
+      : results.ratings.length;
 
   return (
     <div className="flex flex-col font-medium gap-5 flex-1">
@@ -69,6 +74,7 @@ const PageResults = ({
             <PageResultsNav results={results} navigatePages={navigatePages} />
           </div>
           <PageResultsSort
+            overrideParams={overrideParams}
             overrideSortOptions={overrideSortOptions}
             urlParams={urlParams}
             submitFilter={submitFilter}
@@ -91,32 +97,24 @@ const PageResults = ({
               />
             ) : results.resultsType === 'votes' &&
               results.ratings.length > 0 ? (
-              <div className="grid grid-cols-5 gap-6">
-                {results.ratings.map(
-                  (r: RatingData) =>
-                    r.indexMedia && (
-                      <VerticalMediaPoster
-                        key={r.id}
-                        name={r.indexMedia.name}
-                        url={urlFromRatingData(r)}
-                        image={r.indexMedia.image}
-                        mediaType={r.mediaType}
-                        rating={r.userScore}
-                        isVote={true}
-                      />
-                    )
-                )}
-              </div>
+              <RatingCards
+                ratings={results.ratings}
+                showDate={
+                  urlParams.sortBy == SortBy.VoteDate ||
+                  overrideParams?.sortBy == SortBy.VoteDate
+                }
+              />
             ) : (
-              <div className="h-64 w-full" aria-hidden="true">
-                <Instructions condition={true} />
-              </div>
+              <Instructions
+                linkToSearch={true}
+                resultsType={results.resultsType}
+              />
             )}
           </div>
         </div>
       )}
 
-      {showNavBar && (
+      {showNavBar && resultsPageLength > 9 && (
         <span className="relative w-full mt-5 mb-2 h-fit">
           <PageResultsNav results={results} navigatePages={navigatePages} />
         </span>

@@ -2,7 +2,6 @@ import { JSX } from 'react';
 import {
   invertSortDir,
   isSortBy,
-  SortBy,
   sortByValues,
   SortDir,
 } from '../../../../../shared/types/browse';
@@ -42,12 +41,14 @@ export interface OverrideSortOptions {
 interface PageResultsSortProps {
   urlParams: URLParameters;
   overrideSortOptions?: OverrideSortOptions;
+  overrideParams?: OverrideParams;
   submitFilter: (overrideParams: OverrideParams) => void;
 }
 
 const PageResultsSort = ({
   urlParams,
   overrideSortOptions,
+  overrideParams,
   submitFilter,
 }: PageResultsSortProps): JSX.Element | null => {
   if (overrideSortOptions?.hideSortBar) {
@@ -66,6 +67,7 @@ const PageResultsSort = ({
   //a valid array of options, we'll use index 0, if not, our global defaults
   const defaultOption: DropdownOption =
     urlParams.sortBy ??
+    overrideParams?.sortBy ??
     overrideSortOptions?.defaultOption ??
     overrideSortOptions?.overrideOptions?.[0] ??
     DEF_SORT_BY;
@@ -73,7 +75,6 @@ const PageResultsSort = ({
   const invertedSortDir: boolean = urlParams.sortDir === SortDir.Inverted;
 
   const applySortBy = (newValue: DropdownOption): void => {
-    console.log('New value:', newValue);
     const value: string = getDropdownValue(newValue);
     submitFilter({
       sortBy: isSortBy(value) ? value : DEF_SORT_BY,

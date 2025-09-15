@@ -2,7 +2,8 @@ import { SortBy, SortDir } from "./browse";
 import { CountryCode } from "./countries";
 import { SearchType } from "./search";
 
-export const PAGE_LENGTH: number = 21;
+export const PAGE_LENGTH_BROWSE: number = 21;
+export const PAGE_LENGTH_VOTES: number = 30;
 
 //The parameters that can be overridden in the browse/search pages
 //so they can be used instead of the url equivalents

@@ -26,7 +26,6 @@ const useDropdown = ({
 
   const clean = () => setValue('');
   const reset = () => setValue(defaultValue || '');
-  console.log(value);
   const getProps = () => ({ ...props, value, onChange });
 
   return { value, setValue, reset, clean, getProps };

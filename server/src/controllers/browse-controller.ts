@@ -7,7 +7,7 @@ import { SearchType } from '../../../shared/types/search';
 import { buildIncludeOptions } from '../services/browse-service';
 import { toPlainArray } from '../util/model-helpers';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
-import { PAGE_LENGTH } from '../../../shared/types/search-browse';
+import { PAGE_LENGTH_BROWSE } from '../../../shared/types/search-browse';
 import { extractURLParams } from '../util/url-param-extractor';
 
 const router: Router = express.Router();
@@ -85,7 +85,7 @@ router.get('/', async (req, res, next) => {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page 1
-        totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
+        totalPages: Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
         indexMedia: toPlainArray(rows),
         resultsType: 'browse',
       };
@@ -114,7 +114,7 @@ router.get('/', async (req, res, next) => {
         page: searchPage,
         totalResults: count,
         //we consider no results a blank page #1
-        totalPages: Math.ceil(count / PAGE_LENGTH) || 1,
+        totalPages: Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
         indexMedia: toPlainArray(rows),
         resultsType: 'browse',
       };

@@ -29,6 +29,40 @@ export const getYearNum = (
   return isNaN(year) ? null : year;
 };
 
+//for formatting dates as 'apr 07, 2025'
+export const formatDate = (dateInput: Date | string): string => {
+  const date: Date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+
+  const today: Date = new Date();
+  const yesterday: Date = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) {
+    return "Today";
+  }
+
+  if (date.toDateString() === yesterday.toDateString()) {
+    return "Yesterday";
+  }
+
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+  };
+
+  const formattedDate: string = new Intl.DateTimeFormat(
+    "en-US",
+    options
+  ).format(date);
+
+  return formattedDate.toLowerCase();
+};
+
 export const isNumber = (value?: unknown): value is number =>
   typeof value === "number" && !isNaN(value);
 

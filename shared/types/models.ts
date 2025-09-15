@@ -64,6 +64,7 @@ export interface RatingData {
   mediaId: number;
   userScore: number;
   mediaType: MediaType;
+  updatedAt?: Date;
   indexMedia?: IndexMediaData;
   showId?: number;
   show?: ShowResponse;

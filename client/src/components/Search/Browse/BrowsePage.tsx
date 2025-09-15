@@ -127,6 +127,7 @@ const BrowsePage = ({
               navigatePages={navigatePages}
               badgeType={BadgeType.RankBadge}
               overrideSortOptions={overrideSortOptions}
+              overrideParams={overrideParams}
             />
           </div>
         </>

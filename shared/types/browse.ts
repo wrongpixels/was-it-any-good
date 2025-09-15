@@ -48,9 +48,9 @@ export const isSortBy = (value: string): value is SortBy =>
 
 export const stringToSortBy = (
   value: string | undefined | null
-): SortBy | undefined => {
+): SortBy | null => {
   if (!value || !isSortBy(value)) {
-    return SortBy.Rating;
+    return null;
   }
   return value;
 };

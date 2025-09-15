@@ -1,10 +1,23 @@
 import { Link } from 'react-router-dom';
-import { OptBoolProps } from '../../types/common-props-types';
 import { routerPaths } from '../../utils/url-helper';
+import { BrowseResultsType } from '../../../../shared/types/models';
+import { PropsWithChildren } from 'react';
 
-const Instructions = ({ condition: linkToSearch }: OptBoolProps) => {
+interface InstructionsProps {
+  linkToSearch?: boolean;
+  resultsType?: BrowseResultsType;
+}
+
+const Instructions = ({ linkToSearch, resultsType }: InstructionsProps) => {
+  if (resultsType === 'votes') {
+    return (
+      <InstructionsBlock>
+        {'Start rating media in WIAG to check your progress!'}
+      </InstructionsBlock>
+    );
+  }
   return (
-    <span className="text-center flex flex-col align-middle justify-center text-xs sm:text-sm text-gray-400">
+    <InstructionsBlock>
       <span className="font-medium">
         {'Want to add a Show or Film to WIAG?'}
       </span>
@@ -20,8 +33,16 @@ const Instructions = ({ condition: linkToSearch }: OptBoolProps) => {
         ({'Example:'}{' '}
         <span className="text-starblue cursor-text">{'/tmdb/show/123'}</span>)
       </span>
-    </span>
+    </InstructionsBlock>
   );
 };
+
+const InstructionsBlock = ({ children }: PropsWithChildren) => (
+  <div className="h-full w-full" aria-hidden="true">
+    <span className="text-center flex flex-col align-middle justify-center text-xs sm:text-sm text-gray-400">
+      {children}
+    </span>
+  </div>
+);
 
 export default Instructions;

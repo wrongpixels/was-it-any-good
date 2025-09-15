@@ -13,7 +13,7 @@ const HeaderLogo = (props: OptClassNameProps) => {
         title="Home / Search"
       >
         <span
-          className={`font-bold text-white text-2xl flex items-baseline pb-1 ${styles.shadow.textShadow}  hover:animate-bounce-once`}
+          className={`font-bold text-white text-2xl flex items-baseline pb-1 ${styles.shadow.textShadow}`}
         >
           <span className="flex flex-row items-center">
             {'WI'}

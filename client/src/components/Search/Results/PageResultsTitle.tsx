@@ -16,7 +16,7 @@ const PageResultsTitle = ({
   queryType,
   resultsType,
 }: PageResultsTitleProps): JSX.Element => {
-  const resultString: string = resultsType === 'votes' ? 'vote' : 'result';
+  const resultString: string = resultsType === 'votes' ? 'rating' : 'result';
   return (
     <span className="w-full text-center text-lg sm:block hidden">
       {totalResults || 'No'}
