@@ -156,7 +156,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
           </span>
         </>
       )) ||
-        (!searchTerm && <Instructions condition={true} />)}
+        (!searchTerm && <Instructions linkToSearch={true} />)}
 
       {((isLoading || isFetching) && <LoadingCards showNavBar={!isHome} />) || (
         <>

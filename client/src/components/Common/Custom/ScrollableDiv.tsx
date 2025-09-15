@@ -1,8 +1,8 @@
 import React from 'react';
 import {
-  ScrollData,
   useVerticalScroll,
-} from '../../../hooks/use-verticall-scroll';
+  ScrollData,
+} from '../../../hooks/use-vertical-scroll';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 import IconArrowRight from '../Icons/Arrows/IconArrowRight';
 import IconArrowLeft from '../Icons/Arrows/IconArrowLeft';
@@ -13,107 +13,98 @@ interface ScrollableDivProps extends React.HTMLAttributes<HTMLDivElement> {
   bordersColor?: string;
   borderSize?: string;
 }
-const ScrollableDiv = ({
+
+const ScrollableDiv: React.FC<ScrollableDivProps> = ({
   bordersColor = 'from-gray-50',
   borderSize = 'w-6',
   children,
   className,
   ...rest
-}: ScrollableDivProps) => {
-  const { reference, canScrollR, canScrollL }: ScrollData = useVerticalScroll();
+}) => {
+  const {
+    reference,
+    canScrollR,
+    canScrollL,
+    scrollLeft,
+    scrollRight,
+  }: ScrollData = useVerticalScroll();
 
-  const borderBaseClasses = 'absolute top-0 h-full to-transparent z-10';
+  const borderBaseClasses: string =
+    'absolute top-0 h-full to-transparent z-10 pointer-events-none';
+  const buttonContainerBaseClasses: string =
+    'absolute flex h-full items-center top-0 z-20 transition-opacity duration-200';
+  const buttonBaseClasses: string =
+    'bg-gray-100 border border-gray-300 rounded shadow/30 w-10 h-20 text-center text-gray-400 cursor-pointer';
 
   return (
-    <div {...rest} className={mergeClassnames('relative', className)}>
-      <div className={'pr-5'}>
-        {canScrollL && (
-          <>
-            <div
-              className={mergeClassnames(
-                borderBaseClasses,
-                'left-0 pl-5 bg-gradient-to-r',
-                borderSize,
-                bordersColor
-              )}
-            />
-            <div
-              className={
-                'absolute flex h-full items-center align-middle -translate-x-2 z-10 '
-              }
-            >
-              <div
-                className={
-                  'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20  text-center text-gray-400 cursor-pointer hover:-translate-x-0.75'
-                }
-                onMouseDown={() => {
-                  reference.current?.scrollBy({
-                    left: -400,
-                    top: 0,
-                    behavior: 'smooth',
-                  });
-                }}
-              >
-                <IconArrowLeft
-                  width={25}
-                  className={
-                    'flex items-center h-full w-full align-middle justify-center'
-                  }
-                />
-              </div>
-            </div>
-          </>
+    <div {...rest} className={mergeClassnames('relative mr-4', className)}>
+      <div
+        className={mergeClassnames(
+          borderBaseClasses,
+          'left-0 pl-5 bg-gradient-to-r',
+          borderSize,
+          bordersColor,
+          canScrollL ? 'opacity-100' : 'opacity-0'
         )}
-        {canScrollR && (
-          <>
-            <div
-              className={mergeClassnames(
-                borderBaseClasses,
-                'right-0 mr-5 bg-gradient-to-l',
-                borderSize,
-                bordersColor
-              )}
-            >
-              <div
-                className={
-                  'absolute flex h-full items-center align-middle z-30'
-                }
-              >
-                <div
-                  className={
-                    'transition-all duration-75 bg-gray-100 rounded shadow/30 w-10 h-20 right-1 text-center text-gray-400 cursor-pointer hover:translate-x-0.75'
-                  }
-                  onMouseDown={() => {
-                    reference.current?.scrollBy({
-                      left: 400,
-                      top: 0,
-                      behavior: 'smooth',
-                    });
-                  }}
-                >
-                  <span
-                    className={
-                      'flex items-center h-full w-full align-middle justify-center'
-                    }
-                  >
-                    <IconArrowRight
-                      width={25}
-                      className={
-                        'flex items-center h-full w-full align-middle justify-center'
-                      }
-                    />
-                  </span>
-                </div>
-              </div>
-            </div>
-          </>
+      />
+      <div
+        className={mergeClassnames(
+          buttonContainerBaseClasses,
+          'left-0',
+          canScrollL ? 'opacity-100' : 'opacity-0 pointer-events-none'
         )}
+      >
         <div
-          className="flex overflow-x-auto p-1.5 space-x-2 scrollbar-hide"
-          ref={reference}
+          className={mergeClassnames(
+            buttonBaseClasses,
+            'transition-transform hover:-translate-x-0.5'
+          )}
+          onClick={scrollLeft}
         >
-          {children}
+          <IconArrowLeft
+            width={25}
+            className={'flex items-center h-full w-full justify-center'}
+          />
         </div>
+      </div>
+
+      <div
+        className={mergeClassnames(
+          borderBaseClasses,
+          'right-0 pr-5 bg-gradient-to-l',
+          borderSize,
+          bordersColor,
+          canScrollR ? 'opacity-100' : 'opacity-0'
+        )}
+      />
+      <div
+        className={mergeClassnames(
+          buttonContainerBaseClasses,
+          'right-0',
+          canScrollR ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        )}
+      >
+        <div
+          className={mergeClassnames(
+            buttonBaseClasses,
+            'transition-transform hover:translate-x-0.5'
+          )}
+          onClick={scrollRight}
+        >
+          <span className={'flex items-center h-full w-full justify-center'}>
+            <IconArrowRight
+              width={25}
+              className={'flex items-center h-full w-full justify-center'}
+            />
+          </span>
+        </div>
+      </div>
+
+      <div
+        className="flex overflow-x-auto p-1.5 space-x-2 scrollbar-hide"
+        ref={reference}
+      >
+        {children}
       </div>
     </div>
   );

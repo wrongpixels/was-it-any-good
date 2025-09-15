@@ -21,11 +21,13 @@ const HeaderLogin = (): JSX.Element => {
         <div className="flex items-center gap-4 text-sm ">
           <Link
             to={routerPaths.my.votes.base()}
-            className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright hover:text-white"
+            className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright"
           >
             <IMG
               src={DEF_IMAGE_PERSON}
-              className={'w-5 rounded border-2 border-gray-300'}
+              className={
+                'w-5 rounded border-2 border-gray-300 hover:border-white'
+              }
             />
             <span className=" font-semibold">{session.username}</span>
           </Link>
@@ -35,7 +37,7 @@ const HeaderLogin = (): JSX.Element => {
             className="border-sky-700 border-1"
             onClick={handleLogout}
           >
-            Log out
+            {'Log out'}
           </Button>
         </div>
       </div>
@@ -54,7 +56,7 @@ const HeaderLogin = (): JSX.Element => {
             className={`w-20 ${styles.inputField.header}`}
           />
           <Button size="xs" type="submit" variant="toolbar">
-            Log In
+            {'Log In'}
           </Button>
         </form>
         <span className="text-xs text-white">{'or'}</span>
@@ -65,7 +67,7 @@ const HeaderLogin = (): JSX.Element => {
           variant="accept"
           onClick={() => openSignUpOverlay()}
         >
-          Sign Up
+          {'Sign Up'}
         </Button>
       </div>
     </div>

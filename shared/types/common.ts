@@ -19,7 +19,12 @@ export const extractDropdownOption = (
     ? [dropdownOption[0], dropdownOption[1]]
     : [dropdownOption, dropdownOption];
 
-export const getDropdownValue = (dropdownOption: DropdownOption): string => {
+export const getDropdownValue = (
+  dropdownOption: DropdownOption | null
+): string => {
+  if (!dropdownOption) {
+    return "";
+  }
   return Array.isArray(dropdownOption) ? dropdownOption[0] : dropdownOption;
 };
 

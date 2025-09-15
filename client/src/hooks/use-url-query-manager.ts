@@ -74,10 +74,10 @@ const useUrlQueryManager = ({
         .byYear(urlParams.year)
         .toPage(newPage)
         .sortBy(
-          localOverride?.sortBy || overrideParams?.sortBy || urlParams.sortBy
+          localOverride?.sortBy || urlParams.sortBy || overrideParams?.sortBy
         )
         .sortDir(
-          localOverride?.sortDir || overrideParams?.sortDir || urlParams.sortDir
+          localOverride?.sortDir || urlParams.sortDir || overrideParams?.sortDir
         )
         .toString();
       return url;

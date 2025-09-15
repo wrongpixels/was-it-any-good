@@ -23,7 +23,7 @@ import { CountryCode } from '../../../shared/types/countries';
 import { SearchType, arrayToSearchType } from '../../../shared/types/search';
 import {
   OverrideParams,
-  PAGE_LENGTH,
+  PAGE_LENGTH_BROWSE,
   URLParameters,
 } from '../../../shared/types/search-browse';
 import { validateCountries } from '../factories/media-factory';
@@ -91,8 +91,8 @@ export const extractURLParams = (
   const findAndCountOptions: FindAndCountOptions = {
     order: [[sortBy, sortDir.toUpperCase()]],
     distinct: true,
-    limit: PAGE_LENGTH,
-    offset: PAGE_LENGTH * (searchPage - 1),
+    limit: PAGE_LENGTH_BROWSE,
+    offset: PAGE_LENGTH_BROWSE * (searchPage - 1),
   };
 
   return {

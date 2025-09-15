@@ -57,7 +57,7 @@ const SearchInputField = memo(
             sizePadding={5}
           />
           <AnimatedDiv animKey={'search-main-button'}>
-            <Button type={'submit'} className="pr-3 h-9 text-sm sm:text-xs">
+            <Button type={'submit'} className="pr-3 h-9 sm:text-sm text-xs">
               <SearchIcon
                 className="text-gray-100 mt-0.5 sm:-ml-2"
                 sizePadding={5}

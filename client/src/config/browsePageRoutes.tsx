@@ -112,7 +112,6 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     subtitle: 'Films in WIAG database',
     path: routerPaths.tops.films.base(),
     sortBy: SortBy.Rating,
-
     searchType: SearchType.Film,
   }),
   buildPageRoute({
@@ -120,15 +119,15 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     subtitle: 'Shows in WIAG database',
     path: routerPaths.tops.shows.base(),
     sortBy: SortBy.Rating,
-
     searchType: SearchType.Show,
   }),
   buildPageRoute({
-    title: 'Your Votes',
+    title: 'My Ratings',
     queryToUse: 'votes',
     path: routerPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar className="text-starbright" />,
+    sortBy: SortBy.VoteDate,
     overrideSortOptions: {
       overrideOptions: sortByUserValues,
     },
