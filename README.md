@@ -9,10 +9,14 @@ Currently deployed at:
 
 WIAG is a full-stack media rating platform that uses a dynamic scoring approach to combine overall user impressions with their ratings of individual components _(like seasons or DLC)_. The result is a more nuanced average score that better reflects user engagement and how a piece of media's quality evolves over time.
 
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d0a5de83-61ae-4e99-8e9f-cbb81ec5dee5" alt="image" height="600">
+</p>
+
 **For example:**
 In WIAG, you can rate _Futurama_ an '_8_' overall, but then give _Season 1_ a '_9_', _Season 2_ a '_10_', _Season 3_ a '_6_'... and leave the rest unvoted. WIAG's algorithm will consider all these votes for the final score, ignoring the unvoted Seasons.
 
-### Why I Built This
+### Why I'm Building This
 
 The idea stemmed from frustration with other rating platforms, which either combined Shows into a single blob independently of its Seasons _(IMDB)_, or outright listed each Season seaparately, making it hard to tell a "general consensus" on a Show as a whole _(Metacritic/FilmAffinity)_. With WIAG, the goal was to offer a place where a Show and its Seasons could be checked and voted at once, and where they all worked together to build a more accurate final score from and for its users.
 
@@ -29,6 +33,7 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
   - **Relational Data Growth:** When new media is added, all associated people also get created (or retrieved if already existing), and get linked with their specific roles. This allows the database to grow an interconnected network of media and talent organically.
   - **Efficient Search:** Typeahead suggestions are generated from media previously searched by other users, significantly reducing external API calls.
 - **Media Discovery:**
+  - **Search:** Search on TMDB's database to add to WIAG any Film or Show by just clicking on it.
   - **Browse:** Explore the existing database with shortcuts for Popular and Top-rated Films, Shows, and overall media.
   - **Filter & Sort:** Filter media by Genre, Country, or Year, and sort results by Ranking, Popularity, Title or Release date.
 - **Dynamic Rating System:** Users can create accounts and submit weighted ratings for Films, Shows and their individual seasons. All rating calculations happen in real-time and update instantly on the front end without a page refresh.
