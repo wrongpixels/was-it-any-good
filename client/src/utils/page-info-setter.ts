@@ -3,7 +3,9 @@ const DEF_PAGE_DESCRIPTION = '';
 
 const getCurrentTitle = (): string | undefined => {
   const t = document.title;
-  if (!t || t === DEF_PAGE_TITLE) return undefined;
+  if (!t || t === DEF_PAGE_TITLE) {
+    return undefined;
+  }
   const suffix = ` | ${DEF_PAGE_TITLE}`;
   return t.endsWith(suffix) ? t.slice(0, -suffix.length) : t;
 };
