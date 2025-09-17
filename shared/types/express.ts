@@ -1,9 +1,10 @@
 import { ActiveUser } from "./models";
 
-//we declare an optional activeUser in all Requests for flexibility and
-//universal optional access in every request.
+//we declare an optional activeUser and activeRedisKey in all Requests for
+//flexibility and universal optional access in every request.
 declare module "express" {
   interface Request {
     activeUser?: ActiveUser;
+    activeRedisKey?: string;
   }
 }

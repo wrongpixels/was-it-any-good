@@ -21,6 +21,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.0",
+    "redis": "^5.8.2",
     "sequelize": "^6.37.7",
     "sequelize-typescript": "^2.1.6",
     "umzug": "^3.8.2",

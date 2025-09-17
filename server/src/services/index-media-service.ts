@@ -4,16 +4,6 @@ import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import IndexMedia from '../models/media/indexMedia';
 import { tmdbAPI } from '../util/config';
-import { createIndexForMediaBulk } from '../factories/media-factory';
-
-import jsonFilms from '../db/popular-films-db.json';
-import jsonShows from '../db/popular-shows-db.json';
-import {
-  TMDBIndexFilm,
-  TMDBIndexFilmArraySchema,
-  TMDBIndexShow,
-  TMDBIndexShowArraySchema,
-} from '../schemas/tmdb-index-media-schemas';
 import { FilmData, SeasonData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
 import { Transaction } from 'sequelize';
@@ -41,7 +31,7 @@ export const mediaDataToCreateIndexMedia = (
 
 const PAGES_TO_GATHER: number = 10;
 const DB_PATH: string = path.join(__dirname, '../db');
-
+/*
 export const TMDBIndexToIndexMedia = (): CreateIndexMedia[] => {
   const testFilm: TMDBIndexFilm[] = TMDBIndexFilmArraySchema.parse(jsonFilms);
   const testShow: TMDBIndexShow[] = TMDBIndexShowArraySchema.parse(jsonShows);
@@ -56,7 +46,7 @@ export const TMDBIndexToIndexMedia = (): CreateIndexMedia[] => {
   );
   return Array.from(uniqueIndexMedia.values());
 };
-
+*/
 export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
   const media: unknown[] = [];
 

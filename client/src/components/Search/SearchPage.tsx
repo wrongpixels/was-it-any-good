@@ -88,9 +88,17 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     }
   }, [searchResults]);
   if (isHome) {
-    setPageInfo({ title: 'Home' });
+    setPageInfo({
+      title: 'Home',
+      description: 'Rate Films, TV Shows and Seasons!',
+    });
   } else {
-    setPageInfo({ title: `${searchTerm ? `${searchTerm} - ` : ''}Search` });
+    setPageInfo({
+      title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
+      description: searchTerm
+        ? `Showing Search results for ${searchTerm}`
+        : 'Search for any Film or TV Show!',
+    });
   }
 
   const handleSearch = (
