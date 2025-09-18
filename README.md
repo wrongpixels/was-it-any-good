@@ -54,18 +54,18 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 1.  **Data Independence:** External APIs like TMDB are treated **only** as initial data sources. All information is transformed and stored in custom-designed, normalized data models. The platform is not dependent on the structure of any external API. Once a Film, Show, Season or Person has been created, it becomes 100% independent of external APIs.
 
-2.  **Performance Optimization:** WIAG stores brief versions of all media returned from external API searches. This allows for instantaneous typeahead suggestions for subsequent users, minimizing latency and external API rate-limiting concerns.
+2.  **Performance Optimization:** WIAG stores brief versions of all media returned from external API searches, allowing for instantaneous typeahead suggestions for subsequent users, minimizing latency and external API rate-limiting concerns. The server also employs Redis for caching ranked lists and media data separately, minimizing database hits while guaranteeing data freshness with event-driven invalidation.
 
-3.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
+4.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
 
 ### Tech Stack
 
-- **Backend:** Node.js, Express, TypeScript
+- **Backend:** Node.js, Express, TypeScript, Redis
 - **Frontend:** React, TypeScript, TanStack Query
 - **Database:** PostgreSQL with Sequelize ORM
 - **Styling:** Tailwind CSS
 - **Authentication:** JWT (Session Management)
-- **DevOps:** Containerized with Docker and deployed on Railway via a Continuous Deployment (CD) pipeline integrated with GitHub
+- **DevOps:** Containerized with Docker and deployed on Railway via a Continuous Deployment (CD) pipeline integrated with GitHub.
 
 ---
 
