@@ -4,9 +4,11 @@ import { IndexMedia } from '../models';
 import { Op } from 'sequelize';
 import { IndexMediaData } from '../../../shared/types/models';
 import { MediaType } from '../../../shared/types/media';
+import { setActiveCache } from '../redis/redis-client';
+import { useCache } from '../middleware/redis-cache';
 const router = express.Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', useCache<IndexMediaData[]>(), async (req, res, next) => {
   try {
     const suggestion: string | undefined = req.query.query?.toString();
     if (!suggestion) {
@@ -39,6 +41,7 @@ router.get('/', async (req, res, next) => {
       ],
     });
     res.json(matches);
+    setActiveCache(req, matches);
   } catch (error) {
     next(error);
   }

@@ -10,6 +10,8 @@ import { toPlainArray } from '../util/model-helpers';
 import { AuthError } from '../util/customError';
 import { getMyVotesOrder } from '../services/my-service';
 import { DEF_SORT_BY } from '../../../shared/constants/url-param-constants';
+import { useCache } from '../middleware/redis-cache';
+import { setActiveCache } from '../redis/redis-client';
 
 const router: Router = express.Router();
 
@@ -18,6 +20,7 @@ const router: Router = express.Router();
 
 router.get(
   '/votes',
+  useCache<RatingResults>(),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.activeUser) {
@@ -64,6 +67,7 @@ router.get(
         resultsType: 'votes',
       };
       res.json(ratingsResults);
+      setActiveCache(req, ratingsResults);
     } catch (error) {
       next(error);
     }
