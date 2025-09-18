@@ -40,6 +40,7 @@ import {
   RatingUpdateValues,
 } from '../../types/helper-types';
 import { calculateShowAverage } from '../../../../shared/util/rating-average-calculator';
+import { updateVotedMediaCache } from '../../redis/redis-client';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -231,10 +232,10 @@ class Media<
   //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
   //this counts every valid vote linked to the entry and calculates a new average
   static async refreshRatings(
-    mediaId: number,
-    mediaType: MediaType,
+    ratingEntry: Rating,
     transaction?: Transaction
   ): Promise<RatingStats> {
+    const { mediaType, mediaId } = ratingEntry;
     const model =
       mediaType === MediaType.Show
         ? Show
@@ -250,7 +251,7 @@ class Media<
     const ratingExpressionString = `CASE WHEN "base_rating" > 0 THEN ("base_rating" + ${totalSubqueryString}) / (1 + ${countSubqueryString}) ELSE CASE WHEN (${countSubqueryString}) > 0 THEN (${totalSubqueryString}) / (${countSubqueryString}) ELSE 0 END END`;
     const voteCountExpressionString = `CASE WHEN "base_rating" > 0 THEN 1 + ${countSubqueryString} ELSE ${countSubqueryString} END`;
 
-    const values: RatingUpdateValues = {
+    const ratingUpdateValues: RatingUpdateValues = {
       rating: sequelize.literal(ratingExpressionString),
       voteCount: sequelize.literal(voteCountExpressionString),
     };
@@ -263,12 +264,21 @@ class Media<
 
     //the actual call to update the entry's 'rating' and 'totalVotes' after the calculation
     const [affectedCount, [updatedMedia]] = await model.refreshRating(
-      values,
+      ratingUpdateValues,
       options
     );
     if (affectedCount === 0 || !updatedMedia) {
       return DEF_RATING_STATS;
     }
+    //we also sync the cached Redis entry
+    updateVotedMediaCache(
+      {
+        rating: updatedMedia.rating,
+        voteCount: updatedMedia.voteCount,
+      },
+      ratingEntry
+    );
+
     //we need to sync the linked indexMedia after each vote/unvote.
     //searches and rankings read from indexMedia as a cached snapshot of the
     //current average rating, so we don’t have to pull full Film/Show model entries

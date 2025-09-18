@@ -3,8 +3,16 @@ import { Request } from 'express';
 import { redisClient } from '../util/config';
 import {
   DEF_REDIS_CACHE_TIME,
+  getRedisMediaKey,
   REDIS_ENABLED,
 } from '../constants/redis-constants';
+import { MediaType } from '../../../shared/types/media';
+import {
+  FilmResponse,
+  SeasonResponse,
+  ShowResponse,
+} from '../../../shared/types/models';
+import { Rating } from '../models';
 
 export const initializeRedis = (URI: string): RedisClientType | undefined => {
   // we skip the setup if no valid REDIS URI
@@ -29,6 +37,48 @@ export const initializeRedis = (URI: string): RedisClientType | undefined => {
     console.log('Redis is currently disabled.');
   }
   return undefined;
+};
+
+interface MediaRatingUpdate {
+  rating: number;
+  voteCount: number;
+}
+
+export const getMediaFromCache = async (
+  mediaType: MediaType,
+  mediaId: number
+): Promise<FilmResponse | ShowResponse | SeasonResponse | undefined> => {
+  const mediaKey: string = getRedisMediaKey(mediaType, mediaId);
+  const entryString: string | null | undefined =
+    await redisClient?.get(mediaKey);
+  if (!entryString) {
+    return;
+  }
+  const mediaEntry: FilmResponse | ShowResponse | SeasonResponse | undefined =
+    JSON.parse(entryString);
+  return mediaEntry;
+};
+
+//to update the cache of the media entries
+export const updateVotedMediaCache = async (
+  ratingValues: MediaRatingUpdate,
+  ratingEntry: Rating
+) => {
+  if (!redisClient) {
+    return;
+  }
+  const { mediaId, mediaType /* userId, userScore, indexId */ } = ratingEntry;
+  const mediaKey: string = getRedisMediaKey(mediaType, mediaId);
+
+  const mediaEntry: FilmResponse | ShowResponse | SeasonResponse | undefined =
+    await getMediaFromCache(mediaType, mediaId);
+  if (!mediaEntry) {
+    return;
+  }
+  mediaEntry.rating = ratingValues.rating;
+  mediaEntry.voteCount = ratingValues.voteCount;
+  redisClient.setEx(mediaKey, DEF_REDIS_CACHE_TIME, JSON.stringify(mediaEntry));
+  console.log('Updated votes of key:', mediaKey);
 };
 
 export const setActiveCache = async (

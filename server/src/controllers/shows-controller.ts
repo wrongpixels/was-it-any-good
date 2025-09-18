@@ -10,6 +10,8 @@ import { AxiosError } from 'axios';
 import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
+import { useCache } from '../middleware/redis-cache';
+import { setActiveCache } from '../redis/redis-client';
 
 const router: Router = express.Router();
 
@@ -25,25 +27,31 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
-  //we fetch and transform the data into our frontend interface using `plainData: true`.
-  //this avoids handling a sequelize instance here and relying on express' toJSON().
-  //We can't just use sequelize's 'raw:true' as it skips associations within scopes.
-  try {
-    const id: string = req.params.id;
-    const showEntry = await Show.findBy({
-      mediaId: id,
-      activeUser: req.activeUser,
-      plainData: true,
-    });
-    if (!showEntry) {
-      throw new NotFoundError('Show');
+router.get(
+  '/:id',
+  idFormatChecker,
+  useCache<ShowResponse>({ baseKey: 'show', params: ['id'] }),
+  async (req: Request, res, next) => {
+    //we fetch and transform the data into our frontend interface using `plainData: true`.
+    //this avoids handling a sequelize instance here and relying on express' toJSON().
+    //We can't just use sequelize's 'raw:true' as it skips associations within scopes.
+    try {
+      const id: string = req.params.id;
+      const showEntry = await Show.findBy({
+        mediaId: id,
+        activeUser: req.activeUser,
+        plainData: true,
+      });
+      if (!showEntry) {
+        throw new NotFoundError('Show');
+      }
+      res.json(showEntry);
+      setActiveCache(req, showEntry);
+    } catch (error) {
+      next(error);
     }
-    res.json(showEntry);
-  } catch (error) {
-    next(error);
   }
-});
+);
 router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
   //we first try to find existing entries by tmdbId, if not, we fetch the data
   //from TMDB, add it to our db and return our own data.

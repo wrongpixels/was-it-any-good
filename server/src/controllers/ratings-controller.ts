@@ -42,10 +42,7 @@ router.post(
       };
       const [ratingEntry, created]: [Rating, boolean | null] =
         await Rating.upsert(ratingData);
-      const ratingStats: RatingStats = await Media.refreshRatings(
-        ratingEntry.mediaId,
-        ratingEntry.mediaType
-      );
+      const ratingStats: RatingStats = await Media.refreshRatings(ratingEntry);
       const ratingResponse: CreateRatingResponse = {
         ...ratingEntry.get({ plain: true }),
         ratingStats,
@@ -108,10 +105,7 @@ router.delete('/:id', async (req: Request, res, next) => {
     //the instance should remain in memory after removed from the db, but it's good practices.
     const ratingData: RatingData = rating.get({ plain: true });
     await rating.destroy();
-    const ratingStats: RatingStats = await Media.refreshRatings(
-      ratingData.mediaId,
-      ratingData.mediaType
-    );
+    const ratingStats: RatingStats = await Media.refreshRatings(rating);
     const ratingResponse: RemoveRatingResponse = {
       ...ratingData,
       ratingStats,
