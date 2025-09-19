@@ -20,7 +20,7 @@ import { fetchSearchFromTMDBAndParse } from '../services/search-service';
 import { bulkCreateIndexMedia } from '../services/index-media-service';
 import { useCache } from '../middleware/redis-cache';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
-import { setActiveCache } from '../redis/redis-client';
+import { setActiveCache } from '../util/redis-helpers';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -31,7 +31,7 @@ const router: Router = express.Router();
 
 router.get(
   '/',
-  useCache<IndexMediaResults>(),
+  useCache<IndexMediaResults>({ baseKey: 'search', addQueries: true }),
   async (req: Request, res, next) => {
     try {
       const searchTerm: string | undefined =

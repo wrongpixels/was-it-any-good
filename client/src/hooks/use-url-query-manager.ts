@@ -116,12 +116,7 @@ const useUrlQueryManager = ({
   //to go to a specific page
   const navigateToPage = useCallback(
     (page: number) => {
-      if (!overrideParams) {
-        navigateToQuery({ page, replace: false });
-      } else {
-        //if we're overriding parameters, like 'top/shows', we simply set the page query
-        navigateTo(`${page <= 1 ? basePath : `${basePath}?page=${page}`}`);
-      }
+      navigateToQuery({ page, replace: false });
     },
     [navigateToQuery]
   );

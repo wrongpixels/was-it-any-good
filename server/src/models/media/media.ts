@@ -40,7 +40,7 @@ import {
   RatingUpdateValues,
 } from '../../types/helper-types';
 import { calculateShowAverage } from '../../../../shared/util/rating-average-calculator';
-import { updateVotedMediaCache } from '../../redis/redis-client';
+import { updateVotedMediaCache } from '../../util/redis-helpers';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
