@@ -5,6 +5,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { redisClient } from '../util/config';
 import { extractAllQueries } from '../util/url-query-extractor';
+import { MediaType } from '../../../shared/types/media';
+import {
+  getRedisBaseKeyForMediaType,
+  getRedisRatingKey,
+} from '../constants/redis-constants';
+import { getFromCache } from '../util/redis-helpers';
+import { RedisMediaEntry, RedisRatingEntry } from '../types/redis-types';
 
 //the options we can use to automatize unique keys.
 //allows url queries, parameters and linking the activeUser id ('ratings:user:123')
@@ -16,7 +23,10 @@ export interface CacheOptions {
   prefix?: string;
 }
 
-const getKeyName = (req: Request, options?: CacheOptions): string => {
+const getKeyNameFromRequest = (
+  req: Request,
+  options?: CacheOptions
+): string => {
   if (!options?.baseKey) {
     //if no custom key, we use the url itself
     return `${req.method}:${req.originalUrl}`;
@@ -70,22 +80,50 @@ export const useCache = <T>(options?: CacheOptions) => {
     }
 
     //we use custom key or generate from method + URL
-    const keyName: string = getKeyName(req, options);
-    const cachedString: string | null | undefined =
-      await redisClient.get(keyName);
-    if (cachedString) {
-      try {
-        const cachedData: T = JSON.parse(cachedString);
-        if (cachedData) {
-          console.log('Cache found for key:', keyName);
-          return res.json(cachedData);
-        }
-      } catch (error) {
-        console.error('Error parsing cache:', error);
-        await redisClient.del(keyName);
-        return next();
-      }
+    const keyName: string = getKeyNameFromRequest(req, options);
+    //we get and parse into the sent type the cached value from redis if exists
+    const entry: T | undefined = await getFromCache<T>(keyName);
+    if (entry) {
+      return res.json(entry);
     }
+    //if not, we load the created keyName in req for later use in the controller
+    req.activeRedisKey = keyName;
+    return next();
+  };
+};
+
+//a version for media entries that also adds the cached active user rating before
+//returning the final object.
+//userRating is always empty in the cached media for security reasons
+export const useMediaCache = (mediaType: MediaType) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!redisClient) {
+      return next();
+    }
+    //we use custom key or generate from method + URL
+    const keyName: string = getKeyNameFromRequest(req, {
+      baseKey: getRedisBaseKeyForMediaType(mediaType),
+      params: ['id'],
+    });
+    //we get and parse into the sent type the cached value from redis if exists
+    const entry: RedisMediaEntry = await getFromCache<RedisMediaEntry>(keyName);
+    if (entry) {
+      //if the active user is valid, we try to get their Rating for the media, if exists
+      if (req.activeUser?.isValid) {
+        const ratingKey: string = getRedisRatingKey(
+          req.activeUser?.id,
+          entry.indexId
+        );
+        const userRating: RedisRatingEntry =
+          await getFromCache<RedisRatingEntry>(ratingKey);
+        if (userRating) {
+          //and we set it in the entry we'll return
+          entry.userRating = userRating;
+        }
+      }
+      return res.json(entry);
+    }
+    //if not, we load the created keyName in req for later use in the controller
     req.activeRedisKey = keyName;
     return next();
   };

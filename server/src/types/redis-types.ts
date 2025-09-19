@@ -1,5 +1,6 @@
 import {
   FilmResponse,
+  RatingData,
   SeasonResponse,
   ShowResponse,
 } from '../../../shared/types/models';
@@ -9,3 +10,5 @@ export type RedisMediaEntry =
   | ShowResponse
   | SeasonResponse
   | undefined;
+
+export type RedisRatingEntry = RatingData | undefined;
