@@ -16,7 +16,7 @@ import { toPlainArray } from '../util/model-helpers';
 import { Op } from 'sequelize';
 import { fetchTrendingFromTMDBAndParse } from '../services/trending-service';
 import { useCache } from '../middleware/redis-cache';
-import { setActiveCache } from '../redis/redis-client';
+import { setActiveCache } from '../util/redis-helpers';
 
 const router: Router = express.Router();
 
@@ -25,7 +25,7 @@ const router: Router = express.Router();
 
 router.get(
   '/',
-  useCache<IndexMediaResults>(),
+  useCache<IndexMediaResults>({ baseKey: 'trending', addQueries: true }),
   async (req: Request, res, next) => {
     try {
       let films: TMDBIndexFilm[] = [];

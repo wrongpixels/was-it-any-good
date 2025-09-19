@@ -81,7 +81,7 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     if (
       !isHome &&
       !!currentQuery &&
-      (searchPage <= 0 ||
+      (searchPage < 0 ||
         (searchResults && searchResults.totalPages < Number(searchPage)))
     ) {
       navigateToPage(searchResults?.totalPages || 1);

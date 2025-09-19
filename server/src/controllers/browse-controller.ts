@@ -10,13 +10,13 @@ import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { PAGE_LENGTH_BROWSE } from '../../../shared/types/search-browse';
 import { extractURLParams } from '../util/url-param-extractor';
 import { useCache } from '../middleware/redis-cache';
-import { setActiveCache } from '../redis/redis-client';
+import { setActiveCache } from '../util/redis-helpers';
 
 const router: Router = express.Router();
 
 router.get(
   '/',
-  useCache<IndexMediaResults>(),
+  useCache<IndexMediaResults>({ baseKey: 'browse', addQueries: true }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       //we extract the queries we received and the prebuilt options

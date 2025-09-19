@@ -11,7 +11,7 @@ import { AuthError } from '../util/customError';
 import { getMyVotesOrder } from '../services/my-service';
 import { DEF_SORT_BY } from '../../../shared/constants/url-param-constants';
 import { useCache } from '../middleware/redis-cache';
-import { setActiveCache } from '../redis/redis-client';
+import { setActiveCache } from '../util/redis-helpers';
 
 const router: Router = express.Router();
 
@@ -20,7 +20,11 @@ const router: Router = express.Router();
 
 router.get(
   '/votes',
-  useCache<RatingResults>(),
+  useCache<RatingResults>({
+    baseKey: 'ratings',
+    addQueries: true,
+    addActiveUser: true,
+  }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       if (!req.activeUser) {

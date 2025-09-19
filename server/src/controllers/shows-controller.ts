@@ -11,7 +11,7 @@ import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
 import { useCache } from '../middleware/redis-cache';
-import { setActiveCache } from '../redis/redis-client';
+import { setActiveCache } from '../util/redis-helpers';
 
 const router: Router = express.Router();
 
