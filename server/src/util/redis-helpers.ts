@@ -31,7 +31,8 @@ export const getFromCache = async <T>(
     return;
   }
   try {
-    const entry: T | undefined = { ...JSON.parse(entryString) };
+    const entry: T | undefined = JSON.parse(entryString);
+    console.log('Got cache for key:', keyName);
     return entry;
   } catch (_error: unknown) {
     console.error(
@@ -72,17 +73,14 @@ export const updateVotedMediaCache = async (
   if (!redisClient) {
     return;
   }
-  const { mediaId, mediaType, userId, indexId, userScore, updatedAt } =
-    ratingEntry;
+  const { mediaId, mediaType, userId, indexId } = ratingEntry;
   const mediaKey: string = getRedisMediaKey(mediaType, mediaId);
   const ratingKey: string = getRedisRatingKey(userId, indexId);
 
-  const [mediaEntry, userRatingEntry]: [RedisMediaEntry, RedisRatingEntry] =
-    await Promise.all([
-      getFromCache<RedisMediaEntry>(mediaKey),
-      getFromCache<RedisRatingEntry>(ratingKey),
-    ]);
-  if (!mediaEntry || !userRatingEntry) {
+  const mediaEntry: RedisMediaEntry =
+    await getFromCache<RedisMediaEntry>(mediaKey);
+
+  if (!mediaEntry) {
     return;
   }
   //we update the data on the media entry
@@ -90,21 +88,17 @@ export const updateVotedMediaCache = async (
   mediaEntry.voteCount = ratingValues.voteCount;
 
   //and write the changes to cache
-  setToCache(mediaKey, mediaEntry);
+  setToCache<RedisMediaEntry>(mediaKey, mediaEntry);
   console.log('Updated votes of media key:', mediaKey);
 
-  //and we update the user rating itself
-  userRatingEntry.userScore = userScore;
-  userRatingEntry.updatedAt = updatedAt;
-
-  //and also write it to cache
-  setToCache(ratingKey, mediaEntry);
+  //and set the new rating to cache
+  setToCache<RedisRatingEntry>(ratingKey, ratingEntry);
   console.log('Updated votes of user rating key:', ratingKey);
 };
 
-export const setActiveCache = async (
+export const setActiveCache = async <T>(
   req: Request,
-  value: unknown,
+  value: T,
   //expire in 1 hour by default. Undefined or setting <= 0 means no expiration
   expiration: number | undefined = DEF_REDIS_CACHE_TIME
 ): Promise<void | string | null> => {
@@ -116,7 +110,7 @@ export const setActiveCache = async (
     console.error('Request does not have an active Redis key');
     return;
   }
-  return await setToCache(req.activeRedisKey, value, expiration);
+  return await setToCache<T>(req.activeRedisKey, value, expiration);
 };
 
 //a specific cache setter for media that strips
@@ -126,6 +120,21 @@ export const setMediaActiveCache = async (
   media: FilmResponse | ShowResponse | SeasonResponse,
   expiration: number | undefined = DEF_REDIS_CACHE_TIME
 ): Promise<void | string | null> => {
+  //if there was a activeUser, we cache either the rating or null
+  if (req.activeUser?.isValid) {
+    console.log(media.userRating);
+    const ratingKey: string = getRedisRatingKey(
+      req.activeUser.id,
+      media.indexId
+    );
+    //we cache null to know we already checked for this user's vote
+    setToCache<RatingData | null>(ratingKey, media.userRating ?? null);
+  }
+  //we ensure we don't cache userRating
   media.userRating = undefined;
-  return await setActiveCache(req, media, expiration);
+  return await setActiveCache<FilmResponse | ShowResponse | SeasonResponse>(
+    req,
+    media,
+    expiration
+  );
 };

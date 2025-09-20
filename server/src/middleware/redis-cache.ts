@@ -10,8 +10,10 @@ import {
   getRedisBaseKeyForMediaType,
   getRedisRatingKey,
 } from '../constants/redis-constants';
-import { getFromCache } from '../util/redis-helpers';
+import { getFromCache, setToCache } from '../util/redis-helpers';
 import { RedisMediaEntry, RedisRatingEntry } from '../types/redis-types';
+import { Rating } from '../models';
+import { RatingData } from '../../../shared/types/models';
 
 //the options we can use to automatize unique keys.
 //allows url queries, parameters and linking the activeUser id ('ratings:user:123')
@@ -110,13 +112,31 @@ export const useMediaCache = (mediaType: MediaType) => {
     if (entry) {
       //if the active user is valid, we try to get their Rating for the media, if exists
       if (req.activeUser?.isValid) {
-        const ratingKey: string = getRedisRatingKey(
-          req.activeUser?.id,
-          entry.indexId
-        );
-        const userRating: RedisRatingEntry =
+        const userId: number = req.activeUser.id;
+        const indexId: number = entry.indexId;
+
+        const ratingKey: string = getRedisRatingKey(userId, indexId);
+        let userRating: RedisRatingEntry | null =
           await getFromCache<RedisRatingEntry>(ratingKey);
-        if (userRating) {
+        //if userRating is undefined, means it wasn't found. We need
+        //to try to find at least once and assign a null so this only runs once.
+
+        if (userRating === undefined) {
+          try {
+            userRating = await Rating.findOne({ where: { userId, indexId } });
+            //we ensure we set it to valid or null
+            setToCache<RatingData | null>(ratingKey, userRating ?? null);
+          } catch (dbError) {
+            console.error(
+              'DB fetch failed for rating key:',
+              ratingKey,
+              dbError
+            );
+            userRating = null;
+          }
+        }
+
+        if (userRating !== undefined) {
           //and we set it in the entry we'll return
           entry.userRating = userRating;
         }
