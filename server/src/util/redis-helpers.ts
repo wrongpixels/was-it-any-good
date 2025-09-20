@@ -12,6 +12,7 @@ import {
   SeasonResponse,
   ShowResponse,
 } from '../../../shared/types/models';
+import { MediaType } from '../../../shared/types/media';
 
 interface MediaRatingUpdate {
   rating: number;
@@ -123,7 +124,6 @@ export const setMediaCache = async (
 ): Promise<void | string | null> => {
   //if there was a activeUser, we cache either the rating or null
   if (req.activeUser?.isValid) {
-    console.log(media.userRating);
     const ratingKey: string = getRedisRatingKey(
       req.activeUser.id,
       media.indexId
@@ -131,8 +131,23 @@ export const setMediaCache = async (
     //we cache null to know we already checked for this user's vote
     setToCache<RatingData | null>(ratingKey, media.userRating ?? null);
   }
-  //we ensure we don't cache userRating
+  //we ensure we don't cache userRating in main media
   media.userRating = undefined;
+
+  //and in seasons if it's a show. We also create the cache entry for them
+
+  if (media.mediaType === MediaType.Show && media.seasons) {
+    media.seasons = media.seasons.map((s: SeasonResponse) => {
+      if (req.activeUser?.isValid) {
+        const seasonRatingKey: string = getRedisRatingKey(
+          req.activeUser.id,
+          s.indexId
+        );
+        setToCache<RatingData | null>(seasonRatingKey, s.userRating ?? null);
+      }
+      return { ...s, userRating: undefined };
+    });
+  }
 
   //and set the corresponding key
   if (useActive) {

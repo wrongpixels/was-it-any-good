@@ -1,10 +1,10 @@
-import { JSX } from 'react';
+import { JSX, useEffect } from 'react';
 import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
 import MediaPagePoster from '../Posters/MediaPagePoster';
 import MediaHeader from './MediaHeader';
 import SeasonsSection from './Sections/SeasonsSection';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useMediaByIdQuery,
   useMediaByTMDBQuery,
@@ -22,7 +22,10 @@ import LoadingPage from '../Common/Status/LoadingPage';
 import ErrorPage from '../Common/Status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
-import { mediaTypeToDisplayName } from '../../utils/url-helper';
+import {
+  buildRouterMediaLink,
+  mediaTypeToDisplayName,
+} from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
 import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
@@ -38,6 +41,7 @@ const MediaPage = ({
   tmdb = false,
   mediaType,
 }: MediaPage): JSX.Element | null => {
+  const navigate = useNavigate();
   const { id: mediaId } = useParams<{ id: string }>();
   const { isLoginPending }: AuthContextValues = useAuth();
   const {
@@ -49,10 +53,22 @@ const MediaPage = ({
     ? useMediaByTMDBQuery(mediaId, mediaType)
     : useMediaByIdQuery(mediaId, mediaType);
 
+  let isRedirecting: boolean = !!tmdb && !!media;
+
+  //once load, if it's a tmdb entry, we redirect to the existing or just
+  //created id page
+  useEffect(() => {
+    if (tmdb && media) {
+      navigate(buildRouterMediaLink(media.mediaType, media.id), {
+        replace: true,
+      });
+    }
+  }, [media]);
+
   if (mediaId && isNaN(Number(mediaId))) {
     return <WrongIdFormatPage />;
   }
-  if (isFetching || isLoginPending) {
+  if (isFetching || isLoginPending || isRedirecting) {
     return tmdb ? (
       <CreatingMediaPage text={mediaType} />
     ) : (
@@ -76,6 +92,7 @@ const MediaPage = ({
   }
 
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
+
   const show = isShow(media);
   return (
     <div>
