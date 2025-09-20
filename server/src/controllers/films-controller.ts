@@ -10,7 +10,7 @@ import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
-import { setMediaActiveCache } from '../util/redis-helpers';
+import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 const router: Router = express.Router();
 
 router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
@@ -90,6 +90,7 @@ router.get(
         throw new NotFoundError('Film');
       }
       res.json(filmEntry);
+      setMediaCache(req, filmEntry);
     } catch (error) {
       next(error);
     }

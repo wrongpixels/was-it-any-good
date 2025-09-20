@@ -115,10 +115,11 @@ export const setActiveCache = async <T>(
 
 //a specific cache setter for media that strips
 //user sensitive data gathered in the first fetch
-export const setMediaActiveCache = async (
+export const setMediaCache = async (
   req: Request,
   media: FilmResponse | ShowResponse | SeasonResponse,
-  expiration: number | undefined = DEF_REDIS_CACHE_TIME
+  expiration: number | undefined = DEF_REDIS_CACHE_TIME,
+  useActive: boolean = false
 ): Promise<void | string | null> => {
   //if there was a activeUser, we cache either the rating or null
   if (req.activeUser?.isValid) {
@@ -132,9 +133,27 @@ export const setMediaActiveCache = async (
   }
   //we ensure we don't cache userRating
   media.userRating = undefined;
-  return await setActiveCache<FilmResponse | ShowResponse | SeasonResponse>(
-    req,
+
+  //and set the corresponding key
+  if (useActive) {
+    return await setActiveCache<FilmResponse | ShowResponse | SeasonResponse>(
+      req,
+      media,
+      expiration
+    );
+  }
+  return await setToCache<FilmResponse | ShowResponse | SeasonResponse>(
+    getRedisMediaKey(media.mediaType, media.id),
     media,
     expiration
   );
+};
+
+//a specific cache setter for active media in the request
+export const setMediaActiveCache = async (
+  req: Request,
+  media: FilmResponse | ShowResponse | SeasonResponse,
+  expiration: number | undefined = DEF_REDIS_CACHE_TIME
+): Promise<void | string | null> => {
+  return await setMediaCache(req, media, expiration, true);
 };
