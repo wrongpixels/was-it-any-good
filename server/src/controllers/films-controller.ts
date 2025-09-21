@@ -11,6 +11,7 @@ import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
+import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 const router: Router = express.Router();
 
 router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
@@ -89,8 +90,11 @@ router.get(
       if (!filmEntry) {
         throw new NotFoundError('Film');
       }
-      res.json(filmEntry);
-      setMediaCache(req, filmEntry);
+      //we set the cache for the id page
+      await setMediaCache(req, filmEntry);
+      //we strip the heavy fields, as we only need id and mediaType for
+      //the redirect to the entry in the client.
+      res.json(toBasicMediaResponse(filmEntry));
     } catch (error) {
       next(error);
     }

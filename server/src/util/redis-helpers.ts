@@ -71,6 +71,7 @@ export const updateVotedMediaCache = async (
   ratingValues: MediaRatingUpdate,
   ratingEntry: RatingData
 ) => {
+  console.log('UPDATING a', ratingEntry.mediaType);
   if (!redisClient) {
     return;
   }
@@ -136,6 +137,9 @@ export const setMediaCache = async (
 
   //and in seasons if it's a show. We also create the cache entry for them
 
+  const seasonResponsePairs: Map<string, SeasonResponse> = new Map();
+  const seasonRatingPairs: Map<string, RatingData | null> = new Map();
+
   if (media.mediaType === MediaType.Show && media.seasons) {
     media.seasons = media.seasons.map((s: SeasonResponse) => {
       if (req.activeUser?.isValid) {
@@ -143,7 +147,8 @@ export const setMediaCache = async (
           req.activeUser.id,
           s.indexId
         );
-        setToCache<RatingData | null>(seasonRatingKey, s.userRating ?? null);
+        seasonResponsePairs.set(getRedisMediaKey(MediaType.Season, s.id), s);
+        seasonRatingPairs.set(seasonRatingKey, s.userRating ?? null);
       }
       return { ...s, userRating: undefined };
     });

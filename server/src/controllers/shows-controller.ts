@@ -12,6 +12,7 @@ import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
+import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 
 const router: Router = express.Router();
 
@@ -89,8 +90,8 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
     if (!showEntry) {
       throw new NotFoundError('Show');
     }
-    res.json(showEntry);
-    setMediaCache(req, showEntry);
+    await setMediaCache(req, showEntry);
+    res.json(toBasicMediaResponse(showEntry));
   } catch (error) {
     next(error);
   }
