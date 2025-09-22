@@ -276,7 +276,10 @@ class Media<
         rating: updatedMedia.rating,
         voteCount: updatedMedia.voteCount,
       },
-      ratingEntry
+      ratingEntry,
+      updatedMedia.mediaType === MediaType.Season
+        ? updatedMedia.showId
+        : undefined
     );
 
     //we need to sync the linked indexMedia after each vote/unvote.

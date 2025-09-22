@@ -8,6 +8,7 @@ import { RedisMediaEntry, RedisRatingEntry } from '../types/redis-types';
 import { redisClient } from './config';
 import {
   FilmResponse,
+  MediaResponse,
   RatingData,
   SeasonResponse,
   ShowResponse,
@@ -69,33 +70,57 @@ export const setToCache = async <T>(
 //to update the cache of the media entries
 export const updateVotedMediaCache = async (
   ratingValues: MediaRatingUpdate,
-  ratingEntry: RatingData
+  ratingEntry: RatingData,
+  showId?: number
 ) => {
   console.log('UPDATING a', ratingEntry.mediaType);
   if (!redisClient) {
     return;
   }
   const { mediaId, mediaType, userId, indexId } = ratingEntry;
-  const mediaKey: string = getRedisMediaKey(mediaType, mediaId);
+
+  //if it's a season, we get the full show entry that owns it, if not, the media linked to
+  const mediaKey: string = getRedisMediaKey(
+    showId ? MediaType.Show : mediaType,
+    showId ?? mediaId
+  );
   const ratingKey: string = getRedisRatingKey(userId, indexId);
 
   const mediaEntry: RedisMediaEntry =
     await getFromCache<RedisMediaEntry>(mediaKey);
 
   if (!mediaEntry) {
+    console.log("Couldn't find key:", mediaKey);
     return;
   }
   //we update the data on the media entry
-  mediaEntry.rating = ratingValues.rating;
-  mediaEntry.voteCount = ratingValues.voteCount;
+
+  //if it's a season, we have to edit the season inside the show cache
+  if (
+    ratingEntry.mediaType === MediaType.Season &&
+    mediaEntry.mediaType === MediaType.Show
+  ) {
+    const season: SeasonResponse | undefined = mediaEntry.seasons?.find(
+      (s: SeasonResponse) => s.indexId === indexId
+    );
+    if (!season) {
+      return;
+    }
+    season.rating = ratingValues.rating;
+    season.voteCount = ratingValues.voteCount;
+  }
+
+  //if not, we just update the entry's data
+  else {
+    mediaEntry.rating = ratingValues.rating;
+    mediaEntry.voteCount = ratingValues.voteCount;
+  }
 
   //and write the changes to cache
-  setToCache<RedisMediaEntry>(mediaKey, mediaEntry);
-  console.log('Updated votes of media key:', mediaKey);
-
-  //and set the new rating to cache
-  setToCache<RedisRatingEntry>(ratingKey, ratingEntry);
-  console.log('Updated votes of user rating key:', ratingKey);
+  await Promise.allSettled([
+    setToCache<RedisMediaEntry>(mediaKey, mediaEntry),
+    setToCache<RedisRatingEntry>(ratingKey, ratingEntry),
+  ]);
 };
 
 export const setActiveCache = async <T>(
@@ -122,23 +147,23 @@ export const setMediaCache = async (
   media: FilmResponse | ShowResponse | SeasonResponse,
   expiration: number | undefined = DEF_REDIS_CACHE_TIME,
   useActive: boolean = false
-): Promise<void | string | null> => {
-  //if there was a activeUser, we cache either the rating or null
+): Promise<void> => {
+  //we create 2 maps with the key and the data to set, 1 for ratings and other
+  //for the media to set
+  const mediaPairs: [string, MediaResponse | SeasonResponse][] = [];
+  const ratingPairs: [string, RatingData | null][] = [];
+
+  //if there was an activeUser, we cache either the rating or null
   if (req.activeUser?.isValid) {
-    const ratingKey: string = getRedisRatingKey(
-      req.activeUser.id,
-      media.indexId
-    );
-    //we cache null to know we already checked for this user's vote
-    setToCache<RatingData | null>(ratingKey, media.userRating ?? null);
+    ratingPairs.push([
+      getRedisRatingKey(req.activeUser.id, media.indexId),
+      media.userRating ?? null,
+    ]);
   }
   //we ensure we don't cache userRating in main media
   media.userRating = undefined;
 
-  //and in seasons if it's a show. We also create the cache entry for them
-
-  const seasonResponsePairs: Map<string, SeasonResponse> = new Map();
-  const seasonRatingPairs: Map<string, RatingData | null> = new Map();
+  //if it's a show, we also create the cache entries for them
 
   if (media.mediaType === MediaType.Show && media.seasons) {
     media.seasons = media.seasons.map((s: SeasonResponse) => {
@@ -147,26 +172,41 @@ export const setMediaCache = async (
           req.activeUser.id,
           s.indexId
         );
-        seasonResponsePairs.set(getRedisMediaKey(MediaType.Season, s.id), s);
-        seasonRatingPairs.set(seasonRatingKey, s.userRating ?? null);
+        //currently, we don't cache season data, it's more efficient to store them inside the show.
+        //we also avoid conflicting expirations
+        //mediaPairs.push([getRedisMediaKey(MediaType.Season, s.id), s]);
+        ratingPairs.push([seasonRatingKey, s.userRating ?? null]);
       }
       return { ...s, userRating: undefined };
     });
   }
-
-  //and set the corresponding key
-  if (useActive) {
-    return await setActiveCache<FilmResponse | ShowResponse | SeasonResponse>(
-      req,
-      media,
-      expiration
-    );
+  //we set the appropriate media key
+  if (useActive && req.activeRedisKey) {
+    mediaPairs.push([req.activeRedisKey, media]);
+  } else {
+    mediaPairs.push([getRedisMediaKey(media.mediaType, media.id), media]);
   }
-  return await setToCache<FilmResponse | ShowResponse | SeasonResponse>(
-    getRedisMediaKey(media.mediaType, media.id),
-    media,
-    expiration
-  );
+  //and we cache all in parallel through a Promise.allSettled
+  const promises: Promise<string | null | undefined>[] = [
+    ...ratingPairs.map((r) =>
+      setToCache<RatingData | null>(r[0], r[1], expiration)
+    ),
+    ...mediaPairs.map((m) =>
+      setToCache<MediaResponse | SeasonResponse>(m[0], m[1], expiration)
+    ),
+  ];
+  try {
+    const results = await Promise.allSettled(promises);
+    const failed = results.filter((r) => r.status === 'rejected');
+    if (failed.length > 0) {
+      console.error(
+        `Failed to cache ${failed.length}/${promises.length} items:`,
+        failed.map((r) => r.reason)
+      );
+    }
+  } catch (error) {
+    console.error('Batch cache error:', error);
+  }
 };
 
 //a specific cache setter for active media in the request

@@ -13,7 +13,8 @@ import {
 import { getFromCache, setToCache } from '../util/redis-helpers';
 import { RedisMediaEntry, RedisRatingEntry } from '../types/redis-types';
 import { Rating } from '../models';
-import { RatingData } from '../../../shared/types/models';
+import { RatingData, SeasonResponse } from '../../../shared/types/models';
+import { Op } from 'sequelize';
 
 //the options we can use to automatize unique keys.
 //allows url queries, parameters and linking the activeUser id ('ratings:user:123')
@@ -114,31 +115,93 @@ export const useMediaCache = (mediaType: MediaType) => {
       if (req.activeUser?.isValid) {
         const userId: number = req.activeUser.id;
         const indexId: number = entry.indexId;
+        const ratingKeys: string[] = [];
+        ratingKeys.push(getRedisRatingKey(userId, indexId));
 
-        const ratingKey: string = getRedisRatingKey(userId, indexId);
-        let userRating: RedisRatingEntry | null =
-          await getFromCache<RedisRatingEntry>(ratingKey);
-        //if userRating is undefined, means it wasn't found. We need
+        //if it's a show, we also need to gather the user's ratings
+        //of the seasons
+        if (entry.mediaType === MediaType.Show && entry.seasons) {
+          entry.seasons.forEach((s: SeasonResponse) =>
+            ratingKeys.push(getRedisRatingKey(userId, s.indexId))
+          );
+        }
+
+        const promises: Promise<RedisRatingEntry | null>[] = ratingKeys.map(
+          (r: string) => getFromCache<RedisRatingEntry>(r)
+        );
+        //we save the key and mediaRating of index0, as it's the one of the main media
+        const [mediaRatingKey]: string[] = ratingKeys;
+        const ratings: (RedisRatingEntry | null)[] =
+          await Promise.all(promises);
+        let mediaRating: RedisRatingEntry | null = ratings[0] ?? null;
+        //if mediaRating is undefined, means it wasn't found. We need
         //to try to find at least once and assign a null so this only runs once.
 
-        if (userRating === undefined) {
+        if (mediaRating === undefined) {
           try {
-            userRating = await Rating.findOne({ where: { userId, indexId } });
+            mediaRating = await Rating.findOne({ where: { userId, indexId } });
             //we ensure we set it to valid or null
-            setToCache<RatingData | null>(ratingKey, userRating ?? null);
+            setToCache<RatingData | null>(mediaRatingKey, mediaRating ?? null);
           } catch (dbError) {
             console.error(
               'DB fetch failed for rating key:',
-              ratingKey,
+              mediaRatingKey,
               dbError
             );
-            userRating = null;
+            mediaRating = null;
           }
         }
 
-        if (userRating !== undefined) {
+        if (mediaRating !== undefined) {
           //and we set it in the entry we'll return
-          entry.userRating = userRating;
+          entry.userRating = mediaRating;
+        }
+        if (entry.mediaType === MediaType.Show && entry.seasons) {
+          const seasonRatingMap: Map<number, RatingData | null> = new Map();
+          const missingSeasonRatings: Map<number, RatingData | null> =
+            new Map();
+          entry.seasons.forEach((s: SeasonResponse, i: number) => {
+            const rating: RedisRatingEntry | null = ratings[i + 1]; // Skip main rating index
+            if (rating === undefined) {
+              missingSeasonRatings.set(s.indexId, null);
+            } else {
+              seasonRatingMap.set(s.indexId, rating);
+            }
+          });
+          if (missingSeasonRatings.size > 0) {
+            try {
+              const seasonRatingEntries: RatingData[] = await Rating.findAll({
+                where: {
+                  userId,
+                  indexId: { [Op.in]: Array.from(missingSeasonRatings.keys()) },
+                },
+              });
+              if (seasonRatingEntries.length > 0) {
+                seasonRatingEntries.forEach((s: RatingData) => {
+                  missingSeasonRatings.set(s.indexId, s);
+                  seasonRatingMap.set(s.indexId, s);
+                });
+                //and we store in cache these new gathered ratings from db
+                const seasonPromises: Promise<string | null | undefined>[] = [];
+                missingSeasonRatings.forEach((rating, indexId) =>
+                  seasonPromises.push(
+                    setToCache<RatingData | null>(
+                      getRedisRatingKey(userId, indexId),
+                      rating
+                    )
+                  )
+                );
+                await Promise.allSettled(seasonPromises);
+              }
+            } catch (dbError) {
+              console.error('DB fetch failed for season ratings:', dbError);
+            }
+            //and now, we assign all the gathered seasons according to our map.
+            entry.seasons = entry.seasons.map((s: SeasonResponse) => ({
+              ...s,
+              userRating: seasonRatingMap.get(s.indexId),
+            }));
+          }
         }
       }
       return res.json(entry);
