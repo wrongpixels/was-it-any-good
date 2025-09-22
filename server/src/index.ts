@@ -2,7 +2,7 @@ import express from 'express';
 //import cors from 'cors';
 import path from 'path';
 
-import { PORT } from './util/config';
+import { PORT, PRODUCTION } from './util/config';
 import { initializeDB } from './util/db';
 import {
   filmsRouter,
@@ -53,7 +53,7 @@ app.all('/api/*rest', (_req, _res, next) => {
   next(new NotFoundError('API endpoint'));
 });
 
-if (process.env.NODE_ENV === 'production') {
+if (PRODUCTION) {
   //absolute path to 'app/client/dist' so it works both locally and in railway,
   //where we extract 'app/server/dist/server' into just 'app/server'
   const projectRoot = process.cwd();

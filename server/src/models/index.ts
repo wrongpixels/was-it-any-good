@@ -11,6 +11,7 @@ import User from './users/user';
 import Session from './users/session';
 import IndexMedia from './media/indexMedia';
 import { sequelize } from '../util/db';
+import { PRODUCTION } from '../util/config';
 
 Person.hasMany(MediaRole, {
   foreignKey: 'personId',
@@ -28,7 +29,9 @@ Session.associate();
 Rating.associate();
 Season.associate();
 IndexMedia.associate();
-sequelize.sync({ alter: true, force: false });
+if (!PRODUCTION) {
+  sequelize.sync({ alter: true, force: false });
+}
 
 export {
   Media,

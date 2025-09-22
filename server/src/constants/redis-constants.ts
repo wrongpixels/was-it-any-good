@@ -7,7 +7,7 @@ export const REDIS_FILM_KEY: string = 'film';
 export const REDIS_SHOW_KEY: string = 'show';
 export const REDIS_SEASON_KEY: string = 'season';
 
-export const getRedisKeyForMediaType = (mediaType: MediaType) => {
+export const getRedisBaseKeyForMediaType = (mediaType: MediaType) => {
   switch (mediaType) {
     case MediaType.Film:
       return REDIS_FILM_KEY;
@@ -21,5 +21,9 @@ export const getRedisKeyForMediaType = (mediaType: MediaType) => {
 };
 
 export const getRedisMediaKey = (mediaType: MediaType, mediaId: number) => {
-  return `${getRedisKeyForMediaType(mediaType)}:${mediaId}`;
+  return `${getRedisBaseKeyForMediaType(mediaType)}:${mediaId}`;
+};
+
+export const getRedisRatingKey = (userId: number, indexId: number) => {
+  return `rating:${indexId}:user:${userId}:`;
 };

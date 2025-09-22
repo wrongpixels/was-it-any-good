@@ -10,8 +10,9 @@ import { AxiosError } from 'axios';
 import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
 import idFormatChecker from '../middleware/id-format-checker';
-import { useCache } from '../middleware/redis-cache';
-import { setActiveCache } from '../util/redis-helpers';
+import { useMediaCache } from '../middleware/redis-cache';
+import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
+import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 
 const router: Router = express.Router();
 
@@ -30,7 +31,7 @@ router.get('/', async (_req, res, next) => {
 router.get(
   '/:id',
   idFormatChecker,
-  useCache<ShowResponse>({ baseKey: 'show', params: ['id'] }),
+  useMediaCache(MediaType.Show),
   async (req: Request, res, next) => {
     //we fetch and transform the data into our frontend interface using `plainData: true`.
     //this avoids handling a sequelize instance here and relying on express' toJSON().
@@ -46,7 +47,7 @@ router.get(
         throw new NotFoundError('Show');
       }
       res.json(showEntry);
-      setActiveCache(req, showEntry);
+      setMediaActiveCache(req, showEntry);
     } catch (error) {
       next(error);
     }
@@ -89,7 +90,8 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
     if (!showEntry) {
       throw new NotFoundError('Show');
     }
-    res.json(showEntry);
+    await setMediaCache(req, showEntry);
+    res.json(toBasicMediaResponse(showEntry));
   } catch (error) {
     next(error);
   }

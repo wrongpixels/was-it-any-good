@@ -3,7 +3,11 @@ import { TMDB_API_URL } from '../constants/url-constants';
 import { RedisClientType } from 'redis';
 import { initializeRedis } from '../redis/redis-client';
 
-const POSTGRES_URI: string = process.env.POSTGRES_URI || '';
+const PRODUCTION: boolean = process.env.NODE_ENV === 'production';
+const POSTGRES_URI: string =
+  !PRODUCTION && process.env.LOCAL_POSTGRES_URI
+    ? process.env.LOCAL_POSTGRES_URI
+    : process.env.POSTGRES_URI || '';
 const REDIS_URI: string = process.env.REDIS_URI || '';
 const API_SECRET: string = process.env.API_SECRET || '';
 const API_TOKEN_TMDB: string = process.env.API_TOKEN_TMDB || '';
@@ -39,4 +43,12 @@ const tmdbAPI = axios.create({
   },
 });
 
-export { POSTGRES_URI, REDIS_URI, redisClient, PORT, tmdbAPI, API_SECRET };
+export {
+  POSTGRES_URI,
+  REDIS_URI,
+  redisClient,
+  PORT,
+  tmdbAPI,
+  API_SECRET,
+  PRODUCTION,
+};

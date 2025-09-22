@@ -5,6 +5,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { redisClient } from '../util/config';
 import { extractAllQueries } from '../util/url-query-extractor';
+import { MediaType } from '../../../shared/types/media';
+import {
+  getRedisBaseKeyForMediaType,
+  getRedisRatingKey,
+} from '../constants/redis-constants';
+import { getFromCache, setToCache } from '../util/redis-helpers';
+import { RedisMediaEntry, RedisRatingEntry } from '../types/redis-types';
+import { Rating } from '../models';
+import { RatingData, SeasonResponse } from '../../../shared/types/models';
+import { Op } from 'sequelize';
 
 //the options we can use to automatize unique keys.
 //allows url queries, parameters and linking the activeUser id ('ratings:user:123')
@@ -16,7 +26,10 @@ export interface CacheOptions {
   prefix?: string;
 }
 
-const getKeyName = (req: Request, options?: CacheOptions): string => {
+const getKeyNameFromRequest = (
+  req: Request,
+  options?: CacheOptions
+): string => {
   if (!options?.baseKey) {
     //if no custom key, we use the url itself
     return `${req.method}:${req.originalUrl}`;
@@ -70,22 +83,130 @@ export const useCache = <T>(options?: CacheOptions) => {
     }
 
     //we use custom key or generate from method + URL
-    const keyName: string = getKeyName(req, options);
-    const cachedString: string | null | undefined =
-      await redisClient.get(keyName);
-    if (cachedString) {
-      try {
-        const cachedData: T = JSON.parse(cachedString);
-        if (cachedData) {
-          console.log('Cache found for key:', keyName);
-          return res.json(cachedData);
-        }
-      } catch (error) {
-        console.error('Error parsing cache:', error);
-        await redisClient.del(keyName);
-        return next();
-      }
+    const keyName: string = getKeyNameFromRequest(req, options);
+    //we get and parse into the sent type the cached value from redis if exists
+    const entry: T | undefined = await getFromCache<T>(keyName);
+    if (entry) {
+      return res.json(entry);
     }
+    //if not, we load the created keyName in req for later use in the controller
+    req.activeRedisKey = keyName;
+    return next();
+  };
+};
+
+//a version for media entries that also adds the cached active user rating before
+//returning the final object.
+//userRating is always empty in the cached media for security reasons
+export const useMediaCache = (mediaType: MediaType) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    if (!redisClient) {
+      return next();
+    }
+    //we use custom key or generate from method + URL
+    const keyName: string = getKeyNameFromRequest(req, {
+      baseKey: getRedisBaseKeyForMediaType(mediaType),
+      params: ['id'],
+    });
+    //we get and parse into the sent type the cached value from redis if exists
+    const entry: RedisMediaEntry = await getFromCache<RedisMediaEntry>(keyName);
+    if (entry) {
+      //if the active user is valid, we try to get their Rating for the media, if exists
+      if (req.activeUser?.isValid) {
+        const userId: number = req.activeUser.id;
+        const indexId: number = entry.indexId;
+        const ratingKeys: string[] = [];
+        ratingKeys.push(getRedisRatingKey(userId, indexId));
+
+        //if it's a show, we also need to gather the user's ratings
+        //of the seasons
+        if (entry.mediaType === MediaType.Show && entry.seasons) {
+          entry.seasons.forEach((s: SeasonResponse) =>
+            ratingKeys.push(getRedisRatingKey(userId, s.indexId))
+          );
+        }
+
+        const promises: Promise<RedisRatingEntry | null>[] = ratingKeys.map(
+          (r: string) => getFromCache<RedisRatingEntry>(r)
+        );
+        //we save the key and mediaRating of index0, as it's the one of the main media
+        const [mediaRatingKey]: string[] = ratingKeys;
+        const ratings: (RedisRatingEntry | null)[] =
+          await Promise.all(promises);
+        let mediaRating: RedisRatingEntry | null = ratings[0] ?? null;
+        //if mediaRating is undefined, means it wasn't found. We need
+        //to try to find at least once and assign a null so this only runs once.
+
+        if (mediaRating === undefined) {
+          try {
+            mediaRating = await Rating.findOne({ where: { userId, indexId } });
+            //we ensure we set it to valid or null
+            setToCache<RatingData | null>(mediaRatingKey, mediaRating ?? null);
+          } catch (dbError) {
+            console.error(
+              'DB fetch failed for rating key:',
+              mediaRatingKey,
+              dbError
+            );
+            mediaRating = null;
+          }
+        }
+
+        if (mediaRating !== undefined) {
+          //and we set it in the entry we'll return
+          entry.userRating = mediaRating;
+        }
+        if (entry.mediaType === MediaType.Show && entry.seasons) {
+          const seasonRatingMap: Map<number, RatingData | null> = new Map();
+          const missingSeasonRatings: Map<number, RatingData | null> =
+            new Map();
+          entry.seasons.forEach((s: SeasonResponse, i: number) => {
+            const rating: RedisRatingEntry | null = ratings[i + 1];
+            if (rating === undefined) {
+              missingSeasonRatings.set(s.indexId, null);
+            } else {
+              seasonRatingMap.set(s.indexId, rating);
+            }
+          });
+          if (missingSeasonRatings.size > 0) {
+            try {
+              const seasonRatingEntries: RatingData[] = await Rating.findAll({
+                where: {
+                  userId,
+                  indexId: { [Op.in]: Array.from(missingSeasonRatings.keys()) },
+                },
+              });
+              if (seasonRatingEntries.length > 0) {
+                seasonRatingEntries.forEach((s: RatingData) => {
+                  missingSeasonRatings.set(s.indexId, s);
+                  seasonRatingMap.set(s.indexId, s);
+                });
+                //and we store in cache these new gathered ratings from db
+                const seasonPromises: Promise<string | null | undefined>[] = [];
+                missingSeasonRatings.forEach((rating, indexId) =>
+                  seasonPromises.push(
+                    setToCache<RatingData | null>(
+                      getRedisRatingKey(userId, indexId),
+                      rating
+                    )
+                  )
+                );
+                await Promise.allSettled(seasonPromises);
+              }
+            } catch (dbError) {
+              console.error('DB fetch failed for season ratings:', dbError);
+            }
+          }
+          //and finally, we hydrate the gathered season active user ratings according to our map.
+          entry.seasons = entry.seasons.map((s: SeasonResponse) => ({
+            ...s,
+            userRating: seasonRatingMap.get(s.indexId),
+          }));
+        }
+      }
+      return res.json(entry);
+    }
+    //if not, we load the created keyName in req for later use in the controller
     req.activeRedisKey = keyName;
     return next();
   };
