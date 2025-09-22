@@ -196,7 +196,8 @@ export const useMediaCache = (mediaType: MediaType) => {
             } catch (dbError) {
               console.error('DB fetch failed for season ratings:', dbError);
             }
-          } //and now, we assign all the gathered seasons according to our map.
+          }
+          //and finally, we hydrate the gathered season active user ratings according to our map.
           entry.seasons = entry.seasons.map((s: SeasonResponse) => ({
             ...s,
             userRating: seasonRatingMap.get(s.indexId),
