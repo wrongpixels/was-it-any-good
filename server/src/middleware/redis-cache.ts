@@ -161,7 +161,7 @@ export const useMediaCache = (mediaType: MediaType) => {
           const missingSeasonRatings: Map<number, RatingData | null> =
             new Map();
           entry.seasons.forEach((s: SeasonResponse, i: number) => {
-            const rating: RedisRatingEntry | null = ratings[i + 1]; // Skip main rating index
+            const rating: RedisRatingEntry | null = ratings[i + 1];
             if (rating === undefined) {
               missingSeasonRatings.set(s.indexId, null);
             } else {
@@ -196,12 +196,11 @@ export const useMediaCache = (mediaType: MediaType) => {
             } catch (dbError) {
               console.error('DB fetch failed for season ratings:', dbError);
             }
-            //and now, we assign all the gathered seasons according to our map.
-            entry.seasons = entry.seasons.map((s: SeasonResponse) => ({
-              ...s,
-              userRating: seasonRatingMap.get(s.indexId),
-            }));
-          }
+          } //and now, we assign all the gathered seasons according to our map.
+          entry.seasons = entry.seasons.map((s: SeasonResponse) => ({
+            ...s,
+            userRating: seasonRatingMap.get(s.indexId),
+          }));
         }
       }
       return res.json(entry);
