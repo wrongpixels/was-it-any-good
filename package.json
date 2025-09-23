@@ -14,7 +14,9 @@
     "dev": "node scripts/setup-env.js && concurrently \"npm run dev -w client\" \"cross-env DOTENV_CONFIG_PATH=server/.env ts-node-dev --project server/tsconfig.json --respawn --transpile-only --require dotenv/config server/src/index.ts\"",
     "deploy": "npm run build && echo 'Ready for deployment'",
     "start:railway": "node server/src/index.js",
-    "start": "node scripts/setup-env.js && cross-env NODE_ENV=production DOTENV_CONFIG_PATH=server/.env node --require dotenv/config server/dist/server/src/index.js"
+    "start": "node scripts/setup-env.js && cross-env NODE_ENV=production DOTENV_CONFIG_PATH=server/.env node --require dotenv/config server/dist/server/src/index.js",
+    "test": "npm run test --workspaces",
+    "test:client": "npm run test -w client"
   },
   "devDependencies": {
     "concurrently": "^8.0.0"

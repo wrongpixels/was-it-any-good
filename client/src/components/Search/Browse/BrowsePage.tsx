@@ -62,7 +62,7 @@ const BrowsePage = ({
     : useBrowseQuery(currentQuery);
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
 
-  console.log(browseResults);
+  // console.log(browseResults);
 
   //to avoid setting a url bigger than totalPages or less than 1
   //this is also protected in the backend

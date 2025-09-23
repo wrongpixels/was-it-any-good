@@ -56,12 +56,6 @@ const useUrlQueryManager = ({
       newPage,
       overrideParams: localOverride,
     }: QueryOpts) => {
-      console.log(
-        localOverride?.searchType,
-        overrideParams?.searchType,
-        queryTypeManager.getAppliedNames()
-      );
-
       const url: string = queryBuilder
         .clean()
         .byTerm(newQuery || urlParams.searchTerm)
