@@ -1,47 +1,38 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PropsWithChildren } from 'react';
-import AuthProvider, {
-  AuthContext,
-  AuthContextValues,
-} from '../context/AuthProvider';
+import { AuthContext, AuthContextValues } from '../context/AuthProvider';
 import { NotificationProvider } from '../context/NotificationProvider';
 import { render, RenderOptions } from '@testing-library/react';
 import OverlayProvider from '../context/OverlayProvider';
 import { UserSessionData } from '../../../shared/types/models';
 import { vi } from 'vitest';
-import {
-  BrowserRouter,
-  MemoryRouter,
-  Route,
-  Router,
-  Routes,
-} from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import ImageOverlay from '../components/Overlay/ImageOverlay';
 import SignUpOverlay from '../components/Overlay/SignUpOverlay';
+import { AnimationProvider } from '../context/AnimationProvider';
 
-let queryClient: QueryClient | undefined = undefined;
-export const MOCK_USER_ID: number = 1;
-export const MOCK_SESSION_ID: number = 1;
+export const MOCK_LOGGED_USER_ID: number = 1;
+export const MOCK_LOGGED_SESSION_ID: number = 1;
+export const MOCK_LOGGED_USERNAME = 'Valid Username';
+export const MOCK_LOGGED_TOKEN = 'abc123';
 export const MOCK_CREATED_AT: Date = new Date();
 export const MOCK_UPDATED_AT: Date = new Date();
-const MOCK_USERNAME = 'Valid Username';
-const MOCK_TOKEN = 'abc123';
 
 export const MOCK_SESSION_VALID: UserSessionData = {
-  id: MOCK_SESSION_ID,
-  userId: MOCK_USER_ID,
-  username: MOCK_USERNAME,
-  token: MOCK_TOKEN,
+  id: MOCK_LOGGED_SESSION_ID,
+  userId: MOCK_LOGGED_USER_ID,
+  username: MOCK_LOGGED_USERNAME,
+  token: MOCK_LOGGED_TOKEN,
   updatedAt: MOCK_UPDATED_AT,
   createdAt: MOCK_CREATED_AT,
   expired: false,
 };
 
 export const MOCK_SESSION_EXPIRED: UserSessionData = {
-  id: MOCK_SESSION_ID,
-  userId: MOCK_USER_ID,
-  username: MOCK_USERNAME,
-  token: MOCK_TOKEN,
+  id: MOCK_LOGGED_SESSION_ID,
+  userId: MOCK_LOGGED_USER_ID,
+  username: MOCK_LOGGED_USERNAME,
+  token: MOCK_LOGGED_TOKEN,
   updatedAt: MOCK_UPDATED_AT,
   createdAt: MOCK_CREATED_AT,
   expired: false,
@@ -80,19 +71,21 @@ export const TestProviderWrapper = ({
   return (
     //a memory router for testing
     <MemoryRouter>
-      <QueryClientProvider client={createQueryClient()}>
-        <NotificationProvider>
-          <OverlayProvider>
-            <AuthContext.Provider
-              value={loggedIn ? MOCK_AUTH_VALID : MOCK_AUTH_EMPTY}
-            >
-              <ImageOverlay />
-              <SignUpOverlay />
-              {children}
-            </AuthContext.Provider>
-          </OverlayProvider>
-        </NotificationProvider>
-      </QueryClientProvider>
+      <AnimationProvider>
+        <QueryClientProvider client={createQueryClient()}>
+          <NotificationProvider>
+            <OverlayProvider>
+              <AuthContext.Provider
+                value={loggedIn ? MOCK_AUTH_VALID : MOCK_AUTH_EMPTY}
+              >
+                <ImageOverlay />
+                <SignUpOverlay />
+                {children}
+              </AuthContext.Provider>
+            </OverlayProvider>
+          </NotificationProvider>
+        </QueryClientProvider>
+      </AnimationProvider>
     </MemoryRouter>
   );
 };
@@ -114,13 +107,10 @@ export const renderWithProviders = (
 };
 
 export const createQueryClient = (): QueryClient => {
-  queryClient = new QueryClient({
+  const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
       queries: { retry: false },
     },
   });
   return queryClient;
 };
-
-export const getQueryClient = (): QueryClient =>
-  queryClient ?? createQueryClient();

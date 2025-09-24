@@ -34,12 +34,15 @@ const HeaderLogin = (): JSX.Element => {
             className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright"
           >
             <IMG
+              alt={`${session.username} avatar`}
               src={DEF_IMAGE_PERSON}
               className={
                 'w-5 rounded border-2 border-gray-300 hover:border-white'
               }
             />
-            <span className=" font-semibold">{session.username}</span>
+            <span role="status" className="font-semibold">
+              {session.username}
+            </span>
           </Link>
           <Button
             size="xs"

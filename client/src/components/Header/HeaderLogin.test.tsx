@@ -1,7 +1,10 @@
 import { screen } from '@testing-library/react';
 import { describe, test, expect, beforeEach } from 'vitest';
 import HeaderLogin from './HeaderLogin';
-import { renderWithProviders } from '../../test/test-utils';
+import {
+  MOCK_LOGGED_USERNAME,
+  renderWithProviders,
+} from '../../test/test-utils';
 import userEvent from '@testing-library/user-event';
 import {
   getMissingUserOrPasswordMessage,
@@ -19,22 +22,22 @@ const getLoginButton = (): HTMLElement =>
   screen.getByRole('button', { name: /log in/i });
 const queryLogOutButton = (): HTMLElement | null =>
   screen.queryByRole('button', { name: /log out/i });
-
-const getUserField = (): HTMLElement => screen.getByPlaceholderText('User');
-const getPasswordField = (): HTMLElement =>
-  screen.getByPlaceholderText('Password');
-
 const queryUserField = (): HTMLElement | null =>
   screen.queryByPlaceholderText('User');
 const queryPasswordField = (): HTMLElement | null =>
   screen.queryByPlaceholderText('Password');
+const getUserField = (): HTMLElement => screen.getByPlaceholderText('User');
+const getPasswordField = (): HTMLElement =>
+  screen.getByPlaceholderText('Password');
+const getSignUpButton = (): HTMLElement =>
+  screen.getByRole('button', { name: /sign up/i });
+const getCreateButton = (): HTMLElement =>
+  screen.getByRole('button', { name: /create/i });
 
 describe('Header Login', () => {
   describe('If logged out', () => {
     beforeEach(() => renderWithProviders(<HeaderLogin />));
-    test('Sign Up button renders', () => {
-      expect(querySignUpButton()).toBeVisible();
-    });
+
     test('Log In Form renders and correctly follows user inputs', async () => {
       expect(queryLoginButton()).toBeVisible();
       const userField: HTMLElement = getUserField();
@@ -46,38 +49,54 @@ describe('Header Login', () => {
       expect(userField).toHaveValue(TEST_USER);
       expect(passwordField).toHaveValue(TEST_PASSWORD);
     });
-    test('Log Out button does not render', () =>
-      expect(queryLogOutButton()).toBeNull());
-    test('Log In fails with empty data', async () => {
-      const userField: HTMLElement = getUserField();
-      const passwordField: HTMLElement = getPasswordField();
-      const loginButton: HTMLElement = getLoginButton();
-
-      await userEvent.click(loginButton);
-      expect(screen.getByText(NOTI_MISSING_USER_AND_PASSWORD)).toBeVisible();
-
-      await userEvent.type(userField, TEST_USER);
-      await userEvent.click(loginButton);
-      expect(
-        screen.getByText(getMissingUserOrPasswordMessage(TEST_USER))
-      ).toBeVisible();
-
-      await userEvent.clear(userField);
-      await userEvent.type(passwordField, TEST_PASSWORD);
-      await userEvent.click(loginButton);
-      expect(
-        screen.getByText(getMissingUserOrPasswordMessage(''))
-      ).toBeVisible();
+    test('Log Out button does not render', () => {
+      expect(queryLogOutButton()).toBeNull();
     });
-    /*
+    test('User data does not render', () => {
+      expect(
+        screen.queryByRole('status', { name: MOCK_LOGGED_USERNAME })
+      ).toBeNull();
+      expect(
+        screen.queryByAltText(`${MOCK_LOGGED_USERNAME} avatar`)
+      ).toBeNull();
+    });
+    describe('when logging in fails', () => {
+      test('shows a notification if both fields are empty', async () => {
+        await userEvent.click(getLoginButton());
+        expect(screen.getByText(NOTI_MISSING_USER_AND_PASSWORD)).toBeVisible();
+      });
+
+      test('shows a notification if only the password is provided', async () => {
+        await userEvent.type(getPasswordField(), TEST_PASSWORD);
+        await userEvent.click(getLoginButton());
+        expect(
+          screen.getByText(getMissingUserOrPasswordMessage(''))
+        ).toBeVisible();
+      });
+
+      test('shows a notification if only the user is provided', async () => {
+        await userEvent.type(getUserField(), TEST_USER);
+        await userEvent.click(getLoginButton());
+        expect(
+          screen.getByText(getMissingUserOrPasswordMessage(TEST_USER))
+        ).toBeVisible();
+      });
+    });
+    test('Sign Up button renders', () => {
+      expect(querySignUpButton()).toBeVisible();
+    });
     test('When clicked, Sign up Overlay opens', async () => {
       await userEvent.click(getSignUpButton());
       expect(getCreateButton()).toBeVisible();
-    });*/
+    });
   });
   describe('If Logged in', () => {
     beforeEach(() => {
       renderWithProviders(<HeaderLogin />, { loggedIn: true });
+    });
+    test('User data renders', () => {
+      expect(screen.getByRole('status', { name: MOCK_LOGGED_USERNAME }));
+      expect(screen.getByAltText(`${MOCK_LOGGED_USERNAME} avatar`));
     });
     test('Log Out button is visible', () => {
       expect(queryLogOutButton()).toBeVisible();
