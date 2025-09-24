@@ -1,19 +1,29 @@
 import { JSX } from 'react';
 import Button from '../Common/Custom/Button';
-import { useLoginForm } from '../../hooks/use-login-form';
-import { InputField } from '../Common/Custom/InputField';
-import { styles } from '../../constants/tailwind-styles';
 import { useOverlay } from '../../context/OverlayProvider';
 import IMG from '../Common/Custom/IMG';
 import { DEF_IMAGE_PERSON } from '../../../../shared/defaults/media-defaults';
 import { routerPaths } from '../../utils/url-helper';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
+import { AuthContextValues } from '../../context/AuthProvider';
+import { useAuth } from '../../hooks/use-auth';
+import HeaderLoginForm from './HeaderLoginForm';
+import { useNotificationContext } from '../../context/NotificationProvider';
+import { getByeUserMessage } from '../../../../shared/constants/notification-messages';
 
 const HeaderLogin = (): JSX.Element => {
-  const { session, handleLogout, submitLogin, passwordInput, userInput } =
-    useLoginForm();
-
+  const notification = useNotificationContext();
+  const { session, login, logout }: AuthContextValues = useAuth();
   const { openSignUpOverlay } = useOverlay();
+
+  const handleLogout = async () => {
+    if (session) {
+      notification.setNotification({
+        message: getByeUserMessage(session?.username),
+      });
+    }
+    logout();
+  };
 
   if (session) {
     return (
@@ -21,15 +31,17 @@ const HeaderLogin = (): JSX.Element => {
         <div className="flex items-center gap-4 text-sm ">
           <Link
             to={routerPaths.my.votes.base()}
+            aria-label={`View profile for ${session.username}`}
             className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright"
           >
             <IMG
+              alt=""
               src={DEF_IMAGE_PERSON}
               className={
                 'w-5 rounded border-2 border-gray-300 hover:border-white'
               }
             />
-            <span className=" font-semibold">{session.username}</span>
+            <span className="font-semibold">{session.username}</span>
           </Link>
           <Button
             size="xs"
@@ -46,21 +58,8 @@ const HeaderLogin = (): JSX.Element => {
   return (
     <div className="flex gap-2 items-center">
       <div className="relative flex flex-row gap-3 items-center">
-        <form onSubmit={submitLogin} className="flex gap-2">
-          <InputField
-            {...userInput.getProps()}
-            className={`w-20 ${styles.inputField.header}`}
-          />
-          <InputField
-            {...passwordInput.getProps()}
-            className={`w-20 ${styles.inputField.header}`}
-          />
-          <Button size="xs" type="submit" variant="toolbar">
-            {'Log In'}
-          </Button>
-        </form>
+        <HeaderLoginForm notification={notification} login={login} />
         <span className="text-xs text-white">{'or'}</span>
-
         <Button
           size="xs"
           type="submit"

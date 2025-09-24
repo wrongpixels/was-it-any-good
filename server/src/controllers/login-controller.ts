@@ -12,6 +12,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { API_SECRET } from '../util/config';
 import { logoutUser } from '../services/session-service';
+import { NOTI_WRONG_LOGIN_DATA } from '../../../shared/constants/notification-messages';
 
 const router: Router = express.Router();
 
@@ -38,7 +39,7 @@ router.post('/', async (req: Request, res, next) => {
       await logoutUser(currentSession.userId);
     }
     if (!user) {
-      throw new CustomError('Wrong username or password', 401);
+      throw new CustomError(NOTI_WRONG_LOGIN_DATA, 401);
     }
     if (!user.isActive) {
       throw new CustomError(
@@ -51,7 +52,7 @@ router.post('/', async (req: Request, res, next) => {
       user?.hash
     );
     if (!passwordMatch) {
-      throw new CustomError('Wrong username or password', 401);
+      throw new CustomError(NOTI_WRONG_LOGIN_DATA, 401);
     }
     const userToken: ActiveUser = {
       username: user.username,

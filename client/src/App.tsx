@@ -46,7 +46,6 @@ const App = (): JSX.Element => {
     </div>
   );
 };
-
 // auth sensitive part of the app
 const AppBody = (): JSX.Element => {
   useScrollToTop();
