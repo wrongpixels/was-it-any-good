@@ -1,23 +1,23 @@
-import { render, screen } from '@testing-library/react';
-import { describe, test, expect } from 'vitest';
+import { screen } from '@testing-library/react';
+import { describe, test, expect, beforeEach } from 'vitest';
 import HeaderLogin from './HeaderLogin';
-import AuthProvider from '../../context/AuthProvider';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { getQueryClient } from '../../test/test-utils';
-import { NotificationProvider } from '../../context/NotificationProvider';
+import { renderWithProviders } from '../../test/test-utils';
+import userEvent from '@testing-library/user-event';
+
+const getSignUpButton = (): HTMLElement =>
+  screen.getByRole('button', { name: /sign up/i });
+const getCreateButton = (): HTMLElement =>
+  screen.getByRole('button', { name: /create/i });
 
 describe('Header Login', () => {
-  test('Sign up button renders (Logged out)', () => {
-    render(
-      <QueryClientProvider client={getQueryClient()}>
-        <NotificationProvider>
-          <AuthProvider>
-            <HeaderLogin />
-          </AuthProvider>
-        </NotificationProvider>
-      </QueryClientProvider>
-    );
-    expect(screen.getByRole('button', { name: /sign up/i })).toBeVisible();
+  describe('If logged out', () => {
+    beforeEach(() => renderWithProviders(<HeaderLogin />));
+    test('Sign up button renders', () => {
+      expect(getSignUpButton()).toBeVisible();
+    });
+    test('When clicked, Sign up Overlay opens', async () => {
+      await userEvent.click(getSignUpButton());
+      expect(getCreateButton()).toBeVisible();
+    });
   });
-  //test('Sign up opens Overlay', () => {});
 });
