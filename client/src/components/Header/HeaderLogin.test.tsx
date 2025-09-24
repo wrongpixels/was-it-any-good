@@ -17,29 +17,26 @@ const queryLoginButton = (): HTMLElement | null =>
   screen.queryByRole('button', { name: /log in/i });
 const getLoginButton = (): HTMLElement =>
   screen.getByRole('button', { name: /log in/i });
-const queryLogoutButton = (): HTMLElement | null =>
+const queryLogOutButton = (): HTMLElement | null =>
   screen.queryByRole('button', { name: /log out/i });
 
 const getUserField = (): HTMLElement => screen.getByPlaceholderText('User');
 const getPasswordField = (): HTMLElement =>
   screen.getByPlaceholderText('Password');
 
-/*
 const queryUserField = (): HTMLElement | null =>
   screen.queryByPlaceholderText('User');
 const queryPasswordField = (): HTMLElement | null =>
-  screen.queryByPlaceholderText('Password'); */
+  screen.queryByPlaceholderText('Password');
 
 describe('Header Login', () => {
   describe('If logged out', () => {
     beforeEach(() => renderWithProviders(<HeaderLogin />));
-    test('Sign up button renders', () => {
+    test('Sign Up button renders', () => {
       expect(querySignUpButton()).toBeVisible();
     });
-    test('Log In button renders', () => {
-      expect(queryLoginButton()).toBeVisible();
-    });
     test('Log In Form renders and correctly follows user inputs', async () => {
+      expect(queryLoginButton()).toBeVisible();
       const userField: HTMLElement = getUserField();
       const passwordField: HTMLElement = getPasswordField();
       expect(userField).toBeVisible();
@@ -50,7 +47,7 @@ describe('Header Login', () => {
       expect(passwordField).toHaveValue(TEST_PASSWORD);
     });
     test('Log Out button does not render', () =>
-      expect(queryLogoutButton()).toBeNull());
+      expect(queryLogOutButton()).toBeNull());
     test('Log In fails with empty data', async () => {
       const userField: HTMLElement = getUserField();
       const passwordField: HTMLElement = getPasswordField();
@@ -72,10 +69,24 @@ describe('Header Login', () => {
         screen.getByText(getMissingUserOrPasswordMessage(''))
       ).toBeVisible();
     });
-
-    /*test('When clicked, Sign up Overlay opens', async () => {
+    /*
+    test('When clicked, Sign up Overlay opens', async () => {
       await userEvent.click(getSignUpButton());
       expect(getCreateButton()).toBeVisible();
     });*/
+  });
+  describe('If Logged in', () => {
+    beforeEach(() => {
+      renderWithProviders(<HeaderLogin />, { loggedIn: true });
+    });
+    test('Log Out button is visible', () => {
+      expect(queryLogOutButton()).toBeVisible();
+    });
+
+    test('Login form does not render', () => {
+      expect(queryUserField()).toBeNull();
+      expect(queryPasswordField()).toBeNull();
+      expect(queryLoginButton()).toBeNull();
+    });
   });
 });

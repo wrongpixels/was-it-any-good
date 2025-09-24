@@ -4,7 +4,7 @@ import { useOverlay } from '../../context/OverlayProvider';
 import IMG from '../Common/Custom/IMG';
 import { DEF_IMAGE_PERSON } from '../../../../shared/defaults/media-defaults';
 import { routerPaths } from '../../utils/url-helper';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { AuthContextValues } from '../../context/AuthProvider';
 import { useAuth } from '../../hooks/use-auth';
 import HeaderLoginForm from './HeaderLoginForm';
