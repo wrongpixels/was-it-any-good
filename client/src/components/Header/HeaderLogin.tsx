@@ -31,18 +31,17 @@ const HeaderLogin = (): JSX.Element => {
         <div className="flex items-center gap-4 text-sm ">
           <Link
             to={routerPaths.my.votes.base()}
+            aria-label={`View profile for ${session.username}`}
             className="transition-colors flex flex-row gap-2 items-center text-starsearch-bright"
           >
             <IMG
-              alt={`${session.username} avatar`}
+              alt=""
               src={DEF_IMAGE_PERSON}
               className={
                 'w-5 rounded border-2 border-gray-300 hover:border-white'
               }
             />
-            <span role="status" className="font-semibold">
-              {session.username}
-            </span>
+            <span className="font-semibold">{session.username}</span>
           </Link>
           <Button
             size="xs"

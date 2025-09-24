@@ -1,7 +1,7 @@
 import { MediaType } from '../../../shared/types/media';
 
 export const DEF_REDIS_CACHE_TIME: number = 3600;
-export const REDIS_ENABLED: boolean = true;
+export const REDIS_ENABLED: boolean = false;
 
 export const REDIS_FILM_KEY: string = 'film';
 export const REDIS_SHOW_KEY: string = 'show';

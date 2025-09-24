@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { describe, test, expect, beforeEach } from 'vitest';
 import HeaderLogin from './HeaderLogin';
 import {
@@ -52,34 +52,35 @@ describe('Header Login', () => {
     test('Log Out button does not render', () => {
       expect(queryLogOutButton()).toBeNull();
     });
-    test('User data does not render', () => {
+    test('User profile data does not render', () => {
       expect(
-        screen.queryByRole('status', { name: MOCK_LOGGED_USERNAME })
-      ).toBeNull();
-      expect(
-        screen.queryByAltText(`${MOCK_LOGGED_USERNAME} avatar`)
+        screen.queryByRole('link', {
+          name: `View profile for ${MOCK_LOGGED_USERNAME}`,
+        })
       ).toBeNull();
     });
     describe('when logging in fails', () => {
       test('shows a notification if both fields are empty', async () => {
         await userEvent.click(getLoginButton());
-        expect(screen.getByText(NOTI_MISSING_USER_AND_PASSWORD)).toBeVisible();
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          NOTI_MISSING_USER_AND_PASSWORD
+        );
       });
 
       test('shows a notification if only the password is provided', async () => {
         await userEvent.type(getPasswordField(), TEST_PASSWORD);
         await userEvent.click(getLoginButton());
-        expect(
-          screen.getByText(getMissingUserOrPasswordMessage(''))
-        ).toBeVisible();
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          getMissingUserOrPasswordMessage('')
+        );
       });
 
       test('shows a notification if only the user is provided', async () => {
         await userEvent.type(getUserField(), TEST_USER);
         await userEvent.click(getLoginButton());
-        expect(
-          screen.getByText(getMissingUserOrPasswordMessage(TEST_USER))
-        ).toBeVisible();
+        expect(screen.getByRole('alert')).toHaveTextContent(
+          getMissingUserOrPasswordMessage(TEST_USER)
+        );
       });
     });
     test('Sign Up button renders', () => {
@@ -94,10 +95,24 @@ describe('Header Login', () => {
     beforeEach(() => {
       renderWithProviders(<HeaderLogin />, { loggedIn: true });
     });
-    test('User data renders', () => {
-      expect(screen.getByRole('status', { name: MOCK_LOGGED_USERNAME }));
-      expect(screen.getByAltText(`${MOCK_LOGGED_USERNAME} avatar`));
+    9;
+    describe('User profile data', () => {
+      test('data renders', () => {
+        expect(
+          screen.getByRole('link', {
+            name: `View profile for ${MOCK_LOGGED_USERNAME}`,
+          })
+        ).toBeVisible();
+      });
+      test('avatar renders', () => {
+        const profile: HTMLElement = screen.getByRole('link', {
+          name: `View profile for ${MOCK_LOGGED_USERNAME}`,
+        });
+        const avatar: HTMLElement = within(profile).getByRole('img');
+        expect(avatar).toBeVisible();
+      });
     });
+
     test('Log Out button is visible', () => {
       expect(queryLogOutButton()).toBeVisible();
     });

@@ -118,7 +118,9 @@ const NotificationAlert = ({
         border-3 rounded-md px-2 mt-2 py-1 z-[9999]`}
       style={{ position: 'fixed' }}
     >
-      <span className="w-fit whitespace-pre-line">{message}</span>
+      <span role="alert" className="w-fit whitespace-pre-line">
+        {message}
+      </span>
     </div>
   );
 };

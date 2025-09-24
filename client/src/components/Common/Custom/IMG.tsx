@@ -13,7 +13,7 @@ interface CustomIMGProps
 const IMG = ({ url, newTab, enabled, children, ...rest }: CustomIMGProps) => {
   return (
     <ToggleLink to={url} newTab={newTab} enabled={enabled}>
-      <img {...rest}>{children}</img>
+      <img role="img" {...rest} />
     </ToggleLink>
   );
 };
