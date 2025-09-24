@@ -19,7 +19,7 @@ export interface NotificationContextValues {
   show: (props: NotificationProps) => void;
   setNotification: (props: SendNotificationProps) => void;
   setError: (props: SendNotificationProps) => void;
-  anchorRef?: RefObject<HTMLDivElement | null>; // Optional to match provider value
+  anchorRef?: RefObject<HTMLDivElement | null>;
 }
 
 const NotificationContext = createContext<
@@ -96,8 +96,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
     </NotificationContext.Provider>
   );
 };
-
-export const useNotificationContext = () => {
+export const useNotificationContext = (): NotificationContextValues => {
   const context = useContext(NotificationContext);
   if (!context) {
     throw new Error(
