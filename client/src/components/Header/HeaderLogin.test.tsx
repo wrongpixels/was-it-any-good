@@ -95,7 +95,7 @@ describe('Header Login', () => {
     beforeEach(() => {
       renderWithProviders(<HeaderLogin />, { loggedIn: true });
     });
-    9;
+
     describe('User profile data', () => {
       test('data renders', () => {
         expect(

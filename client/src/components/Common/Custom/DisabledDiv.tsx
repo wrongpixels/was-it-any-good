@@ -5,7 +5,8 @@ interface DisabledDivProps extends React.HTMLAttributes<HTMLDivElement> {
   disabled: boolean;
   ref?: React.RefObject<HTMLDivElement | null>;
 }
-
+//a custom div that disables its children interactivity with a variable
+//also reducing opacity to make the difference visually apparent
 const DisabledDiv = ({
   disabled,
   className,
