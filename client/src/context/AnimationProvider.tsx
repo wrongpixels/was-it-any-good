@@ -25,7 +25,7 @@ export interface Anim {
   loop: AnimLoop;
 }
 
-interface AnimEngineValues {
+export interface AnimEngineValues {
   activeAnimations: Map<AnimKey, Anim>;
   playAnim: (params: AnimPlayParams) => void;
   stopAnim: (animKey: AnimKey) => void;
