@@ -56,7 +56,7 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 2.  **Performance Optimization:** WIAG stores brief versions of all media returned from external API searches, allowing for instantaneous typeahead suggestions for subsequent users, minimizing latency and external API rate-limiting concerns. The server also employs Redis for caching ranked lists and media data separately, minimizing database hits while guaranteeing data freshness with event-driven invalidation.
 
-4.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
+3.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
 
 ### Tech Stack
 
@@ -65,6 +65,7 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 - **Database:** PostgreSQL with Sequelize ORM
 - **Styling:** Tailwind CSS
 - **Authentication:** JWT (Session Management)
+- **Testing:** Vitest and Supertest (Unit), Playwright (End-to-end)
 - **DevOps:** Containerized with Docker and deployed on Railway via a Continuous Deployment (CD) pipeline integrated with GitHub.
 
 ---
