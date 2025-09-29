@@ -36,9 +36,9 @@
     "@types/node": "^22.15.21",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "cross-env": "^10.0.0",
     "eslint": "^8.57.1",
     "nodemon": "^3.1.10",
-    "sequelize-cli": "^6.6.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.8.3"
   }

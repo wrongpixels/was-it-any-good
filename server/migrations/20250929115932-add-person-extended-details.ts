@@ -1,13 +1,13 @@
-import { DataTypes, QueryInterface } from 'sequelize';
+import { DataTypes } from 'sequelize';
+import { QueryInterfaceContext } from '../src/util/db/migrator-db';
 
 module.exports = {
-  async up(queryInterface: QueryInterface) {
+  up: async ({ context: queryInterface }: QueryInterfaceContext) => {
     await queryInterface.addColumn('people', 'added_details', {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     });
-
     await queryInterface.addColumn('people', 'birth_place', {
       type: DataTypes.STRING,
       allowNull: true,
@@ -27,7 +27,7 @@ module.exports = {
     });
   },
 
-  async down(queryInterface: QueryInterface) {
+  down: async ({ context: queryInterface }: QueryInterfaceContext) => {
     await queryInterface.removeColumn('people', 'added_details');
     await queryInterface.removeColumn('people', 'birth_place');
     await queryInterface.removeColumn('people', 'death_date');
