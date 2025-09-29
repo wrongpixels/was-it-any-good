@@ -18,13 +18,13 @@ FROM node:20-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 
-#copying just the content of the dist folder to avoid ugly nested structures
+#we make the content of 'app/server/dist/server' be just 'app/server' to avoid ugly nested structures
 COPY --from=builder --chown=node:node /app/server/dist/server/src/. /app/server/src/
 #migrations are also copied
 COPY --from=builder --chown=node:node /app/server/dist/server/migrations /app/server/migrations
-#client dist goes to dist
+#client dist goes to app/client
 COPY --from=builder --chown=node:node /app/client/dist /app/client/dist
-#we add shared
+#and we also add shared
 COPY --from=builder --chown=node:node /app/server/dist/shared /app/shared
 #server package json for dependencies
 COPY --from=builder --chown=node:node /app/server/package.json /app/server/
