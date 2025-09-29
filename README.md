@@ -62,7 +62,7 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 - **Backend:** Node.js, Express, TypeScript, Redis
 - **Frontend:** React, TypeScript, TanStack Query
-- **Database:** PostgreSQL with Sequelize ORM
+- **Database:** PostgreSQL with Sequelize ORM, Umzug for Migrations
 - **Styling:** Tailwind CSS
 - **Authentication:** JWT (Session Management)
 - **Testing:** Vitest and Supertest (Unit), Playwright (End-to-end)

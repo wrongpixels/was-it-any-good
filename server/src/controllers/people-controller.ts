@@ -30,6 +30,9 @@ router.get(
       if (!person) {
         throw new NotFoundError('Person');
       }
+      if (!person.addedDetails) {
+        console.log('Missing extra Person data. Gathering');
+      }
       const personData: PersonResponse = toPlain<Person>(person);
       //we sort indexMedia here by roles (Actor, Director…) because sequelize
       //is not great for that and the frontend should avoid doing it.

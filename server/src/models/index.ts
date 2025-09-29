@@ -30,7 +30,7 @@ Rating.associate();
 Season.associate();
 IndexMedia.associate();
 if (!PRODUCTION) {
-  sequelize.sync({ alter: true, force: false });
+  sequelize.sync({ alter: false, force: false });
 }
 
 export {
