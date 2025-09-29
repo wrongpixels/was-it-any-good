@@ -44,7 +44,7 @@ export const fetchAndUpdatePersonDetails = async (
     const personDetails: TMDBPersonDetails = TMDBPersonDetailsSchema.parse(
       tmdbPersonRes.data
     );
-    //we extract the country from the place of birth
+    //we extract the country from the place of birth (format 'City, Province, Country')
     const countryString: string =
       personDetails.place_of_birth?.split(', ').pop() ?? '';
     await person.update({
@@ -53,6 +53,8 @@ export const fetchAndUpdatePersonDetails = async (
       birthDate: personDetails.birthday || undefined,
       deathDate: personDetails.deathday || undefined,
       description: personDetails.biography || undefined,
+      //we try to match the country extracted with a valid CountryCode to assign a country to
+      //people, as TMDB doesn't do it even in these extended details
       country: [stringToCountryCode(countryString)],
     });
     console.log('Updated details for Person');
