@@ -6,7 +6,7 @@ import {
   Model,
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { Film, Season, Show } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 

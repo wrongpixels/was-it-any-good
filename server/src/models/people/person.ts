@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import IndexMedia from '../media/indexMedia';
@@ -21,6 +21,12 @@ class Person extends Model<
   declare image: string;
   declare birthDate?: string;
   declare country: CountryCode[];
+
+  //extended details, added only when user clicks on the persons profile
+  declare addedDetails: CreationOptional<boolean>;
+  declare birthPlace?: string;
+  declare deathDate?: string;
+  declare description?: string;
 }
 
 Person.init(
@@ -69,9 +75,26 @@ Person.init(
         },
       },
     },
-    birthDate: {
-      type: DataTypes.DATE,
+    birthPlace: {
+      type: DataTypes.STRING,
       allowNull: true,
+    },
+    description: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    birthDate: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    deathDate: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    addedDetails: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {
@@ -123,6 +146,6 @@ Person.init(
   }
 );
 export type PersonAttributes = InferAttributes<Person>;
-export type CreatePerson = Omit<PersonAttributes, 'id'>;
+export type CreatePerson = Omit<PersonAttributes, 'id' | 'addedDetails'>;
 
 export default Person;

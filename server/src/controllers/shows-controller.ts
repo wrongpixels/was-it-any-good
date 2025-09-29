@@ -3,7 +3,7 @@ import express, { Request, Router } from 'express';
 import { Show } from '../models';
 import CustomError, { NotFoundError } from '../util/customError';
 import { buildShowEntry } from '../services/show-service';
-import { sequelize } from '../util/db';
+import { sequelize } from '../util/db/initialize-db';
 import { Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';

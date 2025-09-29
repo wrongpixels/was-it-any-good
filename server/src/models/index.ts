@@ -10,7 +10,7 @@ import MediaRole from './people/mediaRole';
 import User from './users/user';
 import Session from './users/session';
 import IndexMedia from './media/indexMedia';
-import { sequelize } from '../util/db';
+import { sequelize } from '../util/db/initialize-db';
 import { PRODUCTION } from '../util/config';
 
 Person.hasMany(MediaRole, {

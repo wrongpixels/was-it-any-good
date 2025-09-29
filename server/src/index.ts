@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 
 import { PORT, PRODUCTION } from './util/config';
-import { initializeDB } from './util/db';
+import { initializeDB } from './util/db/initialize-db';
 import {
   filmsRouter,
   genresRouter,

@@ -9,7 +9,7 @@ import {
   WhereOptions,
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { Film, IndexMedia, Season, Show, User } from '..';
 import { RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';

@@ -1,5 +1,5 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { FilmParental } from '../../types/parental/parental-types';
 
 import { Media, Season, Show } from '..';

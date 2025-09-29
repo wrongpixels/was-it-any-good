@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { POSTGRES_URI } from './config';
+import { POSTGRES_URI } from '../config';
 //import { Umzug, SequelizeStorage } from 'umzug';
 
 const sequelize = new Sequelize(POSTGRES_URI, { logging: false });

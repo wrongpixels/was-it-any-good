@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { User } from '..';
 import { isDateExpired } from '../../../../shared/helpers/auth-helper';
 

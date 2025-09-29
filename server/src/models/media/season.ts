@@ -1,5 +1,5 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { Film, IndexMedia, Media, Rating, Show } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
