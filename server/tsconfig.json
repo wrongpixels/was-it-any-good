@@ -1,6 +1,6 @@
 {
   "skipLibCheck": true,
-  "include": ["src/**/*", "../shared"],
+  "include": ["src/**/*", "../shared", "migrations/**/*"],
   "exclude": [
     "node_modules",
     "./node_modules",

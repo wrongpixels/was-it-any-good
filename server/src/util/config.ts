@@ -3,7 +3,20 @@ import { TMDB_API_URL } from '../constants/url-constants';
 import { RedisClientType } from 'redis';
 import { initializeRedis } from '../redis/redis-client';
 
-const PRODUCTION: boolean = process.env.NODE_ENV === 'production';
+export enum ProductionMode {
+  None = 0,
+  Deployment = 1,
+  Local = 2,
+}
+
+const NODE_ENV: string = process.env.NODE_ENV || '';
+const PRODUCTION_MODE: ProductionMode =
+  NODE_ENV === 'production'
+    ? ProductionMode.Deployment
+    : NODE_ENV === 'local-production'
+      ? ProductionMode.Local
+      : ProductionMode.None;
+const PRODUCTION: boolean = PRODUCTION_MODE !== ProductionMode.None;
 const POSTGRES_URI: string =
   !PRODUCTION && process.env.LOCAL_POSTGRES_URI
     ? process.env.LOCAL_POSTGRES_URI
@@ -51,4 +64,6 @@ export {
   tmdbAPI,
   API_SECRET,
   PRODUCTION,
+  PRODUCTION_MODE,
+  NODE_ENV,
 };

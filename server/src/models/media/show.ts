@@ -8,7 +8,7 @@ import {
   FilmParental,
   ShowParental,
 } from '../../types/parental/parental-types';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 
 import { Film, Media, Season } from '..';
 import { MediaType } from '../../../../shared/types/media';

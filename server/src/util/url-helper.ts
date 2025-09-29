@@ -19,6 +19,10 @@ export const tmdbPaths = {
     credits: (showId: string | number, seasonId: string | number) =>
       `${tmdbPaths.shows.byTMDBId(showId)}/season/${seasonId}/credits`,
   },
+  person: {
+    base: '/person',
+    byTMDBId: (id: string | number) => `${tmdbPaths.person.base}/${id}`,
+  },
   search: {
     base: '/search',
     bySearchType: (term: string, searchType: TMDBSearchType, page?: string) =>

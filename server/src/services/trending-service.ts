@@ -23,8 +23,8 @@ export const fetchTrendingFromTMDBAndParse = async (): Promise<
   [TMDBFilmSearchData | undefined, TMDBShowSearchData | undefined]
 > => {
   const [filmResponse, showResponse] = await Promise.all([
-    tmdbAPI.get<unknown>(tmdbPaths.discover.films()),
-    tmdbAPI.get<unknown>(tmdbPaths.discover.shows()),
+    tmdbAPI.get<TMDBFilmSearchData>(tmdbPaths.discover.films()),
+    tmdbAPI.get<TMDBShowSearchData>(tmdbPaths.discover.shows()),
   ]);
 
   let filmData: TMDBFilmSearchData | undefined;

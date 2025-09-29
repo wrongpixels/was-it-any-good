@@ -3,7 +3,10 @@ import { Person } from '../models';
 import { NotFoundError } from '../util/customError';
 import { PersonResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
-import { sortRoles } from '../services/people-service';
+import {
+  fetchAndUpdatePersonDetails,
+  sortRoles,
+} from '../services/people-service';
 import idFormatChecker from '../middleware/id-format-checker';
 const router = express.Router();
 
@@ -29,6 +32,10 @@ router.get(
         await Person.scope('withMedia').findByPk(id);
       if (!person) {
         throw new NotFoundError('Person');
+      }
+      if (!person.addedDetails) {
+        console.log('Missing extra Person data. Gathering');
+        await fetchAndUpdatePersonDetails(person);
       }
       const personData: PersonResponse = toPlain<Person>(person);
       //we sort indexMedia here by roles (Actor, Director…) because sequelize

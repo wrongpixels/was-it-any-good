@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
 } from 'sequelize';
-import { sequelize } from '../../util/db';
+import { sequelize } from '../../util/db/initialize-db';
 import { AuthorType } from '../../types/media/media-types';
 import { Film, Show } from '..';
 import { IndexMediaData } from '../../../../shared/types/models';

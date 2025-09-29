@@ -2,7 +2,7 @@ import express, { NextFunction, Request, Response, Router } from 'express';
 import CustomError, { NotFoundError } from '../util/customError';
 import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
-import { sequelize } from '../util/db';
+import { sequelize } from '../util/db/initialize-db';
 import { Transaction } from 'sequelize';
 import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';

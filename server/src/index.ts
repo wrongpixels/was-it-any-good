@@ -3,7 +3,7 @@ import express from 'express';
 import path from 'path';
 
 import { PORT, PRODUCTION } from './util/config';
-import { initializeDB } from './util/db';
+import { initializeDB } from './util/db/initialize-db';
 import {
   filmsRouter,
   genresRouter,
@@ -60,8 +60,7 @@ if (PRODUCTION) {
   const distPath = path.join(projectRoot, 'client', 'dist');
   const indexPath = path.join(distPath, 'index.html');
 
-  console.log(`[SERVER] Project root (from process.cwd()): ${projectRoot}`);
-  console.log(`[SERVER] Serving static files from: ${distPath}`);
+  console.log(`[SERVER] Serving client static files from: ${distPath}`);
   app.use(express.static(distPath));
   app.get('/*rest', (_req, res) => {
     res.sendFile(indexPath);
