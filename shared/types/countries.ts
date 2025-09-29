@@ -193,7 +193,28 @@ enum Country {
   ZM = "Zambia",
   ZW = "Zimbabwe",
 }
+
 export type CountryCode = keyof typeof Country;
+
+export const stringToCountryCode = (name: string): CountryCode => {
+  if (!name) {
+    return "UNKNOWN";
+  }
+  const cleanName = name.trim().toLowerCase();
+  if (cleanName === "uk") {
+    return "GB";
+  }
+  if (cleanName === "usa") {
+    return "US";
+  }
+  for (const [code, fullName] of Object.entries(Country)) {
+    if (fullName.toLowerCase() === cleanName && isCountryCode(code)) {
+      return code;
+    }
+  }
+  return "UNKNOWN";
+};
+
 export const VALID_COUNTRY_KEYS = new Set(Object.keys(Country));
 export const isCountryCode = (code: string): code is CountryCode =>
   VALID_COUNTRY_KEYS.has(code.toUpperCase());

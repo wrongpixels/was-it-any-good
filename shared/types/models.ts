@@ -159,6 +159,10 @@ export interface PersonResponse {
   image: string;
   birthDate?: string | undefined;
   country: CountryCode[];
+  addedDetails: boolean;
+  birthPlace?: string;
+  deathDate?: string;
+  description?: string;
   roles?: MediaRoleResponse[];
   sortedRoles?: SortedRoles;
 }
