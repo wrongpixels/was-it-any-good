@@ -20,6 +20,8 @@ ENV NODE_ENV=production
 
 #copying just the content of the dist folder to avoid ugly nested structures
 COPY --from=builder --chown=node:node /app/server/dist/server/src/. /app/server/src/
+#migrations are also copied
+COPY --from=builder --chown=node:node /app/server/dist/server/migrations /app/server/migrations
 #client dist goes to dist
 COPY --from=builder --chown=node:node /app/client/dist /app/client/dist
 #we add shared
