@@ -196,6 +196,10 @@ enum Country {
 
 export type CountryCode = keyof typeof Country;
 
+//a function that matches country names with our CountryCodes.
+//accepts custom overrides for special cases.
+//added as TMDB doesnt provide a way to know the origin country of people, but usually
+//includes a birth place with a format 'City, Region, Country'
 export const stringToCountryCode = (name: string): CountryCode => {
   if (!name) {
     return "UNKNOWN";
