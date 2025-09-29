@@ -60,8 +60,7 @@ if (PRODUCTION) {
   const distPath = path.join(projectRoot, 'client', 'dist');
   const indexPath = path.join(distPath, 'index.html');
 
-  console.log(`[SERVER] Project root (from process.cwd()): ${projectRoot}`);
-  console.log(`[SERVER] Serving static files from: ${distPath}`);
+  console.log(`[SERVER] Serving client static files from: ${distPath}`);
   app.use(express.static(distPath));
   app.get('/*rest', (_req, res) => {
     res.sendFile(indexPath);

@@ -38,8 +38,6 @@ router.get(
         await fetchAndUpdatePersonDetails(person);
       }
       const personData: PersonResponse = toPlain<Person>(person);
-      console.log(personData);
-
       //we sort indexMedia here by roles (Actor, Director…) because sequelize
       //is not great for that and the frontend should avoid doing it.
       res.json({ ...personData, sortedRoles: sortRoles(personData) });
