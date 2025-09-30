@@ -1,12 +1,4 @@
-export const getYearParenthesis = (
-  dateString: string | null | undefined
-): string => {
-  const year: string = getYearString(dateString);
-  if (!year || year === "") {
-    return "";
-  }
-  return `(${year})`;
-};
+import { formatCountry } from "../types/countries";
 
 export const getYearString = (
   dateString: string | null | undefined
@@ -17,6 +9,10 @@ export const getYearString = (
   }
   return year.toString();
 };
+
+export const getYearParenthesis = (
+  dateString: string | null | undefined
+): string => tryAddParenthesis(getYearString(dateString));
 
 export const getYearNum = (
   dateString: string | null | undefined
@@ -29,8 +25,25 @@ export const getYearNum = (
   return isNaN(year) ? null : year;
 };
 
+export const formatBirthPlace = (
+  text: string | undefined | null
+): string | undefined => {
+  if (!text || text === undefined) {
+    return undefined;
+  }
+  const sections: string[] = text.split(", ");
+  if (!sections) {
+    return text;
+  }
+  const country: string | undefined = sections.pop();
+  if (country) {
+    sections.push(formatCountry(country));
+  }
+  return sections.join(", ");
+};
+
 //for formatting dates as 'apr 07, 2025'
-export const formatDate = (dateInput: Date | string): string => {
+export const formatRatingDate = (dateInput: Date | string): string => {
   const date: Date = new Date(dateInput);
 
   if (isNaN(date.getTime())) {
@@ -48,6 +61,15 @@ export const formatDate = (dateInput: Date | string): string => {
   if (date.toDateString() === yesterday.toDateString()) {
     return "Yesterday";
   }
+  return formatDate(date).toLowerCase();
+};
+
+export const formatDate = (dateInput: Date | string): string => {
+  const date: Date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
 
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -60,7 +82,40 @@ export const formatDate = (dateInput: Date | string): string => {
     options
   ).format(date);
 
-  return formattedDate.toLowerCase();
+  return formattedDate;
+};
+
+//a function that gets the age of a person, correcting for birthdays
+export const getAge = (dateInput: string | Date): number | null => {
+  const date: Date = new Date(dateInput);
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+  const today: Date = new Date();
+  //first we simply check the difference of years from today
+  let age: number = today.getFullYear() - date.getFullYear();
+
+  //and we check if this year's birthday has already happened
+  const monthDiff: number = today.getMonth() - date.getMonth();
+  const dayDiff: number = today.getDate() - date.getDate();
+
+  //if not, we remove a year
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  return age;
+};
+
+//a function that tries to put into parenthesis the input or returns
+//an empty string, so nothing will be displayed if empty
+export const tryAddParenthesis = (
+  input: string | null | number | Date | undefined
+): string => {
+  if (!input) {
+    return "";
+  }
+  return `(${input})`;
 };
 
 export const isNumber = (value?: unknown): value is number =>

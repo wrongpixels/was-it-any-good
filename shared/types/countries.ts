@@ -62,6 +62,7 @@ enum Country {
   FR = "France",
   GA = "Gabon",
   GM = "Gambia",
+  DE = "Germany",
   GN = "Guinea",
   GW = "Guinea-Bissau",
   GY = "Guyana",
@@ -197,7 +198,7 @@ enum Country {
 export type CountryCode = keyof typeof Country;
 
 //a function that matches country names with our CountryCodes.
-//accepts custom overrides for special cases.
+//runs custom overrides for special cases and blatant false information.
 //added as TMDB doesnt provide a way to know the origin country of people, but usually
 //includes a birth place with a format 'City, Region, Country'
 export const stringToCountryCode = (name: string): CountryCode => {
@@ -205,11 +206,19 @@ export const stringToCountryCode = (name: string): CountryCode => {
     return "UNKNOWN";
   }
   const cleanName = name.trim().toLowerCase();
-  if (cleanName === "uk") {
-    return "GB";
-  }
-  if (cleanName === "usa") {
-    return "US";
+
+  switch (cleanName) {
+    case "uk":
+      return "GB";
+    case "usa":
+      return "US";
+    //tmdb seems to allow for users to add regions as countries, unhealthy for our db.
+    case "catalonia":
+    case "euskal herria":
+    case "euskadi":
+    case "catalunya":
+    case "cataluña":
+      return "ES";
   }
   for (const [code, fullName] of Object.entries(Country)) {
     if (fullName.toLowerCase() === cleanName && isCountryCode(code)) {
@@ -217,6 +226,20 @@ export const stringToCountryCode = (name: string): CountryCode => {
     }
   }
   return "UNKNOWN";
+};
+
+export const formatCountry = (name: string): string => {
+  const cleanName = name.trim().toLowerCase();
+
+  switch (cleanName) {
+    case "catalonia":
+    case "euskal herria":
+    case "euskadi":
+    case "catalunya":
+    case "cataluña":
+      return "Spain";
+  }
+  return name;
 };
 
 export const VALID_COUNTRY_KEYS = new Set(Object.keys(Country));
