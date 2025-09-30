@@ -1,13 +1,3 @@
-export const getYearParenthesis = (
-  dateString: string | null | undefined
-): string => {
-  const year: string = getYearString(dateString);
-  if (!year || year === "") {
-    return "";
-  }
-  return `(${year})`;
-};
-
 export const getYearString = (
   dateString: string | null | undefined
 ): string => {
@@ -17,6 +7,10 @@ export const getYearString = (
   }
   return year.toString();
 };
+
+export const getYearParenthesis = (
+  dateString: string | null | undefined
+): string => tryAddParenthesis(getYearString(dateString));
 
 export const getYearNum = (
   dateString: string | null | undefined
@@ -70,6 +64,39 @@ export const formatDate = (dateInput: Date | string): string => {
   ).format(date);
 
   return formattedDate;
+};
+
+//a function that gets the age of a person, correcting for birthdays
+export const getAge = (dateInput: string | Date): number | null => {
+  const date: Date = new Date(dateInput);
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+  const today: Date = new Date();
+  //first we simply check the difference of years from today
+  let age: number = today.getFullYear() - date.getFullYear();
+
+  //and we check if this year's birthday has already happened
+  const monthDiff: number = today.getMonth() - date.getMonth();
+  const dayDiff: number = today.getDate() - date.getDate();
+
+  //if not, we remove a year
+  if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+    age--;
+  }
+
+  return age;
+};
+
+//a function that tries to put into parenthesis the input or returns
+//an empty string, so nothing will be displayed if empty
+export const tryAddParenthesis = (
+  input: string | null | number | Date | undefined
+): string => {
+  if (!input) {
+    return "";
+  }
+  return `(${input})`;
 };
 
 export const isNumber = (value?: unknown): value is number =>

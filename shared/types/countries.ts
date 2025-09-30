@@ -62,6 +62,7 @@ enum Country {
   FR = "France",
   GA = "Gabon",
   GM = "Gambia",
+  DE = "Germany",
   GN = "Guinea",
   GW = "Guinea-Bissau",
   GY = "Guyana",

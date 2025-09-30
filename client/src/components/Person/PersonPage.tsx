@@ -17,6 +17,7 @@ import PersonDetails from './PersonDetails';
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
   const personId: string | undefined = match?.params.id;
+
   const {
     data: person,
     isError,
@@ -39,8 +40,10 @@ const PersonPage = (): JSX.Element | null => {
     }
     return <ErrorPage context={'loading Person'} error={error?.message} />;
   }
-
+  const mainRoles: string | undefined =
+    person.sortedRoles?.mainRoles.join(', ');
   setTitle(person.name);
+
   return (
     <div className="flex flex-col flex-1 justify-center">
       <EntryTitle
@@ -48,13 +51,13 @@ const PersonPage = (): JSX.Element | null => {
         icon={<IconUser height={30} className="text-starblue" />}
       />
       <div className="flex flex-col md:flex-row flex-1">
-        <div className="w-full md:w-55 flex flex-col justify-center items-center">
-          <div className="w-50 md:w-50 mt-3 md:mt-7 md:mb-0 mb-7 md:flex-shrink-0 align-middle">
+        <div className="w-full md:w-55 flex flex-col items-center">
+          <div className="w-50 md:w-50 mt-3 md:mt-0 md:mb-0 mb-7 md:flex-shrink-0 align-middle">
             <PersonPagePoster
               title={person.name}
               src={person.image}
               alt={person.name}
-              extraInfo={person.sortedRoles?.mainRoles.join(', ')}
+              extraInfo={mainRoles}
             />
           </div>
           {person.addedDetails && (
