@@ -18,6 +18,7 @@ import {
 } from '../schemas/tmdb-person-details-schema';
 import { tmdbAPI } from '../util/config';
 import { tmdbPaths } from '../util/url-helper';
+import { formatBirthPlace } from '../../../shared/helpers/format-helper';
 
 //an extra call to TMDB API that populates extra options information for people.
 //this is not done on creation for performance reason, and this info is only fetched
@@ -49,7 +50,7 @@ export const fetchAndUpdatePersonDetails = async (
       personDetails.place_of_birth?.split(', ').pop() ?? '';
     await person.update({
       addedDetails: true,
-      birthPlace: personDetails.place_of_birth || undefined,
+      birthPlace: formatBirthPlace(personDetails.place_of_birth),
       birthDate: personDetails.birthday || undefined,
       deathDate: personDetails.deathday || undefined,
       description: personDetails.biography || undefined,

@@ -1,3 +1,5 @@
+import { formatCountry } from "../types/countries";
+
 export const getYearString = (
   dateString: string | null | undefined
 ): string => {
@@ -21,6 +23,23 @@ export const getYearNum = (
   const date: Date = new Date(dateString);
   const year: number = date.getFullYear();
   return isNaN(year) ? null : year;
+};
+
+export const formatBirthPlace = (
+  text: string | undefined | null
+): string | undefined => {
+  if (!text || text === undefined) {
+    return undefined;
+  }
+  const sections: string[] = text.split(", ");
+  if (!sections) {
+    return text;
+  }
+  const country: string | undefined = sections.pop();
+  if (country) {
+    sections.push(formatCountry(country));
+  }
+  return sections.join(", ");
 };
 
 //for formatting dates as 'apr 07, 2025'
