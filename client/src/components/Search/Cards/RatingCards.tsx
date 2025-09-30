@@ -1,4 +1,4 @@
-import { formatDate } from '../../../../../shared/helpers/format-helper';
+import { formatRatingDate } from '../../../../../shared/helpers/format-helper';
 import { MediaType } from '../../../../../shared/types/media';
 import { RatingData } from '../../../../../shared/types/models';
 import { urlFromRatingData } from '../../../utils/url-helper';
@@ -27,8 +27,8 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
             {showDate && r.updatedAt && (
               <Tag
                 className="right-3 top-9"
-                text={formatDate(r.updatedAt)}
-                title={`Voted ${formatDate(r.updatedAt)}`}
+                text={formatRatingDate(r.updatedAt)}
+                title={`Voted ${formatRatingDate(r.updatedAt)}`}
               />
             )}
             {r.indexMedia.mediaType === MediaType.Season && (

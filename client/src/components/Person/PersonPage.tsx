@@ -12,6 +12,7 @@ import IconUser from '../Common/Icons/IconUser';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import MediaMissing from '../Media/MediaMissing';
 import ErrorPage from '../Common/Status/ErrorPage';
+import PersonDetails from './PersonDetails';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -47,8 +48,8 @@ const PersonPage = (): JSX.Element | null => {
         icon={<IconUser height={30} className="text-starblue" />}
       />
       <div className="flex flex-col md:flex-row flex-1">
-        <div className="w-full md:w-auto flex flex-row justify-center">
-          <div className="w-50 md:w-40 mt-3 md:mt-7 md:mb-0 mb-7 md:flex-shrink-0 align-middle">
+        <div className="w-full md:w-55 flex flex-col justify-center items-center">
+          <div className="w-50 md:w-50 mt-3 md:mt-7 md:mb-0 mb-7 md:flex-shrink-0 align-middle">
             <PersonPagePoster
               title={person.name}
               src={person.image}
@@ -56,6 +57,11 @@ const PersonPage = (): JSX.Element | null => {
               extraInfo={person.sortedRoles?.mainRoles.join(', ')}
             />
           </div>
+          {person.addedDetails && (
+            <div className="mt-3 w-full">
+              <PersonDetails person={person} />
+            </div>
+          )}
         </div>
         <div className="flex-1 border-l border-gray-200 md:ml-10 pl-4 overflow-auto">
           <div className="flex flex-col gap-2 -mt-2">

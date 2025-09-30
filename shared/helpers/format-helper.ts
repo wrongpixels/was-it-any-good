@@ -30,7 +30,7 @@ export const getYearNum = (
 };
 
 //for formatting dates as 'apr 07, 2025'
-export const formatDate = (dateInput: Date | string): string => {
+export const formatRatingDate = (dateInput: Date | string): string => {
   const date: Date = new Date(dateInput);
 
   if (isNaN(date.getTime())) {
@@ -48,6 +48,15 @@ export const formatDate = (dateInput: Date | string): string => {
   if (date.toDateString() === yesterday.toDateString()) {
     return "Yesterday";
   }
+  return formatDate(date).toLowerCase();
+};
+
+export const formatDate = (dateInput: Date | string): string => {
+  const date: Date = new Date(dateInput);
+
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
 
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
@@ -60,7 +69,7 @@ export const formatDate = (dateInput: Date | string): string => {
     options
   ).format(date);
 
-  return formattedDate.toLowerCase();
+  return formattedDate;
 };
 
 export const isNumber = (value?: unknown): value is number =>

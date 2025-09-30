@@ -1,4 +1,4 @@
-import { formatDate } from '../../../../shared/helpers/format-helper';
+import { formatRatingDate } from '../../../../shared/helpers/format-helper';
 import { RatingData } from '../../../../shared/types/models';
 import {
   NO_RATINGS,
@@ -32,7 +32,7 @@ const StarRatingIndexMedia = ({
           <span className="cursor-help">{rating}</span>
           {userRating?.updatedAt && (
             <span
-              title={`Voted ${formatDate(userRating.updatedAt)}`}
+              title={`Voted ${formatRatingDate(userRating.updatedAt)}`}
               className={`shadow/20 mt-0.5 text-regular text-center align-middle font-semibold text-white rounded bg-starblue/70 w-6 ${styles.animations.zoomLessOnHover} border-2 border-sky-900/50`}
             >
               {userRating.userScore}
