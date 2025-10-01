@@ -32,11 +32,13 @@ import {
 } from './index-media-service';
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
 import { reorderSeasons } from '../../../shared/helpers/media-helper';
+import { AxiosResponse } from 'axios';
 
+//the main function to handle creating a new show
 export const buildShowEntry = async (
   params: MediaQueryValues
 ): Promise<ShowResponse | null> => {
-  const showData: ShowData = await fetchTMDBShow(params.mediaId);
+  const showData: ShowData = await fetchTMDBShowFull(params.mediaId);
 
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
@@ -103,7 +105,7 @@ export const buildShowEntry = async (
   return showResponse;
 };
 
-export const fetchTMDBShow = async (
+export const fetchTMDBShowFull = async (
   tmdbId: string | number
 ): Promise<ShowData> => {
   const [showRes, creditsRes, externalIdsRes] = await Promise.all([
@@ -140,6 +142,27 @@ export const fetchTMDBShow = async (
 
   const actualShowData: ShowData = createShow(showData);
   return actualShowData;
+};
+
+//to update shows in case of new seasons
+export const updateShowEntry = async (showEntry: Show) => {
+  //we fetch a fresh version of the show
+  const newShowData: TMDBShowInfoData = await fetchTMDBShowData(
+    showEntry.tmdbId
+  );
+  const showDiff: number =
+    newShowData.number_of_seasons - showEntry.seasonCount;
+  if (showDiff) {
+    console.log(`Found ${showDiff} new Season(s)!`);
+  }
+};
+
+export const fetchTMDBShowData = async (tmdbId: number | string) => {
+  const showRes: AxiosResponse = await tmdbAPI.get(
+    tmdbPaths.shows.byTMDBId(tmdbId)
+  );
+  const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
+  return showInfoData;
 };
 
 export const buildShow = (showData: ShowData, indexId: number): CreateShow => ({

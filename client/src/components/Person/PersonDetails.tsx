@@ -19,15 +19,20 @@ const PersonDetails = ({ person }: PersonDetailsProps): JSX.Element | null => {
   }
   return (
     <div className="flex flex-col gap-2">
-      <BornSection title="Born" text={person.birthDate} />
+      <BornSection
+        title="Born"
+        born={person.birthDate}
+        death={person.deathDate}
+      />
+      <DeathSection
+        title="Death"
+        born={person.birthDate}
+        death={person.deathDate}
+      />
       <BirthPlaceSection
         title="Place of Birth"
         text={person.birthPlace}
         countryCodes={person.country}
-      />
-      <Section
-        title="Death"
-        text={person.deathDate ? formatDate(person.deathDate) : undefined}
       />
     </div>
   );
@@ -84,13 +89,40 @@ const BirthPlaceSection = ({
   );
 };
 
-const BornSection = ({ title, text }: SectionProps): JSX.Element | null => {
-  if (!title || !text) {
+interface AgeSectionProps extends SectionProps {
+  born?: string;
+  death?: string;
+}
+
+const BornSection = ({
+  title,
+  born,
+  death,
+}: AgeSectionProps): JSX.Element | null => {
+  if (!title || !born) {
     return null;
   }
-  const formattedDate: string = formatDate(text);
-  const age: number | null = getAge(text);
+  const formattedDate: string = formatDate(born);
+  const age: number | null = death ? null : getAge(born);
   const displayAge: string = !age ? '' : tryAddParenthesis(`age ${age}`);
+  const displayBorn: string = !displayAge
+    ? formattedDate
+    : `${formattedDate} ${displayAge}`;
+
+  return <Section title={title} text={displayBorn} />;
+};
+
+const DeathSection = ({
+  title,
+  born,
+  death,
+}: AgeSectionProps): JSX.Element | null => {
+  if (!title || !death || !born) {
+    return null;
+  }
+  const formattedDate: string = formatDate(death);
+  const age: number | null = getAge(born, death);
+  const displayAge: string = !age ? '' : tryAddParenthesis(`aged ${age}`);
   const displayBorn: string = !displayAge
     ? formattedDate
     : `${formattedDate} ${displayAge}`;

@@ -18,7 +18,7 @@ import {
   RatingUpdateValues,
 } from '../../types/helper-types';
 import { toPlain } from '../../util/model-helpers';
-import { SeasonResponse } from '../../../../shared/types/models';
+import { SeasonResponse, ShowResponse } from '../../../../shared/types/models';
 import { reorderSeasons } from '../../../../shared/helpers/media-helper';
 
 class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
@@ -29,7 +29,9 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare seasonCount: number;
   declare seasons?: SeasonResponse[];
 
-  static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
+  static async findBy(
+    params: Omit<MediaQueryValues, 'mediaType'>
+  ): Promise<Show | ShowResponse | null> {
     const mediaType = MediaType.Show;
     const media: Show | Film | Season | null = await this.findMediaBy({
       ...params,
