@@ -13,7 +13,7 @@ import idFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
-import { isShowDataOld } from '../util/media-helpers';
+//import { isShowDataOld } from '../util/media-helpers';
 import { toPlain } from '../util/model-helpers';
 
 const router: Router = express.Router();
@@ -46,7 +46,8 @@ router.get(
       if (!showEntry || !(showEntry instanceof Show)) {
         throw new NotFoundError('Show');
       }
-      if (isShowDataOld(showEntry)) {
+      // if (isShowDataOld(showEntry))
+      {
         console.log('Show data might be outdated');
         await updateShowEntry(showEntry);
       }

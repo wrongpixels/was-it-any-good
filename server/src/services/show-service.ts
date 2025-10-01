@@ -33,6 +33,8 @@ import {
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
 import { reorderSeasons } from '../../../shared/helpers/media-helper';
 import { AxiosResponse } from 'axios';
+import { Transaction } from 'sequelize';
+import { sequelize } from '../util/db/initialize-db';
 
 //the main function to handle creating a new show
 export const buildShowEntry = async (
@@ -84,12 +86,15 @@ export const buildShowEntry = async (
     )
   );
 
-  //and we finally create the seasons in the db
-  await Season.bulkCreate(seasons, {
-    ignoreDuplicates: true,
-    transaction: params.transaction,
-  });
-  await buildCreditsAndGenres(showEntry, showData, params.transaction);
+  //and we finally create the seasons, credits and genres in the db
+  await Promise.allSettled([
+    Season.bulkCreate(seasons, {
+      ignoreDuplicates: true,
+      transaction: params.transaction,
+    }),
+    buildCreditsAndGenres(showEntry, showData, params.transaction),
+  ]);
+
   //we reload after creating the credits and season associations so the final entry is populated
   await showEntry.reload({
     ...findOptions,
@@ -147,13 +152,48 @@ export const fetchTMDBShowFull = async (
 //to update shows in case of new seasons
 export const updateShowEntry = async (showEntry: Show) => {
   //we fetch a fresh version of the show
-  const newShowData: TMDBShowInfoData = await fetchTMDBShowData(
+  const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShowData(
     showEntry.tmdbId
   );
   const showDiff: number =
-    newShowData.number_of_seasons - showEntry.seasonCount;
+    newShowTMDBData.number_of_seasons - showEntry.seasonCount;
   if (showDiff) {
+    const transaction: Transaction = await sequelize.transaction();
     console.log(`Found ${showDiff} new Season(s)!`);
+    const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
+    const newSeasonsData: SeasonData[] = newShowData.seasons.slice(-showDiff);
+    console.log(newSeasonsData);
+    const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
+      (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
+    );
+    const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+      createSeasonsIndexMedia,
+      transaction
+    );
+    const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
+      buildSeason(
+        s,
+        showEntry,
+        seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
+      )
+    );
+    const seasons: Season[] = await Season.bulkCreate(newSeasons, {
+      ignoreDuplicates: true,
+      transaction,
+    });
+    console.log(newSeasons, seasons);
+    await Promise.allSettled([
+      //we also refresh the possible new cast and so
+      buildCreditsAndGenres(showEntry, newShowData, transaction),
+      //and update our existing showEntry
+
+      showEntry.update({
+        seasons: { ...showEntry.seasons, ...seasons },
+        seasonCount: showEntry.seasonCount + seasons.length,
+      }),
+    ]);
+    await showEntry.reload();
+    await showEntry.syncIndex(transaction);
   }
 };
 
