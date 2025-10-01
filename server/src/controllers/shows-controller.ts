@@ -13,6 +13,8 @@ import idFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
+//import { isShowDataOld } from '../util/media-helpers';
+import { toPlain } from '../util/model-helpers';
 
 const router: Router = express.Router();
 
@@ -33,21 +35,26 @@ router.get(
   idFormatChecker,
   useMediaCache(MediaType.Show),
   async (req: Request, res, next) => {
-    //we fetch and transform the data into our frontend interface using `plainData: true`.
-    //this avoids handling a sequelize instance here and relying on express' toJSON().
-    //We can't just use sequelize's 'raw:true' as it skips associations within scopes.
     try {
       const id: string = req.params.id;
-      const showEntry = await Show.findBy({
+      const showEntry: Show | ShowResponse | null = await Show.findBy({
         mediaId: id,
         activeUser: req.activeUser,
-        plainData: true,
+        plainData: false,
       });
-      if (!showEntry) {
+      //we have to ensure TS that we received the full model entry
+      if (!showEntry || !(showEntry instanceof Show)) {
         throw new NotFoundError('Show');
       }
-      res.json(showEntry);
-      setMediaActiveCache(req, showEntry);
+      /* if (isShowDataOld(showEntry))
+      {
+        console.log('Show data might be outdated');
+        await updateShowEntry(showEntry);
+      } */
+      //we convert it to plain data for cache storage and the client
+      const showResponse: ShowResponse = toPlain(showEntry);
+      res.json(showResponse);
+      setMediaActiveCache(req, showResponse);
     } catch (error) {
       next(error);
     }

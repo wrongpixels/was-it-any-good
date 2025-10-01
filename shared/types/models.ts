@@ -208,6 +208,7 @@ export interface BaseMediaResponse extends BaseResponse {
   status: string;
   runtime: number | null;
   indexId: number;
+  updatedAt?: Date;
   userRating?: RatingData | null;
   cast?: CreditResponse[];
   crew?: CreditResponse[];

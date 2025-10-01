@@ -85,19 +85,28 @@ export const formatDate = (dateInput: Date | string): string => {
   return formattedDate;
 };
 
-//a function that gets the age of a person, correcting for birthdays
-export const getAge = (dateInput: string | Date): number | null => {
-  const date: Date = new Date(dateInput);
-  if (isNaN(date.getTime())) {
+//a function that gets the age of a person, correcting for birthdays and
+//allowing for an optional end date instead of current
+export const getAge = (
+  bornInput: string | Date,
+  endInput?: string | Date
+): number | null => {
+  const bornDate: Date = new Date(bornInput);
+  if (isNaN(bornDate.getTime())) {
     return null;
   }
-  const today: Date = new Date();
+  //if we don't provide an endDate, we use the current date
+  const endDate: Date = endInput ? new Date(endInput) : new Date();
+  if (isNaN(endDate.getTime())) {
+    return null;
+  }
+
   //first we simply check the difference of years from today
-  let age: number = today.getFullYear() - date.getFullYear();
+  let age: number = endDate.getFullYear() - bornDate.getFullYear();
 
   //and we check if this year's birthday has already happened
-  const monthDiff: number = today.getMonth() - date.getMonth();
-  const dayDiff: number = today.getDate() - date.getDate();
+  const monthDiff: number = endDate.getMonth() - bornDate.getMonth();
+  const dayDiff: number = endDate.getDate() - bornDate.getDate();
 
   //if not, we remove a year
   if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {

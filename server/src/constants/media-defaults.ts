@@ -23,6 +23,9 @@ export interface AirDate {
   date: string | null;
   isUnknown: boolean;
 }
+
+export const LAST_CHECK_DAYS_SHOW: number = 5;
+
 export const DEF_BIRTHDATE: BirthDate = {
   year: 0,
   isUnknown: true,
