@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/helpers/format-helper';
 import CountryFlags from '../Media/Sections/MediaCountryFlags';
 import { CountryCode } from '../../../../shared/types/countries';
+import React from 'react';
 
 interface PersonDetailsProps {
   person: PersonResponse;
@@ -49,24 +50,36 @@ const BirthPlaceSection = ({
   if (!title || !text) {
     return null;
   }
-  //we don't want provinces, states and so, we just keep city and country max
-  const birthSections: string[] = text.split(', ');
-  const displayBirthPlace: string =
-    birthSections.length <= 2
-      ? text
-      : `${birthSections[0]}, ${birthSections.pop()}`;
+
+  //if we have more than 3 parts in the location (city, region, state, country)
+  //we just keep the 1st (city) + last 2 (state, country)
+  const parts = text.split(', ');
+  const displayBirthPlace =
+    parts.length <= 3 ? text : `${parts[0]}, ${parts.slice(-2).join(', ')}`;
+
+  const displayParts = displayBirthPlace.split(', ');
+
   return (
     <span className="flex flex-col text-sm">
-      <span className="font-bold text-gray-500">
-        {title}
-        {':'}
+      <span className="font-bold text-gray-500">{title}:</span>
+      <span className="text-gray-600 flex flex-wrap items-baseline gap-1 break-words">
+        {displayParts.slice(0, -1).map((part, index) => (
+          <React.Fragment key={index}>{part}, </React.Fragment>
+        ))}
+        {/* we want the flag to wrap with the country so it doesn't look odd 
+        when there's a line break only for the flag*/}
+        <span className="whitespace-nowrap flex flex-row gap-1.5">
+          {displayParts[displayParts.length - 1]}
+          {countryCodes && (
+            <>
+              <CountryFlags
+                countryCodes={countryCodes}
+                className="inline-flex pt-0 self-start"
+              />
+            </>
+          )}
+        </span>
       </span>
-      <div className="flex flex-row gap-2">
-        <span className="text-gray-600">{displayBirthPlace}</span>
-        {countryCodes && (
-          <CountryFlags countryCodes={countryCodes} className="pt-0" />
-        )}
-      </div>
     </span>
   );
 };

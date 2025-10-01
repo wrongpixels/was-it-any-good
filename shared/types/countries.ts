@@ -209,6 +209,9 @@ export const stringToCountryCode = (name: string): CountryCode => {
 
   switch (cleanName) {
     case "uk":
+    case "england":
+    case "scotland":
+    case "great britain":
       return "GB";
     case "usa":
       return "US";
@@ -232,6 +235,10 @@ export const formatCountry = (name: string): string => {
   const cleanName = name.trim().toLowerCase();
 
   switch (cleanName) {
+    case "uk":
+      return "U.K.";
+    case "usa":
+      return "U.S.";
     case "catalonia":
     case "euskal herria":
     case "euskadi":
