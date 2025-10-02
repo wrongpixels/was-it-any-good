@@ -2,7 +2,7 @@
 import express, { Request, Router } from 'express';
 import { Show } from '../models';
 import CustomError, { NotFoundError } from '../util/customError';
-import { buildShowEntry } from '../services/show-service';
+import { buildShowEntry, updateShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db/initialize-db';
 import { Transaction } from 'sequelize';
 import { ShowResponse } from '../../../shared/types/models';
@@ -15,6 +15,7 @@ import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 //import { isShowDataOld } from '../util/media-helpers';
 import { toPlain } from '../util/model-helpers';
+import { isShowDataOld } from '../util/media-helpers';
 
 const router: Router = express.Router();
 
@@ -46,11 +47,10 @@ router.get(
       if (!showEntry || !(showEntry instanceof Show)) {
         throw new NotFoundError('Show');
       }
-      /* if (isShowDataOld(showEntry))
-      {
+      if (isShowDataOld(showEntry)) {
         console.log('Show data might be outdated');
         await updateShowEntry(showEntry);
-      } */
+      }
       //we convert it to plain data for cache storage and the client
       const showResponse: ShowResponse = toPlain(showEntry);
       res.json(showResponse);
