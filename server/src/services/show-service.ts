@@ -159,41 +159,52 @@ export const updateShowEntry = async (showEntry: Show) => {
     newShowTMDBData.number_of_seasons - showEntry.seasonCount;
   if (showDiff) {
     const transaction: Transaction = await sequelize.transaction();
-    console.log(`Found ${showDiff} new Season(s)!`);
-    const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
-    const newSeasonsData: SeasonData[] = newShowData.seasons.slice(-showDiff);
-    console.log(newSeasonsData);
-    const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
-      (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
-    );
-    const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
-      createSeasonsIndexMedia,
-      transaction
-    );
-    const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
-      buildSeason(
-        s,
-        showEntry,
-        seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
-      )
-    );
-    const seasons: Season[] = await Season.bulkCreate(newSeasons, {
-      ignoreDuplicates: true,
-      transaction,
-    });
-    console.log(newSeasons, seasons);
-    await Promise.allSettled([
-      //we also refresh the possible new cast and so
-      buildCreditsAndGenres(showEntry, newShowData, transaction),
-      //and update our existing showEntry
+    try {
+      console.log(`Found ${showDiff} new Season(s)!`);
+      const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
+      const newSeasonsData: SeasonData[] = newShowData.seasons.slice(-showDiff);
+      console.log(newSeasonsData);
+      const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
+        (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
+      );
+      const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+        createSeasonsIndexMedia,
+        transaction
+      );
+      const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
+        buildSeason(
+          s,
+          showEntry,
+          seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
+        )
+      );
 
-      showEntry.update({
-        seasons: { ...showEntry.seasons, ...seasons },
-        seasonCount: showEntry.seasonCount + seasons.length,
-      }),
-    ]);
+      await Promise.allSettled([
+        Season.bulkCreate(newSeasons, {
+          ignoreDuplicates: true,
+          transaction,
+        }),
+        //we also refresh the possible new cast and so
+        buildCreditsAndGenres(showEntry, newShowData, transaction),
+        //and update our existing showEntry
+        showEntry.update(
+          {
+            seasonCount: newShowData.seasonCount,
+            episodeCount: newShowData.episodeCount,
+          },
+          { transaction }
+        ),
+      ]);
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      console.error('Rollback:', error);
+      throw error;
+    }
     await showEntry.reload();
-    await showEntry.syncIndex(transaction);
+    reorderSeasons(showEntry);
+    console.log('Post-reload seasons:', showEntry.seasons?.length);
+    await showEntry.syncIndex();
   }
 };
 
