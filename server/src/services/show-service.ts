@@ -157,10 +157,18 @@ export const updateShowEntry = async (showEntry: Show) => {
   );
   const showDiff: number =
     newShowTMDBData.number_of_seasons - showEntry.seasonCount;
-  if (showDiff) {
+  const episodeDiff: number =
+    newShowTMDBData.number_of_episodes - showEntry.episodeCount;
+
+  //if a new season or more episodes, we update the show
+  if (showDiff || episodeDiff) {
     const transaction: Transaction = await sequelize.transaction();
     try {
-      console.log(`Found ${showDiff} new Season(s)!`);
+      console.log(
+        showDiff
+          ? `Found ${showDiff} new Season(s)!`
+          : `Found ${episodeDiff} new episodes!`
+      );
       const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
       const newSeasonsData: SeasonData[] = newShowData.seasons.slice(-showDiff);
       console.log(newSeasonsData);
