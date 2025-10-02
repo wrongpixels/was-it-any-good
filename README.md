@@ -96,11 +96,13 @@ Open it, and edit it providing your own:
 - **API_SECRET**
   - A random, private string that will be used for encrypting data (passwords, etc).
 - **POSTGRES_URI**
-  - The full connection URI for your PostgreSQL database.
+  - The connection URI for your PostgreSQL database.
 - **API_TOKEN_TMDB**
   - Your own TMDB API Token _(read [here](https://developer.themoviedb.org/docs/getting-started) how to get one!)_.
-- **PORT**
-  - The Port the WIAG server will be running on. It defaults to 6060.
+- **PORT** *(Optional!)*
+  - The Port the WIAG server will be running on. It defaults to 6060 if not set.
+- **REDIS_URI** *(Optional!)*
+  - The connection URI for your Redis server, in case you want to use it (WIAG can work without it.)
 
 Example of a valid .env file:
 
