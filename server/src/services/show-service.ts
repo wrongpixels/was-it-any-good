@@ -155,46 +155,24 @@ export const updateShowEntry = async (showEntry: Show) => {
   const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShowData(
     showEntry.tmdbId
   );
-  const showDiff: number =
+  const seasonDiff: number =
     newShowTMDBData.number_of_seasons - showEntry.seasonCount;
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  //if a new season or more episodes, we update the show
-  if (showDiff || episodeDiff) {
+  //if a new season or more episodes are found, we update the show
+  if (seasonDiff > 0 || episodeDiff > 0) {
     const transaction: Transaction = await sequelize.transaction();
     try {
       console.log(
-        showDiff
-          ? `Found ${showDiff} new Season(s)!`
+        seasonDiff
+          ? `Found ${seasonDiff} new Season(s)!`
           : `Found ${episodeDiff} new episodes!`
       );
       const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
-      const newSeasonsData: SeasonData[] = newShowData.seasons.slice(-showDiff);
-      console.log(newSeasonsData);
-      const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
-        (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
-      );
-      const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
-        createSeasonsIndexMedia,
-        transaction
-      );
-      const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
-        buildSeason(
-          s,
-          showEntry,
-          seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
-        )
-      );
-
-      await Promise.allSettled([
-        Season.bulkCreate(newSeasons, {
-          ignoreDuplicates: true,
-          transaction,
-        }),
-        //we also refresh the possible new cast and so
-        buildCreditsAndGenres(showEntry, newShowData, transaction),
-        //and update our existing showEntry
+      //the promises to run no matter if we found new seasons or new episodes
+      const promises: Promise<unknown>[] = [
+        //we update our existing showEntry data
         showEntry.update(
           {
             seasonCount: newShowData.seasonCount,
@@ -202,7 +180,37 @@ export const updateShowEntry = async (showEntry: Show) => {
           },
           { transaction }
         ),
-      ]);
+        //and we update the cast and crew
+        buildCreditsAndGenres(showEntry, newShowData, transaction),
+      ];
+      //we only create seasons and cast/crew if new seasons were found
+      if (seasonDiff > 0) {
+        const newSeasonsData: SeasonData[] =
+          newShowData.seasons.slice(-seasonDiff);
+        console.log(newSeasonsData);
+        const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
+          (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
+        );
+        const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+          createSeasonsIndexMedia,
+          transaction
+        );
+        const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
+          buildSeason(
+            s,
+            showEntry,
+            seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
+          )
+        );
+        //we push the promise to create seasons
+        promises.push(
+          Season.bulkCreate(newSeasons, {
+            ignoreDuplicates: true,
+            transaction,
+          })
+        );
+      }
+      await Promise.allSettled(promises);
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -212,7 +220,17 @@ export const updateShowEntry = async (showEntry: Show) => {
     await showEntry.reload();
     reorderSeasons(showEntry);
     console.log('Post-reload seasons:', showEntry.seasons?.length);
-    await showEntry.syncIndex();
+    console.log('Post-reload episodes:', showEntry.episodeCount);
+  } else {
+    console.log('Before update:', showEntry.updatedAt?.toISOString());
+
+    await showEntry.update({
+      image: newShowTMDBData.poster_path ?? showEntry.image,
+      baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
+      popularity: newShowTMDBData.popularity ?? showEntry.popularity,
+      description: newShowTMDBData.overview ?? showEntry.description,
+    });
+    console.log('After update:', showEntry.updatedAt?.toISOString());
   }
 };
 
