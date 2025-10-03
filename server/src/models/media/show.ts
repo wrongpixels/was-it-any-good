@@ -28,6 +28,8 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
   declare episodeCount: number;
   declare seasonCount: number;
   declare seasons?: SeasonResponse[];
+  declare createdAt?: Date;
+  declare updatedAt?: Date;
 
   static async findBy(
     params: Omit<MediaQueryValues, 'mediaType'>
@@ -87,6 +89,14 @@ Show.init(
     seasonCount: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
 

@@ -213,6 +213,16 @@ export const updateShowEntry = async (showEntry: Show) => {
     reorderSeasons(showEntry);
     console.log('Post-reload seasons:', showEntry.seasons?.length);
     await showEntry.syncIndex();
+  } else {
+    console.log('Before update:', showEntry.updatedAt?.toISOString());
+
+    await showEntry.update({
+      image: newShowTMDBData.poster_path ?? showEntry.image,
+      baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
+      popularity: newShowTMDBData.popularity ?? showEntry.popularity,
+      description: newShowTMDBData.overview ?? showEntry.description,
+    });
+    console.log('After update:', showEntry.updatedAt?.toISOString());
   }
 };
 
