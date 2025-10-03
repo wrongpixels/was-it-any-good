@@ -58,7 +58,7 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 3.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
 
-4.  **Pull‑on‑demand Media Refresh System:** WIAG refreshes media data automatically whenever a user accesses it and enough time has passed since the last update. Then, a single API call checks for new seasons or episodes to add, along with new cast and/or crew data. _(Films follow a similar process, but at a much lower frequency!)_
+4.  **Pull‑on‑demand Media Refresh System:** To ensure Shows stay updated as new seasons are released, WIAG automatically refreshes their data whenever a user accesses them and enough time has passed since the last update. A single API call then checks for new seasons or episodes, updating WIAG's database with any new information. _(Films follow a similar process, but at a much lower frequency!)_
 
 Together, these systems keep the database maintained and up‑to‑date while focusing on the media users actively engage with, significantly reducing background maintenance overhead and API load compared to traditional scheduled jobs.
 
