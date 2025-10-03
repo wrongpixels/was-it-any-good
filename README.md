@@ -58,6 +58,10 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 3.  **Self-Sustaining Ecosystem:** The database grows organically based on user activity. Media, People and their relationships are populated on-demand, ensuring the database remains lean and relevant without requiring bulk data imports. This creates a robust, interconnected graph of information entirely within WIAG's ecosystem.
 
+4.  **Pull‑on‑demand Media Refresh System:** WIAG refreshes media data automatically whenever a user accesses it and enough time has passed since the last update. Then, a single API call checks for new seasons or episodes to add, along with new cast and/or crew data. _(Films follow a similar process, but at a much lower frequency!)_
+
+Together, these systems keep the database maintained and up‑to‑date while focusing on the media users actively engage with, significantly reducing background maintenance overhead and API load compared to traditional scheduled jobs.
+
 ### Tech Stack
 
 - **Backend:** Node.js, Express, TypeScript, Redis
@@ -99,9 +103,9 @@ Open it, and edit it providing your own:
   - The connection URI for your PostgreSQL database.
 - **API_TOKEN_TMDB**
   - Your own TMDB API Token _(read [here](https://developer.themoviedb.org/docs/getting-started) how to get one!)_.
-- **PORT** *(Optional!)*
+- **PORT** _(Optional!)_
   - The Port the WIAG server will be running on. It defaults to 6060 if not set.
-- **REDIS_URI** *(Optional!)*
+- **REDIS_URI** _(Optional!)_
   - The connection URI for your Redis server, in case you want to use it (WIAG can work without it.)
 
 Example of a valid .env file:
