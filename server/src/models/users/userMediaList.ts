@@ -32,7 +32,7 @@ class UserMediaList extends Model<
   declare mediaTypes: CreationOptional<MediaType[]>;
   declare icon: CreationOptional<UserMediaListIcon>;
   declare lockedMediaType: CreationOptional<boolean>;
-  declare canBeDeleted: CreationOptional<boolean>;
+  declare canBeModified: CreationOptional<boolean>;
   declare autoRemoveItems: CreationOptional<boolean>;
   declare private: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
@@ -69,7 +69,7 @@ UserMediaList.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    canBeDeleted: {
+    canBeModified: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },

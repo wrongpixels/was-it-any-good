@@ -47,7 +47,7 @@ export const DEF_LIST_LIKES: CreateUserMediaList = {
   userId: -1,
   autoCleanItems: true,
   private: false,
-  canBeDeleted: false,
+  canBeModified: false,
   icon: "like",
 };
 
@@ -57,7 +57,7 @@ export const DEF_LIST_WATCHLIST: CreateUserMediaList = {
   mediaTypes: [MediaType.Film, MediaType.Show, MediaType.Season],
   lockedMediaType: true,
   autoCleanItems: true,
-  canBeDeleted: false,
+  canBeModified: false,
   private: false,
   indexInUserLists: 1,
   userId: -1,
@@ -72,7 +72,7 @@ export const DEF_LIST_FAV_FILMS: CreateUserMediaList = {
   indexInUserLists: 2,
   userId: -1,
   autoCleanItems: false,
-  canBeDeleted: false,
+  canBeModified: false,
   private: false,
   icon: "fav-film",
 };
@@ -85,7 +85,7 @@ export const DEF_LIST_FAV_SHOWS: CreateUserMediaList = {
   indexInUserLists: 3,
   userId: -1,
   autoCleanItems: false,
-  canBeDeleted: false,
+  canBeModified: false,
   private: false,
   icon: "fav-show",
 };

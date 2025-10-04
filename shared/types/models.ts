@@ -294,7 +294,7 @@ export interface UserMediaListData {
   lockedMediaType: boolean;
   private: boolean;
   autoCleanItems: boolean;
-  canBeDeleted: boolean;
+  canBeModified: boolean;
   icon: UserMediaListIcon;
   createdAt?: Date;
   updatedAt?: Date;
@@ -304,8 +304,8 @@ export interface UserMediaListData {
 export interface CreateUserMediaList
   extends Omit<
     UserMediaListData,
-    "id" | "listItems" | "createdAt" | "updatedAt" | "icon" | "canBeDeleted"
+    "id" | "listItems" | "createdAt" | "updatedAt" | "icon" | "canBeModified"
   > {
   icon?: UserMediaListIcon;
-  canBeDeleted?: boolean;
+  canBeModified?: boolean;
 }
