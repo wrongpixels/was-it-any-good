@@ -251,3 +251,61 @@ export interface CreateMediaGenre {
   genreId: number;
   mediaType: MediaType;
 }
+
+export interface UserMediaListItemData {
+  id: number;
+  indexInList: number;
+  userListId: number;
+  userList?: UserMediaListData;
+  indexId: number;
+  indexMedia?: IndexMediaData;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export const USER_MEDIA_LIST_ICONS = [
+  "fav-film",
+  "fav-show",
+  "fav-multi",
+  "film",
+  "show",
+  "season",
+  "multi",
+  "like",
+  "watchlist",
+  "other",
+] as const;
+
+export type UserMediaListIcon = (typeof USER_MEDIA_LIST_ICONS)[number];
+
+export interface CreateUserMediaListItem
+  extends Omit<
+    UserMediaListItemData,
+    "id" | "indexMedia" | "userList" | "createdAt" | "updatedAt"
+  > {}
+
+export interface UserMediaListData {
+  id: number;
+  name: string;
+  description: string;
+  userId: number;
+  indexInUserLists: number;
+  mediaTypes: MediaType[];
+  lockedMediaType: boolean;
+  private: boolean;
+  autoCleanItems: boolean;
+  canBeDeleted: boolean;
+  icon: UserMediaListIcon;
+  createdAt?: Date;
+  updatedAt?: Date;
+  listItems?: UserMediaListItemData[];
+}
+
+export interface CreateUserMediaList
+  extends Omit<
+    UserMediaListData,
+    "id" | "listItems" | "createdAt" | "updatedAt" | "icon" | "canBeDeleted"
+  > {
+  icon?: UserMediaListIcon;
+  canBeDeleted?: boolean;
+}
