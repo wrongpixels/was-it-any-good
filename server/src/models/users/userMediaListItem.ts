@@ -73,6 +73,7 @@ UserMediaListItem.init(
     sequelize,
     underscored: true,
     modelName: 'user_media_list_item',
+    tableName: 'user_media_list_items',
     indexes: [
       {
         unique: true,

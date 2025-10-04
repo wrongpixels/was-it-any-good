@@ -8,6 +8,8 @@ import {
 import { sequelize } from '../../util/db/initialize-db';
 import Rating from './rating';
 import { Session } from '..';
+import UserMediaList from './userMediaList';
+import { RatingData } from '../../../../shared/types/models';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
@@ -19,12 +21,21 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare lastActive: Date | null;
   declare isActive: boolean;
   declare isAdmin: boolean;
+  declare userLists?: UserMediaList[];
+  declare ratings?: RatingData[];
 
   static associate() {
     this.hasMany(Rating, {
       as: 'ratings',
       foreignKey: 'userId',
       constraints: false,
+    });
+    this.hasMany(UserMediaList, {
+      as: 'userLists',
+      foreignKey: 'userId',
+      hooks: true,
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
     });
     this.hasOne(Session);
   }

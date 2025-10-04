@@ -19,6 +19,7 @@ import {
   USER_MEDIA_LIST_ICONS,
   UserMediaListIcon,
 } from '../../../../shared/types/models';
+import { User } from '..';
 
 class UserMediaList extends Model<
   InferAttributes<UserMediaList>,
@@ -46,6 +47,10 @@ class UserMediaList extends Model<
       //so if we delete the list, all the items are also deleted
       onDelete: 'CASCADE',
       hooks: true,
+    });
+    this.belongsTo(User, {
+      as: 'user',
+      foreignKey: 'userId',
     });
   }
 }
@@ -150,6 +155,7 @@ UserMediaList.init(
     sequelize,
     underscored: true,
     modelName: 'user_media_list',
+    tableName: 'user_media_lists',
     indexes: [
       {
         unique: true,
