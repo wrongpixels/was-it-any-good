@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import { POSTGRES_URI } from '../config';
 import { MigrationMeta } from 'umzug';
-import { getMigrator } from './migrator-db';
+import { getMigrator, MIGRATIONS_ENABLED } from './migrator-db';
 
 const sequelize = new Sequelize(POSTGRES_URI, { logging: false });
 
@@ -10,7 +10,9 @@ const initializeDB = async () => {
     await sequelize.authenticate();
     console.log('Connected to Postgres DB');
     const pendingMigrations: MigrationMeta[] = await getMigrator().pending();
-    if (pendingMigrations.length > 0) {
+    if (!MIGRATIONS_ENABLED) {
+      console.log('Migrations are currently disabled.');
+    } else if (pendingMigrations.length > 0) {
       console.log(`Found ${pendingMigrations.length} pending Migrations!`);
       try {
         const migrations: MigrationMeta[] = await applyMigrations();

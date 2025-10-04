@@ -15,6 +15,11 @@ import {
   MIN_LENGTH_DESCRIPTION,
   MIN_LENGTH_NAME,
 } from '../../../../shared/constants/user-media-list-constants';
+import {
+  USER_MEDIA_LIST_ICONS,
+  UserMediaListIcon,
+} from '../../../../shared/types/models';
+import { User } from '..';
 
 class UserMediaList extends Model<
   InferAttributes<UserMediaList>,
@@ -26,7 +31,11 @@ class UserMediaList extends Model<
   declare userId: number;
   declare indexInUserLists: number;
   declare mediaTypes: CreationOptional<MediaType[]>;
+  declare icon: CreationOptional<UserMediaListIcon>;
   declare lockedMediaType: CreationOptional<boolean>;
+  declare canBeModified: CreationOptional<boolean>;
+  declare autoRemoveItems: CreationOptional<boolean>;
+  declare private: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
   declare listItems?: UserMediaListItem[];
@@ -38,6 +47,10 @@ class UserMediaList extends Model<
       //so if we delete the list, all the items are also deleted
       onDelete: 'CASCADE',
       hooks: true,
+    });
+    this.belongsTo(User, {
+      as: 'user',
+      foreignKey: 'userId',
     });
   }
 }
@@ -57,6 +70,18 @@ UserMediaList.init(
         min: MIN_LENGTH_NAME,
       },
     },
+    autoRemoveItems: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    canBeModified: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    private: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     description: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -75,6 +100,11 @@ UserMediaList.init(
         min: 0,
         max: MAX_USER_LISTS_INDEX,
       },
+    },
+    icon: {
+      type: DataTypes.ENUM(...USER_MEDIA_LIST_ICONS),
+      allowNull: false,
+      defaultValue: 'multi',
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -125,6 +155,7 @@ UserMediaList.init(
     sequelize,
     underscored: true,
     modelName: 'user_media_list',
+    tableName: 'user_media_lists',
     indexes: [
       {
         unique: true,
