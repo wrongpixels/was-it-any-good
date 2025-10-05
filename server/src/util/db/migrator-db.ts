@@ -9,7 +9,6 @@ export type QueryInterfaceContext = { context: QueryInterface };
 
 export const getMigrator = (): Umzug<QueryInterface> => {
   if (!migrator) {
-    console.log(process.cwd());
     migrator = new Umzug({
       logger: console,
       migrations: {
