@@ -23,7 +23,11 @@ import { CreateShow } from '../models/media/show';
 import Season, { CreateSeason } from '../models/media/season';
 import CustomError from '../util/customError';
 import { tmdbPaths } from '../util/url-helper';
-import { CreateIndexMedia, ShowResponse } from '../../../shared/types/models';
+import {
+  CreateIndexMedia,
+  SeasonResponse,
+  ShowResponse,
+} from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
 import {
   upsertIndexMedia,
@@ -35,6 +39,7 @@ import { reorderSeasons } from '../../../shared/helpers/media-helper';
 import { AxiosResponse } from 'axios';
 import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
+import { DEF_IMAGE_MEDIA } from '../../../shared/defaults/media-defaults';
 
 //the main function to handle creating a new show
 export const buildShowEntry = async (
@@ -172,25 +177,35 @@ export const updateShowEntry = async (showEntry: Show) => {
       const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
       //the promises to run no matter if we found new seasons or new episodes
       const promises: Promise<unknown>[] = [
-        //we update our existing showEntry data
+        //we update our existing showEntry data and some basic fields
         showEntry.update(
           {
             seasonCount: newShowData.seasonCount,
             episodeCount: newShowData.episodeCount,
+            image: newShowTMDBData.poster_path ?? showEntry.image,
+            baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
+            popularity: newShowTMDBData.popularity ?? showEntry.popularity,
+            description: newShowTMDBData.overview ?? showEntry.description,
           },
           { transaction }
         ),
         //and we update the cast and crew
         buildCreditsAndGenres(showEntry, newShowData, transaction),
       ];
-      //we only create seasons and cast/crew if new seasons were found
-      if (seasonDiff > 0) {
-        const newSeasonsData: SeasonData[] =
-          newShowData.seasons.slice(-seasonDiff);
-        console.log(newSeasonsData);
+      //we check for any existing Season that might be missing core data
+      const missingSeasonData: SeasonResponse | undefined =
+        showEntry.seasons?.find(
+          (s: SeasonResponse) =>
+            s.baseRating === -1 || s.image === DEF_IMAGE_MEDIA
+        );
+      //we only create seasons and cast/crew if new seasons or were found or if we
+      //have incomplete seasons.
+      if (seasonDiff > 0 || missingSeasonData) {
+        const newSeasonsData: SeasonData[] = newShowData.seasons;
         const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
         );
+        //we bulk upsert the indexMedia of all seasons, which will update basic fields
         const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
           createSeasonsIndexMedia,
           transaction
@@ -202,10 +217,18 @@ export const updateShowEntry = async (showEntry: Show) => {
             seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
           )
         );
-        //we push the promise to create seasons
+        //we push the promise to bulk upsert all new and refreshed seasons
         promises.push(
           Season.bulkCreate(newSeasons, {
-            ignoreDuplicates: true,
+            updateOnDuplicate: [
+              'baseRating',
+              'popularity',
+              'episodeCount',
+              'image',
+              'description',
+              'name',
+            ],
+            returning: true,
             transaction,
           })
         );

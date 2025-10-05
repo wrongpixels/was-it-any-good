@@ -15,7 +15,7 @@ const initializeDB = async () => {
     } else if (pendingMigrations.length > 0) {
       console.log(`Found ${pendingMigrations.length} pending Migrations!`);
       try {
-        const migrations: MigrationMeta[] = await applyMigrations();
+        const migrations: MigrationMeta[] = await runMigrations();
         console.log('Migrations applied:', {
           files: migrations.map((m: MigrationMeta) => m.name),
         });
@@ -33,7 +33,12 @@ const initializeDB = async () => {
   }
 };
 
-const applyMigrations = async () => await getMigrator().up();
+const runMigrations = async () => await getMigrator().up();
 const rollBackMigrations = async () => await getMigrator().down();
 
-export { initializeDB, sequelize, applyMigrations, rollBackMigrations };
+export {
+  initializeDB,
+  sequelize,
+  runMigrations as applyMigrations,
+  rollBackMigrations,
+};
