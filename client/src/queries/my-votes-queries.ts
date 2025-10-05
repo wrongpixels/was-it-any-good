@@ -8,6 +8,7 @@ export const useMyVotesQuery = (
   console.log(query);
   return useQuery({
     queryKey: ['myVotes', query],
+    retry: false,
     queryFn: () => getMyVotes(query),
   });
 };
