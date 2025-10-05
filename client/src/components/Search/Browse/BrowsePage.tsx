@@ -17,6 +17,7 @@ import LoadingCards from '../Loading/LoadingSearch';
 import { OverrideParams } from '../../../../../shared/types/search-browse';
 import { useMyVotesQuery } from '../../../queries/my-votes-queries';
 import { OverrideSortOptions } from '../Results/PageResultsSort';
+import useAuthProtection from '../../../hooks/use-auth-protection';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -38,6 +39,10 @@ const BrowsePage = ({
   queryToUse = 'browse',
 }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || routerPaths.browse.base;
+  //if we are accessing user data, we check for a valid session with this hook:
+  //in this case, it will only enforce it if we are checking user votes.
+  useAuthProtection({ condition: queryToUse === 'votes' });
+
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
   //override params are passed here.

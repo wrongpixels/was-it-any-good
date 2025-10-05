@@ -1,4 +1,5 @@
 import {
+  AUTH_REQUIRED_ERROR,
   NOT_FOUND_ERROR,
   SESSION_AUTH_ERROR,
   WRONG_FORMAT_ERROR,
@@ -27,7 +28,10 @@ class CustomError extends Error {
 }
 
 export class AuthError extends CustomError {
-  constructor(message: string = 'Authentication required.', code?: ErrorCode) {
+  constructor(
+    message: string = 'Authentication required.',
+    code: ErrorCode = AUTH_REQUIRED_ERROR
+  ) {
     super(message, 401, 'AuthError', code);
   }
 }

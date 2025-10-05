@@ -14,6 +14,7 @@ export const setupAxiosInterceptors = (queryClient: QueryClient): void => {
         logoutClientSide(queryClient);
         window.location.reload();
       }
+
       return Promise.reject(error);
     }
   );

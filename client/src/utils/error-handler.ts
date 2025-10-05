@@ -2,6 +2,7 @@ import { AxiosError, isAxiosError } from 'axios';
 import { APIError } from '../../../shared/types/errors';
 import {
   DEF_API_ERROR,
+  AUTH_REQUIRED_ERROR,
   SESSION_AUTH_ERROR,
 } from '../../../shared/constants/error-constants';
 import { capitalize } from './common-format-helper';
@@ -61,6 +62,9 @@ export const isNotFoundError = (error: unknown): error is APIError =>
 
 export const getAuthError = (error: unknown): APIError | null =>
   getByStatusCode(error, 401);
+
+export const isAuthRequiredError = (error: unknown): boolean =>
+  getAuthError(error)?.code === AUTH_REQUIRED_ERROR;
 
 export const isSessionAuthError = (error: unknown): boolean =>
   getAuthError(error)?.code === SESSION_AUTH_ERROR;

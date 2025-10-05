@@ -1,10 +1,5 @@
 import { JSX } from 'react';
-import {
-  Route,
-  BrowserRouter as Router,
-  Routes,
-  useNavigate,
-} from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MediaPage from './components/Media/MediaPage';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
@@ -49,18 +44,12 @@ const App = (): JSX.Element => {
 // auth sensitive part of the app
 const AppBody = (): JSX.Element => {
   useScrollToTop();
-  const { isLoginPending, session } = useAuth();
-  const navigate = useNavigate();
+  const { isLoginPending } = useAuth();
 
   if (isLoginPending) {
     return <SigningInPage />;
   }
 
-  //if someone is accessing auth protected urls without a session
-  //we launch them home
-  if (!session && window.location.pathname.startsWith('/my/')) {
-    navigate('/');
-  }
   return (
     <div className="flex flex-col h-full min-h-0 p-8 pt-4 ">
       <Routes>
