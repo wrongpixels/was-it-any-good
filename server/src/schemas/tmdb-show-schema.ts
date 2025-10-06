@@ -33,6 +33,9 @@ export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
   episode_run_time: z.array(z.number()),
   created_by: z.array(TMDBCreatorSchema),
   seasons: z.array(TMDBSeasonSchema),
+});
+
+export const TMDBFullShowInfoSchema = TMDBShowInfoSchema.extend({
   aggregate_credits: TMDBShowCreditsSchema,
   external_ids: TMDBExternalIdSchema,
 });
@@ -42,6 +45,7 @@ export const TMDBShowSchema = TMDBShowInfoSchema.extend({
   credits: TMDBFilmCreditsSchema,
 });
 
+export type TMDBFullShowInfoData = z.infer<typeof TMDBFullShowInfoSchema>;
 export type TMDBShowInfoData = z.infer<typeof TMDBShowInfoSchema>;
 export type TMDBShowData = z.infer<typeof TMDBShowSchema>;
 export type TMDBImdbData = z.infer<typeof TMDBExternalIdSchema>;

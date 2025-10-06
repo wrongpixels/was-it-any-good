@@ -8,7 +8,9 @@ export const tmdbPaths = {
   },
   shows: {
     base: '/tv',
-    byTMDBId: (id: string | number) =>
+    byTMDBId: (id: string | number) => `${tmdbPaths.shows.base}/${id}`,
+    //a single fetch that appends extended credits and external ids
+    withCreditsAndIds: (id: string | number) =>
       `${tmdbPaths.shows.base}/${id}?append_to_response=aggregate_credits%2Cexternal_ids`,
     extendedCredits: (id: string | number) =>
       `${tmdbPaths.shows.byTMDBId(id)}/aggregate_credits`,

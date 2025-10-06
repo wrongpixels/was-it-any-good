@@ -62,7 +62,7 @@ export const TMDBFilmCreditsSchema = z.object({
 });
 
 export const TMDBShowCreditsSchema = z.object({
-  id: z.number(),
+  //id: z.number(),
   cast: z.array(TMDBShowCastRoleSchema),
   crew: z.array(TMDBShowCrewSchema),
 });
