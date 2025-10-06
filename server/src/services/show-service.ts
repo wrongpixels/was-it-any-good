@@ -1,12 +1,7 @@
 import { createShow } from '../factories/show-factory';
+import { TMDBCreditsData } from '../schemas/tmdb-media-schema';
 import {
-  TMDBCreditsData,
-  TMDBShowCreditsData,
-  TMDBShowCreditsSchema,
-} from '../schemas/tmdb-media-schema';
-import {
-  TMDBExternalIdSchema,
-  TMDBImdbData,
+  TMDBFullShowInfoSchema,
   TMDBShowData,
   TMDBShowInfoData,
   TMDBShowInfoSchema,
@@ -118,36 +113,27 @@ export const buildShowEntry = async (
 export const fetchTMDBShowFull = async (
   tmdbId: string | number
 ): Promise<ShowData> => {
-  const [showRes, creditsRes, externalIdsRes] = await Promise.all([
-    tmdbAPI.get(tmdbPaths.shows.byTMDBId(tmdbId)),
-    tmdbAPI.get(tmdbPaths.shows.extendedCredits(tmdbId)),
-    //for some reason, the imdbId is not included in show entries
-    tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
-  ]);
-  const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
-
-  const showCreditsData: TMDBShowCreditsData | undefined =
-    TMDBShowCreditsSchema.safeParse(creditsRes.data)['data'];
-
-  if (!showCreditsData) {
-    throw new CustomError('Error creating entry credits', 400);
-  }
+  //we fetch the full show with appended extended credits and external ids
+  const showRes: AxiosResponse = await tmdbAPI.get(
+    tmdbPaths.shows.withCreditsAndIds(tmdbId)
+  );
+  //we extract the extended credits and the external ids, leaving the show data
+  const { aggregate_credits, external_ids, ...rawShowData } =
+    TMDBFullShowInfoSchema.parse(showRes.data);
 
   //TMDB show credits endpoint is unreliable, providing incomplete data or a single season's.
-  //instead, we fetch the 'aggregate_credits' for the full cast/crew history.
+  //instead, we used the 'aggregate_credits' for the full cast/crew history.
   //these use a different data structure than all other credits, so in order to
   //maintain a single pipeline for creating all our media (film, season, show),
+
   //we transform extended credits into the TMDBCreditsData our factories expect:
-  const creditsData: TMDBCreditsData = formatTMDBShowCredits(showCreditsData);
+  const creditsData: TMDBCreditsData = formatTMDBShowCredits(aggregate_credits);
 
-  const imdbData: TMDBImdbData = TMDBExternalIdSchema.parse(
-    externalIdsRes.data
-  );
-
+  //and we construct our final TMDBShowData object with everything in the expected format
   const showData: TMDBShowData = {
-    ...showInfoData,
+    ...rawShowData,
     credits: creditsData,
-    imdb_id: imdbData.imdb_id,
+    imdb_id: external_ids.imdb_id,
   };
 
   const actualShowData: ShowData = createShow(showData);
@@ -156,7 +142,7 @@ export const fetchTMDBShowFull = async (
 
 //to update shows in case of new seasons
 export const updateShowEntry = async (showEntry: Show) => {
-  //we fetch a fresh version of the show
+  //we fetch a fresh light version of the show, with no credits
   const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShowData(
     showEntry.tmdbId
   );
@@ -165,40 +151,49 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  //if a new season or more episodes are found, we update the show
-  if (seasonDiff > 0 || episodeDiff > 0) {
-    const transaction: Transaction = await sequelize.transaction();
-    try {
+  const fullUpdate: boolean = seasonDiff > 0 || episodeDiff > 0;
+
+  //we only need a transaction for full updates.
+  const transaction: Transaction | undefined = fullUpdate
+    ? await sequelize.transaction()
+    : undefined;
+  try {
+    //the promises to run at the end of the process.
+    //No matter what, we'll update some basic info with the light data we have
+    const promises: Promise<unknown>[] = [
+      showEntry.update(
+        {
+          seasonCount: newShowTMDBData.number_of_seasons,
+          episodeCount: newShowTMDBData.number_of_episodes,
+          image: newShowTMDBData.poster_path ?? showEntry.image,
+          baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
+          popularity: newShowTMDBData.popularity ?? showEntry.popularity,
+          description: newShowTMDBData.overview ?? showEntry.description,
+        },
+        { transaction }
+      ),
+    ];
+
+    //if a new season or more episodes are found, we update the show in more depth
+    if (fullUpdate) {
       console.log(
         seasonDiff
           ? `Found ${seasonDiff} new Season(s)!`
           : `Found ${episodeDiff} new episodes!`
       );
+      //first, we fetch a full version of the Show
       const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
-      //the promises to run no matter if we found new seasons or new episodes
-      const promises: Promise<unknown>[] = [
-        //we update our existing showEntry data and some basic fields
-        showEntry.update(
-          {
-            seasonCount: newShowData.seasonCount,
-            episodeCount: newShowData.episodeCount,
-            image: newShowTMDBData.poster_path ?? showEntry.image,
-            baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
-            popularity: newShowTMDBData.popularity ?? showEntry.popularity,
-            description: newShowTMDBData.overview ?? showEntry.description,
-          },
-          { transaction }
-        ),
-        //and we update the cast and crew
-        buildCreditsAndGenres(showEntry, newShowData, transaction),
-      ];
-      //we check for any existing Season that might be missing core data
+
+      //and we push to promises an updated cast and crew
+      promises.push(buildCreditsAndGenres(showEntry, newShowData, transaction));
+
+      //then, we check for any existing Season that might be missing core data
       const missingSeasonData: SeasonResponse | undefined =
         showEntry.seasons?.find(
           (s: SeasonResponse) =>
             s.baseRating === -1 || s.image === DEF_IMAGE_MEDIA
         );
-      //we only create seasons and cast/crew if new seasons or were found or if we
+      //we only rebuild seasons if new seasons or were found or if we
       //have incomplete seasons.
       if (seasonDiff > 0 || missingSeasonData) {
         const newSeasonsData: SeasonData[] = newShowData.seasons;
@@ -217,7 +212,7 @@ export const updateShowEntry = async (showEntry: Show) => {
             seasonsIndexMedia.find((i: IndexMedia) => i.tmdbId === s.tmdbId)
           )
         );
-        //we push the promise to bulk upsert all new and refreshed seasons
+        //we push the promise to bulk create/update all new and refreshed seasons
         promises.push(
           Season.bulkCreate(newSeasons, {
             updateOnDuplicate: [
@@ -233,28 +228,23 @@ export const updateShowEntry = async (showEntry: Show) => {
           })
         );
       }
-      await Promise.allSettled(promises);
-      await transaction.commit();
-    } catch (error) {
-      await transaction.rollback();
-      console.error('Rollback:', error);
-      throw error;
     }
-    await showEntry.reload();
-    reorderSeasons(showEntry);
-    console.log('Post-reload seasons:', showEntry.seasons?.length);
-    console.log('Post-reload episodes:', showEntry.episodeCount);
-  } else {
-    console.log('Before update:', showEntry.updatedAt?.toISOString());
-
-    await showEntry.update({
-      image: newShowTMDBData.poster_path ?? showEntry.image,
-      baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
-      popularity: newShowTMDBData.popularity ?? showEntry.popularity,
-      description: newShowTMDBData.overview ?? showEntry.description,
-    });
-    console.log('After update:', showEntry.updatedAt?.toISOString());
+    //and we run the promises and commit the transaction
+    await Promise.all(promises);
+    if (transaction) {
+      await transaction.commit();
+    }
+  } catch (error) {
+    if (transaction) {
+      await transaction.rollback();
+    }
+    console.error('Rollback:', error);
+    throw error;
   }
+  await showEntry.reload();
+  reorderSeasons(showEntry);
+  console.log('Post-reload seasons:', showEntry.seasons?.length);
+  console.log('Post-reload episodes:', showEntry.episodeCount);
 };
 
 export const fetchTMDBShowData = async (tmdbId: number | string) => {

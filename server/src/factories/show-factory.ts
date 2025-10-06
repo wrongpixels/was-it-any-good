@@ -27,7 +27,9 @@ export const createShow = (tmdb: TMDBShowData): ShowData => ({
   releaseDate: getAirDate(tmdb.first_air_date),
   lastAirDate: getAirDate(tmdb.last_air_date),
   runtime: tmdb.episode_run_time[0],
-  seasons: createSeasons(tmdb),
+  seasons: createSeasons(tmdb).filter(
+    (s: SeasonData) => s.releaseDate !== null
+  ),
 });
 
 export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({

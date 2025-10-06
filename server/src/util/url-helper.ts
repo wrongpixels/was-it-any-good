@@ -4,11 +4,17 @@ export const tmdbPaths = {
   films: {
     base: '/movie',
     byTMDBId: (id: string | number) => `${tmdbPaths.films.base}/${id}`,
+    //a single fetch that appends credits
+    withCredits: (id: string | number) =>
+      `${tmdbPaths.films.base}/${id}?append_to_response=credits`,
     credits: (id: string | number) => `${tmdbPaths.films.byTMDBId(id)}/credits`,
   },
   shows: {
     base: '/tv',
     byTMDBId: (id: string | number) => `${tmdbPaths.shows.base}/${id}`,
+    //a single fetch that appends extended credits and external ids
+    withCreditsAndIds: (id: string | number) =>
+      `${tmdbPaths.shows.base}/${id}?append_to_response=aggregate_credits%2Cexternal_ids`,
     extendedCredits: (id: string | number) =>
       `${tmdbPaths.shows.byTMDBId(id)}/aggregate_credits`,
     credits: (id: string | number) => `${tmdbPaths.shows.byTMDBId(id)}/credits`,

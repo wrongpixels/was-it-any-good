@@ -3,6 +3,7 @@ import {
   TMDBFilmCreditsSchema,
   TMDBEntrySchema,
   TMDBMediaSchema,
+  TMDBShowCreditsSchema,
 } from './tmdb-media-schema';
 
 const TMDBCreatorSchema = TMDBEntrySchema.extend({
@@ -18,7 +19,9 @@ const TMDBSeasonSchema = TMDBEntrySchema.extend({
   season_number: z.number(),
   poster_path: z.string().nullable(),
 });
-
+export const TMDBExternalIdSchema = z.object({
+  imdb_id: z.string().nullable(),
+});
 export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
   name: z.string(),
   original_name: z.string(),
@@ -32,15 +35,17 @@ export const TMDBShowInfoSchema = TMDBMediaSchema.extend({
   seasons: z.array(TMDBSeasonSchema),
 });
 
+export const TMDBFullShowInfoSchema = TMDBShowInfoSchema.extend({
+  aggregate_credits: TMDBShowCreditsSchema,
+  external_ids: TMDBExternalIdSchema,
+});
+
 export const TMDBShowSchema = TMDBShowInfoSchema.extend({
   imdb_id: z.string().nullable(),
   credits: TMDBFilmCreditsSchema,
 });
 
-export const TMDBExternalIdSchema = z.object({
-  imdb_id: z.string().nullable(),
-});
-
+export type TMDBFullShowInfoData = z.infer<typeof TMDBFullShowInfoSchema>;
 export type TMDBShowInfoData = z.infer<typeof TMDBShowInfoSchema>;
 export type TMDBShowData = z.infer<typeof TMDBShowSchema>;
 export type TMDBImdbData = z.infer<typeof TMDBExternalIdSchema>;

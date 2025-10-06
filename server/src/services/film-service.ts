@@ -1,16 +1,10 @@
+import { AxiosResponse } from 'axios';
 import { FilmResponse } from '../../../shared/types/models';
 import { createFilm } from '../factories/film-factory';
 import { IndexMedia } from '../models';
 import Film, { CreateFilm } from '../models/media/film';
-import {
-  TMDBFilmInfoData,
-  TMDBFilmData,
-  TMDBFilmInfoSchema,
-} from '../schemas/tmdb-film-schema';
-import {
-  TMDBCreditsData,
-  TMDBFilmCreditsSchema,
-} from '../schemas/tmdb-media-schema';
+import { TMDBFilmInfoSchema } from '../schemas/tmdb-film-schema';
+import { TMDBCreditsData } from '../schemas/tmdb-media-schema';
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
 import CustomError from '../util/customError';
@@ -59,16 +53,18 @@ export const buildFilmEntry = async (
 export const fetchTMDBFilm = async (
   tmdbId: string | number
 ): Promise<FilmData> => {
-  const [filmRes, creditsRes] = await Promise.all([
-    tmdbAPI.get(tmdbPaths.films.byTMDBId(tmdbId)),
-    tmdbAPI.get(tmdbPaths.films.credits(tmdbId)),
-  ]);
-  const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
-  const creditsData: TMDBCreditsData = trimCredits(
-    TMDBFilmCreditsSchema.parse(creditsRes.data)
+  const filmRes: AxiosResponse = await tmdbAPI.get(
+    tmdbPaths.films.withCredits(tmdbId)
   );
-  const filmData: TMDBFilmData = { ...filmInfoData, credits: creditsData };
-  const actualFilmData: FilmData = createFilm(filmData);
+  //we extract credits from the rest of the film data
+  const { credits, ...filmInfoData } = TMDBFilmInfoSchema.parse(filmRes.data);
+  //we trim and format the credits
+  const creditsData: TMDBCreditsData = trimCredits(credits);
+  //and build the final FilmData object for our db
+  const actualFilmData: FilmData = createFilm({
+    ...filmInfoData,
+    credits: creditsData,
+  });
   return actualFilmData;
 };
 

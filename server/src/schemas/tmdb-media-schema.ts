@@ -56,13 +56,13 @@ const TMDBShowCrewSchema = TMDBCreditRoleSchema.omit({
 });
 
 export const TMDBFilmCreditsSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   cast: z.array(TMDBFilmCastRoleSchema),
   crew: z.array(TMDBFilmCrewSchema),
 });
 
 export const TMDBShowCreditsSchema = z.object({
-  id: z.number(),
+  id: z.number().optional(),
   cast: z.array(TMDBShowCastRoleSchema),
   crew: z.array(TMDBShowCrewSchema),
 });
