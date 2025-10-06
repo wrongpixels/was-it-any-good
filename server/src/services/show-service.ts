@@ -118,36 +118,38 @@ export const buildShowEntry = async (
 export const fetchTMDBShowFull = async (
   tmdbId: string | number
 ): Promise<ShowData> => {
-  const [showRes, creditsRes, externalIdsRes] = await Promise.all([
+  const [showRes /*, creditsRes, externalIdsRes*/] = await Promise.all([
     tmdbAPI.get(tmdbPaths.shows.byTMDBId(tmdbId)),
-    tmdbAPI.get(tmdbPaths.shows.extendedCredits(tmdbId)),
+    //tmdbAPI.get(tmdbPaths.shows.extendedCredits(tmdbId)),
     //for some reason, the imdbId is not included in show entries
-    tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
+    // tmdbAPI.get(tmdbPaths.shows.extIds(tmdbId)),
   ]);
   const showInfoData: TMDBShowInfoData = TMDBShowInfoSchema.parse(showRes.data);
-
+  /*
   const showCreditsData: TMDBShowCreditsData | undefined =
     TMDBShowCreditsSchema.safeParse(creditsRes.data)['data'];
 
   if (!showCreditsData) {
     throw new CustomError('Error creating entry credits', 400);
   }
-
+*/
   //TMDB show credits endpoint is unreliable, providing incomplete data or a single season's.
-  //instead, we fetch the 'aggregate_credits' for the full cast/crew history.
+  //instead, we used the 'aggregate_credits' for the full cast/crew history.
   //these use a different data structure than all other credits, so in order to
   //maintain a single pipeline for creating all our media (film, season, show),
   //we transform extended credits into the TMDBCreditsData our factories expect:
-  const creditsData: TMDBCreditsData = formatTMDBShowCredits(showCreditsData);
-
+  const creditsData: TMDBCreditsData = formatTMDBShowCredits(
+    showInfoData.aggregate_credits
+  );
+  /*
   const imdbData: TMDBImdbData = TMDBExternalIdSchema.parse(
     externalIdsRes.data
-  );
+  );*/
 
   const showData: TMDBShowData = {
     ...showInfoData,
     credits: creditsData,
-    imdb_id: imdbData.imdb_id,
+    // imdb_id: imdbData.imdb_id,
   };
 
   const actualShowData: ShowData = createShow(showData);
@@ -202,6 +204,7 @@ export const updateShowEntry = async (showEntry: Show) => {
       //have incomplete seasons.
       if (seasonDiff > 0 || missingSeasonData) {
         const newSeasonsData: SeasonData[] = newShowData.seasons;
+        console.log(newSeasonsData);
         const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
         );

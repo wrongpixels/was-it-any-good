@@ -8,7 +8,8 @@ export const tmdbPaths = {
   },
   shows: {
     base: '/tv',
-    byTMDBId: (id: string | number) => `${tmdbPaths.shows.base}/${id}`,
+    byTMDBId: (id: string | number) =>
+      `${tmdbPaths.shows.base}/${id}?append_to_response=aggregate_credits%2Cexternal_ids`,
     extendedCredits: (id: string | number) =>
       `${tmdbPaths.shows.byTMDBId(id)}/aggregate_credits`,
     credits: (id: string | number) => `${tmdbPaths.shows.byTMDBId(id)}/credits`,
