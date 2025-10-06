@@ -125,6 +125,7 @@ export const fetchTMDBShowFull = async (
   //instead, we used the 'aggregate_credits' for the full cast/crew history.
   //these use a different data structure than all other credits, so in order to
   //maintain a single pipeline for creating all our media (film, season, show),
+
   //we transform extended credits into the TMDBCreditsData our factories expect:
   const creditsData: TMDBCreditsData = formatTMDBShowCredits(aggregate_credits);
 
@@ -196,7 +197,6 @@ export const updateShowEntry = async (showEntry: Show) => {
       //have incomplete seasons.
       if (seasonDiff > 0 || missingSeasonData) {
         const newSeasonsData: SeasonData[] = newShowData.seasons;
-        console.log(newSeasonsData);
         const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
         );

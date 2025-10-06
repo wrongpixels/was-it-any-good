@@ -4,6 +4,9 @@ export const tmdbPaths = {
   films: {
     base: '/movie',
     byTMDBId: (id: string | number) => `${tmdbPaths.films.base}/${id}`,
+    //a single fetch that appends credits
+    withCredits: (id: string | number) =>
+      `${tmdbPaths.films.base}/${id}?append_to_response=credits`,
     credits: (id: string | number) => `${tmdbPaths.films.byTMDBId(id)}/credits`,
   },
   shows: {
