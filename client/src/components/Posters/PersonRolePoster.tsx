@@ -11,6 +11,11 @@ interface PersonPagePosterProps {
 const PersonRolePoster = ({
   mediaResponse,
 }: PersonPagePosterProps): JSX.Element => {
+  console.log(
+    mediaResponse.indexMedia?.rating,
+    mediaResponse.indexMedia?.baseRating,
+    mediaResponse.indexMedia?.voteCount
+  );
   return (
     <VerticalMediaPoster
       url={buildMediaLink(mediaResponse)}

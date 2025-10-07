@@ -37,7 +37,6 @@ const VerticalMediaPoster = ({
         <span className="text-xs text-gray-500 text-center flex h-full align-middle items-center justify-center -translate-y-1 py-1">
           <span className={'line-clamp-1 leading-tight w-35'}>{name}</span>
         </span>
-
         <div className="flex-1 relative">
           <LazyImage
             src={imageLinker.getPosterImage(image)}

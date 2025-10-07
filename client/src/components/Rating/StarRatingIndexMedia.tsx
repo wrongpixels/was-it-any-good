@@ -24,7 +24,7 @@ const StarRatingIndexMedia = ({
 }: StarRatingIndexMediaProps) => {
   return (
     <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500">
-      {rating ? (
+      {rating > 0 ? (
         <div
           title={`WIAG Score: ${rating}${userRating ? `\nYour rating: ${userRating.userScore}` : ''} `}
           className="flex flex-row items-center gap-2.5"

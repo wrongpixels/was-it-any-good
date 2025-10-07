@@ -13,6 +13,7 @@ import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import MediaMissing from '../Media/MediaMissing';
 import ErrorPage from '../Common/Status/ErrorPage';
 import PersonDetails from './PersonDetails';
+import PersonDescription from './PersonDescription';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -68,6 +69,7 @@ const PersonPage = (): JSX.Element | null => {
         </div>
         <div className="flex-1 border-l border-gray-200 md:ml-10 pl-4 overflow-auto">
           <div className="flex flex-col gap-2 -mt-2">
+            <PersonDescription text={person.description} className="mt-1" />
             {person.sortedRoles?.mediaByRole.map(
               (media: AuthorMedia, index: number) => (
                 <PersonRoleCredits
