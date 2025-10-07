@@ -23,7 +23,7 @@ const DisplayRating = ({
 
   return (
     <div
-      title={`Rating: ${rating.toString()}`}
+      title={rating > 1 ? `Rating: ${rating.toString()}` : 'Not enough ratings'}
       className={`${mergeClassnames('flex', props.className)}`}
     >
       <div className="relative">
