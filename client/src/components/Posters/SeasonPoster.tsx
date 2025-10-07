@@ -23,7 +23,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
         </div>
       </div>
       <LazyImage
-        variant={ImageVariant.inline}
+        variant={ImageVariant.default}
         src={imageLinker.getPosterImage(media.image)}
         alt={media.name}
         title={media.name}
