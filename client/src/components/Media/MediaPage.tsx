@@ -31,6 +31,7 @@ import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
+import UserLists from '../UserLists/UserLists';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -141,9 +142,10 @@ const MediaPage = ({
             )}
           </div>
         </span>
-        <span className="w-50 hidden md:block">
+        <div className="flex-col w-50 hidden md:flex gap-3">
           <MediaPagePoster media={media} />
-        </span>
+          <UserLists />
+        </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">
