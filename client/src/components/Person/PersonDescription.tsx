@@ -7,7 +7,7 @@ import { TxtParentNodeWithSentenceNodeContent } from 'sentence-splitter';
 
 const baseClassName: string = 'text-sm text-gray-400 italic';
 
-//we remove the Wikipedia sentence from the description.
+//we remove the Wikipedia sentence from the description and only show 2 sentences max.
 export const cleanDescription = (text: string): string => {
   const nodes: TxtParentNodeWithSentenceNodeContent[] = split(text);
 

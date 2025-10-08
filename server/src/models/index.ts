@@ -10,8 +10,10 @@ import MediaRole from './people/mediaRole';
 import User from './users/user';
 import Session from './users/session';
 import IndexMedia from './media/indexMedia';
-import { sequelize } from '../util/db/initialize-db';
+//import { sequelize } from '../util/db/initialize-db';
 import { PRODUCTION } from '../util/config';
+import UserMediaList from './users/userMediaList';
+import UserMediaListItem from './users/userMediaListItem';
 
 Person.hasMany(MediaRole, {
   foreignKey: 'personId',
@@ -29,8 +31,10 @@ Session.associate();
 Rating.associate();
 Season.associate();
 IndexMedia.associate();
+UserMediaList.associate();
+UserMediaListItem.associate();
 if (!PRODUCTION) {
-  sequelize.sync({ alter: false, force: false });
+  // sequelize.sync({ alter: false, force: false });
 }
 
 export {
@@ -46,4 +50,6 @@ export {
   User,
   Session,
   IndexMedia,
+  UserMediaList,
+  UserMediaListItem,
 };
