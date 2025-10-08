@@ -142,7 +142,7 @@ const MediaPage = ({
             )}
           </div>
         </span>
-        <div className="flex-col w-50 hidden md:flex gap-3">
+        <div className="flex-col w-50 hidden md:flex gap-2">
           <MediaPagePoster media={media} />
           <UserLists />
         </div>

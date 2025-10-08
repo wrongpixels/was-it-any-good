@@ -1,9 +1,13 @@
 import { JSX, memo } from 'react';
 import { OptStringProps } from '../../types/common-props-types';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
-import { CLEAN_WIKIPEDIA_DESCRIPTION } from '../../constants/format-constants';
+import {
+  CLEAN_WIKIPEDIA_DESCRIPTION,
+  CLEAN_WIKIPEDIA_PARTIAL_DESCRIPTION,
+} from '../../constants/format-constants';
 import { split } from 'sentence-splitter';
 import { TxtParentNodeWithSentenceNodeContent } from 'sentence-splitter';
+import { toFirstUpperCase } from '../../../../shared/helpers/format-helper';
 
 const baseClassName: string = 'text-sm text-gray-400 italic';
 
@@ -12,12 +16,17 @@ export const cleanDescription = (text: string): string => {
   const nodes: TxtParentNodeWithSentenceNodeContent[] = split(text);
 
   const sentences: string[] = nodes
-    .filter((node) => node.type === 'Sentence')
-    .map((node) => node.raw.trim());
+    .filter(
+      (node: TxtParentNodeWithSentenceNodeContent) => node.type === 'Sentence'
+    )
+    .map((node: TxtParentNodeWithSentenceNodeContent) => node.raw.trim());
 
   return sentences
-    .filter((s) => !s.includes(CLEAN_WIKIPEDIA_DESCRIPTION))
+    .filter((s: string) => !s.includes(CLEAN_WIKIPEDIA_DESCRIPTION))
     .slice(0, 2)
+    .map((s: string) =>
+      s.replace(/\u00A0/g, ' ').replace(CLEAN_WIKIPEDIA_PARTIAL_DESCRIPTION, '')
+    )
     .join(' ')
     .trim();
 };
@@ -30,7 +39,7 @@ const PersonDescription = ({
   }
   return (
     <div className={mergeClassnames(baseClassName, className)}>
-      {cleanDescription(text)}
+      {toFirstUpperCase(cleanDescription(text))}
     </div>
   );
 };
