@@ -1,39 +1,23 @@
 import { JSX } from 'react';
-import { PersonResponse } from '../../../../shared/types/models';
-import {
-  formatDate,
-  getAge,
-  tryAddParenthesis,
-} from '../../../../shared/helpers/format-helper';
 import CountryFlags from '../Media/Sections/MediaCountryFlags';
-import { CountryCode } from '../../../../shared/types/countries';
 import React from 'react';
+import { PersonDetailsValues } from '../../utils/person-details-builder';
 
 interface PersonDetailsProps {
-  person: PersonResponse;
+  personValues: PersonDetailsValues;
 }
 
-const PersonDetails = ({ person }: PersonDetailsProps): JSX.Element | null => {
-  if (!person) {
+const PersonDetails = ({
+  personValues,
+}: PersonDetailsProps): JSX.Element | null => {
+  if (!personValues) {
     return null;
   }
   return (
     <div className="flex flex-col gap-2">
-      <BornSection
-        title="Born"
-        born={person.birthDate}
-        death={person.deathDate}
-      />
-      <DeathSection
-        title="Death"
-        born={person.birthDate}
-        death={person.deathDate}
-      />
-      <BirthPlaceSection
-        title="Place of Birth"
-        text={person.birthPlace}
-        countryCodes={person.country}
-      />
+      <Section title="Born" text={personValues.displayBornDate} />
+      <Section title="Death" text={personValues.displayDeathDate} />
+      <BirthPlaceSection title="Place of Birth" personValues={personValues} />
     </div>
   );
 };
@@ -44,41 +28,32 @@ interface SectionProps {
 }
 
 interface BirthPlaceProps extends SectionProps {
-  countryCodes?: CountryCode[];
+  personValues: PersonDetailsValues;
 }
 
 const BirthPlaceSection = ({
   title,
-  text,
-  countryCodes,
+  personValues,
 }: BirthPlaceProps): JSX.Element | null => {
-  if (!title || !text) {
+  if (!personValues.displayParts) {
     return null;
   }
-
-  //if we have more than 3 parts in the location (city, region, state, country)
-  //we just keep the 1st (city) + last 2 (state, country)
-  const parts = text.split(', ');
-  const displayBirthPlace =
-    parts.length <= 3 ? text : `${parts[0]}, ${parts.slice(-2).join(', ')}`;
-
-  const displayParts = displayBirthPlace.split(', ');
 
   return (
     <span className="flex flex-col text-sm">
       <span className="font-bold text-gray-500">{title}:</span>
       <span className="text-gray-600 flex flex-wrap items-baseline gap-1 break-words">
-        {displayParts.slice(0, -1).map((part, index) => (
+        {personValues.displayParts.slice(0, -1).map((part, index) => (
           <React.Fragment key={index}>{part}, </React.Fragment>
         ))}
         {/* we want the flag to wrap with the country so it doesn't look odd 
         when there's a line break only for the flag*/}
         <span className="whitespace-nowrap flex flex-row gap-1.5">
-          {displayParts[displayParts.length - 1]}
-          {countryCodes && (
+          {personValues.displayParts[personValues.displayParts.length - 1]}
+          {personValues.countryCodes && (
             <>
               <CountryFlags
-                countryCodes={countryCodes}
+                countryCodes={personValues.countryCodes}
                 className="inline-flex pt-0 self-start"
               />
             </>
@@ -87,47 +62,6 @@ const BirthPlaceSection = ({
       </span>
     </span>
   );
-};
-
-interface AgeSectionProps extends SectionProps {
-  born?: string;
-  death?: string;
-}
-
-const BornSection = ({
-  title,
-  born,
-  death,
-}: AgeSectionProps): JSX.Element | null => {
-  if (!title || !born) {
-    return null;
-  }
-  const formattedDate: string = formatDate(born);
-  const age: number | null = death ? null : getAge(born);
-  const displayAge: string = !age ? '' : tryAddParenthesis(`age ${age}`);
-  const displayBorn: string = !displayAge
-    ? formattedDate
-    : `${formattedDate} ${displayAge}`;
-
-  return <Section title={title} text={displayBorn} />;
-};
-
-const DeathSection = ({
-  title,
-  born,
-  death,
-}: AgeSectionProps): JSX.Element | null => {
-  if (!title || !death || !born) {
-    return null;
-  }
-  const formattedDate: string = formatDate(death);
-  const age: number | null = getAge(born, death);
-  const displayAge: string = !age ? '' : tryAddParenthesis(`aged ${age}`);
-  const displayBorn: string = !displayAge
-    ? formattedDate
-    : `${formattedDate} ${displayAge}`;
-
-  return <Section title={title} text={displayBorn} />;
 };
 
 const Section = ({ title, text }: SectionProps): JSX.Element | null => {

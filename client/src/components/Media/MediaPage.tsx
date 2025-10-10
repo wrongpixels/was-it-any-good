@@ -43,7 +43,7 @@ const MediaPage = ({
 }: MediaPage): JSX.Element | null => {
   const navigate = useNavigate();
   const { id: mediaId } = useParams<{ id: string }>();
-  const { isLoginPending }: AuthContextValues = useAuth();
+  const { isLoginPending /*, session*/ }: AuthContextValues = useAuth();
   const {
     data: media,
     isFetching,
@@ -141,9 +141,10 @@ const MediaPage = ({
             )}
           </div>
         </span>
-        <span className="w-50 hidden md:block">
+        <div className="flex-col w-50 hidden md:flex gap-2">
           <MediaPagePoster media={media} />
-        </span>
+          {/* session && <UserLists />*/}
+        </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">

@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import { PathMatch, useMatch } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import { setTitle } from '../../utils/page-info-setter';
@@ -14,6 +14,10 @@ import MediaMissing from '../Media/MediaMissing';
 import ErrorPage from '../Common/Status/ErrorPage';
 import PersonDetails from './PersonDetails';
 import PersonDescription from './PersonDescription';
+import {
+  buildPersonDetails,
+  PersonDetailsValues,
+} from '../../utils/person-details-builder';
 
 const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
@@ -41,8 +45,7 @@ const PersonPage = (): JSX.Element | null => {
     }
     return <ErrorPage context={'loading Person'} error={error?.message} />;
   }
-  const mainRoles: string | undefined =
-    person.sortedRoles?.mainRoles.join(', ');
+  const personDetailsValues: PersonDetailsValues = buildPersonDetails(person);
   setTitle(person.name);
 
   return (
@@ -58,18 +61,21 @@ const PersonPage = (): JSX.Element | null => {
               title={person.name}
               src={person.image}
               alt={person.name}
-              extraInfo={mainRoles}
+              extraInfo={personDetailsValues.mainRoles}
             />
           </div>
           {person.addedDetails && (
             <div className="mt-3 w-full">
-              <PersonDetails person={person} />
+              <PersonDetails personValues={personDetailsValues} />
             </div>
           )}
         </div>
         <div className="flex-1 border-l border-gray-200 md:ml-10 pl-4 overflow-auto">
           <div className="flex flex-col gap-2 -mt-2">
-            <PersonDescription text={person.description} className="mt-1" />
+            <PersonDescription
+              text={personDetailsValues.description}
+              className="mt-1"
+            />
             {person.sortedRoles?.mediaByRole.map(
               (media: AuthorMedia, index: number) => (
                 <PersonRoleCredits
@@ -86,4 +92,4 @@ const PersonPage = (): JSX.Element | null => {
   );
 };
 
-export default PersonPage;
+export default memo(PersonPage);

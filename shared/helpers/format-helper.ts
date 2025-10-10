@@ -1,5 +1,7 @@
 import { formatCountry } from "../types/countries";
 
+export const startsWithVowel = (text: string) => /^[aeiou]/i.test(text);
+
 export const getYearString = (
   dateString: string | null | undefined
 ): string => {

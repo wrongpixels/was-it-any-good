@@ -25,7 +25,7 @@ const RatingPoster = ({
   if (isNaN(rating) || !media) {
     return null;
   }
-  const ratingTitle: string = `WIAG rating: ${rating}`;
+  const ratingTitle: string = `WIAG score: ${rating}`;
   const userRatingTitle: string = media.userRating
     ? `\nYour rating: ${media.userRating.userScore}`
     : '';
