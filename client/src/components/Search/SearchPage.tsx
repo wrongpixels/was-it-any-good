@@ -25,6 +25,8 @@ import LoadingCards from './Loading/LoadingSearch';
 import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
 import { OVERRIDE_SORT_SEARCH } from '../../constants/search-browse-constants';
 import { getDropdownValue } from '../../../../shared/types/common';
+import Button from '../Common/Custom/Button';
+import { IndexMediaResults } from '../../../../shared/types/models';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -66,8 +68,10 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
     getDropdownValue(searchDropdown.value)
   );
 
+  const searchResults: IndexMediaResults | undefined = undefined;
+
   const {
-    data: searchResults,
+    data: currentSearchResults,
     isFetching,
     isLoading,
     isError,
@@ -185,6 +189,11 @@ const SearchPage = ({ isHome }: SearchPageProps): JSX.Element | null => {
             )}
           </span>
         </>
+      )}
+      {isHome && (
+        <div>
+          <Button>+ See more</Button>
+        </div>
       )}
     </div>
   );
