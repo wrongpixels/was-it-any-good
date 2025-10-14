@@ -4,11 +4,12 @@ import useListNavigation from '../../../hooks/use-list-navigation';
 import SuggestionPoster from '../../Posters/SuggestionPoster';
 import FirstSearchRow from './Rows/FirstSearchRow';
 import SearchRow from './Rows/SearchRow';
-import { routerPaths, urlFromIndexMedia } from '../../../utils/url-helper';
+import { urlFromIndexMedia } from '../../../utils/url-helper';
 import LoadingSearchRow from './Rows/LoadingSearchRow';
 import Separator from '../../Common/Separator';
 
 interface SearchResultsProps {
+  handleSearch: (value: string | null) => void;
   searchValue: string;
   isLoading: boolean;
   searchResults: IndexMediaData[] | undefined;
@@ -17,6 +18,7 @@ interface SearchResultsProps {
 }
 
 const SearchResults = ({
+  handleSearch,
   searchValue,
   isLoading,
   onClose,
@@ -43,8 +45,11 @@ const SearchResults = ({
   const navigateToResult = (targetIndex: number | null): void => {
     if (targetIndex && targetIndex > 0) {
       navigateTo(urlFromIndexMedia(searchResults[targetIndex - 1]));
-    } else if (targetIndex === 0) {
-      navigateTo(routerPaths.search.byTerm(searchValue));
+    }
+    //if we're on row 0, we search
+    else if (targetIndex === 0) {
+      cleanField();
+      handleSearch(searchValue);
     }
   };
   let mediaToShow: IndexMediaData | null = null;

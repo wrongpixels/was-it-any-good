@@ -72,6 +72,22 @@ export enum TMDBSearchType {
 export const isValidSearchType = (value: string): boolean =>
   searchTypes.includes(value);
 
+export const searchTypeArrayToDropdown = (
+  searchTypes: SearchType[]
+): SearchDropDown => {
+  if (searchTypes.length === 1) {
+    switch (searchTypes[0]) {
+      case SearchType.Film:
+        return SearchDropDown.Films;
+      case SearchType.Show:
+        return SearchDropDown.Shows;
+      default:
+        return SearchDropDown.All;
+    }
+  }
+  return SearchDropDown.All;
+};
+
 export const mediaTypeToSearchType = (
   mediaType: MediaType | undefined
 ): SearchType | null | undefined => {

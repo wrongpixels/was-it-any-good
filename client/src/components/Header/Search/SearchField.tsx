@@ -5,6 +5,8 @@ import SearchIcon from '../../Common/Icons/SearchIcon';
 import { InputField } from '../../Common/Custom/InputField';
 import { styles } from '../../../constants/tailwind-styles';
 import useSuggestions from '../../../hooks/use-suggestions';
+import { routerPaths } from '../../../utils/url-helper';
+import { useNavigate } from 'react-router-dom';
 
 interface SearchFieldProps {
   fieldName: string;
@@ -17,7 +19,7 @@ const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
   });
   const { suggestions, isFetching, isDropdownVisible, setDropdownVisible } =
     useSuggestions(searchField.value);
-
+  const navigate = useNavigate();
   return (
     <div className="flex gap-2">
       <InputField
@@ -31,6 +33,11 @@ const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
       {searchField.value && isDropdownVisible && (
         <div className="absolute translate-y-8 -translate-x-2.5">
           <SearchResults
+            handleSearch={(value: string | null) => {
+              if (value) {
+                navigate(routerPaths.search.byTerm(value));
+              }
+            }}
             searchResults={suggestions}
             isLoading={isFetching}
             searchValue={searchField.value}

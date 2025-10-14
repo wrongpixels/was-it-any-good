@@ -1,5 +1,10 @@
 import { JSX } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import MediaPage from './components/Media/MediaPage';
 import { MediaType } from '../../shared/types/media';
 import Header from './components/Header/Header';
@@ -19,6 +24,7 @@ import {
 import Footer from './components/Footer/Footer';
 import SignUpOverlay from './components/Overlay/SignUpOverlay';
 import useScrollToTop from './hooks/use-scroll-to-top';
+import HomePage from './components/Search/HomePage';
 
 const App = (): JSX.Element => {
   return (
@@ -45,6 +51,7 @@ const App = (): JSX.Element => {
 const AppBody = (): JSX.Element => {
   useScrollToTop();
   const { isLoginPending } = useAuth();
+  const location = useLocation();
 
   if (isLoginPending) {
     return <SigningInPage />;
@@ -53,8 +60,11 @@ const AppBody = (): JSX.Element => {
   return (
     <div className="flex flex-col h-full min-h-0 p-8 pt-4 ">
       <Routes>
-        <Route path="/" element={<SearchPage isHome={true} />} />
-        <Route path={routerPaths.search.base} element={<SearchPage />} />
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path={routerPaths.search.base}
+          element={<SearchPage key={location.search} />}
+        />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
 
         {browsePageRoutes.map((browseRoute: BrowsePageRouterData) => (
