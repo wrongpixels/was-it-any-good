@@ -7,7 +7,7 @@ export const useTrendingQuery = (
 ): UseQueryResult<IndexMediaResults, Error> => {
   return useQuery({
     queryKey: ['trending', page],
-    queryFn: getTrending,
+    queryFn: () => getTrending(page),
     select: (data: IndexMediaResults) => {
       data.indexMedia = data.indexMedia.sort(
         (a, b) => b.popularity - a.popularity

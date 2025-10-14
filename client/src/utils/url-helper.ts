@@ -75,8 +75,10 @@ export const apiPaths = {
     byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
   },
 
-  trending: `${API_BASE}/trending`,
-
+  trending: {
+    base: `${API_BASE}/trending`,
+    byPage: (page: number) => `${apiPaths.trending.base}?page=${page}`,
+  },
   browse: {
     base: `${API_BASE}/browse`,
     byQuery: (query: string) => `${apiPaths.browse.base}?${query}`,
