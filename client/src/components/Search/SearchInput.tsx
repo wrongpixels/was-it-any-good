@@ -44,6 +44,7 @@ const SearchInputField = memo(
             isDropdownVisible && (
               <div className="absolute translate-y-10 z-1">
                 <SearchResults
+                  handleSearch={handleSearch}
                   searchResults={suggestions}
                   isLoading={isFetching}
                   searchValue={searchField.value}
