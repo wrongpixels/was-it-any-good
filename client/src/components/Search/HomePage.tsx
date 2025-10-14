@@ -53,11 +53,16 @@ const HomePage = (): JSX.Element | null => {
     isError,
   } = useTrendingQuery(pageToFetch);
 
+  //to make the first fetch immediate and avoid the lag of useEffect
+  if (!searchResults && fetchedSearchResults) {
+    setSearchResults(fetchedSearchResults);
+  }
+
   //an effect that assigns the just fetched results to the final display ones.
   useEffect(() => {
     if (fetchedSearchResults) {
       setSearchResults((prevResults) => {
-        //for the very first fetch we just set the new results.
+        //for the very first fetch, it still not set, we just set the new results.
         if (!prevResults || fetchedSearchResults.page === 1) {
           return fetchedSearchResults;
         }
