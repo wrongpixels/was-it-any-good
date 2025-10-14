@@ -58,9 +58,6 @@ export const extractURLParams = (
     overrideParams?.sortBy ||
     stringToSortBy(req.query[UPARAM_SORT_BY]?.toString()) ||
     DEF_SORT_BY;
-
-  console.log(sortBy);
-
   //DESC for strings is actually Z -> A, not really ideal for a default sorting.
   //as all other SortBy are numbers, we simply invert this one
   const defaultSortDir: SortDir =

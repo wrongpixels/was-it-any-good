@@ -148,7 +148,7 @@ const HomePage = (): JSX.Element | null => {
       <Instructions />
       <span className="w-full -mt-4">
         <EntryTitle
-          title={'Trending on TMDB'}
+          title={'Trending Today'}
           icon={
             isFetching ? (
               <IconLoadingSpinner className="mx-1 h-4.5" />

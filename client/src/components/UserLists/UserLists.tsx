@@ -9,7 +9,7 @@ interface UserListsProps extends OptClassNameProps {
 }
 
 const UserLists = ({
-  userLists,
+  //userLists,
   className: inheritedClassname,
 }: UserListsProps): JSX.Element | null => {
   return (

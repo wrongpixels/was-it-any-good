@@ -17,16 +17,12 @@ export interface TMDBShowSearchData extends TMDBSearchResult {
 }
 export type TMDBSearchData = TMDBFilmSearchData | TMDBFilmSearchData;
 
-//a version of fetchSearch that doesn't use parameters and just gets page 1
-//of discover of both shows and films
-export const fetchTrendingFromTMDBAndParse = async (
-  page: number = 1
-): Promise<
+export const fetchTrendingFromTMDBAndParse = async (): Promise<
   [TMDBFilmSearchData | undefined, TMDBShowSearchData | undefined]
 > => {
   const [filmResponse, showResponse] = await Promise.all([
-    tmdbAPI.get<TMDBFilmSearchData>(tmdbPaths.trending.films(page.toString())),
-    tmdbAPI.get<TMDBShowSearchData>(tmdbPaths.trending.shows(page.toString())),
+    tmdbAPI.get<TMDBFilmSearchData>(tmdbPaths.trending.films()),
+    tmdbAPI.get<TMDBShowSearchData>(tmdbPaths.trending.shows()),
   ]);
 
   let filmData: TMDBFilmSearchData | undefined;
