@@ -95,9 +95,6 @@ const HomePage = (): JSX.Element | null => {
     name: 'searchType',
     onChanged: toggleParam,
   });
-  const searchType: SearchType = searchDropToType(
-    getDropdownValue(searchDropdown.value)
-  );
 
   const handleSearch = (newSearch: string | null) => {
     if (!newSearch) {
@@ -111,6 +108,11 @@ const HomePage = (): JSX.Element | null => {
       });
       return;
     }
+    const searchType: SearchType = searchDropToType(
+      getDropdownValue(searchDropdown.value)
+    );
+
+    console.log(searchType);
     //we navigate to SearchPage with the new term and selected type.
     navigateToNewTerm({
       newTerm: newSearch,
