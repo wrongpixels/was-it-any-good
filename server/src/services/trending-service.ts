@@ -12,19 +12,21 @@ import { tmdbPaths } from '../util/url-helper';
 export interface TMDBFilmSearchData extends TMDBSearchResult {
   films: TMDBIndexFilm[];
 }
-
 export interface TMDBShowSearchData extends TMDBSearchResult {
   shows: TMDBIndexShow[];
 }
+export type TMDBSearchData = TMDBFilmSearchData | TMDBFilmSearchData;
+
 //a version of fetchSearch that doesn't use parameters and just gets page 1
 //of discover of both shows and films
-
-export const fetchTrendingFromTMDBAndParse = async (): Promise<
+export const fetchTrendingFromTMDBAndParse = async (
+  page: number = 1
+): Promise<
   [TMDBFilmSearchData | undefined, TMDBShowSearchData | undefined]
 > => {
   const [filmResponse, showResponse] = await Promise.all([
-    tmdbAPI.get<TMDBFilmSearchData>(tmdbPaths.discover.films()),
-    tmdbAPI.get<TMDBShowSearchData>(tmdbPaths.discover.shows()),
+    tmdbAPI.get<TMDBFilmSearchData>(tmdbPaths.trending.films(page.toString())),
+    tmdbAPI.get<TMDBShowSearchData>(tmdbPaths.trending.shows(page.toString())),
   ]);
 
   let filmData: TMDBFilmSearchData | undefined;

@@ -181,9 +181,9 @@ const HomePage = (): JSX.Element | null => {
       )}
 
       {searchResults && (
-        <div>
+        <div className="pt-2">
           <Button onClick={onSeeMore} disabled={!canLoadMore || isFetching}>
-            + See more
+            {'+ See more'}
           </Button>
         </div>
       )}
