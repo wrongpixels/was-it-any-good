@@ -76,7 +76,6 @@ const useUrlQueryManager = ({
         .toString();
       return url;
     },
-
     [urlParams, queryTypeManager, overrideParams, queryBuilder]
   );
 

@@ -32,9 +32,8 @@ router.get(
       let shows: TMDBIndexShow[] = [];
       let searchResult: TMDBSearchResult | null = null;
 
-      //unlike the search controller, we don't need pagination.
       //we list the top 21 trending media items of the moment, combine them and return them.
-
+      //
       const [trendingFilms, trendingShows] =
         await fetchTrendingFromTMDBAndParse();
 
@@ -83,7 +82,7 @@ router.get(
 
       //we find them again to get the show/film ids and the genres of the
       //IndexMedia entries of media already in our db.
-      const populatedEntries = await IndexMedia.scope(
+      const populatedEntries: IndexMedia[] = await IndexMedia.scope(
         'withMediaAndGenres'
       ).findAll({
         where: {

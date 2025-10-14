@@ -19,6 +19,7 @@ import {
 import Footer from './components/Footer/Footer';
 import SignUpOverlay from './components/Overlay/SignUpOverlay';
 import useScrollToTop from './hooks/use-scroll-to-top';
+import HomePage from './components/Search/HomePage';
 
 const App = (): JSX.Element => {
   return (
@@ -53,7 +54,7 @@ const AppBody = (): JSX.Element => {
   return (
     <div className="flex flex-col h-full min-h-0 p-8 pt-4 ">
       <Routes>
-        <Route path="/" element={<SearchPage isHome={true} />} />
+        <Route path="/" element={<HomePage />} />
         <Route path={routerPaths.search.base} element={<SearchPage />} />
         <Route path={routerPaths.browse.base} element={<BrowsePage />} />
 
