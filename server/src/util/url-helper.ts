@@ -50,7 +50,7 @@ export const tmdbPaths = {
   trending: {
     base: '/trending',
     bySearchType: (searchType: TMDBSearchType, page: string = '1') =>
-      `${tmdbPaths.trending.base}/${searchType}/week?&page=${page || 1}`,
+      `${tmdbPaths.trending.base}/${searchType}/day?&page=${page || 1}`,
     shows: (page?: string) =>
       tmdbPaths.trending.bySearchType(TMDBSearchType.TV, page),
     films: (page?: string) =>

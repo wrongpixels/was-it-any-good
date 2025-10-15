@@ -26,6 +26,7 @@ import { OVERRIDE_SORT_SEARCH } from '../../constants/search-browse-constants';
 import { getDropdownValue } from '../../../../shared/types/common';
 import Button from '../Common/Custom/Button';
 import { IndexMediaResults } from '../../../../shared/types/models';
+import IconAdd from '../Common/Icons/IconAdd';
 
 //HomePage uses state to accumulate results, allowing users to load more instead of using pages.
 //the search bar navigates the user to SearchPage to handle actual search queries.
@@ -187,10 +188,20 @@ const HomePage = (): JSX.Element | null => {
         </span>
       )}
 
-      {searchResults && (
+      {searchResults && canLoadMore && (
         <div className="pt-2">
-          <Button onClick={onSeeMore} disabled={!canLoadMore || isFetching}>
-            {'+ See more'}
+          <Button
+            className="h-9 pb-0.5 gap-1"
+            onClick={onSeeMore}
+            disabled={isFetching}
+          >
+            {!isFetching ? (
+              <IconAdd width={17} />
+            ) : (
+              <IconLoadingSpinner className="text-blue-100" />
+            )}
+
+            {'See more'}
           </Button>
         </div>
       )}
