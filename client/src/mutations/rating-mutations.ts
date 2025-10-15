@@ -21,12 +21,16 @@ import {
   MediaQueryManager,
   createRatingQueryManager,
 } from '../utils/media-query-manager';
+import {
+  MUTATION_KEY_VOTE,
+  QUERY_KEY_TRENDING,
+} from '../constants/tanstack-key-constants';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['vote'],
+    mutationKey: [MUTATION_KEY_VOTE],
     mutationFn: (rating: CreateRating) => voteMedia(rating),
     onMutate: (rating: CreateRating) => {
       //we do an optimistic update calculating what the new average should be
@@ -61,7 +65,7 @@ export const useVoteMutation = () => {
     onSuccess: (ratingResponse: CreateRatingResponse) => {
       //we invalidate the cache of HomePage
       queryClient.removeQueries({
-        queryKey: ['trending'],
+        queryKey: [QUERY_KEY_TRENDING],
         exact: false,
       });
       //the server returns the new userRating data with updated media average rating and voteCount
@@ -134,7 +138,7 @@ export const useUnvoteMutation = () => {
     onSuccess: () => {
       //we REMOVE HomePage cache
       queryClient.removeQueries({
-        queryKey: ['trending'],
+        queryKey: [QUERY_KEY_TRENDING],
         exact: false,
       });
     },
