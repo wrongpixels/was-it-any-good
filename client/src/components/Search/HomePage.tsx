@@ -195,10 +195,11 @@ const HomePage = (): JSX.Element | null => {
             onClick={onSeeMore}
             disabled={isFetching}
           >
-            {!isFetching ? (
-              <IconAdd width={17} />
-            ) : (
+            {isFetching ||
+            (fetchedSearchResults?.page === 2 && searchResults.page === 1) ? (
               <IconLoadingSpinner className="text-blue-100" />
+            ) : (
+              <IconAdd width={17} />
             )}
 
             {'See more'}
