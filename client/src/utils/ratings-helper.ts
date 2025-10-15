@@ -12,10 +12,15 @@ import {
   calculateShowAverage,
   calculateAverage,
 } from '../../../shared/util/rating-average-calculator';
+import {
+  QUERY_KEY_MEDIA,
+  QUERY_KEY_RATING,
+  QUERY_KEY_TMDB_MEDIA,
+} from '../constants/query-key-constants';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
-  'rating',
+  QUERY_KEY_RATING,
   `${mediaType.toLowerCase()}-${mediaId}`,
 ];
 
@@ -33,11 +38,15 @@ export const getActiveMediaKey = (
     tmdb === undefined
       ? buildPathUrl().includes(`tmdb/${mediaType.toLowerCase()}/${mediaId}`)
       : tmdb;
-  return [isTmdb ? 'tmdbMedia' : 'media', mediaType, String(mediaId)];
+  return [
+    isTmdb ? QUERY_KEY_TMDB_MEDIA : QUERY_KEY_MEDIA,
+    mediaType,
+    String(mediaId),
+  ];
 };
 
 export const getMediaKey = (mediaType: string, mediaId: string | number) => [
-  'media',
+  QUERY_KEY_MEDIA,
   mediaType,
   String(mediaId),
 ];
@@ -45,7 +54,7 @@ export const getMediaKey = (mediaType: string, mediaId: string | number) => [
 export const getTmdbMediaKey = (
   mediaType: string,
   tmdbId: string | number = -1
-): string[] => ['tmdbMedia', mediaType, String(tmdbId)];
+): string[] => [QUERY_KEY_TMDB_MEDIA, mediaType, String(tmdbId)];
 
 export const addVoteToMedia = (
   media: MediaResponse,

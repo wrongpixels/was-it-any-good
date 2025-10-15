@@ -31,6 +31,8 @@ import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -41,6 +43,7 @@ const MediaPage = ({
   tmdb = false,
   mediaType,
 }: MediaPage): JSX.Element | null => {
+  const queryClient: QueryClient = useQueryClient();
   const navigate = useNavigate();
   const { id: mediaId } = useParams<{ id: string }>();
   const { isLoginPending /*, session*/ }: AuthContextValues = useAuth();
@@ -59,6 +62,12 @@ const MediaPage = ({
   //created id page
   useEffect(() => {
     if (tmdb && media) {
+      //we invalidate the HomePage cache after a successful creation, as averages
+      //stored in placeholder IndexMedia might change due to our algorithm
+      queryClient.removeQueries({
+        queryKey: [QUERY_KEY_TRENDING],
+        exact: false,
+      });
       navigate(buildRouterMediaLink(media.mediaType, media.id), {
         replace: true,
       });
