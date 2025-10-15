@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getMyVotes } from '../services/my-votes-service';
 import { RatingResults } from '../../../shared/types/models';
-import { QUERY_KEY_MY_VOTES } from '../constants/tanstack-key-constants';
+import { QUERY_KEY_MY_VOTES } from '../constants/query-key-constants';
 
 export const useMyVotesQuery = (
   query: string

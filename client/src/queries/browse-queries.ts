@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getBrowseResults } from '../services/browse-service';
 import { IndexMediaResults } from '../../../shared/types/models';
-import { QUERY_KEY_BROWSE } from '../constants/tanstack-key-constants';
+import { QUERY_KEY_BROWSE } from '../constants/query-key-constants';
 
 export const useBrowseQuery = (
   query: string

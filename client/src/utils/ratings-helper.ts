@@ -16,7 +16,7 @@ import {
   QUERY_KEY_MEDIA,
   QUERY_KEY_RATING,
   QUERY_KEY_TMDB_MEDIA,
-} from '../constants/tanstack-key-constants';
+} from '../constants/query-key-constants';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [

@@ -24,7 +24,7 @@ import {
 import {
   MUTATION_KEY_VOTE,
   QUERY_KEY_TRENDING,
-} from '../constants/tanstack-key-constants';
+} from '../constants/query-key-constants';
 
 export const useVoteMutation = () => {
   const queryClient = useQueryClient();

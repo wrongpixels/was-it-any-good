@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { getSearch } from '../services/search-service';
 import { IndexMediaResults } from '../../../shared/types/models';
-import { QUERY_KEY_SEARCH } from '../constants/tanstack-key-constants';
+import { QUERY_KEY_SEARCH } from '../constants/query-key-constants';
 
 export const useSearchQuery = (
   searchQuery: string,

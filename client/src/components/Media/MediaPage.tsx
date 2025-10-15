@@ -32,7 +32,7 @@ import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEY_TRENDING } from '../../constants/tanstack-key-constants';
+import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 
 interface MediaPage {
   mediaType: MediaType;

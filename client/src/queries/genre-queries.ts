@@ -7,7 +7,7 @@ import {
 import { getGenreById } from '../services/genre-service';
 import { GenreResponse } from '../../../shared/types/models';
 import { combineQueryResults } from '../utils/query-helper';
-import { QUERY_KEY_GENRE } from '../constants/tanstack-key-constants';
+import { QUERY_KEY_GENRE } from '../constants/query-key-constants';
 
 //we need to know our genre names by id in the Browse Page before accessing our results and
 //and also when having no results at all. TansTack takes care of individually caching them,

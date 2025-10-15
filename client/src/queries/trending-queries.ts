@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { IndexMediaResults } from '../../../shared/types/models';
 import { getTrending } from '../services/trending-service';
-import { QUERY_KEY_TRENDING } from '../constants/tanstack-key-constants';
+import { QUERY_KEY_TRENDING } from '../constants/query-key-constants';
 
 export const useTrendingQuery = (
   page: number = 1
