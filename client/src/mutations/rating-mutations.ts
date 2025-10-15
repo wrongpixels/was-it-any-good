@@ -59,6 +59,11 @@ export const useVoteMutation = () => {
     },
     onError: (_err, _rating) => {},
     onSuccess: (ratingResponse: CreateRatingResponse) => {
+      //we invalidate the cache of HomePage
+      queryClient.removeQueries({
+        queryKey: ['trending'],
+        exact: false,
+      });
       //the server returns the new userRating data with updated media average rating and voteCount
       //Instead of invalidating the entire media query, que replace the fields in the cache
       const { ratingStats, ...ratingData } = ratingResponse;
@@ -125,6 +130,13 @@ export const useUnvoteMutation = () => {
         );
         queryManager.setMedia(updatedMedia);
       }
+    },
+    onSuccess: () => {
+      //we REMOVE HomePage cache
+      queryClient.removeQueries({
+        queryKey: ['trending'],
+        exact: false,
+      });
     },
   });
 };
