@@ -159,7 +159,9 @@ export const recalculateRating = (
     const newTotalVotes = totalVotes - 1;
     console.log(totalSum, newTotalVotes, previousRating);
     return {
-      rating: (totalSum - previousRating) / newTotalVotes,
+      //we round to replicate json response and avoid decimal flickering
+      rating:
+        Math.round(((totalSum - previousRating) / newTotalVotes) * 10) / 10,
       voteCount: newTotalVotes,
     };
   }
@@ -169,7 +171,8 @@ export const recalculateRating = (
     const newSum = totalSum - previousRating + userRating;
 
     return {
-      rating: newSum / totalVotes,
+      //we round to replicate json response and avoid decimal flickering
+      rating: Math.round((newSum / totalVotes) * 10) / 10,
       voteCount: totalVotes,
     };
   }
@@ -180,7 +183,8 @@ export const recalculateRating = (
   console.log('Votes are ', newTotalVotes);
 
   return {
-    rating: (totalSum + userRating) / newTotalVotes,
+    //we round to replicate json response and avoid decimal flickering
+    rating: Math.round(((totalSum + userRating) / newTotalVotes) * 10) / 10,
     voteCount: newTotalVotes,
   };
 };
