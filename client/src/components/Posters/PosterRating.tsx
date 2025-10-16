@@ -10,6 +10,8 @@ import {
 } from '../../constants/ratings-constants';
 import { styles } from '../../constants/tailwind-styles';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
+import DisplayRating from '../Rating/DisplayRating';
+import { formatRatingDate } from '../../../../shared/helpers/format-helper';
 
 interface RatingPosterProps {
   media: MediaResponse | SeasonResponse;
@@ -25,6 +27,15 @@ const RatingPoster = ({
   if (isNaN(rating) || !media) {
     return null;
   }
+  //to know if the season is not released yet
+  const releaseDate: Date | null = !media.releaseDate
+    ? null
+    : new Date(media.releaseDate);
+  const unreleased: boolean = !releaseDate ? false : new Date() < releaseDate;
+  const posterText: string = !releaseDate
+    ? 'Not released yet'
+    : `Available ${formatRatingDate(releaseDate)}`;
+
   const ratingTitle: string = `WIAG score: ${rating}`;
   const userRatingTitle: string = media.userRating
     ? `\nYour rating: ${media.userRating.userScore}`
@@ -36,11 +47,15 @@ const RatingPoster = ({
     <div className="flex flex-col items-center mt-1 ">
       <div className={`relative ${isSeason ? 'h-6' : 'h-7'}`}>
         <div className="text-gray-300">
-          <StarRating
-            starWidth={starWidth}
-            defaultRating={rating}
-            media={media}
-          />
+          {unreleased ? (
+            <DisplayRating rating={0} starWidth={starWidth} className="pt-1" />
+          ) : (
+            <StarRating
+              starWidth={starWidth}
+              defaultRating={rating}
+              media={media}
+            />
+          )}
         </div>
         <div
           className="absolute top-0 left-0 overflow-hidden"
@@ -48,7 +63,7 @@ const RatingPoster = ({
         ></div>
       </div>
 
-      {valid && rating > 0 ? (
+      {valid && !unreleased && rating > 0 ? (
         <div className="flex items-center justify-center gap-6 ">
           {!isSeason && (
             <div className={`w-6 ${styles.animations.zoomOnHover}`}>
@@ -90,7 +105,7 @@ const RatingPoster = ({
         <div
           className={`text-sm text-gray-400 text-center ${!isSeason ? 'py-2 ' : 'pt-2 pb-1 '}italic`}
         >
-          {NO_RATINGS}
+          {unreleased ? posterText : NO_RATINGS}
         </div>
       )}
     </div>

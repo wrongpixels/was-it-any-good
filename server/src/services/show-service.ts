@@ -151,7 +151,7 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  const fullUpdate: boolean = seasonDiff > 0 || episodeDiff > 0;
+  const fullUpdate: boolean = seasonDiff !== 0 || episodeDiff !== 0;
 
   //we only need a transaction for full updates.
   const transaction: Transaction | undefined = fullUpdate
@@ -187,11 +187,16 @@ export const updateShowEntry = async (showEntry: Show) => {
       //and we push to promises an updated cast and crew
       promises.push(buildCreditsAndGenres(showEntry, newShowData, transaction));
 
-      //then, we check for any existing Season that might be missing core data
+      //then, we check for any existing Season that might be missing core data or has a releaseDate
+      //set later than our last update
       const missingSeasonData: SeasonResponse | undefined =
         showEntry.seasons?.find(
           (s: SeasonResponse) =>
-            s.baseRating === -1 || s.image === DEF_IMAGE_MEDIA
+            s.baseRating <= 0 ||
+            s.image === DEF_IMAGE_MEDIA ||
+            (s.releaseDate &&
+              showEntry.updatedAt &&
+              new Date(s.releaseDate) > new Date(showEntry.updatedAt))
         );
       //we only rebuild seasons if new seasons or were found or if we
       //have incomplete seasons.
@@ -217,6 +222,7 @@ export const updateShowEntry = async (showEntry: Show) => {
           Season.bulkCreate(newSeasons, {
             updateOnDuplicate: [
               'baseRating',
+              'releaseDate',
               'popularity',
               'episodeCount',
               'image',
