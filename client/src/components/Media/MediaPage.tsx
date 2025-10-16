@@ -49,7 +49,7 @@ const MediaPage = ({
   const { isLoginPending /*, session*/ }: AuthContextValues = useAuth();
   const {
     data: media,
-    isFetching,
+    isLoading,
     isError,
     error,
   } = tmdb
@@ -77,7 +77,7 @@ const MediaPage = ({
   if (mediaId && isNaN(Number(mediaId))) {
     return <WrongIdFormatPage />;
   }
-  if (isFetching || isLoginPending || isRedirecting) {
+  if (isLoading || isLoginPending || isRedirecting) {
     return tmdb ? (
       <CreatingMediaPage text={mediaType} />
     ) : (
