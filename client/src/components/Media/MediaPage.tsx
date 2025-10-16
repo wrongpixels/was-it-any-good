@@ -50,6 +50,7 @@ const MediaPage = ({
   const {
     data: media,
     isLoading,
+    isFetching,
     isError,
     error,
   } = tmdb
@@ -77,7 +78,15 @@ const MediaPage = ({
   if (mediaId && isNaN(Number(mediaId))) {
     return <WrongIdFormatPage />;
   }
-  if (isLoading || isLoginPending || isRedirecting) {
+  if (
+    isLoading ||
+    isLoginPending ||
+    isRedirecting ||
+    (isFetching &&
+      media &&
+      media?.cast === undefined &&
+      media?.crew === undefined)
+  ) {
     return tmdb ? (
       <CreatingMediaPage text={mediaType} />
     ) : (
