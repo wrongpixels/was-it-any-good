@@ -16,21 +16,33 @@ import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { getYearNum } from '../../../shared/helpers/format-helper';
 
-export const createShow = (tmdb: TMDBShowData): ShowData => ({
-  ...DEF_SHOW,
-  ...createTMDBMediaBase(tmdb),
-  name: tmdb.name,
-  sortName: tmdb.name.trim(),
-  episodeCount: tmdb.number_of_episodes,
-  seasonCount: tmdb.number_of_seasons,
-  originalName: tmdb.original_name,
-  releaseDate: getAirDate(tmdb.first_air_date),
-  lastAirDate: getAirDate(tmdb.last_air_date),
-  runtime: tmdb.episode_run_time[0],
-  seasons: createSeasons(tmdb).filter(
-    (s: SeasonData) => s.releaseDate !== null
-  ),
-});
+export const createShow = (tmdb: TMDBShowData): ShowData => {
+  //we filter out seasons with null releaseDates or invalid ones.
+  //those mean not released + not enough data created.
+  const seasons = createSeasons(tmdb).filter((s: SeasonData) => {
+    if (!s.releaseDate) {
+      return false;
+    }
+    const date = new Date(s.releaseDate);
+    if (isNaN(date.getTime())) {
+      return false;
+    }
+    return true;
+  });
+  return {
+    ...DEF_SHOW,
+    ...createTMDBMediaBase(tmdb),
+    name: tmdb.name,
+    sortName: tmdb.name.trim(),
+    episodeCount: tmdb.number_of_episodes,
+    seasonCount: seasons.length,
+    originalName: tmdb.original_name,
+    releaseDate: getAirDate(tmdb.first_air_date),
+    lastAirDate: getAirDate(tmdb.last_air_date),
+    runtime: tmdb.episode_run_time[0],
+    seasons,
+  };
+};
 
 export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   ...createTMDBIndexBase(tmdb),

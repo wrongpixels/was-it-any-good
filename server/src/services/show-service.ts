@@ -151,7 +151,7 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  const fullUpdate: boolean = seasonDiff > 0 || episodeDiff > 0;
+  const fullUpdate: boolean = seasonDiff !== 0 || episodeDiff !== 0;
 
   //we only need a transaction for full updates.
   const transaction: Transaction | undefined = fullUpdate
