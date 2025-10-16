@@ -23,19 +23,13 @@ const PersonPage = (): JSX.Element | null => {
   const match: PathMatch | null = useMatch('/person/:id');
   const personId: string | undefined = match?.params.id;
 
-  const {
-    data: person,
-    isError,
-    isLoading,
-    isFetching,
-    error,
-  } = usePersonQuery(personId);
+  const { data: person, isError, isLoading, error } = usePersonQuery(personId);
 
   if (personId && isNaN(Number(personId))) {
     return <WrongIdFormatPage />;
   }
 
-  if (isFetching || isLoading) {
+  if (isLoading) {
     return <LoadingPage text="person" />;
   }
 
