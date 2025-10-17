@@ -390,14 +390,22 @@ class Media<
         this.voteCount === 0 &&
         this.baseRating <= 0 &&
         this.indexMedia.baseRating > 0;
+      const initialBaseRating: number = this.baseRating;
 
-      await this.update({
+      const updateValues: Partial<TAttributes> = {
         baseRating: this.indexMedia.baseRating,
-        voteCount: updateVoteCount ? 1 : this.voteCount,
-        rating: updateVoteCount ? this.indexMedia.baseRating : this.rating,
-        //to avoid TS errors
-      } as unknown as Partial<TAttributes>);
-      console.log('Updated baseRating to', this.baseRating);
+      } as unknown as Partial<TAttributes>;
+      if (updateVoteCount) {
+        updateValues.voteCount = 1;
+        updateValues.rating = this.indexMedia.baseRating;
+      }
+      await this.update(updateValues);
+      console.log(
+        'Updated baseRating from',
+        initialBaseRating,
+        'to',
+        this.baseRating
+      );
       if (updateVoteCount) {
         console.log('Media now has a valid base vote of', this.rating);
       }
@@ -469,7 +477,15 @@ class Media<
   static hooks() {
     return {
       afterUpdate: async (media: Show | Film) => {
-        await media.syncIndex();
+        const changed = media.changed();
+        //if our rating or voteCount has changed, we sync the indexMedia
+        if (
+          changed &&
+          (changed.includes('rating') || changed.includes('voteCount'))
+        ) {
+          console.log('Media rating or voteCount changed, syncing index.');
+          await media.syncIndex();
+        }
       },
       afterDestroy: async (media: Show | Film) => {
         await Media.removeIndex(media.indexId);
