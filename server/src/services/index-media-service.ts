@@ -90,7 +90,7 @@ export const bulkUpsertIndexMedia = async (
   transaction?: Transaction
 ): Promise<IndexMedia[]> => {
   return await IndexMedia.bulkCreate(indexMedia, {
-    updateOnDuplicate: ['popularity', 'name', 'image', 'baseRating'],
+    updateOnDuplicate: ['popularity', 'name', 'image' /*'baseRating'*/],
     returning: true,
     transaction,
   });
