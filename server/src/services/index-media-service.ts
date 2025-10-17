@@ -7,6 +7,7 @@ import { tmdbAPI } from '../util/config';
 import { FilmData, SeasonData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
 import { Transaction } from 'sequelize';
+import { sequelize } from '../util/db/initialize-db';
 
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData | SeasonData,
@@ -84,8 +85,85 @@ export const upsertIndexMedia = async (
   const [indexEntry] = await IndexMedia.upsert(data, { transaction });
   return indexEntry;
 };
+//SQL version so we can update certain fields conditionally.
+//specifically, we only update baseRating when a valid one has been added (for entries without
+//a valid rating that gets added eventually).
+export const bulkUpsertIndexMedia = async (
+  indexMedia: CreateIndexMedia[],
+  transaction?: Transaction
+): Promise<IndexMedia[]> => {
+  if (!indexMedia.length) {
+    return [];
+  }
 
-export const bulkCreateIndexMedia = async (
+  const params: (string | number)[] = [];
+
+  const valuePlaceholders = indexMedia
+    .map((_, i) => {
+      const offset = i * 8;
+      return `(
+        $${offset + 1},
+        $${offset + 2},
+        $${offset + 3},
+        $${offset + 4},
+        $${offset + 5},
+        $${offset + 6},
+        $${offset + 7},
+        $${offset + 8}
+      )`;
+    })
+    .join(',\n');
+
+  for (const m of indexMedia) {
+    params.push(
+      m.tmdbId,
+      m.mediaType,
+      m.name,
+      m.image,
+      m.popularity,
+      m.baseRating,
+      m.voteCount,
+      m.rating
+    );
+  }
+
+  const query = `
+    INSERT INTO index_media (
+      tmdb_id,
+      media_type,
+      name,
+      image,
+      popularity,
+      base_rating,
+      vote_count,
+      rating
+    )
+    VALUES
+      ${valuePlaceholders}
+    ON CONFLICT (tmdb_id, media_type)
+    DO UPDATE SET
+      name = EXCLUDED.name,
+      image = EXCLUDED.image,
+      popularity = EXCLUDED.popularity,
+      base_rating = CASE
+        WHEN index_media.base_rating = 0 THEN EXCLUDED.base_rating
+        ELSE index_media.base_rating
+      END
+    RETURNING *;
+  `;
+
+  const result: unknown[] = await sequelize.query(query, {
+    bind: params,
+    transaction,
+    model: IndexMedia,
+    mapToModel: true,
+  });
+
+  const rows = result[0] as IndexMedia[];
+  return rows;
+};
+/*
+export const bulkUpsertIndexMedia = async (
   indexMedia: CreateIndexMedia[],
   transaction?: Transaction
 ): Promise<IndexMedia[]> => {
@@ -95,3 +173,78 @@ export const bulkCreateIndexMedia = async (
     transaction,
   });
 };
+
+//SQL version so we can update certain fields conditionally.
+//specifically, we only update voteCount when baseRating has been added (for entries without
+//a valid rating that gets added eventually).
+//baseRating keeps being updated and will be taken into account in the next user vote, or if no
+//user vote has taken place yet, we update rating to show immediately the new average
+export const bulkCreateIndexMedia = async (
+  indexMedia: CreateIndexMedia[],
+  transaction?: Transaction
+): Promise<IndexMedia[]> => {
+  if (!indexMedia.length) return [];
+
+  const params: (string | number)[] = [];
+  const valuePlaceholders = indexMedia
+    .map((_, i) => {
+      const offset = i * 8;
+      return `($${offset + 1}, $${offset + 2}, $${offset + 3}, $${offset + 4},
+               $${offset + 5}, $${offset + 6}, $${offset + 7}, $${offset + 8})`;
+    })
+    .join(',\n');
+
+  indexMedia.forEach((m) => {
+    params.push(
+      m.tmdbId,
+      m.mediaType,
+      m.name,
+      m.image,
+      m.popularity,
+      m.baseRating,
+      m.voteCount,
+      m.rating
+    );
+  });
+
+  const query = `
+    INSERT INTO index_media
+      (tmdb_id, media_type, name, image, popularity, base_rating, vote_count, rating)
+    VALUES
+      ${valuePlaceholders}
+    ON CONFLICT (tmdb_id, media_type) DO UPDATE
+    SET
+      name         = EXCLUDED.name,
+      image        = EXCLUDED.image,
+      popularity   = EXCLUDED.popularity,
+      base_rating  = EXCLUDED.base_rating,
+      vote_count = CASE
+        WHEN index_media.base_rating = 0
+             AND index_media.vote_count = 0
+             AND index_media.rating = 0
+             AND EXCLUDED.base_rating > 0
+          THEN 1
+        ELSE index_media.vote_count
+      END,
+      rating = CASE
+        WHEN index_media.base_rating = 0
+             AND index_media.vote_count = 0
+             AND index_media.rating = 0
+             AND EXCLUDED.base_rating > 0
+          THEN EXCLUDED.base_rating
+        ELSE index_media.rating
+      END
+    RETURNING *;
+  `;
+
+  const result: unknown[] = await sequelize.query(query, {
+    bind: params,
+    transaction,
+    model: IndexMedia,
+    mapToModel: true,
+  });
+
+  const rows = result[0] as IndexMedia[];
+  return rows;
+};
+*/

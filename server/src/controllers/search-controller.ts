@@ -17,7 +17,7 @@ import {
 import { toPlainArray } from '../util/model-helpers';
 import { Op } from 'sequelize';
 import { fetchSearchFromTMDBAndParse } from '../services/search-service';
-import { bulkCreateIndexMedia } from '../services/index-media-service';
+import { bulkUpsertIndexMedia } from '../services/index-media-service';
 import { useCache } from '../middleware/redis-cache';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { setActiveCache } from '../util/redis-helpers';
@@ -182,7 +182,7 @@ router.get(
       ];
 
       //we bulk create or update if existing, returning so we know the involved ids
-      const entries: IndexMedia[] = await bulkCreateIndexMedia(indexMedia);
+      const entries: IndexMedia[] = await bulkUpsertIndexMedia(indexMedia);
       const ids = entries.map((i: IndexMedia) => i.id);
 
       //we find them again to get the show/film ids and the genres of the

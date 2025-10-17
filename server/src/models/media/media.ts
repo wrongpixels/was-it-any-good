@@ -75,6 +75,7 @@ class Media<
   declare getCrew: HasManyGetAssociationsMixin<MediaRole>;
   //For getting the Genres
   declare getGenres: BelongsToManyGetAssociationsMixin<MediaGenre>;
+  declare indexMedia?: IndexMedia;
 
   static baseInit() {
     return {
@@ -354,18 +355,62 @@ class Media<
       where,
     };
     //we need to do it like this or TS complains about typing.
+    //we update the baseRating before returning, as the linked indexMedia entry
+    //may have been updated in searches or trending pages
     switch (params.mediaType) {
-      case MediaType.Film:
-        return await Film.scope(scopeOptions).findOne(combinedFindOptions);
-      case MediaType.Show:
-        return await Show.scope(scopeOptions).findOne(combinedFindOptions);
-      case MediaType.Season:
-        return await Season.scope(scopeOptions).findOne(combinedFindOptions);
+      case MediaType.Film: {
+        const entry =
+          await Film.scope(scopeOptions).findOne(combinedFindOptions);
+        await entry?.updateBaseRating();
+        return entry;
+      }
+      case MediaType.Show: {
+        const entry =
+          await Show.scope(scopeOptions).findOne(combinedFindOptions);
+        await entry?.updateBaseRating();
+        return entry;
+      }
+      case MediaType.Season: {
+        const entry =
+          await Season.scope(scopeOptions).findOne(combinedFindOptions);
+        await entry?.updateBaseRating();
+        return entry;
+      }
       default:
         throw new CustomError(`Invalid media type: ${params.mediaType}`, 400);
     }
   }
 
+  //we update the baseRating if it has changed in the indexMedia nested, and we also
+  //add the voteCount 1 if it was a media with no rating at all.
+  //in the next user vote, the fresh baseRating will be used for the average
+  public async updateBaseRating() {
+    if (this.indexMedia && this.indexMedia.baseRating !== this.baseRating) {
+      const updateVoteCount =
+        this.voteCount === 0 &&
+        this.baseRating <= 0 &&
+        this.indexMedia.baseRating > 0;
+      const initialBaseRating: number = this.baseRating;
+
+      const updateValues: Partial<TAttributes> = {
+        baseRating: this.indexMedia.baseRating,
+      } as unknown as Partial<TAttributes>;
+      if (updateVoteCount) {
+        updateValues.voteCount = 1;
+        updateValues.rating = this.indexMedia.baseRating;
+      }
+      await this.update(updateValues);
+      console.log(
+        'Updated baseRating from',
+        initialBaseRating,
+        'to',
+        this.baseRating
+      );
+      if (updateVoteCount) {
+        console.log('Media now has a valid base vote of', this.rating);
+      }
+    }
+  }
   public async syncIndex(transaction?: Transaction): Promise<void> {
     try {
       const rating =
@@ -432,7 +477,15 @@ class Media<
   static hooks() {
     return {
       afterUpdate: async (media: Show | Film) => {
-        await media.syncIndex();
+        const changed = media.changed();
+        //if our rating or voteCount has changed, we sync the indexMedia
+        if (
+          changed &&
+          (changed.includes('rating') || changed.includes('voteCount'))
+        ) {
+          console.log('Media rating or voteCount changed, syncing index.');
+          await media.syncIndex();
+        }
       },
       afterDestroy: async (media: Show | Film) => {
         await Media.removeIndex(media.indexId);
@@ -493,6 +546,10 @@ class Media<
             attributes: [],
             where: { mediaType },
           },
+        },
+        {
+          association: 'indexMedia',
+          attributes: ['rating', 'updatedAt', 'baseRating', 'voteCount'],
         },
       ],
     };
