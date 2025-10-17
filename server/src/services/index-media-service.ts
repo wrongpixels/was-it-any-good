@@ -7,7 +7,6 @@ import { tmdbAPI } from '../util/config';
 import { FilmData, SeasonData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
 import { Transaction } from 'sequelize';
-import { sequelize } from '../util/db/initialize-db';
 
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData | SeasonData,
