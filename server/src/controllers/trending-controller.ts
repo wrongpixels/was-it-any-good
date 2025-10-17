@@ -17,6 +17,7 @@ import { fetchTrendingFromTMDBAndParse } from '../services/trending-service';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
 import { UPARAM_PAGE } from '../../../shared/constants/url-param-constants';
+import { bulkUpsertIndexMedia } from '../services/index-media-service';
 
 const router: Router = express.Router();
 
@@ -79,10 +80,7 @@ router.get(
       ];
 
       //we bulk create or update if existing, returning so we know the involved ids
-      const entries: IndexMedia[] = await IndexMedia.bulkCreate(indexMedia, {
-        updateOnDuplicate: ['popularity', 'image', 'baseRating'],
-        returning: true,
-      });
+      const entries: IndexMedia[] = await bulkUpsertIndexMedia(indexMedia);
 
       const ids = entries.map((i: IndexMedia) => i.id);
 

@@ -27,7 +27,7 @@ import { toPlain } from '../util/model-helpers';
 import {
   upsertIndexMedia,
   mediaDataToCreateIndexMedia,
-  bulkCreateIndexMedia,
+  bulkUpsertIndexMedia,
 } from './index-media-service';
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
 import { reorderSeasons } from '../../../shared/helpers/media-helper';
@@ -71,7 +71,7 @@ export const buildShowEntry = async (
     (s: SeasonData) => mediaDataToCreateIndexMedia(s, showData.name)
   );
   //and we save them in the db
-  const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+  const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia(
     createSeasonsIndexMedia,
     params.transaction
   );
@@ -206,7 +206,7 @@ export const updateShowEntry = async (showEntry: Show) => {
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
         );
         //we bulk upsert the indexMedia of all seasons, which will update basic fields
-        const seasonsIndexMedia: IndexMedia[] = await bulkCreateIndexMedia(
+        const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia(
           createSeasonsIndexMedia,
           transaction
         );
