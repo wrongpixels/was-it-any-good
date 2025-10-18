@@ -118,6 +118,6 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
 export const needsToFetchDetails = (person: PersonResponse): boolean => {
   return (
     person.addedDetails === false ||
-    (person.addedDetails && person.birthDate?.includes('，') === true)
+    (person.addedDetails && person.birthPlace?.includes('，') === true)
   );
 };
