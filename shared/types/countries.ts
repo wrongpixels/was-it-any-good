@@ -244,6 +244,7 @@ export const formatCountry = (name: string): string => {
     case "euskadi":
     case "catalunya":
     case "cataluña":
+    case "españa":
       return "Spain";
   }
   return name;

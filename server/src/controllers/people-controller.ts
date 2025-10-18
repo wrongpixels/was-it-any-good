@@ -5,6 +5,7 @@ import { PersonResponse } from '../../../shared/types/models';
 import { toPlain } from '../util/model-helpers';
 import {
   fetchAndUpdatePersonDetails,
+  needsToFetchDetails,
   sortRoles,
 } from '../services/people-service';
 import idFormatChecker from '../middleware/id-format-checker';
@@ -33,7 +34,7 @@ router.get(
       if (!person) {
         throw new NotFoundError('Person');
       }
-      if (!person.addedDetails) {
+      if (needsToFetchDetails(person)) {
         console.log('Missing extra Person data. Gathering');
         await fetchAndUpdatePersonDetails(person);
       }
