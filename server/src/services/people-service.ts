@@ -47,10 +47,11 @@ export const fetchAndUpdatePersonDetails = async (
     );
     const normalizedBirthPlace: string =
       //we normalize the Chinese commas
-      personDetails.place_of_birth?.replace(/，/g, ',') ??
-      ''
-        //and also the spaces around them
-        .replace(/\s*,\s*/g, ', ');
+      personDetails.place_of_birth
+        ?.replace(/，/g, ',')
+        // and also the spaces around them
+        ?.replace(/\s*,\s*/g, ', ') ?? '';
+
     //we extract the country from the place of birth (format 'City, Province, Country')
     const countryString: string = normalizedBirthPlace.split(', ').pop() ?? '';
     await person.update({
