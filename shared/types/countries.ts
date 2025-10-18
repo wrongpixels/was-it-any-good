@@ -198,9 +198,12 @@ enum Country {
 export type CountryCode = keyof typeof Country;
 
 //a function that matches country names with our CountryCodes.
-//runs custom overrides for special cases and blatant false information.
-//added as TMDB doesnt provide a way to know the origin country of people, but usually
-//includes a birth place with a format 'City, Region, Country'
+
+//TMDB doesn't provide a way to know the origin country of a person.
+//People usually include a birth place with structure: 'City, Region, Country',
+//but it doesn't follow a standard format or unified country names, with some
+//instances including blatant false information or strings in the wrong language.
+//here we have try to catch, fix and unify the most frequent occurrences.
 export const stringToCountryCode = (name: string): CountryCode => {
   if (!name) {
     return "UNKNOWN";
@@ -214,9 +217,11 @@ export const stringToCountryCode = (name: string): CountryCode => {
     case "great britain":
       return "GB";
     case "usa":
+    case "сша":
       return "US";
     //tmdb seems to allow for users to add regions as countries, unhealthy for our db.
     case "catalonia":
+    case "españa":
     case "euskal herria":
     case "euskadi":
     case "catalunya":
@@ -230,7 +235,9 @@ export const stringToCountryCode = (name: string): CountryCode => {
   }
   return "UNKNOWN";
 };
-
+//how the countries look in the PersonDetails page.
+//we fix TMDBs inconsistent and ever varying country names, which sometimes
+//include strings in the wrong language because why not.
 export const formatCountry = (name: string): string => {
   const cleanName = name.trim().toLowerCase();
 
@@ -238,12 +245,14 @@ export const formatCountry = (name: string): string => {
     case "uk":
       return "U.K.";
     case "usa":
+    case "сша":
       return "U.S.";
     case "catalonia":
     case "euskal herria":
     case "euskadi":
     case "catalunya":
     case "cataluña":
+    case "españa":
       return "Spain";
   }
   return name;

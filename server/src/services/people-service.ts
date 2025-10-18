@@ -45,12 +45,18 @@ export const fetchAndUpdatePersonDetails = async (
     const personDetails: TMDBPersonDetails = TMDBPersonDetailsSchema.parse(
       tmdbPersonRes.data
     );
+    const normalizedBirthPlace: string =
+      //we normalize the Chinese commas
+      personDetails.place_of_birth
+        ?.replace(/，/g, ',')
+        // and also the spaces around them
+        ?.replace(/\s*,\s*/g, ', ') ?? '';
+
     //we extract the country from the place of birth (format 'City, Province, Country')
-    const countryString: string =
-      personDetails.place_of_birth?.split(', ').pop() ?? '';
+    const countryString: string = normalizedBirthPlace.split(', ').pop() ?? '';
     await person.update({
       addedDetails: true,
-      birthPlace: formatBirthPlace(personDetails.place_of_birth),
+      birthPlace: formatBirthPlace(normalizedBirthPlace),
       birthDate: personDetails.birthday || undefined,
       deathDate: personDetails.deathday || undefined,
       description: personDetails.biography || undefined,
@@ -105,4 +111,13 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
   });
   const mainRoles = authorMedia.map((role) => role.authorType);
   return { mediaByRole: authorMedia, mainRoles };
+};
+
+//we ony update if no details added yet or if a wrong formatted comma was added
+//(because of early Chinese entries that TMDB doesn't format properly)
+export const needsToFetchDetails = (person: PersonResponse): boolean => {
+  return (
+    person.addedDetails === false ||
+    (person.addedDetails && person.birthDate?.includes('，') === true)
+  );
 };
