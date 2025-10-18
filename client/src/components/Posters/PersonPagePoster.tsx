@@ -25,7 +25,7 @@ const PersonPagePoster = ({
         aspect={AspectRatio.poster}
         src={imageLinker.getBigAvatarImage(src)}
         variant={ImageVariant.inline}
-        className={`rounded shadow ring-1 ring-gray-300 ${styles.poster.media} min-h-57 `}
+        className={`rounded shadow ring-1 ring-gray-300 ${styles.poster.media} min-h-69 `}
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(src))}
       />
       <span className="p-0.5 mt-0.5 font-semibold text-sm leading-tight break-words text-gray-500 text-center">
