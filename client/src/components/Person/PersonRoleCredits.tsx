@@ -1,4 +1,4 @@
-import { AuthorMedia } from '../../../../shared/types/roles';
+import { AuthorMedia, AuthorType } from '../../../../shared/types/roles';
 import {
   MediaResponse,
   MediaRoleResponse,
@@ -37,7 +37,7 @@ const PersonRoleCredits = ({
               <PersonRolePoster
                 mediaResponse={media}
                 characterNames={
-                  r.characterName
+                  r.role === AuthorType.Actor
                     ? formatCharacterNames(r.characterName)
                     : undefined
                 }
@@ -48,9 +48,12 @@ const PersonRoleCredits = ({
         })}
         <PlaceholderPoster
           placeholderCount={placeholderCount}
-          className="hidden sm:block"
+          className="hidden sm:block h-81"
         />
-        <PlaceholderPoster placeholderCount={1} className="block sm:hidden" />
+        <PlaceholderPoster
+          placeholderCount={1}
+          className="block sm:hidden h-81"
+        />
       </ScrollableDiv>
     </div>
   );

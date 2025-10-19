@@ -48,10 +48,7 @@ const MediaPersonPoster = ({ credit }: MediaPersonPosterProps) => {
             >
               {credit.person.name}
             </div>
-            <div
-              className="text-gray-500 text-xs font-normal leading-tight line-clamp-2"
-              title={extraInfo}
-            >
+            <div className={styles.underPosterInfo} title={extraInfo}>
               {extraInfo}
             </div>
           </div>

@@ -20,6 +20,8 @@ const transitions = {
 export const styles = {
   contentWidth: 'w-full max-w-screen-lg md:mx-auto sm:px-6 lg:px-8',
   hyperlink: 'text-starblue hover:text-hoverblue',
+  underPosterInfo:
+    'text-gray-500 text-xs font-normal leading-tight line-clamp-2',
   animations: {
     opacity70: `${transitions.slower} opacity-70 hover:opacity-100`,
     opacity80: `${transitions.slower} opacity-80 hover:opacity-100`,

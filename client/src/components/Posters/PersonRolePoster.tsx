@@ -3,6 +3,7 @@ import { buildMediaLink } from '../../utils/url-helper';
 import { MediaResponse } from '../../../../shared/types/models';
 import VerticalMediaPoster from './VerticalMediaPoster';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
+import { styles } from '../../constants/tailwind-styles';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;
@@ -15,7 +16,7 @@ const PersonRolePoster = ({
   characterNames,
 }: PersonPagePosterProps): JSX.Element => {
   return (
-    <div className="flex flex-col">
+    <div title={characterNames} className="flex flex-col items-center">
       <VerticalMediaPoster
         url={buildMediaLink(mediaResponse)}
         mediaType={mediaResponse.mediaType}
@@ -28,7 +29,14 @@ const PersonRolePoster = ({
         }
         userRating={mediaResponse.userRating?.userScore}
       />
-      {characterNames && <div>{characterNames}</div>}
+      {characterNames && (
+        <div
+          className={`max-w-39 pt-2 cursor-help text-center ${styles.underPosterInfo} line-clamp-3`}
+        >
+          <span className="font-semibold">As:</span>{' '}
+          <span className="italic">{characterNames}</span>
+        </div>
+      )}
     </div>
   );
 };
