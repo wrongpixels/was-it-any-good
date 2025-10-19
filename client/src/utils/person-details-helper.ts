@@ -80,3 +80,11 @@ export const buildDescription = (
   const finalDescription: string = `${personDetailsValues.personName}${bornDate} ${verb} ${particle} ${personDetailsValues.mainRolesWithAnd}${location}.`;
   return finalDescription;
 };
+
+//a function to clean the characterNames array into a formatted single string
+export const formatCharacterNames = (characterName: string[] | undefined) => {
+  const cleanNames: string[] | undefined = characterName?.map((c: string) =>
+    c.replace(/\s*\(voice\)/g, '').replace(/ \/ /g, ', ')
+  );
+  return cleanNames?.join(', ').replace(' (voice)', '') || 'Unknown';
+};

@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
 import { stringToCountryCode } from '../../../shared/types/countries';
-import { MediaType } from '../../../shared/types/media';
 import {
   MediaRoleResponse,
   MediaResponse,
@@ -19,6 +18,7 @@ import {
 import { tmdbAPI } from '../util/config';
 import { tmdbPaths } from '../util/url-helper';
 import { formatBirthPlace } from '../../../shared/helpers/format-helper';
+import { getMediaFromRole } from '../../../shared/helpers/media-helper';
 
 //an extra call to TMDB API that populates extra options information for people.
 //this is not done on creation for performance reason, and this info is only fetched
@@ -75,33 +75,30 @@ export const fetchAndUpdatePersonDetails = async (
   return;
 };
 
-const getMedia = (role: MediaRoleResponse): MediaResponse | undefined => {
-  if (role.mediaType === MediaType.Film) {
-    return role.film;
-  }
-  if (role.mediaType === MediaType.Show) {
-    return role.show;
-  }
-  return undefined;
-};
+//a custom logic that returns the media of a Person sorted by roles (Actor, Director, Producer...)
 export const sortRoles = (person: PersonResponse): SortedRoles => {
   const authorMedia: AuthorMedia[] = [];
+  //a copy of person without heavy data, to use in CreditResponse
   person.roles?.forEach((r: MediaRoleResponse) => {
-    const media: MediaResponse | undefined = getMedia(r);
+    //we check the role has a valid media linked
+    const media: MediaResponse | undefined = getMediaFromRole(r);
     if (media) {
+      //we look for an entry for this author type
       const entry = authorMedia.find(
         (a: AuthorMedia) => a.authorType === r.role
       );
       if (entry) {
-        entry.media.push(media);
+        //if it already exists, we add this media to the list and the characterName
+        entry.role.push(r);
       } else {
-        authorMedia.push({ authorType: r.role, media: [media] });
+        //if not, we create the list and add it as the first role entry
+        authorMedia.push({ authorType: r.role, role: [r] });
       }
     }
   });
   authorMedia.sort((a, b) => {
-    const countB = b.media.length;
-    const countA = a.media.length;
+    const countB = b.role.length;
+    const countA = a.role.length;
     if (countA !== countB) {
       return countB - countA;
     }
@@ -109,7 +106,8 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
       authorOrder.indexOf(a.authorType) - authorOrder.indexOf(b.authorType)
     );
   });
-  const mainRoles = authorMedia.map((role) => role.authorType);
+  const mainRoles = authorMedia.map((role: AuthorMedia) => role.authorType);
+
   return { mediaByRole: authorMedia, mainRoles };
 };
 

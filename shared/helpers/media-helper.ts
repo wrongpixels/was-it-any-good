@@ -1,5 +1,10 @@
 import { MediaType } from "../types/media";
-import { MediaResponse, SeasonResponse, ShowResponse } from "../types/models";
+import {
+  MediaResponse,
+  MediaRoleResponse,
+  SeasonResponse,
+  ShowResponse,
+} from "../types/models";
 
 export const stringToMediaType = (media: string): MediaType | null => {
   switch (media.toLowerCase()) {
@@ -31,3 +36,15 @@ export const reorderSeasons = (
   show: ShowResponse
 ): SeasonResponse[] | undefined =>
   show?.seasons?.sort((a, b) => a.index - b.index);
+
+export const getMediaFromRole = (
+  role: MediaRoleResponse
+): MediaResponse | undefined => {
+  if (role.mediaType === MediaType.Film) {
+    return role.film;
+  }
+  if (role.mediaType === MediaType.Show) {
+    return role.show;
+  }
+  return undefined;
+};
