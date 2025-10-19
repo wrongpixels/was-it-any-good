@@ -39,9 +39,15 @@ router.get(
         await fetchAndUpdatePersonDetails(person);
       }
       const personData: PersonResponse = toPlain<Person>(person);
-      //we sort indexMedia here by roles (Actor, Director…) because sequelize
-      //is not great for that and the frontend should avoid doing it.
-      res.json({ ...personData, sortedRoles: sortRoles(personData) });
+
+      res.json({
+        ...personData,
+        //we sort indexMedia here by roles (Actor, Director…) because sequelize
+        //is not good for that and the frontend should avoid doing it.
+        sortedRoles: sortRoles(personData),
+        //we also remove the original unsorted roles to make the response lighter
+        roles: undefined,
+      });
     } catch (error) {
       next(error);
     }

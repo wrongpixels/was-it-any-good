@@ -6,25 +6,30 @@ import { getMediaAverageRating } from '../../utils/ratings-helper';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;
+  characterNames?: string;
 }
 
 //the Poster component for the media cards in Person pages
 const PersonRolePoster = ({
   mediaResponse,
+  characterNames,
 }: PersonPagePosterProps): JSX.Element => {
   return (
-    <VerticalMediaPoster
-      url={buildMediaLink(mediaResponse)}
-      mediaType={mediaResponse.mediaType}
-      name={mediaResponse.name}
-      image={mediaResponse.image}
-      rating={
-        mediaResponse.indexMedia
-          ? getMediaAverageRating(mediaResponse.indexMedia)
-          : 0
-      }
-      userRating={mediaResponse.userRating?.userScore}
-    />
+    <div className="flex flex-col">
+      <VerticalMediaPoster
+        url={buildMediaLink(mediaResponse)}
+        mediaType={mediaResponse.mediaType}
+        name={mediaResponse.name}
+        image={mediaResponse.image}
+        rating={
+          mediaResponse.indexMedia
+            ? getMediaAverageRating(mediaResponse.indexMedia)
+            : 0
+        }
+        userRating={mediaResponse.userRating?.userScore}
+      />
+      {characterNames && <div>{characterNames}</div>}
+    </div>
   );
 };
 
