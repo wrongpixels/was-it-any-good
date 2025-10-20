@@ -1,7 +1,13 @@
 import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../Custom/SVG';
 
-const IconAddList = ({ width, height, url, newTab, ...rest }: OptIconProps) => (
+const IconAddList = ({
+  width = 20,
+  height,
+  url,
+  newTab,
+  ...rest
+}: OptIconProps) => (
   <span {...rest}>
     <SVG
       url={url}
