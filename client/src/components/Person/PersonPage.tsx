@@ -59,13 +59,13 @@ const PersonPage = (): JSX.Element | null => {
             />
           </div>
           {person.addedDetails && (
-            <div className="mt-3 w-full">
+            <div className="-mt-2 md:mt-3 w-full">
               <PersonDetails personValues={personDetailsValues} />
             </div>
           )}
         </div>
-        <div className="flex-1 border-l border-gray-200 md:ml-10 pl-4 overflow-auto">
-          <div className="flex flex-col gap-2 -mt-2">
+        <div className="flex-1 md:border-l md:border-gray-200 md:ml-10 md:pl-4 overflow-auto">
+          <div className="flex flex-col gap-2 md:-mt-2">
             <PersonDescription
               text={personDetailsValues.description}
               className="mt-1"
