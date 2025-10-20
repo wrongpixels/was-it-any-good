@@ -299,7 +299,7 @@ export const queryTypeToDisplayName = (searchType: SearchType[]) => {
     case SearchType.Film:
       return 'Film';
     case SearchType.Show:
-      return 'TV';
+      return 'TV Show';
     default:
       return '';
   }

@@ -16,11 +16,16 @@ const PageResultsTitle = ({
   queryType,
   resultsType,
 }: PageResultsTitleProps): JSX.Element => {
-  const resultString: string = resultsType === 'votes' ? 'rating' : 'result';
+  const typeString: string = queryTypeToDisplayName(queryType) || 'result';
+  const finalTypeString: string =
+    term && !typeString.includes('result')
+      ? `${typeString} result`
+      : typeString;
+  const resultString: string =
+    resultsType === 'votes' ? 'rating' : finalTypeString;
   return (
     <span className="w-full text-center text-lg sm:block hidden">
       {totalResults || 'No'}
-      {` ${queryTypeToDisplayName(queryType)} `}
       {` ${totalResults !== 1 ? `${resultString}s` : `${resultString}`} `}
       <SearchTerm term={term} />
     </span>
