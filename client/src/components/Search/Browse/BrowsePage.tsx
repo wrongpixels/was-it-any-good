@@ -114,7 +114,7 @@ const BrowsePage = ({
       {((isLoading || isFetching) && (
         <LoadingCards
           showNavBar={true}
-          loadTitle={'Browsing WIAG...'}
+          loadTitle={'Browsing WIAG'}
           placeholderCount={
             browseResults?.resultsType === 'browse'
               ? browseResults?.indexMedia.length

@@ -83,7 +83,11 @@ const PageResults = ({
       )}
       {(isLoading && (
         <span className="flex-1">
-          <SpinnerPage text={`Browsing WIAG...`} className="flex-1" />
+          <SpinnerPage
+            text={`
+            Browsing WIAG...`}
+            className="flex-1"
+          />
         </span>
       )) || (
         <div className="flex flex-col h-full">
