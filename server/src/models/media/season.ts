@@ -1,6 +1,6 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db/initialize-db';
-import { Film, IndexMedia, Media, Rating, Show } from '..';
+import { Film, IndexMedia, Media, Rating, Show, UserMediaList } from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
 import {
@@ -37,6 +37,12 @@ class Season extends Media<
       scope: {
         mediaType: MediaType.Season,
       },
+      constraints: false,
+    });
+
+    this.hasMany(UserMediaList, {
+      foreignKey: 'userId',
+      as: 'userLists',
       constraints: false,
     });
     this.belongsTo(Show, {

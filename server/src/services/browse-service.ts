@@ -1,7 +1,7 @@
 import { IncludeOptions, Op } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
 import { ActiveUser } from '../../../shared/types/models';
-import { getUserRatingIncludeOptions } from '../constants/scope-attributes';
+import { getActiveUserIncludeOptions } from '../constants/scope-attributes';
 
 export const buildIncludeOptions = (
   genres: string[] | undefined,
@@ -16,10 +16,12 @@ export const buildIncludeOptions = (
   if (isFilterPass && !hasFilters) {
     return [];
   }
-  const includeOptions: IncludeOptions[] = [];
-  //we also get the active user's rating for the client
-  const includeUserRating: IncludeOptions | undefined =
-    getUserRatingIncludeOptions(mediaType, activeUser);
+  //we get the activeUser includeOptions as the base (will be empty array if no user)
+  const includeOptions: IncludeOptions[] = getActiveUserIncludeOptions(
+    mediaType,
+    activeUser
+  );
+  //we get the includeOptions for the Genres
   const genreIncludeOptions: IncludeOptions = {
     association: 'genres',
     attributes: ['id', 'name', 'tmdbId'],
@@ -37,10 +39,8 @@ export const buildIncludeOptions = (
       },
     };
   }
+  //and combine them all in the array
   includeOptions.push(genreIncludeOptions);
-  if (includeUserRating) {
-    includeOptions.push(includeUserRating);
-  }
   /*
   if (mediaType === MediaType.Show) {
     includeOptions.push({

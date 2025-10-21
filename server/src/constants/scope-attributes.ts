@@ -10,28 +10,25 @@ export const BRIEF_MEDIA_ATTRIBUTES: FindAttributeOptions = [
   'baseRating',
   'mediaType',
 ];
+export const userLists: IncludeOptions = {
+  association: 'userLists',
 
-export const getUserRatingIncludeOptions = (
-  mediaType: MediaType,
-  activeUser?: ActiveUser
-): IncludeOptions | undefined => {
-  if (!activeUser?.isValid) {
-    return undefined;
-  }
-  return {
-    association: 'userRating',
-    where: {
-      userId: activeUser.id,
-      mediaType: mediaType,
+  include: [
+    {
+      association: 'userList',
+      where: {
+        userId: 1,
+      },
     },
-    required: false,
-  };
+  ],
+  required: false,
 };
+//this allows us to load our activeUser associations like their rating/lists
+//directly within the mediaResponse we'll send to the client.
 
-export const getUserRatingIncludeable = (
-  mediaType: MediaType,
-  activeUser?: ActiveUser
-): Includeable[] => {
+//the function builds an array that works for both IncludeOptions or Includeable,
+//which share structures but not types
+const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
   if (!activeUser?.isValid) {
     return [];
   }
@@ -40,9 +37,20 @@ export const getUserRatingIncludeable = (
       association: 'userRating',
       where: {
         userId: activeUser.id,
-        mediaType,
+        mediaType: mediaType,
       },
       required: false,
     },
   ];
 };
+
+//the functions that type the returned array
+export const getActiveUserIncludeOptions = (
+  mediaType: MediaType,
+  activeUser?: ActiveUser
+): IncludeOptions[] => getUserAssociations(mediaType, activeUser);
+
+export const getActiveUserIncludeable = (
+  mediaType: MediaType,
+  activeUser?: ActiveUser
+): Includeable[] => getUserAssociations(mediaType, activeUser);
