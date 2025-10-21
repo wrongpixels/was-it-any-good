@@ -38,6 +38,7 @@ class UserMediaList extends Model<
   declare private: CreationOptional<boolean>;
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+  declare itemCount: CreationOptional<number>;
   declare listItems?: UserMediaListItem[];
 
   static associate() {
@@ -90,6 +91,11 @@ UserMediaList.init(
         max: MAX_LENGTH_DESCRIPTION,
         min: MIN_LENGTH_DESCRIPTION,
       },
+    },
+    itemCount: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
     indexInUserLists: {
       type: DataTypes.INTEGER,

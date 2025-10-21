@@ -1,11 +1,12 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { AuthError, ForbiddenError, NotFoundError } from '../util/customError';
+import { ForbiddenError, NotFoundError } from '../util/customError';
 import { authRequired } from '../middleware/auth-requirements';
-import { IndexMedia, UserMediaList } from '../models';
+import { IndexMedia, UserMediaList, UserMediaListItem } from '../models';
 import {
   AddMediaToList,
   AddMediaToListSchema,
 } from '../schemas/user-media-list-schemas';
+import { CreateUserMediaListItem } from '../../../shared/types/models';
 
 const router: Router = express.Router();
 
@@ -17,14 +18,12 @@ router.post(
       if (!req.activeUser || !req.activeUser.isAdmin) {
         throw new ForbiddenError();
       }
-      const listElementData: AddMediaToList = AddMediaToListSchema.parse(
-        req.body
-      );
+      const listItemData: AddMediaToList = AddMediaToListSchema.parse(req.body);
       //we get both the targetList and the target media. We'll check both exist and match
       //our expected data to avoid malicious payloads and forbidden actions
       const [targetList, targetMedia] = await Promise.all([
-        UserMediaList.findByPk(listElementData.userListId),
-        IndexMedia.findByPk(listElementData.indexId),
+        UserMediaList.findByPk(listItemData.userListId),
+        IndexMedia.findByPk(listItemData.indexId),
       ]);
       if (!targetList || targetMedia) {
         throw new NotFoundError();
@@ -33,6 +32,15 @@ router.post(
       if (!req.activeUser.isAdmin && req.activeUser.id !== targetList.userId) {
         throw new ForbiddenError();
       }
+      const indexInList: number =
+        listItemData.indexInList || targetList.itemCount;
+      const listItem: CreateUserMediaListItem = {
+        ...listItemData,
+        indexInList,
+      };
+      const listItemEntry: UserMediaListItem =
+        await UserMediaListItem.create(listItem);
+      res.json(listItemEntry);
     } catch (error) {
       next(error);
     }
