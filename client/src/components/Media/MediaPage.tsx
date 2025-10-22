@@ -33,6 +33,7 @@ import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
+import UserLists from '../UserLists/UserLists';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -46,7 +47,7 @@ const MediaPage = ({
   const queryClient: QueryClient = useQueryClient();
   const navigate = useNavigate();
   const { id: mediaId } = useParams<{ id: string }>();
-  const { isLoginPending /*session*/ }: AuthContextValues = useAuth();
+  const { isLoginPending, session }: AuthContextValues = useAuth();
   const {
     data: media,
     isLoading,
@@ -110,7 +111,7 @@ const MediaPage = ({
   }
 
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
-
+  console.log(media.userWatchlist, media.indexId);
   const show = isShow(media);
   return (
     <div>
@@ -161,7 +162,7 @@ const MediaPage = ({
         </span>
         <div className="flex-col w-50 hidden md:flex gap-3">
           <MediaPagePoster media={media} />
-          {/* session && <UserLists media={media} userId={session.userId} /> */}
+          {session && <UserLists media={media} userId={session.userId} />}
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}

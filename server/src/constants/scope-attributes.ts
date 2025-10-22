@@ -31,15 +31,11 @@ const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
     },
     {
       association: 'userWatchlist',
-
       include: [
         {
           association: 'userList',
           where: {
-            userId: activeUser.id,
-            name: 'watchlist',
-            canBeModified: false,
-            icon: 'watchlist',
+            name: 'Watchlist',
           },
         },
       ],
