@@ -27,7 +27,7 @@ import {
 } from '../constants/query-key-constants';
 
 export const useVoteMutation = () => {
-  const queryClient = useQueryClient();
+  const queryClient: QueryClient = useQueryClient();
 
   return useMutation({
     mutationKey: [MUTATION_KEY_VOTE],

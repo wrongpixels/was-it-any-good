@@ -90,6 +90,11 @@ export const apiPaths = {
       byQuery: (query: string) => `${apiPaths.my.votes.base()}?${query}`,
     },
   },
+  watchlist: {
+    base: `${API_BASE}/lists/watchlist`,
+    toggleIndexMedia: (userId: number, indexId: number) =>
+      `${apiPaths.watchlist.base}/${userId}/${indexId}`,
+  },
 };
 export const routerPaths = {
   home: '/',
