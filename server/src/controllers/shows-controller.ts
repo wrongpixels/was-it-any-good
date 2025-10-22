@@ -98,7 +98,7 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
       throw new NotFoundError('Show');
     }
     await setMediaCache(req, showEntry);
-    res.json(toBasicMediaResponse(showEntry));
+    res.status(201).json(toBasicMediaResponse(showEntry));
   } catch (error) {
     next(error);
   }

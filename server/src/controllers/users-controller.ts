@@ -69,7 +69,7 @@ router.put(
 
       user.isActive = activate;
       await user.save();
-      res.json({
+      res.status(200).json({
         message: `User ${user.username} ${
           activate ? 'unbanned' : 'banned'
         } successfully.`,

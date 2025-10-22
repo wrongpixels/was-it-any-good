@@ -34,7 +34,7 @@ router.post(
         throw new SessionAuthError('Session expired');
       }
       const userSession: UserSessionData = dbSession.get({ plain: true });
-      res.json(userSession);
+      res.status(201).json(userSession);
     } catch (error) {
       next(error);
     }

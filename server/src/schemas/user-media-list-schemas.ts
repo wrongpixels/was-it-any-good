@@ -20,7 +20,6 @@ export const RemoveListSchema = z.object({
 
 export const AddMediaToListSchema = z.object({
   indexInList: z.number().optional(),
-  userListId: z.number(),
   indexId: z.number(),
 });
 

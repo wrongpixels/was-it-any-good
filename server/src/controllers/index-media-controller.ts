@@ -34,7 +34,7 @@ router.post('/populate', async (_req, res: Response, next: NextFunction) => {
   try {
     const films: number = await gatherMedia(MediaType.Film);
     const shows: number = await gatherMedia(MediaType.Show);
-    res.json({ shows, films });
+    res.status(201).json({ shows, films });
   } catch (error) {
     next(error);
   }

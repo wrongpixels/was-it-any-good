@@ -94,7 +94,7 @@ router.get(
       await setMediaCache(req, filmEntry);
       //we strip the heavy fields, as we only need id and mediaType for
       //the redirect to the entry in the client.
-      res.json(toBasicMediaResponse(filmEntry));
+      res.status(201).json(toBasicMediaResponse(filmEntry));
     } catch (error) {
       next(error);
     }

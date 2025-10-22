@@ -9,9 +9,10 @@ import {
   sortRoles,
 } from '../services/people-service';
 import idFormatChecker from '../middleware/id-format-checker';
+import { adminRequired } from '../middleware/auth-requirements';
 const router = express.Router();
 
-router.get('/', async (_req, res, next) => {
+router.get('/', adminRequired, async (_req, res, next) => {
   try {
     const people: PersonResponse[] = await Person.scope('withMedia').findAll(
       {}
