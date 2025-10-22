@@ -10,19 +10,7 @@ export const BRIEF_MEDIA_ATTRIBUTES: FindAttributeOptions = [
   'baseRating',
   'mediaType',
 ];
-export const userLists: IncludeOptions = {
-  association: 'userLists',
 
-  include: [
-    {
-      association: 'userList',
-      where: {
-        userId: 1,
-      },
-    },
-  ],
-  required: false,
-};
 //this allows us to load our activeUser associations like their rating/lists
 //directly within the mediaResponse we'll send to the client.
 
@@ -39,6 +27,22 @@ const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
         userId: activeUser.id,
         mediaType: mediaType,
       },
+      required: false,
+    },
+    {
+      association: 'userWatchlist',
+
+      include: [
+        {
+          association: 'userList',
+          where: {
+            userId: activeUser.id,
+            name: 'watchlist',
+            canBeModified: false,
+            icon: 'watchlist',
+          },
+        },
+      ],
       required: false,
     },
   ];

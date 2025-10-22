@@ -14,6 +14,40 @@ import { toPlain } from '../util/model-helpers';
 
 const router: Router = express.Router();
 
+router.get(
+  '/watchlist/:userId',
+  authRequired,
+  customIdFormatChecker('userId'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //we already checked the userId format in the middleware
+      const userId: number = Number(req.params.userId);
+      //only admins and the users themselves can access their watchlist
+      if (
+        !req.activeUser ||
+        !req.activeUser.isAdmin ||
+        userId !== req.activeUser.id
+      ) {
+        throw new ForbiddenError();
+      }
+      const watchlist: UserMediaList | null = await UserMediaList.findOne({
+        where: {
+          userId,
+          name: 'watchlist',
+          canBeModified: false,
+          icon: 'watchlist',
+        },
+      });
+      if (!watchlist) {
+        throw new NotFoundError('watchlist');
+      }
+      res.json(toPlain(watchlist));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 router.post(
   '/:listId/item',
   authRequired,

@@ -215,6 +215,7 @@ export interface BaseMediaResponse extends BaseResponse {
   genres?: GenreResponse[];
   mergedCrew?: MergedCredits[];
   indexMedia?: IndexMediaData;
+  userWatchlist?: UserMediaListItemData;
 }
 
 export interface FilmResponse extends BaseMediaResponse {

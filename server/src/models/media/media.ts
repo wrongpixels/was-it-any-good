@@ -230,11 +230,10 @@ class Media<
       },
       constraints: false,
     });
-    //virtual association to return the active user rating
-    //directly within the media
-    this.hasMany(UserMediaListItem, {
+    //virtual association to find if the media is in user's watchlist
+    this.hasOne(UserMediaListItem, {
       foreignKey: 'indexId',
-      as: 'userLists',
+      as: 'userWatchlist',
       constraints: false,
     });
   }

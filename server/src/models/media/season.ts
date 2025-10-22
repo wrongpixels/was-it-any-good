@@ -39,10 +39,11 @@ class Season extends Media<
       },
       constraints: false,
     });
+    //virtual association to find if the media is in user's watchlist
 
-    this.hasMany(UserMediaList, {
+    this.hasOne(UserMediaList, {
       foreignKey: 'userId',
-      as: 'userLists',
+      as: 'userWatchlist',
       constraints: false,
     });
     this.belongsTo(Show, {
