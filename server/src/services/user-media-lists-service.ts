@@ -7,7 +7,7 @@ export const getUserWatchlist = async (
   await UserMediaList.findOne({
     where: {
       userId,
-      name: 'watchlist',
+      name: 'Watchlist',
       canBeModified: false,
       icon: 'watchlist',
     },

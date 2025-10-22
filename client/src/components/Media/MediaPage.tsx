@@ -162,7 +162,7 @@ const MediaPage = ({
         </span>
         <div className="flex-col w-50 hidden md:flex gap-3">
           <MediaPagePoster media={media} />
-          {session && <UserLists />}
+          {session && <UserLists media={media} userId={session.userId} />}
         </div>
       </div>
       {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}

@@ -1,19 +1,53 @@
-import { JSX } from 'react';
-import { UserMediaListData } from '../../../../shared/types/models';
+import { JSX, useState } from 'react';
+import {
+  MediaResponse,
+  UserMediaListData,
+} from '../../../../shared/types/models';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 import { styles } from '../../constants/tailwind-styles';
 import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import IconChecklist from '../Common/Icons/Lists/IconCheckList';
+import { useWatchlistMutation } from '../../mutations/watchlist-mutations';
 
 interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
+  media: MediaResponse;
+  userId: number;
 }
 
 const UserLists = ({
-  //userLists,
+  userId,
+  media,
   className: inheritedClassname,
 }: UserListsProps): JSX.Element | null => {
+  const watchlistMutation = useWatchlistMutation();
+  //const inList: boolean = !!media.userWatchlist;
+  const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
+
+  const toggleWatchlist = () => {
+    watchlistMutation.mutate(
+      {
+        inList,
+        userId,
+        indexId: media.indexId,
+      },
+      {
+        onSuccess: (result) => {
+          console.log('Response data:', result);
+          console.log('Mutation status:', watchlistMutation.status);
+          setInList((oldInList) => !oldInList);
+        },
+        onError: (error) => {
+          console.error('Request failed:', error);
+        },
+        onSettled: () => {
+          console.log('Final state:', watchlistMutation.status);
+        },
+      }
+    );
+  };
+
   return (
     <div
       className={mergeClassnames(
@@ -21,10 +55,16 @@ const UserLists = ({
         inheritedClassname
       )}
     >
-      <div className="flex flex-row gap-1.5">
-        <IconWatchlistRemove width={17} className="text-gray-300" />{' '}
+      <div
+        className="flex flex-row gap-1 cursor-pointer"
+        onClick={toggleWatchlist}
+      >
+        <IconWatchlistRemove
+          width={17}
+          className={!inList ? 'text-gray-300' : 'text-starblue'}
+        />
         <span className="text-xs font-normal text-gray-350">
-          {'Add to Watchlist'}
+          {`${inList ? 'Remove from ' : 'Add to '}Watchlist`}
         </span>
       </div>
       <div className="flex flex-row gap-2 items-center align-middle">

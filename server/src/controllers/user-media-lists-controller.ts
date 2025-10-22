@@ -65,7 +65,7 @@ router.post(
         IndexMedia.findByPk(indexId),
       ]);
       if (!targetList || !targetMedia) {
-        throw new NotFoundError();
+        throw new NotFoundError(targetList ? 'IndexMedia' : 'User list');
       }
 
       const indexInList: number = targetList.itemCount;
