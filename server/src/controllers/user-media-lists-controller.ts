@@ -11,6 +11,7 @@ import { customIdFormatChecker } from '../middleware/id-format-checker';
 import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
 import { toPlain } from '../util/model-helpers';
+import { getUserWatchlist } from '../services/user-media-lists-service';
 
 const router: Router = express.Router();
 
@@ -30,18 +31,103 @@ router.get(
       ) {
         throw new ForbiddenError();
       }
-      const watchlist: UserMediaList | null = await UserMediaList.findOne({
-        where: {
-          userId,
-          name: 'watchlist',
-          canBeModified: false,
-          icon: 'watchlist',
-        },
-      });
+      const watchlist: UserMediaList | null = await getUserWatchlist(userId);
       if (!watchlist) {
         throw new NotFoundError('watchlist');
       }
       res.json(toPlain(watchlist));
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+//add media to user watchlist directly
+router.post(
+  '/watchlist/:userId/:indexId',
+  authRequired,
+  customIdFormatChecker('userId'),
+  customIdFormatChecker('indexId'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: number = Number(req.params.userId);
+      const indexId: number = Number(req.params.indexId);
+      //only admins and the users themselves can edit their watchlist
+      if (
+        !req.activeUser ||
+        (!req.activeUser.isAdmin && req.activeUser.id !== userId)
+      ) {
+        throw new ForbiddenError();
+      }
+      //we get the target watchlist and the indexMedia to make sure both exist
+      const [targetList, targetMedia] = await Promise.all([
+        getUserWatchlist(userId),
+        IndexMedia.findByPk(indexId),
+      ]);
+      if (!targetList || !targetMedia) {
+        throw new NotFoundError();
+      }
+
+      const indexInList: number = targetList.itemCount;
+      const transaction: Transaction = await sequelize.transaction();
+      try {
+        //we create the new watchlist item matching it to both list and index
+        const item = await UserMediaListItem.create(
+          { userListId: targetList.id, indexId, indexInList },
+          { transaction }
+        );
+        await transaction.commit();
+        res.status(201).json(toPlain(item));
+      } catch (error) {
+        await transaction.rollback();
+        next(error);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+//to remove media from user watchlist directly
+router.delete(
+  '/watchlist/:userId/:indexId',
+  authRequired,
+  customIdFormatChecker('userId'),
+  customIdFormatChecker('indexId'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: number = Number(req.params.userId);
+      const indexId: number = Number(req.params.indexId);
+      //only admins and the users themselves can edit their watchlist
+      if (
+        !req.activeUser ||
+        (!req.activeUser.isAdmin && req.activeUser.id !== userId)
+      ) {
+        throw new ForbiddenError();
+      }
+      //we get the target watchlist to find the item to remove
+      const targetList: UserMediaList | null = await getUserWatchlist(userId);
+      if (!targetList) {
+        throw new NotFoundError('watchlist');
+      }
+      //we find the item that matches both the watchlist and the requested index media
+      const targetListItem: UserMediaListItem | null =
+        await UserMediaListItem.findOne({
+          where: { userListId: targetList.id, indexId },
+        });
+      if (!targetListItem) {
+        throw new NotFoundError('item');
+      }
+
+      const transaction: Transaction = await sequelize.transaction();
+      try {
+        await targetListItem.destroy({ transaction });
+        await transaction.commit();
+        res.status(200).json(toPlain(targetListItem));
+      } catch (error) {
+        await transaction.rollback();
+        next(error);
+      }
     } catch (error) {
       next(error);
     }
