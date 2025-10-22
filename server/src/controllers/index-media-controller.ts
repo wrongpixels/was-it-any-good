@@ -5,11 +5,11 @@ import { gatherMedia } from '../services/index-media-service';
 import { IndexMediaData } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
 import CustomError, { NotFoundError } from '../util/customError';
-import idFormatChecker from '../middleware/id-format-checker';
+import customIdFormatChecker from '../middleware/id-format-checker';
 
 const router = express.Router();
 
-router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
+router.get('/:id', customIdFormatChecker, async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
     if (Number.isNaN(id)) {

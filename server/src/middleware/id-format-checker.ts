@@ -1,13 +1,20 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { WrongFormatError } from '../util/customError';
 
 //a middleware that throws an error if the provided id is not a number
-const idFormatChecker = (req: Request, _res: Response, next: NextFunction) => {
-  const id: string = req.params.id;
-  if (isNaN(Number(id))) {
-    throw new WrongFormatError();
-  }
-  next();
+export const customIdFormatChecker = (idParamName = 'id'): RequestHandler => {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const stringId = req.params[idParamName];
+    const id = Number(stringId);
+
+    if (!stringId || Number.isNaN(id)) {
+      return next(new WrongFormatError(`${idParamName} must be numeric`));
+    }
+
+    next();
+  };
 };
+
+export const idFormatChecker: RequestHandler = customIdFormatChecker();
 
 export default idFormatChecker;

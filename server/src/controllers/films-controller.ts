@@ -8,7 +8,7 @@ import { FilmResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
-import idFormatChecker from '../middleware/id-format-checker';
+import customIdFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
@@ -26,7 +26,7 @@ router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
 router.get(
   '/:id',
   useMediaCache(MediaType.Film),
-  idFormatChecker,
+  customIdFormatChecker,
   async (req: Request, res: Response, next: NextFunction) => {
     //we fetch and transform the data into our frontend interface using `plainData: true`.
     //this avoids handling a sequelize instance here and relying on express' toJSON().
@@ -52,7 +52,7 @@ router.get(
 
 router.get(
   '/tmdb/:id',
-  idFormatChecker,
+  customIdFormatChecker,
   async (req: Request, res: Response, next: NextFunction) => {
     //we first try to find existing entries by tmdbId, if not, we fetch the data
     //from TMDB, add it to our db and return our own data.

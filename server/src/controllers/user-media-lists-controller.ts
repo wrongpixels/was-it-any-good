@@ -7,19 +7,20 @@ import {
   AddMediaToListSchema,
 } from '../schemas/user-media-list-schemas';
 import { CreateUserMediaListItem } from '../../../shared/types/models';
-import idFormatChecker from '../middleware/id-format-checker';
+import { customIdFormatChecker } from '../middleware/id-format-checker';
 import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
+import { toPlain } from '../util/model-helpers';
 
 const router: Router = express.Router();
 
 router.post(
-  '/:id/item',
+  '/:listId/item',
   authRequired,
-  idFormatChecker,
+  customIdFormatChecker('listId'),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userListId: string = req.params.id;
+      const userListId: string = req.params.listId;
       if (!req.activeUser || !req.activeUser.isAdmin) {
         throw new ForbiddenError();
       }
@@ -55,11 +56,60 @@ router.post(
           { transaction }
         );
         await transaction.commit();
-        res.status(201).json(listItemEntry);
+        res.status(201).json(toPlain(listItemEntry));
       } catch (error) {
         await transaction.rollback();
-        console.error(error);
-        console.log('Rolling back');
+        next(error);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.delete(
+  '/:listId/:itemId',
+  authRequired,
+  customIdFormatChecker('listId'),
+  customIdFormatChecker('itemId'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userListId: string = req.params.listId;
+      const userListItemId: string = req.params.itemId;
+      if (!req.activeUser || !req.activeUser.isAdmin) {
+        throw new ForbiddenError();
+      }
+      //we get both the targetList and the targetItem. We'll check both exist and match
+      //our expected data to avoid malicious payloads and forbidden actions
+      const [targetList, targetListItem] = await Promise.all([
+        UserMediaList.findByPk(userListId),
+        UserMediaListItem.findByPk(userListItemId),
+      ]);
+      if (!targetList || !targetListItem) {
+        throw new NotFoundError();
+      }
+      //we check the item is really in the requested list
+      if (targetListItem.userListId !== targetList.id) {
+        throw new ForbiddenError();
+      }
+      //we avoid not admin users being able to delete from other users lists
+      if (!req.activeUser.isAdmin && req.activeUser.id !== targetList.userId) {
+        throw new ForbiddenError();
+      }
+      const transaction: Transaction = await sequelize.transaction();
+
+      try {
+        //and we proceed with the deletion, passing the transaction so the list's
+        //item count is updated/rolled back at the same time
+
+        await targetListItem.destroy({
+          transaction,
+        });
+        await transaction.commit();
+        res.status(200).json(toPlain(targetListItem));
+      } catch (error) {
+        await transaction.rollback();
+        next(error);
       }
     } catch (error) {
       next(error);
