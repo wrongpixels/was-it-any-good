@@ -5,11 +5,11 @@ import { gatherMedia } from '../services/index-media-service';
 import { IndexMediaData } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
 import CustomError, { NotFoundError } from '../util/customError';
-import idFormatChecker from '../middleware/id-format-checker';
+import customIdFormatChecker from '../middleware/id-format-checker';
 
 const router = express.Router();
 
-router.get('/:id', idFormatChecker, async (req: Request, res, next) => {
+router.get('/:id', customIdFormatChecker, async (req: Request, res, next) => {
   try {
     const id: string = req.params.id;
     if (Number.isNaN(id)) {
@@ -34,7 +34,7 @@ router.post('/populate', async (_req, res: Response, next: NextFunction) => {
   try {
     const films: number = await gatherMedia(MediaType.Film);
     const shows: number = await gatherMedia(MediaType.Show);
-    res.json({ shows, films });
+    res.status(201).json({ shows, films });
   } catch (error) {
     next(error);
   }

@@ -22,6 +22,7 @@ import {
   Rating,
   Season,
   Show,
+  UserMediaListItem,
 } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
@@ -33,7 +34,7 @@ import {
   MediaQueryValues,
   MediaQueryOptions,
 } from '../../types/media/media-types';
-import { getUserRatingIncludeable } from '../../constants/scope-attributes';
+import { getActiveUserIncludeable } from '../../constants/scope-attributes';
 import CustomError from '../../util/customError';
 import {
   RatingUpdateOptions,
@@ -219,8 +220,8 @@ class Media<
       },
       constraints: false,
     });
-    //a special Rating association to return the active user rating
-    //directly with the media
+    //association to return the active user rating
+    //directly within the media
     this.hasOne(Rating, {
       foreignKey: 'mediaId',
       as: 'userRating',
@@ -229,7 +230,14 @@ class Media<
       },
       constraints: false,
     });
+    //virtual association to find if the media is in user's watchlist
+    this.hasOne(UserMediaListItem, {
+      foreignKey: 'indexId',
+      as: 'userWatchlist',
+      constraints: false,
+    });
   }
+
   //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
   //this counts every valid vote linked to the entry and calculates a new average
   static async refreshRatings(
@@ -450,7 +458,7 @@ class Media<
     unscoped,
     transaction,
   }: MediaQueryValues): MediaQueryOptions {
-    const include: Includeable[] = getUserRatingIncludeable(
+    const include: Includeable[] = getActiveUserIncludeable(
       mediaType,
       activeUser
     );
@@ -462,7 +470,7 @@ class Media<
       scopeOptions.push({
         method: [
           'withSeasons',
-          getUserRatingIncludeable(MediaType.Season, activeUser),
+          getActiveUserIncludeable(MediaType.Season, activeUser),
         ],
       });
     }

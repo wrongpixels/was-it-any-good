@@ -13,6 +13,7 @@ import searchRouter from './search-controller';
 import trendingRouter from './trending-controller';
 import browseRouter from './browse-controller';
 import myRouter from './my-controller';
+import userMediaListsRouter from './user-media-lists-controller';
 
 export {
   filmsRouter,
@@ -30,4 +31,5 @@ export {
   browseRouter,
   trendingRouter,
   myRouter,
+  userMediaListsRouter,
 };

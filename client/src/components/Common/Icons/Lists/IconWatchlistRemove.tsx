@@ -2,7 +2,7 @@ import { OptIconProps } from '../../../../types/common-props-types';
 import SVG from '../../Custom/SVG';
 
 const IconWatchlistRemove = ({
-  width,
+  width = 20,
   height,
   url,
   newTab,

@@ -1,6 +1,8 @@
 import {
+  CreateOptions,
   CreationOptional,
   DataTypes,
+  DestroyOptions,
   InferAttributes,
   InferCreationAttributes,
   Model,
@@ -30,6 +32,34 @@ class UserMediaListItem extends Model<
       as: 'userList',
     });
     this.belongsTo(IndexMedia, { foreignKey: 'indexId', as: 'indexMedia' });
+  }
+
+  static hooks() {
+    return {
+      //we increment or decrement the number of elements on creation and destroy
+      afterCreate: async (
+        item: UserMediaListItem,
+        options: CreateOptions<UserMediaListItem>
+      ) => {
+        await UserMediaList.increment('itemCount', {
+          transaction: options.transaction,
+          where: {
+            id: item.userListId,
+          },
+        });
+      },
+      afterDestroy: async (
+        item: UserMediaListItem,
+        options: DestroyOptions<UserMediaListItem>
+      ) => {
+        await UserMediaList.decrement('itemCount', {
+          transaction: options.transaction,
+          where: {
+            id: item.userListId,
+          },
+        });
+      },
+    };
   }
 }
 
