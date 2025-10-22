@@ -1,6 +1,14 @@
 import { DataTypes, InferAttributes, InferCreationAttributes } from 'sequelize';
 import { sequelize } from '../../util/db/initialize-db';
-import { Film, IndexMedia, Media, Rating, Show, UserMediaList } from '..';
+import {
+  Film,
+  IndexMedia,
+  Media,
+  Rating,
+  Show,
+  UserMediaList,
+  UserMediaListItem,
+} from '..';
 import { MediaType } from '../../../../shared/types/media';
 import { MediaQueryValues } from '../../types/media/media-types';
 import {
@@ -41,8 +49,8 @@ class Season extends Media<
     });
     //virtual association to find if the media is in user's watchlist
 
-    this.hasOne(UserMediaList, {
-      foreignKey: 'userId',
+    this.hasOne(UserMediaListItem, {
+      foreignKey: 'indexId',
       as: 'userWatchlist',
       constraints: false,
     });
