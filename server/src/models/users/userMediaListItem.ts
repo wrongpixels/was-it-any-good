@@ -76,13 +76,13 @@ UserMediaListItem.init(
     tableName: 'user_media_list_items',
 
     hooks: {
-      async afterCreate(item, options) {
+      async afterCreate(item: UserMediaListItem, options) {
         await UserMediaList.increment('itemCount', {
           transaction: options.transaction,
           where: { id: item.userListId },
         });
       },
-      async afterDestroy(item, options) {
+      async afterDestroy(item: UserMediaListItem, options) {
         await UserMediaList.decrement('itemCount', {
           transaction: options.transaction,
           where: { id: item.userListId },
