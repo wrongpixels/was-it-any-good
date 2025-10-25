@@ -233,6 +233,7 @@ class Media<
     //virtual association to find if the media is in user's watchlist
     this.hasOne(UserMediaListItem, {
       foreignKey: 'indexId',
+      sourceKey: 'indexId',
       as: 'userWatchlist',
       constraints: false,
     });

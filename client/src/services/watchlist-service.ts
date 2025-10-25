@@ -7,7 +7,7 @@ export const toggleFromWatchlist = async ({
   inList,
   userId,
   indexId,
-}: WatchlistMutationOptions) =>
+}: WatchlistMutationOptions): Promise<UserMediaListItemData> =>
   inList
     ? removeFromWatchlist(userId, indexId)
     : addToWatchlist(userId, indexId);

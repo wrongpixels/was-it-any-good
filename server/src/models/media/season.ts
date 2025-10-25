@@ -43,6 +43,7 @@ class Season extends Media<
 
     this.hasOne(UserMediaListItem, {
       foreignKey: 'indexId',
+      sourceKey: 'indexId',
       as: 'userWatchlist',
       constraints: false,
     });

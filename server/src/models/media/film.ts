@@ -34,6 +34,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
     if (media?.mediaType !== mediaType) {
       return null;
     }
+
     return params.plainData ? toPlain(media) : media;
   }
 }

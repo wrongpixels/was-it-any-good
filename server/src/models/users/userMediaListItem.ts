@@ -1,11 +1,10 @@
 import {
-  CreateOptions,
   CreationOptional,
   DataTypes,
-  DestroyOptions,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  Op,
 } from 'sequelize';
 import { IndexMediaData } from '../../../../shared/types/models';
 import UserMediaList from './userMediaList';
@@ -32,34 +31,6 @@ class UserMediaListItem extends Model<
       as: 'userList',
     });
     this.belongsTo(IndexMedia, { foreignKey: 'indexId', as: 'indexMedia' });
-  }
-
-  static hooks() {
-    return {
-      //we increment or decrement the number of elements on creation and destroy
-      afterCreate: async (
-        item: UserMediaListItem,
-        options: CreateOptions<UserMediaListItem>
-      ) => {
-        await UserMediaList.increment('itemCount', {
-          transaction: options.transaction,
-          where: {
-            id: item.userListId,
-          },
-        });
-      },
-      afterDestroy: async (
-        item: UserMediaListItem,
-        options: DestroyOptions<UserMediaListItem>
-      ) => {
-        await UserMediaList.decrement('itemCount', {
-          transaction: options.transaction,
-          where: {
-            id: item.userListId,
-          },
-        });
-      },
-    };
   }
 }
 
@@ -104,6 +75,35 @@ UserMediaListItem.init(
     underscored: true,
     modelName: 'user_media_list_item',
     tableName: 'user_media_list_items',
+
+    hooks: {
+      async afterCreate(item: UserMediaListItem, options) {
+        await UserMediaList.increment('itemCount', {
+          transaction: options.transaction,
+          where: { id: item.userListId },
+        });
+      },
+
+      //we recalculate the itemCount of the list and also fix the indexInList
+      //of items affected by the deletion, or else our unique index will break!
+      async afterDestroy(item: UserMediaListItem, options) {
+        await Promise.all([
+          UserMediaList.decrement('itemCount', {
+            transaction: options.transaction,
+            where: { id: item.userListId },
+          }),
+          //this only affects items on the list placed after the deleted indexInList
+          UserMediaListItem.decrement('indexInList', {
+            transaction: options.transaction,
+            where: {
+              userListId: item.userListId,
+              indexInList: { [Op.gt]: item.indexInList },
+            },
+          }),
+        ]);
+      },
+    },
+
     indexes: [
       {
         unique: true,

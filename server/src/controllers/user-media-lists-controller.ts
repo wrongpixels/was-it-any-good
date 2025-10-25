@@ -6,7 +6,11 @@ import {
   AddMediaToList,
   AddMediaToListSchema,
 } from '../schemas/user-media-list-schemas';
-import { CreateUserMediaListItem } from '../../../shared/types/models';
+import {
+  CreateUserMediaListItem,
+  UserMediaListData,
+  UserMediaListItemData,
+} from '../../../shared/types/models';
 import { customIdFormatChecker } from '../middleware/id-format-checker';
 import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
@@ -35,7 +39,8 @@ router.get(
       if (!watchlist) {
         throw new NotFoundError('watchlist');
       }
-      res.json(toPlain(watchlist));
+      const watchlistResponse: UserMediaListData = toPlain(watchlist);
+      res.json(watchlistResponse);
     } catch (error) {
       next(error);
     }
@@ -72,12 +77,13 @@ router.post(
       const transaction: Transaction = await sequelize.transaction();
       try {
         //we create the new watchlist item matching it to both list and index
-        const item = await UserMediaListItem.create(
+        const listItem: UserMediaListItem = await UserMediaListItem.create(
           { userListId: targetList.id, indexId, indexInList },
           { transaction }
         );
         await transaction.commit();
-        res.status(201).json(toPlain(item));
+        const listItemResponse: UserMediaListItemData = toPlain(listItem);
+        res.status(201).json(listItemResponse);
       } catch (error) {
         await transaction.rollback();
         next(error);
@@ -123,7 +129,9 @@ router.delete(
       try {
         await targetListItem.destroy({ transaction });
         await transaction.commit();
-        res.status(200).json(toPlain(targetListItem));
+        const deletedItemResponse: UserMediaListItemData =
+          toPlain(targetListItem);
+        res.status(200).json(deletedItemResponse);
       } catch (error) {
         await transaction.rollback();
         next(error);
@@ -171,12 +179,13 @@ router.post(
       try {
         //we create the entry using the transaction and pass it to the hook of UserMediaListItem,
         //as it will update the itemCount for us
-        const listItemEntry: UserMediaListItem = await UserMediaListItem.create(
+        const newListItem: UserMediaListItem = await UserMediaListItem.create(
           listItem,
           { transaction }
         );
         await transaction.commit();
-        res.status(201).json(toPlain(listItemEntry));
+        const listItemResponse: UserMediaListItemData = toPlain(newListItem);
+        res.status(201).json(listItemResponse);
       } catch (error) {
         await transaction.rollback();
         next(error);
@@ -226,7 +235,9 @@ router.delete(
           transaction,
         });
         await transaction.commit();
-        res.status(200).json(toPlain(targetListItem));
+        const deletedItemResponse: UserMediaListItemData =
+          toPlain(targetListItem);
+        res.status(200).json(deletedItemResponse);
       } catch (error) {
         await transaction.rollback();
         next(error);

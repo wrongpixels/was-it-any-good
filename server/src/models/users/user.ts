@@ -10,6 +10,7 @@ import Rating from './rating';
 import { Session } from '..';
 import UserMediaList from './userMediaList';
 import { RatingData } from '../../../../shared/types/models';
+import { createDefaultUserLists } from '../../services/user-media-lists-service';
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
@@ -92,6 +93,12 @@ User.init(
     sequelize,
     underscored: true,
     modelName: 'user',
+    hooks: {
+      //we create the default lists on user creation
+      async afterCreate(user: User, options) {
+        await createDefaultUserLists(user.id, options.transaction || undefined);
+      },
+    },
   }
 );
 
