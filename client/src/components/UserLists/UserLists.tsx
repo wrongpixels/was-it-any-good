@@ -9,6 +9,9 @@ import { styles } from '../../constants/tailwind-styles';
 import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import IconChecklist from '../Common/Icons/Lists/IconCheckList';
 import { useWatchlistMutation } from '../../mutations/watchlist-mutations';
+import { useAnimationTrigger } from '../../hooks/use-animation-trigger';
+
+const ENABLED: boolean = true;
 
 interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
@@ -24,7 +27,7 @@ const UserLists = ({
   const watchlistMutation = useWatchlistMutation();
   //const inList: boolean = !!media.userWatchlist;
   const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
-
+  const [watchTrigger, setWatchTrigger] = useAnimationTrigger();
   const toggleWatchlist = () => {
     watchlistMutation.mutate(
       {
@@ -37,6 +40,7 @@ const UserLists = ({
           console.log('Response data:', result);
           console.log('Mutation status:', watchlistMutation.status);
           setInList((oldInList) => !oldInList);
+          setWatchTrigger();
         },
         onError: (error) => {
           console.error('Request failed:', error);
@@ -48,23 +52,31 @@ const UserLists = ({
     );
   };
 
+  if (!ENABLED) {
+    return null;
+  }
+
   return (
     <div
       className={mergeClassnames(
-        `${styles.poster.regular()} flex flex-row items-center justify-around h-auto min-h-0 gap-1.5`,
+        `${styles.poster.regular()} to-gray-50 via-gray-100/70 flex flex-row items-center justify-around h-auto min-h-0 gap-1.5`,
         inheritedClassname
       )}
     >
       <div
-        className="flex flex-row gap-1 cursor-pointer"
+        className="flex flex-row gap-2 cursor-pointer pl-1"
         onClick={toggleWatchlist}
       >
         <IconWatchlistRemove
           width={17}
-          className={!inList ? 'text-gray-300' : 'text-starblue'}
+          className={`
+        ${!inList ? 'text-gray-300' : 'text-starbright'}
+        transition-all duration-150 ease-in-out ${watchTrigger && 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1]'} `}
         />
-        <span className="text-xs font-normal text-gray-350">
-          {`${inList ? 'Remove from ' : 'Add to '}Watchlist`}
+        <span
+          className={`transition-all text-xs font-normal ${watchTrigger && 'animate-pulse opacity-0 scale-102'} ${(inList && 'text-amber-900/50') || 'text-gray-350'}`}
+        >
+          {`${inList ? 'In your ' : 'Add to '}Watchlist`}
         </span>
       </div>
       <div className="flex flex-row gap-2 items-center align-middle">

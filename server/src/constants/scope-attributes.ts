@@ -28,7 +28,7 @@ const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
         mediaType: mediaType,
       },
       required: false,
-    },
+    } /*
     {
       association: 'userWatchlist',
       include: [
@@ -40,7 +40,7 @@ const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
         },
       ],
       required: false,
-    },
+    },*/,
   ];
 };
 
