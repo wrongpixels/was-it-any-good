@@ -4,6 +4,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  Op,
 } from 'sequelize';
 import { IndexMediaData } from '../../../../shared/types/models';
 import UserMediaList from './userMediaList';
@@ -82,11 +83,24 @@ UserMediaListItem.init(
           where: { id: item.userListId },
         });
       },
+
+      //we recalculate the itemCount of the list and also fix the indexInList
+      //of items affected by the deletion, or else our unique index will break!
       async afterDestroy(item: UserMediaListItem, options) {
-        await UserMediaList.decrement('itemCount', {
-          transaction: options.transaction,
-          where: { id: item.userListId },
-        });
+        await Promise.all([
+          UserMediaList.decrement('itemCount', {
+            transaction: options.transaction,
+            where: { id: item.userListId },
+          }),
+          //this only affects items on the list placed after the deleted indexInList
+          UserMediaListItem.decrement('indexInList', {
+            transaction: options.transaction,
+            where: {
+              userListId: item.userListId,
+              indexInList: { [Op.gt]: item.indexInList },
+            },
+          }),
+        ]);
       },
     },
 

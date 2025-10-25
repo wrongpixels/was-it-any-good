@@ -16,9 +16,25 @@ export const BRIEF_MEDIA_ATTRIBUTES: FindAttributeOptions = [
 
 //the function builds an array that works for both IncludeOptions or Includeable,
 //which share structures but not types
-const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
+const getUserAssociations = (
+  mediaType: MediaType,
+  activeUser?: ActiveUser,
+  includeWatchlist: boolean = false
+) => {
   if (!activeUser?.isValid) {
     return [];
+  }
+  if (!includeWatchlist) {
+    return [
+      {
+        association: 'userRating',
+        where: {
+          userId: activeUser.id,
+          mediaType: mediaType,
+        },
+        required: false,
+      },
+    ];
   }
   return [
     {
@@ -28,29 +44,33 @@ const getUserAssociations = (mediaType: MediaType, activeUser?: ActiveUser) => {
         mediaType: mediaType,
       },
       required: false,
-    } /*
-    {
+    },
+    includeWatchlist && {
       association: 'userWatchlist',
       include: [
         {
           association: 'userList',
           where: {
+            userId: activeUser.id,
             name: 'Watchlist',
           },
         },
       ],
       required: false,
-    },*/,
+    },
   ];
 };
 
 //the functions that type the returned array
+
+//for index Media
 export const getActiveUserIncludeOptions = (
   mediaType: MediaType,
   activeUser?: ActiveUser
-): IncludeOptions[] => getUserAssociations(mediaType, activeUser);
+): IncludeOptions[] => getUserAssociations(mediaType, activeUser, false);
 
+//for Media
 export const getActiveUserIncludeable = (
   mediaType: MediaType,
   activeUser?: ActiveUser
-): Includeable[] => getUserAssociations(mediaType, activeUser);
+): Includeable[] => getUserAssociations(mediaType, activeUser, true);

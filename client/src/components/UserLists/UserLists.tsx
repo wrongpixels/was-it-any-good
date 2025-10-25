@@ -10,6 +10,8 @@ import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import IconChecklist from '../Common/Icons/Lists/IconCheckList';
 import { useWatchlistMutation } from '../../mutations/watchlist-mutations';
 import { useAnimationTrigger } from '../../hooks/use-animation-trigger';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { getMediaKey } from '../../utils/ratings-helper';
 
 const ENABLED: boolean = true;
 
@@ -26,6 +28,7 @@ const UserLists = ({
 }: UserListsProps): JSX.Element | null => {
   const watchlistMutation = useWatchlistMutation();
   //const inList: boolean = !!media.userWatchlist;
+  const queryClient: QueryClient = useQueryClient();
   const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
   const [watchTrigger, setWatchTrigger] = useAnimationTrigger();
   const toggleWatchlist = () => {
@@ -40,6 +43,10 @@ const UserLists = ({
           console.log('Response data:', result);
           console.log('Mutation status:', watchlistMutation.status);
           setInList((oldInList) => !oldInList);
+          queryClient.refetchQueries({
+            queryKey: getMediaKey(media.mediaType, media.id),
+            type: 'all',
+          });
           setWatchTrigger();
         },
         onError: (error) => {
