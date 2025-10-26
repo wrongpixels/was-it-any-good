@@ -106,7 +106,7 @@ router.get(
         totalResults: combined.length,
         resultsType: 'browse',
       };
-      res.json(results);
+      res.status(200).json(results);
       setActiveCache(req, results);
     } catch (error) {
       next(error);

@@ -28,6 +28,10 @@ const SynopsisSections = ({
   const endYear: string = isShow ? getYearString(endDate) || '?' : '';
   const displayDate: boolean = startYear !== null;
   const displayAny: boolean = isShow && (displayDate || displayEpisodes);
+  const yearDisplay: string =
+    isShow && endYear === startYear
+      ? `${startYear} | `
+      : `${startYear} - ${endYear} | `;
 
   return (
     <div className="mt-2 space-y-2">
@@ -35,7 +39,7 @@ const SynopsisSections = ({
       <p className="text-sm leading-relaxed text-justify flex flex-col">
         <span className=" text-gray-400 font-extralight">
           {displayAny ? '(' : ''}
-          {displayDate && `${startYear} - ${endYear} | `}
+          {displayDate && yearDisplay}
           {displayEpisodes && (
             <span className="font-normal text-gray-450">{`${episodeCount} Episodes`}</span>
           )}

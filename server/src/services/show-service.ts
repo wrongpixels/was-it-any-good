@@ -151,7 +151,10 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  const fullUpdate: boolean = seasonDiff !== 0 || episodeDiff !== 0;
+  const fullUpdate: boolean =
+    showEntry.lastAirDate !== newShowTMDBData.last_air_date ||
+    seasonDiff !== 0 ||
+    episodeDiff !== 0;
 
   //we only need a transaction for full updates.
   const transaction: Transaction | undefined = fullUpdate
@@ -163,6 +166,7 @@ export const updateShowEntry = async (showEntry: Show) => {
     const promises: Promise<unknown>[] = [
       showEntry.update(
         {
+          lastAirDate: newShowTMDBData.last_air_date,
           seasonCount: newShowTMDBData.number_of_seasons,
           episodeCount: newShowTMDBData.number_of_episodes,
           image: newShowTMDBData.poster_path ?? showEntry.image,
