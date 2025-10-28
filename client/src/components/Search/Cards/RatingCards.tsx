@@ -27,7 +27,7 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
             />
             {showDate && r.updatedAt && (
               <Tag
-                className="right-3 top-9"
+                className="right-3 top-9 cursor-help"
                 text={formatRatingDate(r.updatedAt)}
                 title={`Voted ${formatRatingDate(r.updatedAt)}`}
               />

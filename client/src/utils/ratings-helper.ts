@@ -19,7 +19,7 @@ import {
   QUERY_KEY_RATING,
   QUERY_KEY_TMDB_MEDIA,
 } from '../constants/query-key-constants';
-import { NOT_RELEASED } from '../constants/ratings-constants';
+import { NO_RATINGS, NOT_RELEASED } from '../constants/ratings-constants';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
@@ -221,14 +221,16 @@ export const getIndexMediaUserRating = (
 
 export interface CardRatingData {
   hasRatingText: boolean;
+  unreleased: boolean;
   ratingText: string;
   ratingTitle: string;
 }
 //to get the appropriate placeholder text when a media is not released or not voted
-export const getCardRatingText = (
+export const getCardRatingData = (
   mediaReleaseDate: string | null,
   rating: number,
-  userRating?: RatingData | null
+  userRating?: RatingData | null,
+  isVote: boolean = false
 ): CardRatingData => {
   const releaseDate: Date | null = !mediaReleaseDate
     ? null
@@ -237,16 +239,21 @@ export const getCardRatingText = (
     ? false
     : dayjs(releaseDate).isAfter(dayjs(), 'day');
   const hasRatingText: boolean = rating <= 0 || unreleased;
-  const ratingText: string = !releaseDate
-    ? NOT_RELEASED
-    : `Available ${formatRatingDate(releaseDate)}`;
+  const ratingText: string = unreleased
+    ? !releaseDate
+      ? NOT_RELEASED
+      : `Available ${formatRatingDate(releaseDate)}`
+    : NO_RATINGS;
 
-  const ratingTitle: string = `WIAG score: ${rating}`;
+  const ratingTitle: string = isVote
+    ? `You voted: ${rating}`
+    : `WIAG score: ${rating}`;
   const userRatingTitle: string = userRating
     ? `\nYour rating: ${userRating.userScore}`
     : '';
   return {
     hasRatingText,
+    unreleased,
     ratingText,
     ratingTitle: `${ratingTitle}${userRatingTitle}`,
   };

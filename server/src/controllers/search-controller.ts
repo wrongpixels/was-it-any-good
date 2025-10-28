@@ -17,7 +17,10 @@ import {
 import { toPlainArray } from '../util/model-helpers';
 import { Op } from 'sequelize';
 import { fetchSearchFromTMDBAndParse } from '../services/search-service';
-import { bulkUpsertIndexMedia } from '../services/index-media-service';
+import {
+  buildIndexMediaInclude,
+  bulkUpsertIndexMedia,
+} from '../services/index-media-service';
 import { useCache } from '../middleware/redis-cache';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { setActiveCache } from '../util/redis-helpers';
@@ -188,14 +191,15 @@ router.get(
       //we find them again to get the show/film ids and the genres of the
       //IndexMedia entries of media already in our db. Even if we have the reference
       //to the entries, reloading them individually is simply less efficient.
-      const populatedEntries = await IndexMedia.scope(
+      const populatedEntries = await IndexMedia /*.scope(
         'withMediaAndGenres'
-      ).findAll({
+      )*/.findAll({
         where: {
           id: {
             [Op.in]: ids,
           },
         },
+        include: buildIndexMediaInclude(req.activeUser),
       });
 
       const results: IndexMediaResults = {

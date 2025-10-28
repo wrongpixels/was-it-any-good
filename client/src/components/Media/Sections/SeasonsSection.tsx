@@ -18,6 +18,7 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
   if (!show.seasons) {
     return null;
   }
+  //we hide Specials and other Seasons that are not relevant to us
   const visibleSeasons: SeasonResponse[] = show.seasons.filter(
     (s: SeasonResponse) => !isSpecialSeason(s)
   );

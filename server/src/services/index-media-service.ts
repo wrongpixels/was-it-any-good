@@ -1,12 +1,13 @@
 import path from 'path';
 import fs from 'fs/promises';
 import { MediaType } from '../../../shared/types/media';
-import { CreateIndexMedia } from '../../../shared/types/models';
+import { ActiveUser, CreateIndexMedia } from '../../../shared/types/models';
 import IndexMedia from '../models/media/indexMedia';
 import { tmdbAPI } from '../util/config';
 import { FilmData, SeasonData, ShowData } from '../types/media/media-types';
 import { getYearNum } from '../../../shared/helpers/format-helper';
-import { Transaction } from 'sequelize';
+import { Includeable, Transaction } from 'sequelize';
+import { buildIncludeOptions } from './browse-service';
 
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData | SeasonData,
@@ -101,3 +102,21 @@ export const bulkUpsertIndexMedia = async (
     transaction,
   });
 };
+//a common include builder for our IndexMedia.
+//it allows to add active user-related data, like the rating or list
+//information without the limitation of a scope.
+export const buildIndexMediaInclude = (
+  activeUser: ActiveUser | undefined
+): Includeable | Includeable[] | undefined => [
+  //we still need the film/show ids, rating and genres for the frontend
+  {
+    association: 'film',
+    attributes: ['id', 'rating'],
+    include: buildIncludeOptions(undefined, MediaType.Film, false, activeUser),
+  },
+  {
+    association: 'show',
+    attributes: ['id', 'rating'],
+    include: buildIncludeOptions(undefined, MediaType.Show, false, activeUser),
+  },
+];

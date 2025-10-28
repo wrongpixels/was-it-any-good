@@ -5,7 +5,9 @@ export const addOrReplaceSeason = (
   season: SeasonResponse,
   show: ShowResponse
 ): ShowResponse => {
-  if (!season) return show;
+  if (!season) {
+    return show;
+  }
 
   if (!show.seasons || show.seasons.length < 1) {
     return { ...show, seasonCount: 1, seasons: [season] };
