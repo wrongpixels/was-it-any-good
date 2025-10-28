@@ -26,7 +26,7 @@ const StarRatingIndexMedia = ({
     getCardRatingText(releaseDate, rating, userRating);
   return (
     <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500">
-      {hasRatingText ? (
+      {!hasRatingText ? (
         <div
           title={cardRatingData.ratingTitle}
           className="flex flex-row items-center gap-2.5"
