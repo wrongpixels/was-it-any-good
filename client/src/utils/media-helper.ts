@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { SeasonResponse, ShowResponse } from '../../../shared/types/models';
 
 export const addOrReplaceSeason = (
@@ -31,10 +31,10 @@ export const getNewestAirDate = (media: ShowResponse): string | undefined => {
   }
 
   const lastSeason: SeasonResponse = media.seasons[media.seasons.length - 1];
-  const seasonDate: dayjs.Dayjs | null = lastSeason.releaseDate
+  const seasonDate: Dayjs | null = lastSeason.releaseDate
     ? dayjs(lastSeason.releaseDate)
     : null;
-  const airDate: dayjs.Dayjs | null = media.lastAirDate
+  const airDate: Dayjs | null = media.lastAirDate
     ? dayjs(media.lastAirDate)
     : null;
 

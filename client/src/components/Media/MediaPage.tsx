@@ -135,7 +135,7 @@ const MediaPage = ({
             />
           }
           <div className="border-t border-gray-200 mt-3">
-            {media.mediaType === MediaType.Film ? (
+            {!show ? (
               <CrewEntrySection
                 title="Direction and Writing"
                 crew={media.mergedCrew || UNKNOWN_CREW}
@@ -170,7 +170,7 @@ const MediaPage = ({
           {session && <UserLists media={media} userId={session.userId} />}
         </div>
       </div>
-      {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
+      {show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">
         <CastEntrySection title="Cast" cast={media.cast || UNKNOWN_CAST} />
       </div>
