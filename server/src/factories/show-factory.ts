@@ -50,7 +50,7 @@ export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
   year: getYearNum(tmdb.first_air_date),
   addedToMedia: false,
   mediaType: MediaType.Show,
-  releaseDate: tmdb.first_air_date,
+  releaseDate: getAirDate(tmdb.first_air_date),
 });
 
 export const createIndexForShowBulk = (
