@@ -20,13 +20,14 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
               name={r.indexMedia.name}
               url={urlFromRatingData(r)}
               image={r.indexMedia.image}
+              releaseDate={r.indexMedia.releaseDate}
               mediaType={r.mediaType}
               rating={r.userScore}
               isVote={true}
             />
             {showDate && r.updatedAt && (
               <Tag
-                className="right-3 top-9"
+                className="right-3 top-9 cursor-help"
                 text={formatRatingDate(r.updatedAt)}
                 title={`Voted ${formatRatingDate(r.updatedAt)}`}
               />

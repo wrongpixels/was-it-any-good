@@ -17,7 +17,10 @@ import { fetchTrendingFromTMDBAndParse } from '../services/trending-service';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
 import { UPARAM_PAGE } from '../../../shared/constants/url-param-constants';
-import { bulkUpsertIndexMedia } from '../services/index-media-service';
+import {
+  buildIndexMediaInclude,
+  bulkUpsertIndexMedia,
+} from '../services/index-media-service';
 
 const router: Router = express.Router();
 
@@ -86,14 +89,15 @@ router.get(
 
       //we find them again to get the show/film ids and the genres of the
       //IndexMedia entries of media already in our db.
-      const populatedEntries: IndexMedia[] = await IndexMedia.scope(
+      const populatedEntries: IndexMedia[] = await IndexMedia./*scope(
         'withMediaAndGenres'
-      ).findAll({
+      ).*/ findAll({
         where: {
           id: {
             [Op.in]: ids,
           },
         },
+        include: buildIndexMediaInclude(req.activeUser),
       });
 
       //we build our custom results object for the frontend, limited to
@@ -106,7 +110,7 @@ router.get(
         totalResults: combined.length,
         resultsType: 'browse',
       };
-      res.json(results);
+      res.status(200).json(results);
       setActiveCache(req, results);
     } catch (error) {
       next(error);

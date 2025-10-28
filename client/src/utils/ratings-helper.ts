@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import { formatRatingDate } from '../../../shared/helpers/format-helper';
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
 import {
@@ -17,6 +19,7 @@ import {
   QUERY_KEY_RATING,
   QUERY_KEY_TMDB_MEDIA,
 } from '../constants/query-key-constants';
+import { NO_RATINGS, NOT_RELEASED } from '../constants/ratings-constants';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
@@ -204,9 +207,9 @@ export const getMediaAverageRating = (
   media: MediaResponse | SeasonResponse | IndexMediaData
 ): number => {
   if (isShow(media)) {
-    return calculateShowAverage(media);
+    return calculateShowAverage(media) || 0;
   }
-  return calculateAverage(media);
+  return calculateAverage(media) || 0;
 };
 
 export const getIndexMediaUserRating = (
@@ -215,3 +218,43 @@ export const getIndexMediaUserRating = (
   indexMedia.mediaType === MediaType.Film
     ? (indexMedia.film?.userRating ?? undefined)
     : (indexMedia.show?.userRating ?? undefined);
+
+export interface CardRatingData {
+  hasRatingText: boolean;
+  unreleased: boolean;
+  ratingText: string;
+  ratingTitle: string;
+}
+//to get the appropriate placeholder text when a media is not released or not voted
+export const getCardRatingData = (
+  mediaReleaseDate: string | null,
+  rating: number,
+  userRating?: RatingData | null,
+  isVote: boolean = false
+): CardRatingData => {
+  const releaseDate: Date | null = !mediaReleaseDate
+    ? null
+    : new Date(mediaReleaseDate);
+  const unreleased: boolean = !releaseDate
+    ? false
+    : dayjs(releaseDate).isAfter(dayjs(), 'day');
+  const hasRatingText: boolean = rating <= 0 || unreleased;
+  const ratingText: string = unreleased
+    ? !releaseDate
+      ? NOT_RELEASED
+      : `Available ${formatRatingDate(releaseDate)}`
+    : NO_RATINGS;
+
+  const ratingTitle: string = isVote
+    ? `You voted: ${rating}`
+    : `WIAG score: ${rating}`;
+  const userRatingTitle: string = userRating
+    ? `\nYour rating: ${userRating.userScore}`
+    : '';
+  return {
+    hasRatingText,
+    unreleased,
+    ratingText,
+    ratingTitle: `${ratingTitle}${userRatingTitle}`,
+  };
+};

@@ -12,6 +12,7 @@ interface VerticalMediaPosterProps {
   url: string;
   image: string;
   mediaType: MediaType;
+  releaseDate: string | null;
   rating?: number;
   userRating?: number;
   isVote?: boolean;
@@ -22,6 +23,7 @@ const VerticalMediaPoster = ({
   name,
   url,
   image,
+  releaseDate,
   mediaType,
   rating,
   isVote,
@@ -44,7 +46,11 @@ const VerticalMediaPoster = ({
             className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
           />
         </div>
-        <StarRatingIndexMedia rating={rating} isVote={isVote} />
+        <StarRatingIndexMedia
+          rating={rating}
+          isVote={isVote}
+          releaseDate={releaseDate}
+        />
       </div>
     </Link>
   );

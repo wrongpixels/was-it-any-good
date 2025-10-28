@@ -18,21 +18,23 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
   if (!show.seasons) {
     return null;
   }
+  //we hide Specials and other Seasons that are not relevant to us
+  const visibleSeasons: SeasonResponse[] = show.seasons.filter(
+    (s: SeasonResponse) => !isSpecialSeason(s)
+  );
   return (
     <div>
       <Separator />
-      <EntrySection title={`Seasons (${show.seasonCount})`} content=" " />
-      {show.seasons.length < 1 ? (
+      <EntrySection title={`Seasons (${visibleSeasons.length})`} content=" " />
+      {visibleSeasons.length < 1 ? (
         <div>Show has no seasons.</div>
       ) : (
         <ScrollableDiv>
-          {show.seasons
-            .filter((s: SeasonResponse) => !isSpecialSeason(s))
-            .map((s: SeasonResponse) => (
-              <div key={s.id}>
-                <SeasonPoster media={s} />
-              </div>
-            ))}
+          {visibleSeasons.map((s: SeasonResponse) => (
+            <div key={s.id}>
+              <SeasonPoster media={s} />
+            </div>
+          ))}
         </ScrollableDiv>
       )}
     </div>

@@ -16,7 +16,8 @@
     "start:railway": "node server/src/index.js",
     "start": "node scripts/setup-env.js && cross-env NODE_ENV=local-production DOTENV_CONFIG_PATH=server/.env node --require dotenv/config server/dist/server/src/index.js",
     "test": "npm run test --workspaces",
-    "test:client": "npm run test -w client"
+    "test:client": "npm run test -w client",
+    "rollback": "node scripts/setup-env.js && npm run rollback -w server"
   },
   "devDependencies": {
     "concurrently": "^8.2.2",

@@ -34,6 +34,7 @@ import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 import UserLists from '../UserLists/UserLists';
+import { getNewestAirDate } from '../../utils/media-helper';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -113,6 +114,10 @@ const MediaPage = ({
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
   console.log(media.userWatchlist, media.indexId);
   const show = isShow(media);
+  const newestAirDate: string | undefined = show
+    ? getNewestAirDate(media)
+    : undefined;
+
   return (
     <div>
       <div className="flex flex-col md:flex-row gap-8">
@@ -126,11 +131,11 @@ const MediaPage = ({
               mediaType={mediaType}
               episodeCount={show ? media.episodeCount : undefined}
               startDate={media.releaseDate || undefined}
-              endDate={show ? media.lastAirDate || undefined : undefined}
+              endDate={newestAirDate}
             />
           }
           <div className="border-t border-gray-200 mt-3">
-            {media.mediaType === MediaType.Film ? (
+            {!show ? (
               <CrewEntrySection
                 title="Direction and Writing"
                 crew={media.mergedCrew || UNKNOWN_CREW}
@@ -165,7 +170,7 @@ const MediaPage = ({
           {session && <UserLists media={media} userId={session.userId} />}
         </div>
       </div>
-      {media.mediaType === MediaType.Show && <SeasonsSection show={media} />}
+      {show && <SeasonsSection show={media} />}
       <div className="mt-4 border-t border-gray-200">
         <CastEntrySection title="Cast" cast={media.cast || UNKNOWN_CAST} />
       </div>

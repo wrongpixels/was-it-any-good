@@ -3,6 +3,7 @@ export const PADDING_ADJUSTER: number = 4;
 export const DEF_STAR_WIDTH: number = 26;
 export const DEF_MINI_STAR_WIDTH: number = 23;
 export const NO_RATINGS: string = 'Not enough ratings';
+export const NOT_RELEASED: string = 'Not released yet';
 
 export const RATING_SCALES = [
   'scale-115',

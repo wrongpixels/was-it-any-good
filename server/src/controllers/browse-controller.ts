@@ -11,6 +11,7 @@ import { PAGE_LENGTH_BROWSE } from '../../../shared/types/search-browse';
 import { extractURLParams } from '../util/url-param-extractor';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
+import { buildIndexMediaInclude } from '../services/index-media-service';
 
 const router: Router = express.Router();
 
@@ -73,29 +74,7 @@ router.get(
             addedToMedia: true,
           },
           ...findAndCountOptions,
-          include: [
-            //we still need the film/show ids, rating and genres for the frontend
-            {
-              association: 'film',
-              attributes: ['id', 'rating'],
-              include: buildIncludeOptions(
-                undefined,
-                MediaType.Film,
-                false,
-                req.activeUser
-              ),
-            },
-            {
-              association: 'show',
-              attributes: ['id', 'rating'],
-              include: buildIncludeOptions(
-                undefined,
-                MediaType.Show,
-                false,
-                req.activeUser
-              ),
-            },
-          ],
+          include: buildIndexMediaInclude(req.activeUser),
         });
         const results: IndexMediaResults = {
           page: searchPage,

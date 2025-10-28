@@ -6,12 +6,11 @@ import ExternalLogo from '../Rating/ExternalLogo';
 import {
   DEF_MINI_STAR_WIDTH,
   DEF_STAR_WIDTH,
-  NO_RATINGS,
 } from '../../constants/ratings-constants';
 import { styles } from '../../constants/tailwind-styles';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import DisplayRating from '../Rating/DisplayRating';
-import { formatRatingDate } from '../../../../shared/helpers/format-helper';
+import { CardRatingData, getCardRatingData } from '../../utils/ratings-helper';
 
 interface RatingPosterProps {
   media: MediaResponse | SeasonResponse;
@@ -27,19 +26,9 @@ const RatingPoster = ({
   if (isNaN(rating) || !media) {
     return null;
   }
-  //to know if the season is not released yet
-  const releaseDate: Date | null = !media.releaseDate
-    ? null
-    : new Date(media.releaseDate);
-  const unreleased: boolean = !releaseDate ? false : new Date() < releaseDate;
-  const posterText: string = !releaseDate
-    ? 'Not released yet'
-    : `Available ${formatRatingDate(releaseDate)}`;
-
-  const ratingTitle: string = `WIAG score: ${rating}`;
-  const userRatingTitle: string = media.userRating
-    ? `\nYour rating: ${media.userRating.userScore}`
-    : '';
+  //to know if the media is not released yet
+  const { hasRatingText, unreleased, ...cardRatingData }: CardRatingData =
+    getCardRatingData(media.releaseDate, rating, media.userRating);
   const isSeason: boolean =
     media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
@@ -63,7 +52,7 @@ const RatingPoster = ({
         ></div>
       </div>
 
-      {valid && !unreleased && rating > 0 ? (
+      {valid && !hasRatingText ? (
         <div className="flex items-center justify-center gap-6 ">
           {!isSeason && (
             <div className={`w-6 ${styles.animations.zoomOnHover}`}>
@@ -75,7 +64,7 @@ const RatingPoster = ({
             </div>
           )}
           <span
-            title={`${ratingTitle}${userRatingTitle}`}
+            title={cardRatingData.ratingTitle}
             itemScope
             itemType="https://schema.org/AggregateRating"
             className="cursor-help"
@@ -105,7 +94,7 @@ const RatingPoster = ({
         <div
           className={`text-sm text-gray-400 text-center ${!isSeason ? 'py-2 ' : 'pt-2 pb-1 '}italic`}
         >
-          {unreleased ? posterText : NO_RATINGS}
+          {cardRatingData.ratingText}
         </div>
       )}
     </div>
