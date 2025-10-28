@@ -12,7 +12,7 @@ interface StarRatingIndexMediaProps {
 }
 
 //a component to draw with un-responsive rating stars the rating of and
-//IndexMedia. The rating has to be provided already calculated.
+//IndexMedia.  The rating has to be provided already calculated.
 //Defaults to 0 if undefined
 
 const StarRatingIndexMedia = ({
