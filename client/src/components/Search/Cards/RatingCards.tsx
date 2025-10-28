@@ -20,6 +20,7 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
               name={r.indexMedia.name}
               url={urlFromRatingData(r)}
               image={r.indexMedia.image}
+              releaseDate={r.indexMedia.releaseDate}
               mediaType={r.mediaType}
               rating={r.userScore}
               isVote={true}

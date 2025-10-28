@@ -228,7 +228,7 @@ export interface CardRatingData {
 export const getCardRatingText = (
   mediaReleaseDate: string | null,
   rating: number,
-  userRating?: RatingData
+  userRating?: RatingData | null
 ): CardRatingData => {
   const releaseDate: Date | null = !mediaReleaseDate
     ? null

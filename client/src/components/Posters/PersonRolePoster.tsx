@@ -22,6 +22,7 @@ const PersonRolePoster = ({
         mediaType={mediaResponse.mediaType}
         name={mediaResponse.name}
         image={mediaResponse.image}
+        releaseDate={mediaResponse.releaseDate}
         rating={
           mediaResponse.indexMedia
             ? getMediaAverageRating(mediaResponse.indexMedia)
