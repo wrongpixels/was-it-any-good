@@ -27,6 +27,7 @@ class IndexMedia extends Model<
   declare image: string;
   declare rating: number;
   declare year: number | null;
+  declare releaseDate: string | null;
   declare baseRating: number;
   declare country: CountryCode[];
   declare voteCount: number;
@@ -141,6 +142,10 @@ IndexMedia.init(
     },
     year: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    releaseDate: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },

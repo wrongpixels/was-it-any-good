@@ -7,6 +7,7 @@ import {
   DEF_MINI_STAR_WIDTH,
   DEF_STAR_WIDTH,
   NO_RATINGS,
+  NOT_RELEASED,
 } from '../../constants/ratings-constants';
 import { styles } from '../../constants/tailwind-styles';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
@@ -27,13 +28,13 @@ const RatingPoster = ({
   if (isNaN(rating) || !media) {
     return null;
   }
-  //to know if the season is not released yet
+  //to know if the media is not released yet
   const releaseDate: Date | null = !media.releaseDate
     ? null
     : new Date(media.releaseDate);
   const unreleased: boolean = !releaseDate ? false : new Date() < releaseDate;
   const posterText: string = !releaseDate
-    ? 'Not released yet'
+    ? NOT_RELEASED
     : `Available ${formatRatingDate(releaseDate)}`;
 
   const ratingTitle: string = `WIAG score: ${rating}`;

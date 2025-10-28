@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+import { formatRatingDate } from '../../../shared/helpers/format-helper';
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
 import {
@@ -17,6 +19,7 @@ import {
   QUERY_KEY_RATING,
   QUERY_KEY_TMDB_MEDIA,
 } from '../constants/query-key-constants';
+import { NOT_RELEASED } from '../constants/ratings-constants';
 import { buildPathUrl } from './url-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
@@ -215,3 +218,36 @@ export const getIndexMediaUserRating = (
   indexMedia.mediaType === MediaType.Film
     ? (indexMedia.film?.userRating ?? undefined)
     : (indexMedia.show?.userRating ?? undefined);
+
+export interface CardRatingData {
+  hasRatingText: boolean;
+  ratingText: string;
+  ratingTitle: string;
+}
+//to get the appropriate placeholder text when a media is not released or not voted
+export const getCardRatingText = (
+  mediaReleaseDate: string | null,
+  rating: number,
+  userRating?: RatingData
+): CardRatingData => {
+  const releaseDate: Date | null = !mediaReleaseDate
+    ? null
+    : new Date(mediaReleaseDate);
+  const unreleased: boolean = !releaseDate
+    ? false
+    : dayjs(releaseDate).isAfter(dayjs(), 'day');
+  const hasRatingText: boolean = rating <= 0 || unreleased;
+  const ratingText: string = !releaseDate
+    ? NOT_RELEASED
+    : `Available ${formatRatingDate(releaseDate)}`;
+
+  const ratingTitle: string = `WIAG score: ${rating}`;
+  const userRatingTitle: string = userRating
+    ? `\nYour rating: ${userRating.userScore}`
+    : '';
+  return {
+    hasRatingText,
+    ratingText,
+    ratingTitle: `${ratingTitle}${userRatingTitle}`,
+  };
+};

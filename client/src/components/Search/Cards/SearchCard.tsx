@@ -104,6 +104,7 @@ const SearchCard = ({
         <StarRatingIndexMedia
           rating={average}
           userRating={getIndexMediaUserRating(media)}
+          releaseDate={media.releaseDate}
         />
       </div>
     </Link>

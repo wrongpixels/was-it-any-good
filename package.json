@@ -21,5 +21,8 @@
   "devDependencies": {
     "concurrently": "^8.2.2",
     "cross-env": "^10.0.0"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.18"
   }
 }

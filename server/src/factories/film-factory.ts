@@ -26,6 +26,7 @@ export const createIndexForFilm = (tmdb: TMDBIndexFilm): CreateIndexMedia => ({
   name: tmdb.title,
   addedToMedia: false,
   year: getYearNum(tmdb.release_date),
+  releaseDate: tmdb.release_date,
   mediaType: MediaType.Film,
 });
 

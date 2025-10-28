@@ -27,6 +27,7 @@ export const mediaDataToCreateIndexMedia = (
   voteCount: data.voteCount,
   popularity: data.popularity,
   mediaType: data.mediaType,
+  releaseDate: data.releaseDate,
 });
 
 const PAGES_TO_GATHER: number = 10;
@@ -90,7 +91,12 @@ export const bulkUpsertIndexMedia = async (
   transaction?: Transaction
 ): Promise<IndexMedia[]> => {
   return await IndexMedia.bulkCreate(indexMedia, {
-    updateOnDuplicate: ['popularity', 'name', 'image' /*'baseRating'*/],
+    updateOnDuplicate: [
+      'popularity',
+      'name',
+      'image',
+      'releaseDate' /*'baseRating'*/,
+    ],
     returning: true,
     transaction,
   });
