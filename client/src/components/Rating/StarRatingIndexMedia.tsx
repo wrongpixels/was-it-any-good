@@ -42,7 +42,7 @@ const StarRatingIndexMedia = ({
           )}
         </div>
       ) : (
-        <div className="text-sm font-normal text-gray-300 text-center pt-2 pb-1 italic">
+        <div className="text-sm font-normal text-gray-400/80 text-center pt-2 pb-1 italic">
           {cardRatingData.ratingText}
         </div>
       )}

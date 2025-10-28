@@ -207,9 +207,9 @@ export const getMediaAverageRating = (
   media: MediaResponse | SeasonResponse | IndexMediaData
 ): number => {
   if (isShow(media)) {
-    return calculateShowAverage(media);
+    return calculateShowAverage(media) || 0;
   }
-  return calculateAverage(media);
+  return calculateAverage(media) || 0;
 };
 
 export const getIndexMediaUserRating = (

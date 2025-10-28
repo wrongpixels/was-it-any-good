@@ -6,6 +6,7 @@ module.exports = {
     await queryInterface.addColumn('index_media', 'release_date', {
       type: DataTypes.STRING,
       allowNull: true,
+      defaultValue: null,
     });
   },
 
