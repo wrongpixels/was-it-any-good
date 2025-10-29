@@ -182,6 +182,11 @@ export const routerPaths = {
       query: () => `${routerPaths.my.votes.base}?`,
       byQuery: (query: string) => `${routerPaths.my.votes.query()}${query}`,
     },
+    watchlist: {
+      base: () => `${routerPaths.my.base}/watchlist`,
+      query: () => `${routerPaths.my.watchlist.base}?`,
+      byQuery: (query: string) => `${routerPaths.my.watchlist.query()}${query}`,
+    },
   },
   trending: {
     base: '/trending',

@@ -242,7 +242,7 @@ export const getCardRatingData = (
   const ratingText: string = unreleased
     ? !releaseDate
       ? NOT_RELEASED
-      : `Available ${formatRatingDate(releaseDate)}`
+      : `Coming ${formatRatingDate(releaseDate)}`
     : NO_RATINGS;
 
   const ratingTitle: string = isVote
