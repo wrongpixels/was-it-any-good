@@ -215,7 +215,10 @@ export const mediaPaths = {
 };
 
 export const buildMediaLink = (media: MediaResponse) => {
-  return buildRouterMediaLink(media.mediaType, media.id);
+  return slugifyUrl(
+    buildRouterMediaLink(media.mediaType, media.id),
+    media.name
+  );
 };
 
 export const buildRouterMediaLink = (

@@ -35,6 +35,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 import UserLists from '../UserLists/UserLists';
 import { getNewestAirDate } from '../../utils/media-helper';
+import { slugifyUrl } from '../../../../shared/helpers/format-helper';
 
 interface MediaPage {
   mediaType: MediaType;
@@ -72,7 +73,11 @@ const MediaPage = ({
         exact: false,
       });
       //and then we navigate to our just created media page
-      navigate(buildRouterMediaLink(media.mediaType, media.id), {
+      const slugUrl = slugifyUrl(
+        buildRouterMediaLink(media.mediaType, media.id),
+        media.name
+      );
+      navigate(slugUrl, {
         replace: true,
       });
     }
