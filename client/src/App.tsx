@@ -95,7 +95,7 @@ const AppBody = (): JSX.Element => {
             <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
           }
         />
-        <Route path="/person/:id" element={<PersonPage />} />
+        <Route path={routerPaths.people.idParam()} element={<PersonPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

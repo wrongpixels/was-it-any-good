@@ -101,7 +101,7 @@ export const routerPaths = {
   films: {
     base: '/film',
     page: '/films',
-    idParam: () => `${routerPaths.films.base}/:id`,
+    idParam: () => `${routerPaths.films.base}/:id/:slug?`,
     TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
@@ -109,14 +109,14 @@ export const routerPaths = {
   shows: {
     base: '/show',
     page: '/shows',
-    idParam: () => `${routerPaths.shows.base}/:id`,
+    idParam: () => `${routerPaths.shows.base}/:id/:slug?`,
     TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
   },
   people: {
     base: '/person',
-    withParam: () => `${routerPaths.people.base}/:id`,
+    idParam: () => `${routerPaths.people.base}/:id/:slug?`,
     byId: (id: number | string) => `${routerPaths.people.base}/${id}`,
   },
   users: {

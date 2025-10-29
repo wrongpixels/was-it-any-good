@@ -34,7 +34,7 @@ IndexMedia.associate();
 UserMediaList.associate();
 UserMediaListItem.associate();
 if (!PRODUCTION) {
-  // sequelize.sync({ alter: false, force: false });
+  //sequelize.sync({ alter: true, force: false });
 }
 
 export {
