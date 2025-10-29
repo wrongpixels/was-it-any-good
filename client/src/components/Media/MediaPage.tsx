@@ -71,6 +71,7 @@ const MediaPage = ({
         queryKey: [QUERY_KEY_TRENDING],
         exact: false,
       });
+      //and then we navigate to our just created media page
       navigate(buildRouterMediaLink(media.mediaType, media.id), {
         replace: true,
       });

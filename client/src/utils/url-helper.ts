@@ -26,6 +26,7 @@ import {
   URLParameters,
 } from '../../../shared/types/search-browse';
 import { getDropdownValue } from '../../../shared/types/common';
+import { slugifyUrl } from '../../../shared/helpers/format-helper';
 
 export const apiPaths = {
   films: {
@@ -102,7 +103,7 @@ export const routerPaths = {
     base: '/film',
     page: '/films',
     idParam: () => `${routerPaths.films.base}/:id/:slug?`,
-    TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id`,
+    TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id/:slug?`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
   },
@@ -110,7 +111,7 @@ export const routerPaths = {
     base: '/show',
     page: '/shows',
     idParam: () => `${routerPaths.shows.base}/:id/:slug?`,
-    TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id`,
+    TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id/:slug?`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
   },
@@ -255,9 +256,11 @@ export const urlFromRatingData = (rating: RatingData): string => {
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
   const mediaId: number | null = getMediaId(im);
-  return mediaId
+  const url: string = mediaId
     ? buildRouterMediaLink(im.mediaType, mediaId)
     : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
+
+  return slugifyUrl(url, im.name);
 };
 
 export const isQueryActiveInUrl = (query: string): boolean => {
