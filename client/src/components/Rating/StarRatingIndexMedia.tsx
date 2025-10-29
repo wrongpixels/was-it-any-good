@@ -28,7 +28,7 @@ const StarRatingIndexMedia = ({
       {!unreleased && rating ? (
         <div
           title={cardRatingData.ratingTitle}
-          className="flex flex-row items-center gap-2.5"
+          className="flex flex-row items-center gap-2"
         >
           <span className="cursor-help">{rating}</span>
           {userRating?.updatedAt && (
