@@ -6,6 +6,7 @@ import { mediaTypeToDisplayName } from '../../utils/url-helper';
 import LazyImage from '../Common/Custom/LazyImage';
 import StarRatingIndexMedia from '../Rating/StarRatingIndexMedia';
 import { MediaType } from '../../../../shared/types/media';
+import { RatingData } from '../../../../shared/types/models';
 
 interface VerticalMediaPosterProps {
   name: string;
@@ -14,7 +15,7 @@ interface VerticalMediaPosterProps {
   mediaType: MediaType;
   releaseDate: string | null;
   rating?: number;
-  userRating?: number;
+  userRating?: RatingData;
   isVote?: boolean;
 }
 
@@ -27,7 +28,7 @@ const VerticalMediaPoster = ({
   mediaType,
   rating,
   isVote,
-  //userRating,
+  userRating,
 }: VerticalMediaPosterProps): JSX.Element => {
   return (
     <Link
@@ -50,6 +51,7 @@ const VerticalMediaPoster = ({
           rating={rating}
           isVote={isVote}
           releaseDate={releaseDate}
+          userRating={userRating}
         />
       </div>
     </Link>
