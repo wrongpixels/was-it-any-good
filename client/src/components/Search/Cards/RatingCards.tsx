@@ -1,4 +1,7 @@
-import { formatRatingDate } from '../../../../../shared/helpers/format-helper';
+import {
+  formatRatingDate,
+  slugifyUrl,
+} from '../../../../../shared/helpers/format-helper';
 import { MediaType } from '../../../../../shared/types/media';
 import { RatingData } from '../../../../../shared/types/models';
 import { urlFromRatingData } from '../../../utils/url-helper';
@@ -18,7 +21,7 @@ const RatingCards = ({ ratings, showDate = true }: RatingCardsProps) => (
           <span key={r.id} className="relative">
             <VerticalMediaPoster
               name={r.indexMedia.name}
-              url={urlFromRatingData(r)}
+              url={slugifyUrl(urlFromRatingData(r), r.indexMedia.name)}
               image={r.indexMedia.image}
               releaseDate={r.indexMedia.releaseDate}
               mediaType={r.mediaType}

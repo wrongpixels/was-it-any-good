@@ -33,6 +33,7 @@ router.get(
     //We can't just use sequelize's 'raw:true' as it skips associations within scopes.
     try {
       const id: string = req.params.id;
+
       const filmEntry: FilmResponse | null = await Film.findBy({
         mediaId: id,
         activeUser: req.activeUser,
@@ -59,6 +60,7 @@ router.get(
 
     try {
       const id: string = req.params.id;
+
       const mediaValues: MediaQueryValues = {
         mediaId: id,
         mediaType: MediaType.Film,

@@ -1,5 +1,5 @@
 import { JSX, memo } from 'react';
-import { PathMatch, useMatch } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
@@ -20,9 +20,7 @@ import {
 } from '../../utils/person-details-builder';
 
 const PersonPage = (): JSX.Element | null => {
-  const match: PathMatch | null = useMatch('/person/:id');
-  const personId: string | undefined = match?.params.id;
-
+  const { id: personId } = useParams<{ id: string }>();
   const { data: person, isError, isLoading, error } = usePersonQuery(personId);
 
   if (personId && isNaN(Number(personId))) {

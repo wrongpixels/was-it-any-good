@@ -7,6 +7,7 @@ import LazyImage, { ImageVariant } from '../Common/Custom/LazyImage';
 import { routerPaths } from '../../utils/url-helper';
 import React from 'react';
 import { formatCharacterNames } from '../../utils/person-details-helper';
+import { slugifyUrl } from '../../../../shared/helpers/format-helper';
 
 //We unify the inconsistent way character names are used in TMDB and remove the '(voice)' tags,
 //as those take so much useless space.
@@ -26,7 +27,12 @@ const MediaPersonPoster = ({ credit }: MediaPersonPosterProps) => {
   return (
     <Link
       to={
-        credit.person.id > 0 ? routerPaths.people.byId(credit.person.id) : '#'
+        credit.person.id > 0
+          ? slugifyUrl(
+              routerPaths.people.byId(credit.person.id),
+              credit.person.name
+            )
+          : '#'
       }
       key={credit.person.id}
       className={`flex-shrink-0 flex flex-col items-center shadow-md rounded p-1 pt-2 ring-1 ring-gray-300 ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} ${styles.gradient.poster}`}
