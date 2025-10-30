@@ -27,7 +27,7 @@ import {
   mediaTypeToDisplayName,
 } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
-import { getMediaKey, isShow } from '../../utils/ratings-helper';
+import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
@@ -87,7 +87,7 @@ const KeyedMediaPage = ({
       //we invalidate the HomePage cache after a successful creation, as averages
       //stored in placeholder IndexMedia might change due to our algorithm
       queryClient.removeQueries({
-        queryKey: [QUERY_KEY_TRENDING, getMediaKey(media.mediaType, media.id)],
+        queryKey: [QUERY_KEY_TRENDING],
         exact: false,
       });
       //and then we navigate to our just created media page
