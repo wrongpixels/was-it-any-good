@@ -20,7 +20,11 @@ const transformCredits = (data: MediaResponse): MediaResponse => {
   };
 };
 
-export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
+export const useMediaByIdQuery = (
+  id: string = '',
+  mediaType: MediaType,
+  slug?: string
+) => {
   const queryClient = useQueryClient();
 
   const query = useQuery({
@@ -29,7 +33,7 @@ export const useMediaByIdQuery = (id: string = '', mediaType: MediaType) => {
     gcTime: Infinity,
     enabled: !!id && !isNaN(Number(id)),
     select: (data) => (data ? transformCredits(data) : null),
-    queryFn: () => getMediaById(id, mediaType),
+    queryFn: () => getMediaById(id, mediaType, slug),
   });
   //we create a copy for tmdb id urls
   useEffect(() => {

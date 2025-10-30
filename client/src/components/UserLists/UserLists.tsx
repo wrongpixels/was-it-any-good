@@ -13,7 +13,7 @@ import { useAnimationTrigger } from '../../hooks/use-animation-trigger';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { getMediaKey } from '../../utils/ratings-helper';
 
-const ENABLED: boolean = false;
+export const USER_LISTS_ENABLED: boolean = false;
 
 interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
@@ -59,7 +59,7 @@ const UserLists = ({
     );
   };
 
-  if (!ENABLED) {
+  if (!USER_LISTS_ENABLED) {
     return null;
   }
 

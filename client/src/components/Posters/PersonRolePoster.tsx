@@ -15,6 +15,7 @@ const PersonRolePoster = ({
   mediaResponse,
   characterNames,
 }: PersonPagePosterProps): JSX.Element => {
+  console.log(mediaResponse.userRating?.userScore);
   return (
     <div title={characterNames} className="flex flex-col items-center">
       <VerticalMediaPoster
@@ -28,7 +29,7 @@ const PersonRolePoster = ({
             ? getMediaAverageRating(mediaResponse.indexMedia)
             : 0
         }
-        userRating={mediaResponse.userRating?.userScore}
+        userRating={mediaResponse.userRating || undefined}
       />
       {characterNames && (
         <div

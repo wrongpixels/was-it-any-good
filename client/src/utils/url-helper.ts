@@ -31,17 +31,20 @@ import { slugifyUrl } from '../../../shared/helpers/format-helper';
 export const apiPaths = {
   films: {
     base: `${API_BASE}/films`,
-    byId: (id: number | string) => `${apiPaths.films.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.films.base}/${id}${slug ? `/${slug}` : ''}`,
     byTMDBId: (id: number | string) => `${apiPaths.films.base}/tmdb/${id}`,
   },
   shows: {
     base: `${API_BASE}/shows`,
-    byId: (id: number | string) => `${apiPaths.shows.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.shows.base}/${id}${slug ? `/${slug}` : ''}`,
     byTMDBId: (id: number | string) => `${apiPaths.shows.base}/tmdb/${id}`,
   },
   people: {
     base: `${API_BASE}/people`,
-    byId: (id: number | string) => `${apiPaths.people.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.people.base}/${id}${slug ? `/${slug}` : ''}`,
   },
   genres: {
     base: `${API_BASE}/genres`,
@@ -102,7 +105,7 @@ export const routerPaths = {
   films: {
     base: '/film',
     page: '/films',
-    idParam: () => `${routerPaths.films.base}/:id/:slug?`,
+    idRoute: () => `${routerPaths.films.base}/:id/:slug?`,
     TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id/:slug?`,
     byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
@@ -110,15 +113,16 @@ export const routerPaths = {
   shows: {
     base: '/show',
     page: '/shows',
-    idParam: () => `${routerPaths.shows.base}/:id/:slug?`,
+    idRoute: () => `${routerPaths.shows.base}/:id/:slug?`,
     TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id/:slug?`,
     byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
     byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
   },
   people: {
     base: '/person',
-    idParam: () => `${routerPaths.people.base}/:id/:slug?`,
-    byId: (id: number | string) => `${routerPaths.people.base}/${id}`,
+    idRoute: () => `${routerPaths.people.base}/:id/:slug?`,
+    byId: (id: number | string, slug?: string) =>
+      `${routerPaths.people.base}/${id}${slug ? `/${slug}` : ''}`,
   },
   users: {
     base: '/user',
@@ -181,6 +185,11 @@ export const routerPaths = {
       base: () => `${routerPaths.my.base}/votes`,
       query: () => `${routerPaths.my.votes.base}?`,
       byQuery: (query: string) => `${routerPaths.my.votes.query()}${query}`,
+    },
+    watchlist: {
+      base: () => `${routerPaths.my.base}/watchlist`,
+      query: () => `${routerPaths.my.watchlist.base}?`,
+      byQuery: (query: string) => `${routerPaths.my.watchlist.query()}${query}`,
     },
   },
   trending: {

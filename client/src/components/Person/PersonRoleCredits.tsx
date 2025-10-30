@@ -48,11 +48,11 @@ const PersonRoleCredits = ({
         })}
         <PlaceholderPoster
           placeholderCount={placeholderCount}
-          className="hidden sm:block h-81"
+          className="hidden sm:block h-80"
         />
         <PlaceholderPoster
           placeholderCount={1}
-          className="block sm:hidden h-81"
+          className="block sm:hidden h-80"
         />
       </ScrollableDiv>
     </div>

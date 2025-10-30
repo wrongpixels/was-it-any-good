@@ -28,13 +28,13 @@ const StarRatingIndexMedia = ({
       {!unreleased && rating ? (
         <div
           title={cardRatingData.ratingTitle}
-          className="flex flex-row items-center gap-2.5"
+          className="flex flex-row items-center gap-1.5  translate-y-0.25"
         >
           <span className="cursor-help">{rating}</span>
           {userRating?.updatedAt && (
             <span
               title={`Voted ${formatRatingDate(userRating.updatedAt)}`}
-              className={`shadow/20 mt-0.5 text-regular text-center align-middle font-semibold text-white rounded bg-starblue/70 w-6 border-2 border-sky-900/50 cursor-help`}
+              className={`mt-0.5 text-regular text-center align-middle font-semibold text-white rounded bg-starbright/80 w-6.5 h-5 cursor-help flex items-center justify-center`}
             >
               {userRating.userScore}
             </span>

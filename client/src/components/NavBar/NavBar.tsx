@@ -8,6 +8,8 @@ import IconFilm from '../Common/Icons/Media/IconFilm';
 import IconShow from '../Common/Icons/Media/IconShow';
 import IconStar from '../Common/Icons/Ratings/IconStar';
 import { useAuth } from '../../hooks/use-auth';
+import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
+import { USER_LISTS_ENABLED } from '../UserLists/UserLists';
 
 interface LinkInfo {
   text: string;
@@ -95,25 +97,47 @@ const NavBar = (): JSX.Element => {
         ))}
       </ul>
       {auth.session && (
-        <span
-          className={`ml-auto text-end text-xs md:text-sm h-full items-center  ${styles.animations.opacity70}`}
-        >
-          <NavLink
-            to={routerPaths.my.votes.base()}
-            title={'My Ratings'}
-            className={({ isActive }) =>
-              `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
-                isActive
-                  ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/30 to-transparent via-amber-200/10'
-                  : 'border-transparent'
-              }`
-            }
-            end={routerPaths.my.votes.base() === routerPaths.my.votes.base()}
-          >
-            {<IconStar width={16} />}
-            <span className="text-starblue">{'My Ratings'}</span>
-          </NavLink>
-        </span>
+        <div className="ml-auto text-end text-xs md:text-sm h-full items-center  flex flex-row">
+          <span className={`${styles.animations.opacity70}`}>
+            <NavLink
+              to={routerPaths.my.votes.base()}
+              title={'My Ratings'}
+              className={({ isActive }) =>
+                `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
+                  isActive
+                    ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/30 to-transparent via-amber-200/10'
+                    : 'border-transparent'
+                }`
+              }
+              end={routerPaths.my.votes.base() === routerPaths.my.votes.base()}
+            >
+              {<IconStar width={16} />}
+              <span className="text-starblue">{'My Ratings'}</span>
+            </NavLink>
+          </span>
+          {USER_LISTS_ENABLED && (
+            <span className={`${styles.animations.opacity70}`}>
+              <NavLink
+                to={routerPaths.my.watchlist.base()}
+                title={'Watchlist'}
+                className={({ isActive }) =>
+                  `flex flex-row items-center gap-1 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
+                    isActive
+                      ? 'border-amber-400/70 bg-gradient-to-t from-amber-200/30 to-transparent via-amber-200/10'
+                      : 'border-transparent'
+                  }`
+                }
+                end={
+                  routerPaths.my.watchlist.base() ===
+                  routerPaths.my.watchlist.base()
+                }
+              >
+                {<IconWatchlistRemove height={16} width={14} />}
+                <span className="text-starblue">{'Watchlist'}</span>
+              </NavLink>
+            </span>
+          )}
+        </div>
       )}
     </nav>
   );

@@ -47,6 +47,7 @@ const App = (): JSX.Element => {
     </div>
   );
 };
+
 // auth sensitive part of the app
 const AppBody = (): JSX.Element => {
   useScrollToTop();
@@ -76,26 +77,22 @@ const AppBody = (): JSX.Element => {
         ))}
 
         <Route
-          path={routerPaths.films.idParam()}
-          element={<MediaPage key="local-id" mediaType={MediaType.Film} />}
+          path={routerPaths.films.idRoute()}
+          element={<MediaPage mediaType={MediaType.Film} />}
         />
         <Route
-          path={routerPaths.shows.idParam()}
-          element={<MediaPage key="local-id" mediaType={MediaType.Show} />}
+          path={routerPaths.shows.idRoute()}
+          element={<MediaPage mediaType={MediaType.Show} />}
         />
         <Route
           path={routerPaths.films.TMDBIdParam()}
-          element={
-            <MediaPage key="tmdb-id" mediaType={MediaType.Film} tmdb={true} />
-          }
+          element={<MediaPage mediaType={MediaType.Film} tmdb={true} />}
         />
         <Route
           path={routerPaths.shows.TMDBIdParam()}
-          element={
-            <MediaPage key="tmdb-id" mediaType={MediaType.Show} tmdb={true} />
-          }
+          element={<MediaPage mediaType={MediaType.Show} tmdb={true} />}
         />
-        <Route path={routerPaths.people.idParam()} element={<PersonPage />} />
+        <Route path={routerPaths.people.idRoute()} element={<PersonPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

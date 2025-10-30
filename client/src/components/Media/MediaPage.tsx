@@ -27,7 +27,7 @@ import {
   mediaTypeToDisplayName,
 } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
-import { isShow } from '../../utils/ratings-helper';
+import { getMediaKey, isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
@@ -37,18 +37,36 @@ import UserLists from '../UserLists/UserLists';
 import { getNewestAirDate } from '../../utils/media-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
 
-interface MediaPage {
+interface MediaPageProps {
   mediaType: MediaType;
   tmdb?: boolean;
 }
 
+//a wrapper to force update the component when the id, source or slug
+//has changed
 const MediaPage = ({
+  mediaType,
+  tmdb = false,
+}: {
+  mediaType: MediaType;
+  tmdb?: boolean;
+}): JSX.Element => {
+  const { id, slug } = useParams<{ id: string; slug?: string }>();
+
+  const key = tmdb
+    ? `${mediaType.toLowerCase()}-tmdbid-${id}`
+    : `${mediaType.toLowerCase()}-id-${id}${slug ? `-${slug}` : ''}`;
+
+  return <KeyedMediaPage key={key} mediaType={mediaType} tmdb={tmdb} />;
+};
+
+const KeyedMediaPage = ({
   tmdb = false,
   mediaType,
-}: MediaPage): JSX.Element | null => {
+}: MediaPageProps): JSX.Element | null => {
   const queryClient: QueryClient = useQueryClient();
   const navigate = useNavigate();
-  const { id: mediaId } = useParams<{ id: string }>();
+  const { id: mediaId, slug } = useParams<{ id: string; slug: string }>();
   const { isLoginPending, session }: AuthContextValues = useAuth();
   const {
     data: media,
@@ -58,25 +76,27 @@ const MediaPage = ({
     error,
   } = tmdb
     ? useMediaByTMDBQuery(mediaId, mediaType)
-    : useMediaByIdQuery(mediaId, mediaType);
+    : useMediaByIdQuery(mediaId, mediaType, slug);
 
-  let isRedirecting: boolean = !!tmdb && !!media;
+  let isRedirecting: boolean = (!!tmdb && !!media) || !!media?.expectedSlug;
 
-  //once load, if it's a tmdb entry, we redirect to the existing or just
-  //created id page
+  //if it's a tmdb entry, we redirect to the existing or just created id page
+  //it also triggers a redirect if the user inserted a wrong url slug.
   useEffect(() => {
-    if (tmdb && media) {
+    if ((tmdb && media) || media?.expectedSlug) {
       //we invalidate the HomePage cache after a successful creation, as averages
       //stored in placeholder IndexMedia might change due to our algorithm
       queryClient.removeQueries({
-        queryKey: [QUERY_KEY_TRENDING],
+        queryKey: [QUERY_KEY_TRENDING, getMediaKey(media.mediaType, media.id)],
         exact: false,
       });
       //and then we navigate to our just created media page
+      console.log(media);
       const slugUrl = slugifyUrl(
         buildRouterMediaLink(media.mediaType, media.id),
         media.name
       );
+      console.log('Redirecting to', slugUrl);
       navigate(slugUrl, {
         replace: true,
       });
@@ -92,8 +112,8 @@ const MediaPage = ({
     isRedirecting ||
     (isFetching &&
       media &&
-      media?.cast === undefined &&
-      media?.crew === undefined)
+      ((media.cast === undefined && media.crew === undefined) ||
+        media.expectedSlug))
   ) {
     return tmdb ? (
       <CreatingMediaPage text={mediaType} />
@@ -118,14 +138,13 @@ const MediaPage = ({
   }
 
   setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
-  console.log(media.userWatchlist, media.indexId);
   const show = isShow(media);
   const newestAirDate: string | undefined = show
     ? getNewestAirDate(media)
     : undefined;
 
   return (
-    <div>
+    <div key={`${tmdb ? `tmdb` : 'id'}-${mediaId}${slug ? `-${slug}` : ''}`}>
       <div className="flex flex-col md:flex-row gap-8">
         <span className="flex-1 overflow-x-hidden">
           <MediaHeader media={media} />

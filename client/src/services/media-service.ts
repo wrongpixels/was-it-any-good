@@ -6,10 +6,11 @@ import { getFromAPI } from './common-service';
 
 export const getMediaById = (
   id: string,
-  mediaType: MediaType
+  mediaType: MediaType,
+  slug?: string
 ): Promise<MediaResponse> => {
   const path = getMediaPath(mediaType);
-  return getFromAPI<MediaResponse>(path.byId(id));
+  return getFromAPI<MediaResponse>(path.byId(id, slug));
 };
 
 export const getMediaByTMDBId = (
