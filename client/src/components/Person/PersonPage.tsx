@@ -1,5 +1,5 @@
-import { JSX, memo } from 'react';
-import { useParams } from 'react-router-dom';
+import { JSX, memo, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
 import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
@@ -18,16 +18,42 @@ import {
   buildPersonDetails,
   PersonDetailsValues,
 } from '../../utils/person-details-builder';
+import { routerPaths } from '../../utils/url-helper';
 
-const PersonPage = (): JSX.Element | null => {
-  const { id: personId } = useParams<{ id: string }>();
-  const { data: person, isError, isLoading, error } = usePersonQuery(personId);
+//to force a refresh when the slug changes
+const PersonPage = () => {
+  const { id, slug } = useParams<{ id: string; slug?: string }>();
+  const key = `${id}${slug ? `-${slug}` : ''}`;
+  return <KeyedPersonPage key={key} />;
+};
 
-  if (personId && isNaN(Number(personId))) {
+const KeyedPersonPage = (): JSX.Element | null => {
+  const { id: personId, slug } = useParams<{ id: string; slug: string }>();
+  const {
+    data: person,
+    isError,
+    isLoading,
+    error,
+  } = usePersonQuery(personId, slug);
+  const navigate = useNavigate();
+
+  if (!personId || isNaN(Number(personId))) {
     return <WrongIdFormatPage />;
   }
+  console.log('Slug is:', slug);
+  useEffect(() => {
+    if (person?.expectedSlug) {
+      //if we used a wrong slug, we redirect to the actual one.
+      const slugUrl: string = routerPaths.people.byId(
+        personId,
+        person.expectedSlug
+      );
+      console.log('Redirecting to', slugUrl);
+      navigate(slugUrl, { replace: true });
+    }
+  });
 
-  if (isLoading) {
+  if (isLoading || person?.expectedSlug) {
     return <LoadingPage text="person" />;
   }
 

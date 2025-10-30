@@ -77,11 +77,11 @@ const AppBody = (): JSX.Element => {
         ))}
 
         <Route
-          path={routerPaths.films.idParam()}
+          path={routerPaths.films.idRoute()}
           element={<MediaPage mediaType={MediaType.Film} />}
         />
         <Route
-          path={routerPaths.shows.idParam()}
+          path={routerPaths.shows.idRoute()}
           element={<MediaPage mediaType={MediaType.Show} />}
         />
         <Route
@@ -92,7 +92,7 @@ const AppBody = (): JSX.Element => {
           path={routerPaths.shows.TMDBIdParam()}
           element={<MediaPage mediaType={MediaType.Show} tmdb={true} />}
         />
-        <Route path={routerPaths.people.idParam()} element={<PersonPage />} />
+        <Route path={routerPaths.people.idRoute()} element={<PersonPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

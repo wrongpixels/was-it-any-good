@@ -18,8 +18,14 @@ export const slugHandler = (
   return async (req: Request, res: Response, next: NextFunction) => {
     const { id, slug } = req.params;
     //we quickly look for the target entry and only check the name.
+
+    const attributes: string[] = ['name', 'id'];
+    if (model !== Person) {
+      attributes.push('mediaType');
+    }
+
     const entry = await findByPkInModel(model, id, {
-      attributes: ['name', 'mediaType', 'id'],
+      attributes,
     });
     if (!entry) {
       throw new NotFoundError(model.name);

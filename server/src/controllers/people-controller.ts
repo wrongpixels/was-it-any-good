@@ -12,6 +12,7 @@ import idFormatChecker from '../middleware/id-format-checker';
 import { adminRequired } from '../middleware/auth-requirements';
 import { MediaType } from '../../../shared/types/media';
 import { getActiveUserIncludeable } from '../constants/scope-attributes';
+import { slugHandler } from '../middleware/slug-handler';
 const router = express.Router();
 
 router.get('/', adminRequired, async (_req, res, next) => {
@@ -27,8 +28,9 @@ router.get('/', adminRequired, async (_req, res, next) => {
 });
 
 router.get(
-  '/:id',
+  '/:id{/:slug}',
   idFormatChecker,
+  slugHandler(Person),
   async (req: Request, res: Response<PersonResponse | null>, next) => {
     try {
       const id: string = req.params.id;

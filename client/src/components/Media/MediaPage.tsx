@@ -96,7 +96,7 @@ const KeyedMediaPage = ({
         buildRouterMediaLink(media.mediaType, media.id),
         media.name
       );
-      console.log('navigating to', slugUrl);
+      console.log('Redirecting to', slugUrl);
       navigate(slugUrl, {
         replace: true,
       });
