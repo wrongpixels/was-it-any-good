@@ -166,6 +166,7 @@ export interface PersonResponse {
   description?: string
   roles?: MediaRoleResponse[]
   sortedRoles?: SortedRoles
+  expectedSlug?: string
 }
 
 export interface BaseResponse {
@@ -182,6 +183,7 @@ export interface BaseResponse {
   rating: number
   mediaType: MediaType
   releaseDate: string | null
+  expectedSlug?: string
 }
 
 export interface SeasonResponse extends BaseResponse {

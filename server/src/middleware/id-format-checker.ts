@@ -10,7 +10,6 @@ export const customIdFormatChecker = (idParamName = 'id'): RequestHandler => {
     if (!stringId || Number.isNaN(id)) {
       return next(new WrongFormatError(`${idParamName} must be numeric`));
     }
-
     next();
   };
 };

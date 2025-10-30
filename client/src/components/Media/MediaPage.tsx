@@ -27,7 +27,7 @@ import {
   mediaTypeToDisplayName,
 } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
-import { isShow } from '../../utils/ratings-helper';
+import { getMediaKey, isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
 import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
@@ -62,14 +62,14 @@ const MediaPage = ({
 
   let isRedirecting: boolean = !!tmdb && !!media;
 
-  //once load, if it's a tmdb entry, we redirect to the existing or just
-  //created id page
+  //if it's a tmdb entry, we redirect to the existing or just created id page
+  //it also triggers a redirect if the user inserted a wrong url slug.
   useEffect(() => {
     if (tmdb && media) {
       //we invalidate the HomePage cache after a successful creation, as averages
       //stored in placeholder IndexMedia might change due to our algorithm
       queryClient.removeQueries({
-        queryKey: [QUERY_KEY_TRENDING],
+        queryKey: [QUERY_KEY_TRENDING, getMediaKey(media.mediaType, media.id)],
         exact: false,
       });
       //and then we navigate to our just created media page

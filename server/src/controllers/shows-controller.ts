@@ -5,7 +5,7 @@ import CustomError, { NotFoundError } from '../util/customError';
 import { buildShowEntry, updateShowEntry } from '../services/show-service';
 import { sequelize } from '../util/db/initialize-db';
 import { Transaction } from 'sequelize';
-import { ShowResponse } from '../../../shared/types/models';
+import { MediaResponse, ShowResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
@@ -16,6 +16,7 @@ import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 //import { isShowDataOld } from '../util/media-helpers';
 import { toPlain } from '../util/model-helpers';
 import { isShowDataOld } from '../util/media-helpers';
+import { slugifyText } from '../../../shared/helpers/format-helper';
 
 const router: Router = express.Router();
 
@@ -37,7 +38,7 @@ router.get(
   useMediaCache(MediaType.Show),
   async (req: Request, res, next) => {
     try {
-      const id: string = req.params.id;
+      const { id, slug } = req.params;
       const showEntry: Show | ShowResponse | null = await Show.findBy({
         mediaId: id,
         activeUser: req.activeUser,
@@ -52,7 +53,18 @@ router.get(
         await updateShowEntry(showEntry);
       }
       //we convert it to plain data for cache storage and the client
-      const showResponse: ShowResponse = toPlain(showEntry);
+      //we don't do it earlier so we can update the entry if needed.
+      let showResponse: MediaResponse = toPlain(showEntry);
+
+      //if the slug provided doesn't match the expected one, we make the
+      //response basic and provide the correct redirect one.
+      const expectedSlug: string = slugifyText(showResponse.name);
+
+      if (slug !== expectedSlug) {
+        console.log('Unexpected slug', slug, expectedSlug);
+        showResponse.expectedSlug = expectedSlug;
+        showResponse = toBasicMediaResponse(showResponse);
+      }
       res.json(showResponse);
       setMediaActiveCache(req, showResponse);
     } catch (error) {
@@ -97,7 +109,11 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
     if (!showEntry) {
       throw new NotFoundError('Show');
     }
+    //we add the expected slug for the redirect
+    showEntry.expectedSlug = slugifyText(showEntry.name);
     await setMediaCache(req, showEntry);
+    //we strip the heavy fields, as we only need id and mediaType for
+    //the redirect to the entry in the client.
     res.status(201).json(toBasicMediaResponse(showEntry));
   } catch (error) {
     next(error);

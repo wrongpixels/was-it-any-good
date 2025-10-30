@@ -4,7 +4,7 @@ import { Film } from '../models';
 import { buildFilmEntry } from '../services/film-service';
 import { sequelize } from '../util/db/initialize-db';
 import { Transaction } from 'sequelize';
-import { FilmResponse } from '../../../shared/types/models';
+import { FilmResponse, MediaResponse } from '../../../shared/types/models';
 import { AxiosError } from 'axios';
 import { MediaQueryValues } from '../types/media/media-types';
 import { MediaType } from '../../../shared/types/media';
@@ -12,6 +12,7 @@ import customIdFormatChecker from '../middleware/id-format-checker';
 import { useMediaCache } from '../middleware/redis-cache';
 import { setMediaActiveCache, setMediaCache } from '../util/redis-helpers';
 import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
+import { slugifyText } from '../../../shared/helpers/format-helper';
 const router: Router = express.Router();
 
 router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
@@ -32,9 +33,9 @@ router.get(
     //this avoids handling a sequelize instance here and relying on express' toJSON().
     //We can't just use sequelize's 'raw:true' as it skips associations within scopes.
     try {
-      const id: string = req.params.id;
+      const { id, slug } = req.params;
 
-      const filmEntry: FilmResponse | null = await Film.findBy({
+      let filmEntry: MediaResponse | null = await Film.findBy({
         mediaId: id,
         activeUser: req.activeUser,
         plainData: true,
@@ -42,6 +43,14 @@ router.get(
 
       if (!filmEntry) {
         throw new NotFoundError('Film');
+      }
+      //if the slug provided doesn't match the expected one, we make the
+      //response basic and provide the correct redirect one.
+      const expectedSlug: string = slugifyText(filmEntry.name);
+
+      if (slug !== expectedSlug) {
+        filmEntry.expectedSlug = expectedSlug;
+        filmEntry = toBasicMediaResponse(filmEntry);
       }
       res.json(filmEntry);
       setMediaActiveCache(req, filmEntry);
@@ -92,6 +101,8 @@ router.get(
       if (!filmEntry) {
         throw new NotFoundError('Film');
       }
+      //we add the expected slug for the redirect
+      filmEntry.expectedSlug = slugifyText(filmEntry.name);
       //we set the cache for the id page
       await setMediaCache(req, filmEntry);
       //we strip the heavy fields, as we only need id and mediaType for
