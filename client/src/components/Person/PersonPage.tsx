@@ -51,7 +51,7 @@ const KeyedPersonPage = (): JSX.Element | null => {
       console.log('Redirecting to', slugUrl);
       navigate(slugUrl, { replace: true });
     }
-  });
+  }, [slug, person?.expectedSlug]);
 
   if (isLoading || person?.expectedSlug) {
     return <LoadingPage text="person" />;
