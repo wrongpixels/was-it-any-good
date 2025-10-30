@@ -31,17 +31,20 @@ import { slugifyUrl } from '../../../shared/helpers/format-helper';
 export const apiPaths = {
   films: {
     base: `${API_BASE}/films`,
-    byId: (id: number | string) => `${apiPaths.films.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.films.base}/${id}${slug ? `/${slug}` : ''}`,
     byTMDBId: (id: number | string) => `${apiPaths.films.base}/tmdb/${id}`,
   },
   shows: {
     base: `${API_BASE}/shows`,
-    byId: (id: number | string) => `${apiPaths.shows.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.shows.base}/${id}${slug ? `/${slug}` : ''}`,
     byTMDBId: (id: number | string) => `${apiPaths.shows.base}/tmdb/${id}`,
   },
   people: {
     base: `${API_BASE}/people`,
-    byId: (id: number | string) => `${apiPaths.people.base}/${id}`,
+    byId: (id: number | string, slug?: string) =>
+      `${apiPaths.people.base}/${id}${slug ? `/${slug}` : ''}`,
   },
   genres: {
     base: `${API_BASE}/genres`,

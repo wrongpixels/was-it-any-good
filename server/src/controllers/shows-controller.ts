@@ -17,6 +17,7 @@ import { toBasicMediaResponse } from '../../../shared/helpers/media-helper';
 import { toPlain } from '../util/model-helpers';
 import { isShowDataOld } from '../util/media-helpers';
 import { slugifyText } from '../../../shared/helpers/format-helper';
+import { slugHandler } from '../middleware/slug-handler';
 
 const router: Router = express.Router();
 
@@ -32,46 +33,6 @@ router.get('/', async (_req, res, next) => {
   }
 });
 
-router.get(
-  '/:id',
-  idFormatChecker,
-  useMediaCache(MediaType.Show),
-  async (req: Request, res, next) => {
-    try {
-      const { id, slug } = req.params;
-      const showEntry: Show | ShowResponse | null = await Show.findBy({
-        mediaId: id,
-        activeUser: req.activeUser,
-        plainData: false,
-      });
-      //we have to ensure TS that we received the full model entry
-      if (!showEntry || !(showEntry instanceof Show)) {
-        throw new NotFoundError('Show');
-      }
-      if (isShowDataOld(showEntry)) {
-        console.log('Show data might be outdated');
-        await updateShowEntry(showEntry);
-      }
-      //we convert it to plain data for cache storage and the client
-      //we don't do it earlier so we can update the entry if needed.
-      let showResponse: MediaResponse = toPlain(showEntry);
-
-      //if the slug provided doesn't match the expected one, we make the
-      //response basic and provide the correct redirect one.
-      const expectedSlug: string = slugifyText(showResponse.name);
-
-      if (slug !== expectedSlug) {
-        console.log('Unexpected slug', slug, expectedSlug);
-        showResponse.expectedSlug = expectedSlug;
-        showResponse = toBasicMediaResponse(showResponse);
-      }
-      res.json(showResponse);
-      setMediaActiveCache(req, showResponse);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
 router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
   //we first try to find existing entries by tmdbId, if not, we fetch the data
   //from TMDB, add it to our db and return our own data.
@@ -120,6 +81,38 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
   }
 });
 
+router.get(
+  '/:id{/:slug}',
+  idFormatChecker,
+  slugHandler(Show),
+  useMediaCache(MediaType.Show),
+  async (req: Request, res, next) => {
+    try {
+      const { id } = req.params;
+      const showEntry: Show | ShowResponse | null = await Show.findBy({
+        mediaId: id,
+        activeUser: req.activeUser,
+        plainData: false,
+      });
+      //we have to ensure TS that we received the full model entry
+      if (!showEntry || !(showEntry instanceof Show)) {
+        throw new NotFoundError('Show');
+      }
+      if (isShowDataOld(showEntry)) {
+        console.log('Show data might be outdated');
+        await updateShowEntry(showEntry);
+      }
+      //we convert it to plain data for cache storage and the client
+      //we don't do it earlier so we can update the entry if needed.
+      const showResponse: MediaResponse = toPlain(showEntry);
+
+      res.json(showResponse);
+      setMediaActiveCache(req, showResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 router.post('/', async (req, res, next) => {
   try {
     const newEntry = await Show.create(req.body);
