@@ -9,6 +9,7 @@ import {
   SortedRoles,
   AuthorMedia,
   authorOrder,
+  AuthorType,
 } from '../../../shared/types/roles';
 import { Person } from '../models';
 import {
@@ -83,6 +84,14 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
     //we check the role has a valid media linked
     const media: MediaResponse | undefined = getMediaFromRole(r);
     if (media) {
+      //we separate voice actors from regular actors
+      if (r.role === AuthorType.Actor) {
+        if (
+          r.characterName.find((chara: string) => chara.includes('(voice)'))
+        ) {
+          r.role = AuthorType.VoiceActor;
+        }
+      }
       //we look for an entry for this author type
       const entry = authorMedia.find(
         (a: AuthorMedia) => a.authorType === r.role

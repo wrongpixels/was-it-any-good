@@ -40,7 +40,6 @@ const KeyedPersonPage = (): JSX.Element | null => {
   if (!personId || isNaN(Number(personId))) {
     return <WrongIdFormatPage />;
   }
-  console.log('Slug is:', slug);
   useEffect(() => {
     if (person?.expectedSlug) {
       //if we used a wrong slug, we redirect to the actual one.
