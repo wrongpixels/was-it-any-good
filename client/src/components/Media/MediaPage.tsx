@@ -10,7 +10,6 @@ import {
   useMediaByTMDBQuery,
 } from '../../queries/media-queries';
 import MediaMissing from './MediaMissing';
-import { setTitle } from '../../utils/page-info-setter';
 import {
   UNKNOWN_CAST,
   UNKNOWN_CREW,
@@ -22,10 +21,7 @@ import LoadingPage from '../Common/Status/LoadingPage';
 import ErrorPage from '../Common/Status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
-import {
-  buildRouterMediaLink,
-  mediaTypeToDisplayName,
-} from '../../utils/url-helper';
+import { buildRouterMediaLink } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
 import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
@@ -36,6 +32,8 @@ import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 import UserLists from '../UserLists/UserLists';
 import { getNewestAirDate } from '../../utils/media-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
+import { setSEO } from '../../hooks/use-seo';
+import { buildMediaSeo } from '../../utils/page-seo-helpers';
 
 interface MediaPageProps {
   mediaType: MediaType;
@@ -137,7 +135,8 @@ const KeyedMediaPage = ({
     );
   }
 
-  setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
+  //setTitle(`${media.name} (${mediaTypeToDisplayName(mediaType)})`);
+  setSEO(buildMediaSeo(media));
   const show = isShow(media);
   const newestAirDate: string | undefined = show
     ? getNewestAirDate(media)

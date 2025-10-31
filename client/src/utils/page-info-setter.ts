@@ -1,9 +1,11 @@
+import { setSEO } from '../hooks/use-seo';
+
 export const DEF_PAGE_TITLE: string = 'WIAG';
 export const DEF_PAGE_DESCRIPTION: string =
   'Explore Films, Shows... and all the people who make them possible.';
 export const DEF_URL: string = 'https://wiag.io';
 
-const getCurrentTitle = (): string | undefined => {
+export const getCurrentTitle = (): string | undefined => {
   const t = document.title;
   if (!t || t === DEF_PAGE_TITLE) {
     return undefined;
@@ -21,9 +23,11 @@ const getCurrentDescription = (): string | undefined => {
 };
 
 export const setTitle = (newTitle?: string): void => {
+  setSEO({ title: newTitle });
+  /*
   const base = newTitle ?? getCurrentTitle() ?? DEF_PAGE_TITLE;
   document.title =
-    base === DEF_PAGE_TITLE ? DEF_PAGE_TITLE : `${base} | ${DEF_PAGE_TITLE}`;
+    base === DEF_PAGE_TITLE ? DEF_PAGE_TITLE : `${base} | ${DEF_PAGE_TITLE}`;*/
 };
 
 export const setDescription = (newDescription?: string): void => {
@@ -46,6 +50,8 @@ export const setPageInfo = (info: {
   title?: string;
   description?: string;
 }): void => {
-  setTitle(info.title);
-  setDescription(info.description);
+  setSEO({ ...info });
+
+  /* setTitle(info.title);
+  setDescription(info.description); */
 };
