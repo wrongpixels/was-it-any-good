@@ -1,7 +1,6 @@
 import { JSX, memo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePersonQuery } from '../../queries/people-queries';
-import { setTitle } from '../../utils/page-info-setter';
 import EntryTitle from '../EntryTitle';
 import PersonPagePoster from '../Posters/PersonPagePoster';
 import { AuthorMedia } from '../../../../shared/types/roles';
@@ -19,6 +18,8 @@ import {
   PersonDetailsValues,
 } from '../../utils/person-details-builder';
 import { routerPaths } from '../../utils/url-helper';
+import { setSEO } from '../../utils/set-seo';
+import { buildPersonSEO } from '../../utils/page-seo-helpers';
 
 //to force a refresh when the slug changes
 const PersonPage = () => {
@@ -36,11 +37,10 @@ const KeyedPersonPage = (): JSX.Element | null => {
     error,
   } = usePersonQuery(personId, slug);
   const navigate = useNavigate();
-
   if (!personId || isNaN(Number(personId))) {
     return <WrongIdFormatPage />;
   }
-  console.log('Slug is:', slug);
+
   useEffect(() => {
     if (person?.expectedSlug) {
       //if we used a wrong slug, we redirect to the actual one.
@@ -64,7 +64,8 @@ const KeyedPersonPage = (): JSX.Element | null => {
     return <ErrorPage context={'loading Person'} error={error?.message} />;
   }
   const personDetailsValues: PersonDetailsValues = buildPersonDetails(person);
-  setTitle(person.name);
+  //setTitle(person.name);
+  setSEO(buildPersonSEO(person, personDetailsValues));
 
   return (
     <div className="flex flex-col flex-1 justify-center">

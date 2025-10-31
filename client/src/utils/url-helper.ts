@@ -223,7 +223,7 @@ export const mediaPaths = {
   },
 };
 
-export const buildMediaLink = (media: MediaResponse) => {
+export const buildMediaLinkWithSlug = (media: MediaResponse) => {
   return slugifyUrl(
     buildRouterMediaLink(media.mediaType, media.id),
     media.name

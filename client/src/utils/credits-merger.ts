@@ -9,7 +9,8 @@ const crewRolePriority: Record<AuthorType, number> = {
   [AuthorType.ExecProducer]: 3,
   [AuthorType.Producer]: 4,
   [AuthorType.MusicComposer]: 5,
-  [AuthorType.Actor]: 98,
+  [AuthorType.Actor]: 97,
+  [AuthorType.VoiceActor]: 98,
   [AuthorType.Unknown]: 99,
 };
 

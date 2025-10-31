@@ -1,7 +1,11 @@
 import { JSX, memo } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import RatingPoster from './PosterRating';
-import { getMediaAverageRating } from '../../utils/ratings-helper';
+import {
+  CardRatingData,
+  getCardRatingData,
+  getMediaAverageRating,
+} from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
 import { useOverlay } from '../../context/OverlayProvider';
@@ -13,6 +17,11 @@ interface MediaPagePosterProps {
 
 const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
   const average: number = getMediaAverageRating(media);
+  const cardRatingData: CardRatingData = getCardRatingData(
+    media.releaseDate,
+    average,
+    media.userRating
+  );
   const { openImageAsOverlay: openAsOverlay } = useOverlay();
 
   return (
@@ -25,7 +34,12 @@ const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
         onClick={() => openAsOverlay(imageLinker.getFullSizeImage(media.image))}
       />
       <div className="text-center">
-        <RatingPoster rating={average} media={media} valid={true} />
+        <RatingPoster
+          rating={average}
+          media={media}
+          valid={true}
+          cardRatingData={cardRatingData}
+        />
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ const PersonRoleCredits = ({
               <PersonRolePoster
                 mediaResponse={media}
                 characterNames={
-                  r.role === AuthorType.Actor
+                  [AuthorType.Actor, AuthorType.VoiceActor].includes(r.role)
                     ? formatCharacterNames(r.characterName)
                     : undefined
                 }

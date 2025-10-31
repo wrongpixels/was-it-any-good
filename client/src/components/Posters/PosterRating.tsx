@@ -10,11 +10,12 @@ import {
 import { styles } from '../../constants/tailwind-styles';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import DisplayRating from '../Rating/DisplayRating';
-import { CardRatingData, getCardRatingData } from '../../utils/ratings-helper';
+import { CardRatingData } from '../../utils/ratings-helper';
 
 interface RatingPosterProps {
   media: MediaResponse | SeasonResponse;
   rating: number;
+  cardRatingData: CardRatingData;
   valid?: boolean;
 }
 
@@ -22,13 +23,13 @@ const RatingPoster = ({
   rating,
   valid = true,
   media,
+  cardRatingData,
 }: RatingPosterProps): JSX.Element | null => {
   if (isNaN(rating) || !media) {
     return null;
   }
   //to know if the media is not released yet
-  const { hasRatingText, unreleased, ...cardRatingData }: CardRatingData =
-    getCardRatingData(media.releaseDate, rating, media.userRating);
+
   const isSeason: boolean =
     media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
@@ -36,7 +37,7 @@ const RatingPoster = ({
     <div className="flex flex-col items-center mt-1 ">
       <div className={`relative ${isSeason ? 'h-6' : 'h-7'}`}>
         <div className="text-gray-300">
-          {unreleased ? (
+          {cardRatingData.unreleased ? (
             <DisplayRating rating={0} starWidth={starWidth} className="pt-1" />
           ) : (
             <StarRating
@@ -52,7 +53,7 @@ const RatingPoster = ({
         ></div>
       </div>
 
-      {valid && !hasRatingText ? (
+      {valid && !cardRatingData.hasRatingText ? (
         <div className="flex items-center justify-center gap-6 ">
           {!isSeason && (
             <div className={`w-6 ${styles.animations.zoomOnHover}`}>

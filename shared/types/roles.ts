@@ -1,14 +1,15 @@
-import { MediaRoleResponse } from "./models";
+import { MediaRoleResponse } from './models';
 
 export enum AuthorType {
-  Director = "Director",
-  Writer = "Writer",
-  Creator = "Creator",
-  Producer = "Producer",
-  ExecProducer = "Executive Producer",
-  MusicComposer = "Original Music Composer",
-  Actor = "Actor",
-  Unknown = "Unknown",
+  Director = 'Director',
+  Writer = 'Writer',
+  Creator = 'Creator',
+  Producer = 'Producer',
+  ExecProducer = 'Executive Producer',
+  MusicComposer = 'Original Music Composer',
+  Actor = 'Actor',
+  VoiceActor = 'Voice Actor',
+  Unknown = 'Unknown',
 }
 
 export const authorOrder: AuthorType[] = [
@@ -16,6 +17,7 @@ export const authorOrder: AuthorType[] = [
   AuthorType.Director,
   AuthorType.Writer,
   AuthorType.Actor,
+  AuthorType.VoiceActor,
   AuthorType.Producer,
   AuthorType.MusicComposer,
 ];
