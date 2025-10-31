@@ -64,22 +64,14 @@ const RatingPoster = ({
               />
             </div>
           )}
-          <span
-            title={cardRatingData.ratingTitle}
-            itemScope
-            itemType="https://schema.org/AggregateRating"
-            className="cursor-help"
-          >
+          <span title={cardRatingData.ratingTitle} className="cursor-help">
             <AnimatedDiv
               pointerEvents="none"
               animKey={`${media.mediaType}-score-${media.id}`}
               className={`${isSeason ? 'text-2xl' : 'text-3xl'} font-bold text-gray-500 w-10 `}
-              itemProp="ratingValue"
             >
               {rating}
             </AnimatedDiv>
-            <meta itemProp="bestRating" content="10" />
-            <meta itemProp="ratingCount" content={media.voteCount.toString()} />
           </span>
           {!isSeason && (
             <div className={`w-6 opacity-80 ${styles.animations.zoomOnHover}`}>
