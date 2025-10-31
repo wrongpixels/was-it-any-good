@@ -1,4 +1,4 @@
-import { setSEO } from '../hooks/use-seo';
+import { setSEO } from './set-seo';
 
 export const DEF_PAGE_TITLE: string = 'WIAG';
 export const DEF_PAGE_DESCRIPTION: string =

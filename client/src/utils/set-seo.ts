@@ -1,9 +1,9 @@
-import {
-  DEF_PAGE_DESCRIPTION,
-  DEF_PAGE_TITLE,
-  DEF_URL,
-} from '../utils/page-info-setter';
 import { joinUrl } from '../../../shared/helpers/format-helper';
+
+export const DEF_PAGE_TITLE: string = 'WIAG';
+export const DEF_PAGE_DESCRIPTION: string =
+  'Explore Films, Shows... and all the people who make them possible.';
+export const DEF_URL: string = 'https://wiag.io';
 
 export interface SEOData {
   title?: string;

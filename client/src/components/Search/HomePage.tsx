@@ -1,5 +1,4 @@
 import { JSX, useEffect, useState } from 'react';
-import { setPageInfo } from '../../utils/page-info-setter';
 import { routerPaths } from '../../utils/url-helper';
 import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
@@ -27,7 +26,7 @@ import { getDropdownValue } from '../../../../shared/types/common';
 import Button from '../Common/Custom/Button';
 import { IndexMediaResults } from '../../../../shared/types/models';
 import IconAdd from '../Common/Icons/IconAdd';
-import { setSEO } from '../../hooks/use-seo';
+import { setSEO } from '../../utils/set-seo';
 
 //HomePage uses state to accumulate results, allowing users to load more instead of using pages.
 //the search bar navigates the user to SearchPage to handle actual search queries.

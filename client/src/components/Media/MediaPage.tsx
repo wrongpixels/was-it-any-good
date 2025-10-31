@@ -32,7 +32,7 @@ import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
 import UserLists from '../UserLists/UserLists';
 import { getNewestAirDate } from '../../utils/media-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
-import { setSEO } from '../../hooks/use-seo';
+import { setSEO } from '../../utils/set-seo';
 import { buildMediaSeo } from '../../utils/page-seo-helpers';
 
 interface MediaPageProps {

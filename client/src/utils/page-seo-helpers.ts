@@ -12,7 +12,7 @@ import {
 } from '../../../shared/types/models';
 import { AuthorType } from '../../../shared/types/roles';
 import imageLinker from '../../../shared/util/image-linker';
-import { SEOData } from '../hooks/use-seo';
+import { SEOData } from './set-seo';
 import { DEF_URL } from './page-info-setter';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';

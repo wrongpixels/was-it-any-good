@@ -18,7 +18,7 @@ import {
   PersonDetailsValues,
 } from '../../utils/person-details-builder';
 import { routerPaths } from '../../utils/url-helper';
-import { setSEO } from '../../hooks/use-seo';
+import { setSEO } from '../../utils/set-seo';
 import { buildPersonSEO } from '../../utils/page-seo-helpers';
 
 //to force a refresh when the slug changes
