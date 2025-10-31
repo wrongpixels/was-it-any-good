@@ -9,6 +9,7 @@ interface SynopsisSectionProps extends EntryProps {
   episodeCount?: number;
   startDate?: string;
   endDate?: string;
+  runtime?: number | null;
 }
 
 const SynopsisSections = ({
@@ -17,6 +18,7 @@ const SynopsisSections = ({
   startDate,
   endDate,
   mediaType,
+  runtime,
   episodeCount,
 }: SynopsisSectionProps): JSX.Element | null => {
   const isShow: boolean = mediaType === MediaType.Show;
@@ -27,7 +29,8 @@ const SynopsisSections = ({
     : null;
   const endYear: string = isShow ? getYearString(endDate) || '?' : '';
   const displayDate: boolean = startYear !== null;
-  const displayAny: boolean = isShow && (displayDate || displayEpisodes);
+  const displayAny: boolean =
+    (isShow && (displayDate || displayEpisodes)) || (!isShow && !!runtime);
   const yearDisplay: string =
     isShow && endYear === startYear
       ? `${startYear} | `
@@ -43,7 +46,10 @@ const SynopsisSections = ({
           {displayEpisodes && (
             <span className="font-normal text-gray-450">{`${episodeCount} Episodes`}</span>
           )}
-          {displayAny ? '.) ' : ''}
+          {!isShow && runtime && (
+            <span className="font-normal text-gray-450">{`${runtime} minutes`}</span>
+          )}
+          {displayAny ? ') ' : ''}
         </span>
         <span className="text-regular text-gray-500">
           {content || DEF_SYNOPSIS}

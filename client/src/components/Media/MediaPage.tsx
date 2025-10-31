@@ -157,6 +157,7 @@ const KeyedMediaPage = ({
               episodeCount={show ? media.episodeCount : undefined}
               startDate={media.releaseDate || undefined}
               endDate={newestAirDate}
+              runtime={media.runtime}
             />
           }
           <div className="border-t border-gray-200 mt-3">

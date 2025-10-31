@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { buildMediaLink } from '../../utils/url-helper';
+import { buildMediaLinkWithSlug } from '../../utils/url-helper';
 import { MediaResponse } from '../../../../shared/types/models';
 import VerticalMediaPoster from './VerticalMediaPoster';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
@@ -19,7 +19,7 @@ const PersonRolePoster = ({
   return (
     <div title={characterNames} className="flex flex-col items-center">
       <VerticalMediaPoster
-        url={buildMediaLink(mediaResponse)}
+        url={buildMediaLinkWithSlug(mediaResponse)}
         mediaType={mediaResponse.mediaType}
         name={mediaResponse.name}
         image={mediaResponse.image}
