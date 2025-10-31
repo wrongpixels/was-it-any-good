@@ -18,7 +18,8 @@ import {
   PersonDetailsValues,
 } from '../../utils/person-details-builder';
 import { routerPaths } from '../../utils/url-helper';
-import { setSeo } from '../../hooks/use-seo';
+import { setSEO } from '../../hooks/use-seo';
+import { buildPersonSEO } from '../../utils/page-seo-helpers';
 
 //to force a refresh when the slug changes
 const PersonPage = () => {
@@ -64,7 +65,7 @@ const KeyedPersonPage = (): JSX.Element | null => {
   }
   const personDetailsValues: PersonDetailsValues = buildPersonDetails(person);
   //setTitle(person.name);
-  setSeo({ title: 'Test' });
+  setSEO(buildPersonSEO(person, personDetailsValues));
 
   return (
     <div className="flex flex-col flex-1 justify-center">

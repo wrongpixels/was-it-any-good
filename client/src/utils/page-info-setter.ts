@@ -1,6 +1,6 @@
 export const DEF_PAGE_TITLE: string = 'WIAG';
 export const DEF_PAGE_DESCRIPTION: string =
-  'Explore Films, Shows, and the people who make them possible.';
+  'Explore Films, Shows... and all the people who make them possible.';
 export const DEF_URL: string = 'https://wiag.io';
 
 const getCurrentTitle = (): string | undefined => {

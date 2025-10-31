@@ -5,7 +5,7 @@ import {
 } from '../utils/page-info-setter';
 import { joinUrl } from '../../../shared/helpers/format-helper';
 
-export interface SeoData {
+export interface SEOData {
   title?: string;
   description?: string;
   url?: string;
@@ -14,7 +14,7 @@ export interface SeoData {
   structuredData?: object | null;
 }
 
-const defaultSeo: Required<Omit<SeoData, 'structuredData'>> & {
+const defaultSeo: Required<Omit<SEOData, 'structuredData'>> & {
   structuredData?: object | null;
 } = {
   title: DEF_PAGE_TITLE,
@@ -96,8 +96,8 @@ const replaceStructuredData = (data?: object | null) => {
   element.innerHTML = JSON.stringify(data);
 };
 
-export const setSeo = (seo: SeoData) => {
-  const newSeo: SeoData = { ...defaultSeo, ...seo };
+export const setSEO = (seo: SEOData) => {
+  const newSeo: SEOData = { ...defaultSeo, ...seo };
   const pageTitle =
     newSeo.title === defaultSeo.title
       ? defaultSeo.title
