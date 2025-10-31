@@ -14,7 +14,7 @@ const Tag = ({
     <div
       title={title ?? text}
       className={mergeClassnames(
-        'cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60',
+        ' font-semibold cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60',
         className
       )}
     >
