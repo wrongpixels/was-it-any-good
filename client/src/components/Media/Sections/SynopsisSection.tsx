@@ -24,15 +24,15 @@ const SynopsisSections = ({
   const isShow: boolean = mediaType === MediaType.Show;
   const displayEpisodes: boolean =
     isShow && episodeCount !== undefined && episodeCount > 0;
-  const startYear: string | null = isShow
-    ? getYearString(startDate) || null
-    : null;
+  const startYear: string | null = getYearString(startDate) || null;
+
   const endYear: string = isShow ? getYearString(endDate) || '?' : '';
   const displayDate: boolean = startYear !== null;
   const displayAny: boolean =
-    (isShow && (displayDate || displayEpisodes)) || (!isShow && !!runtime);
+    (isShow && (displayDate || displayEpisodes)) ||
+    (!isShow && !!runtime && runtime > 0);
   const yearDisplay: string =
-    isShow && endYear === startYear
+    (isShow && endYear === startYear) || (!isShow && startDate)
       ? `${startYear} | `
       : `${startYear} - ${endYear} | `;
 
@@ -42,11 +42,11 @@ const SynopsisSections = ({
       <p className="text-sm leading-relaxed text-justify flex flex-col">
         <span className=" text-gray-400 font-extralight">
           {displayAny ? '(' : ''}
-          {displayDate && yearDisplay}
+          {displayAny && displayDate && yearDisplay}
           {displayEpisodes && (
             <span className="font-normal text-gray-450">{`${episodeCount} Episodes`}</span>
           )}
-          {!isShow && runtime && (
+          {!isShow && displayAny && (
             <span className="font-normal text-gray-450">{`${runtime} minutes`}</span>
           )}
           {displayAny ? ') ' : ''}
