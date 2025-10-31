@@ -72,6 +72,17 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   const description: string = safeTruncate(media.description, 150);
   const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
 
+  let aggregateRating: object | undefined;
+  if ((media.rating > 0 || media.baseRating > 0) && media.voteCount > 0) {
+    aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: media.rating || media.baseRating,
+      bestRating: 10,
+      ratingCount: media.voteCount,
+      worstRating: 1,
+    };
+  }
+
   const director =
     (media.crew || [])
       .filter((c: CreditResponse) => c.role === AuthorType.Director)
@@ -102,6 +113,7 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
     image: imageUrl,
     director,
     actor,
+    aggregateRating,
     genre: genre.length > 0 ? genre : undefined,
     duration: media.runtime ? `PT${media.runtime}M` : undefined,
     productionCountry:
