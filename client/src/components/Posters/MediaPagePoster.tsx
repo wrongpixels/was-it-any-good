@@ -10,10 +10,6 @@ import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
 import { useOverlay } from '../../context/OverlayProvider';
 import LazyImage from '../Common/Custom/LazyImage';
-import {
-  getYearString,
-  formatRatingDate,
-} from '../../../../shared/helpers/format-helper';
 import Tag from '../Common/Custom/Tag';
 
 interface MediaPagePosterProps {
