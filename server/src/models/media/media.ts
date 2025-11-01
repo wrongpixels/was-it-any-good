@@ -77,6 +77,8 @@ class Media<
   //For getting the Genres
   declare getGenres: BelongsToManyGetAssociationsMixin<MediaGenre>;
   declare indexMedia?: IndexMedia;
+  declare updatedAt?: Date;
+  declare createdAt?: Date;
 
   static baseInit() {
     return {
