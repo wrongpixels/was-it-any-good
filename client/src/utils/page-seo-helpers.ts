@@ -21,6 +21,7 @@ import {
   mediaTypeToDisplayName,
   routerPaths,
 } from './url-helper';
+import { getMediaAverageRating } from './ratings-helper';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -73,10 +74,11 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
 
   let aggregateRating: object | undefined;
-  if ((media.rating > 0 || media.baseRating > 0) && media.voteCount > 0) {
+  const mediaAverage: number = getMediaAverageRating(media);
+  if (mediaAverage > 0 && media.voteCount > 0) {
     aggregateRating = {
       '@type': 'AggregateRating',
-      ratingValue: media.rating || media.baseRating,
+      ratingValue: mediaAverage,
       bestRating: 10,
       ratingCount: media.voteCount,
       worstRating: 1,
