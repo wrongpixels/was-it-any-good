@@ -1,5 +1,4 @@
 import { JSX, useEffect } from 'react';
-import { setPageInfo } from '../../utils/page-info-setter';
 import { routerPaths } from '../../utils/url-helper';
 import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
@@ -21,6 +20,8 @@ import Dropdown from '../Common/Custom/Dropdown';
 import LoadingCards from './Loading/LoadingSearch';
 import { OVERRIDE_SORT_SEARCH } from '../../constants/search-browse-constants';
 import { getDropdownValue } from '../../../../shared/types/common';
+import { setSEO } from '../../utils/set-seo';
+import { buildSearchSeo } from '../../utils/page-seo-helpers';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -68,12 +69,7 @@ const SearchPage = (): JSX.Element | null => {
   }, [searchPage]);
 
   useEffect(() => {
-    setPageInfo({
-      title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
-      description: searchTerm
-        ? `Showing Search results for ${searchTerm}`
-        : 'Search for any Film or TV Show!',
-    });
+    setSEO(buildSearchSeo(searchTerm));
   }, [searchTerm]);
 
   const toggleParam = (param: string) => {
