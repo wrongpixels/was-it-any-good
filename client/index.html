@@ -8,6 +8,47 @@
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explore Films, Shows... and all the people who make them possible."
+    />
+    <meta property="og:site_name" content="WIAG" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://wiag.io/#organization",
+            "name": "WIAG",
+            "url": "https://wiag.io",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://wiag.io/favicon.svg"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://wiag.io/#website",
+            "url": "https://wiag.io",
+            "name": "WIAG",
+            "alternateName": "WIAG: Was it any good?",
+            "description": "Explore Films, Shows... and all the people who make them possible.",
+            "publisher": {
+              "@id": "https://wiag.io/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://wiag.io/search?q={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
