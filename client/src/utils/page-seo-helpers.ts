@@ -21,6 +21,7 @@ import {
   mediaTypeToDisplayName,
   routerPaths,
 } from './url-helper';
+import { getMediaAverageRating } from './ratings-helper';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -73,10 +74,11 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
 
   let aggregateRating: object | undefined;
-  if ((media.rating > 0 || media.baseRating > 0) && media.voteCount > 0) {
+  const mediaAverage: number = getMediaAverageRating(media);
+  if (mediaAverage > 0 && media.voteCount > 0) {
     aggregateRating = {
       '@type': 'AggregateRating',
-      ratingValue: media.rating || media.baseRating,
+      ratingValue: mediaAverage,
       bestRating: 10,
       ratingCount: media.voteCount,
       worstRating: 1,
@@ -188,4 +190,32 @@ export const buildMediaSeo = (media: MediaResponse): SEOData => {
     return buildShowSEO(media);
   }
   return buildBaseMediaSEO(media);
+};
+
+export const buildSearchSeo = (
+  searchTerm: string | null,
+  query: string
+): SEOData => {
+  const url: string = searchTerm
+    ? `${DEF_URL}/search?${query}`
+    : `${DEF_URL}/search`;
+
+  return {
+    title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
+    description: searchTerm
+      ? `Showing Search results for ${searchTerm}`
+      : 'Search for any Film or TV Show!',
+    url,
+    structuredData: searchTerm
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'SearchResultsPage',
+          name: `Search results for "${searchTerm}"`,
+          url,
+          isPartOf: {
+            '@id': `${DEF_URL}/#website`,
+          },
+        }
+      : undefined,
+  };
 };
