@@ -95,7 +95,7 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
       })) || undefined;
 
   const actor =
-    (media.crew || [])
+    (media.cast || [])
       .filter(
         (c: CreditResponse) =>
           c.role === AuthorType.Actor || c.role === AuthorType.VoiceActor
