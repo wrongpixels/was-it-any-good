@@ -69,7 +69,7 @@ const SearchPage = (): JSX.Element | null => {
   }, [searchPage]);
 
   useEffect(() => {
-    setSEO(buildSearchSeo(searchTerm));
+    setSEO(buildSearchSeo(searchTerm, currentQuery));
   }, [searchTerm]);
 
   const toggleParam = (param: string) => {

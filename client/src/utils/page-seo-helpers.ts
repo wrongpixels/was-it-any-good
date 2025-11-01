@@ -192,20 +192,30 @@ export const buildMediaSeo = (media: MediaResponse): SEOData => {
   return buildBaseMediaSEO(media);
 };
 
-export const buildSearchSeo = (searchTerm: string | null) => ({
-  title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
-  description: searchTerm
-    ? `Showing Search results for ${searchTerm}`
-    : 'Search for any Film or TV Show!',
-  structuredData: searchTerm
-    ? {
-        '@context': 'https://schema.org',
-        '@type': 'SearchResultsPage',
-        name: `Search results for "${searchTerm}"`,
-        url: `${DEF_URL}/search?q=${encodeURIComponent(searchTerm)}`,
-        isPartOf: {
-          '@id': `${DEF_URL}/#website`,
-        },
-      }
-    : undefined,
-});
+export const buildSearchSeo = (
+  searchTerm: string | null,
+  query: string
+): SEOData => {
+  const url: string = searchTerm
+    ? `${DEF_URL}/search?${query}`
+    : `${DEF_URL}/search`;
+
+  return {
+    title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
+    description: searchTerm
+      ? `Showing Search results for ${searchTerm}`
+      : 'Search for any Film or TV Show!',
+    url,
+    structuredData: searchTerm
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'SearchResultsPage',
+          name: `Search results for "${searchTerm}"`,
+          url,
+          isPartOf: {
+            '@id': `${DEF_URL}/#website`,
+          },
+        }
+      : undefined,
+  };
+};
