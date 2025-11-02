@@ -1,8 +1,8 @@
 import { LoginData, UserSessionData } from '../../../shared/types/models';
 import axios, { AxiosResponse } from 'axios';
-import { apiPaths } from '../utils/url-helper';
 import { QueryClient } from '@tanstack/react-query';
 import { logoutClientSide } from '../utils/session-handler';
+import { apiPaths } from '../../../shared/util/url-builder';
 
 export const doLogin = async (
   loginData: LoginData

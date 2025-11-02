@@ -1,12 +1,14 @@
 import { BASE_URL } from '../../../shared/constants/url-constants';
-import { slugifyUrl } from '../../../shared/helpers/format-helper';
+import { joinUrl } from '../../../shared/helpers/format-helper';
 import { MediaResponse } from '../../../shared/types/models';
-import film from '../models/media/film';
+import { buildMediaLinkWithSlug } from '../../../shared/util/url-builder';
 
+//to build a single sitemap entry for a piece of media with its correct link.
+//works with any kind of media
 export const buildMediaXMLSitemap = (media: MediaResponse[]): string => {
   const urlEntries = media
     .map((m: MediaResponse) => {
-      const fullUrl: string = slugifyUrl(`${BASE_URL}/film/${m.id}`, film.name);
+      const fullUrl: string = joinUrl(BASE_URL, buildMediaLinkWithSlug(m));
       const lastmod: string = m.updatedAt
         ? new Date(m.updatedAt).toISOString().split('T')[0]
         : new Date().toISOString().split('T')[0];

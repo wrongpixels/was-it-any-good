@@ -4,10 +4,10 @@ import imageLinker from '../../../../shared/util/image-linker';
 import { styles } from '../../constants/tailwind-styles';
 import { isMerged } from '../../utils/credits-merger';
 import LazyImage, { ImageVariant } from '../Common/Custom/LazyImage';
-import { routerPaths } from '../../utils/url-helper';
 import React from 'react';
 import { formatCharacterNames } from '../../utils/person-details-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 //We unify the inconsistent way character names are used in TMDB and remove the '(voice)' tags,
 //as those take so much useless space.
@@ -29,7 +29,7 @@ const MediaPersonPoster = ({ credit }: MediaPersonPosterProps) => {
       to={
         credit.person.id > 0
           ? slugifyUrl(
-              routerPaths.people.byId(credit.person.id),
+              clientPaths.people.byId(credit.person.id),
               credit.person.name
             )
           : '#'

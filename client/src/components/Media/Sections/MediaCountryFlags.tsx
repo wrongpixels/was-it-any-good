@@ -4,13 +4,13 @@ import Country, {
   CountryValues,
 } from '../../../../../shared/types/countries';
 import { MediaType } from '../../../../../shared/types/media';
-import { FLAG_URL } from '../../../constants/url-constants';
 import { MediaTypeProps } from '../../../types/common-props-types';
 import UrlQueryBuilder from '../../../utils/url-query-builder';
 import { Link } from 'react-router-dom';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
-import { routerPaths } from '../../../utils/url-helper';
 import CountryFlag from '../../Common/CountryFlags';
+import { FLAG_URL } from '../../../../../shared/constants/url-constants';
+import { clientPaths } from '../../../../../shared/util/url-builder';
 
 interface CountryFlagWrapperProps extends PropsWithChildren {
   to: string;
@@ -46,7 +46,7 @@ const buildCountries = (
         name: Country[c],
         code: c,
         image: `${FLAG_URL}/${c.toLowerCase()}.png`,
-        searchUrl: routerPaths.browse.byQuery(
+        searchUrl: clientPaths.browse.byQuery(
           urlBuilder.byCountry(c).byMediaType(mediaType).toString()
         ),
       });

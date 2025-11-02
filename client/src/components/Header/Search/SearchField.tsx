@@ -5,8 +5,8 @@ import SearchIcon from '../../Common/Icons/SearchIcon';
 import { InputField } from '../../Common/Custom/InputField';
 import { styles } from '../../../constants/tailwind-styles';
 import useSuggestions from '../../../hooks/use-suggestions';
-import { routerPaths } from '../../../utils/url-helper';
 import { useNavigate } from 'react-router-dom';
+import { clientPaths } from '../../../../../shared/util/url-builder';
 
 interface SearchFieldProps {
   fieldName: string;
@@ -35,7 +35,7 @@ const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
           <SearchResults
             handleSearch={(value: string | null) => {
               if (value) {
-                navigate(routerPaths.search.byTerm(value));
+                navigate(clientPaths.search.byTerm(value));
               }
             }}
             searchResults={suggestions}

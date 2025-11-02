@@ -4,7 +4,7 @@ import { styles } from '../../constants/tailwind-styles';
 import IconTMDBLogoVert from '../Common/Icons/Logos/IconTMDBLogoVert';
 import {
   GITHUB_REPO_URL,
-  TMDB_URL,
+  BASE_TMDB_URL,
 } from '../../../../shared/constants/url-constants';
 
 const Footer = () => {
@@ -31,7 +31,7 @@ const Footer = () => {
         <span className="font-medium text-gray-500 text-xs">
           {'Images and data:'}
         </span>
-        <IconTMDBLogoVert height={14} url={TMDB_URL} />
+        <IconTMDBLogoVert height={14} url={BASE_TMDB_URL} />
       </span>
     </footer>
   );

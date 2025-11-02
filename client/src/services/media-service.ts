@@ -1,8 +1,11 @@
 import { MediaResponse } from '../../../shared/types/models';
 import { MediaType } from '../../../shared/types/media';
-import { apiPaths } from '../utils/url-helper';
-import { BASE_IMDB_URL, BASE_TMDB_URL } from '../constants/url-constants';
 import { getFromAPI } from './common-service';
+import {
+  BASE_IMDB_URL,
+  BASE_TMDB_URL,
+} from '../../../shared/constants/url-constants';
+import { apiPaths } from '../../../shared/util/url-builder';
 
 export const getMediaById = (
   id: string,

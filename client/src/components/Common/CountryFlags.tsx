@@ -1,7 +1,7 @@
 import { CountryValues } from '../../../../shared/types/countries';
+import { mediaPaths } from '../../../../shared/util/url-builder';
 import { styles } from '../../constants/tailwind-styles';
 import { OptBoolProps } from '../../types/common-props-types';
-import { mediaPaths } from '../../utils/url-helper';
 
 interface CountryFlagProps extends OptBoolProps {
   country: CountryValues;

@@ -1,5 +1,4 @@
 import { JSX, useEffect, useState } from 'react';
-import { routerPaths } from '../../utils/url-helper';
 import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
 import {
@@ -27,6 +26,7 @@ import Button from '../Common/Custom/Button';
 import { IndexMediaResults } from '../../../../shared/types/models';
 import IconAdd from '../Common/Icons/IconAdd';
 import { setSEO } from '../../utils/set-seo';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 //HomePage uses state to accumulate results, allowing users to load more instead of using pages.
 //the search bar navigates the user to SearchPage to handle actual search queries.
@@ -36,7 +36,7 @@ const HomePage = (): JSX.Element | null => {
     navigateToQuery: navigateToNewTerm,
     queryTypeManager,
     navigatePages,
-  } = useUrlQueryManager({ basePath: routerPaths.search.base });
+  } = useUrlQueryManager({ basePath: clientPaths.search.base });
 
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();

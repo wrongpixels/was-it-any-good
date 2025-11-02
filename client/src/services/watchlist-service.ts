@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import { UserMediaListItemData } from '../../../shared/types/models';
-import { apiPaths } from '../utils/url-helper';
 import { WatchlistMutationOptions } from '../mutations/watchlist-mutations';
+import { apiPaths } from '../../../shared/util/url-builder';
 
 export const toggleFromWatchlist = async ({
   inList,

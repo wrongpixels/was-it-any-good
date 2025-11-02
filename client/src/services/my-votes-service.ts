@@ -1,5 +1,5 @@
 import { RatingResults } from '../../../shared/types/models';
-import { apiPaths } from '../utils/url-helper';
+import { apiPaths } from '../../../shared/util/url-builder';
 import { getFromAPI } from './common-service';
 
 export const getMyVotes = async (browseQuery: string): Promise<RatingResults> =>

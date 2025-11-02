@@ -6,7 +6,7 @@ import {
   CreateRatingResponse,
 } from '../../../shared/types/models';
 import { getFromAPI } from './common-service';
-import { apiPaths } from '../utils/url-helper';
+import { apiPaths } from '../../../shared/util/url-builder';
 
 export const getRatingByMediaId = ({
   mediaId,

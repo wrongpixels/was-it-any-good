@@ -1,5 +1,4 @@
 import { BrowsePageProps } from '../components/Search/Browse/BrowsePage';
-import { routerPaths } from '../utils/url-helper';
 import { JSX } from 'react';
 import {
   SortBy,
@@ -16,6 +15,7 @@ import IconStar from '../components/Common/Icons/Ratings/IconStar';
 import { QueryToUse } from '../types/search-browse-types';
 import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
 import IconWatchlistAdd from '../components/Common/Icons/Lists/IconWatchlistAdd';
+import { clientPaths } from '../../../shared/util/url-builder';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -98,35 +98,35 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: 'Popular Media',
     subtitle: 'Most popular media in WIAG database',
-    path: routerPaths.popular.multi.base(),
+    path: clientPaths.popular.multi.base(),
     sortBy: SortBy.Popularity,
     searchType: SearchType.Multi,
   }),
   buildPageRoute({
     title: 'Top Rated Media',
     subtitle: 'Highest rated media in WIAG database',
-    path: routerPaths.tops.multi.base(),
+    path: clientPaths.tops.multi.base(),
     sortBy: SortBy.Rating,
     searchType: SearchType.Multi,
   }),
   buildPageRoute({
     title: 'Films',
     subtitle: 'Films in WIAG database',
-    path: routerPaths.films.page,
+    path: clientPaths.films.page,
     sortBy: SortBy.Rating,
     searchType: SearchType.Film,
   }),
   buildPageRoute({
     title: 'TV Shows',
     subtitle: 'Shows in WIAG database',
-    path: routerPaths.shows.page,
+    path: clientPaths.shows.page,
     sortBy: SortBy.Rating,
     searchType: SearchType.Show,
   }),
   buildPageRoute({
     title: 'Top Films',
     subtitle: 'Best Films in WIAG database',
-    path: routerPaths.tops.films.base(),
+    path: clientPaths.tops.films.base(),
     sortBy: SortBy.Rating,
     searchType: SearchType.Film,
     overrideSortOptions: {
@@ -136,7 +136,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: 'Top TV Shows',
     subtitle: 'Best Shows in WIAG database',
-    path: routerPaths.tops.shows.base(),
+    path: clientPaths.tops.shows.base(),
     sortBy: SortBy.Rating,
     searchType: SearchType.Show,
     overrideSortOptions: {
@@ -146,7 +146,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: 'My Ratings',
     queryToUse: 'votes',
-    path: routerPaths.my.votes.base(),
+    path: clientPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar {...defIconProps} />,
     sortBy: SortBy.VoteDate,
@@ -156,7 +156,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   }),
   buildPageRoute({
     title: 'Watchlist',
-    path: routerPaths.my.watchlist.base(),
+    path: clientPaths.my.watchlist.base(),
     searchType: SearchType.Multi,
     icon: <IconWatchlistAdd {...defIconProps} />,
     sortBy: SortBy.AddedDate,

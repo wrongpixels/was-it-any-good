@@ -15,13 +15,13 @@ import imageLinker from '../../../shared/util/image-linker';
 import { SEOData } from './set-seo';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';
-import {
-  buildMediaLinkWithSlug,
-  mediaTypeToDisplayName,
-  routerPaths,
-} from './url-helper';
+import { mediaTypeToDisplayName } from './url-helper';
 import { getMediaAverageRating } from './ratings-helper';
 import { BASE_URL } from '../../../shared/constants/url-constants';
+import {
+  clientPaths,
+  buildMediaLinkWithSlug,
+} from '../../../shared/util/url-builder';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -33,7 +33,7 @@ export const buildPersonSEO = (
 ): SEOData => {
   const url: string = joinUrl(
     BASE_URL,
-    slugifyUrl(routerPaths.people.byId(person.id), person.name)
+    slugifyUrl(clientPaths.people.byId(person.id), person.name)
   );
   const imageUrl: string = imageLinker.getAvatarImage(person.image);
   return {

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
-import { routerPaths } from '../../utils/url-helper';
 import IconStarLogo from '../Common/Icons/Logos/IconStarLogo';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 const HeaderLogo = (props: OptClassNameProps) => {
   return (
     <div {...props}>
       <Link
-        to={`${routerPaths.home}`}
+        to={`${clientPaths.home}`}
         className="flex items-center flex-shrink-0"
         title="Home / Search"
       >

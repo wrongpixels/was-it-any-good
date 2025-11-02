@@ -1,5 +1,4 @@
 import { JSX, useEffect } from 'react';
-import { routerPaths } from '../../utils/url-helper';
 import PageResults from './Results/PageResults';
 import SearchInputField from './SearchInput';
 import {
@@ -22,6 +21,7 @@ import { OVERRIDE_SORT_SEARCH } from '../../constants/search-browse-constants';
 import { getDropdownValue } from '../../../../shared/types/common';
 import { setSEO } from '../../utils/set-seo';
 import { buildSearchSeo } from '../../utils/page-seo-helpers';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 //SearchPage doesn't use states to track parameters and options, it relies on the active url and its query parameters.
 //when adding or removing parameters, the url changes forcing a re-render that repopulates the component's data.
@@ -38,7 +38,7 @@ const SearchPage = (): JSX.Element | null => {
     navigateToPage,
     navigateToQuery: navigateToNewTerm,
     queryTypeManager,
-  } = useUrlQueryManager({ basePath: routerPaths.search.base });
+  } = useUrlQueryManager({ basePath: clientPaths.search.base });
   const { searchTerm, searchPage, queryType } = urlParams;
   const { setNotification, anchorRef } = useNotificationContext();
   const { playAnim } = useAnimEngine();
