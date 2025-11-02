@@ -1,10 +1,19 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import express from 'express';
 
-import { Film, Show } from '../models';
-import { buildMediaXMLSitemap, formatDate } from '../services/sitemaps-service';
+import { Film, Person, Show } from '../models';
+import {
+  buildMediaXMLSitemap,
+  buildPeopleSitemap,
+  formatDate,
+} from '../services/sitemaps-service';
 import { BASE_URL } from '../../../shared/constants/url-constants';
 import { clientPaths } from '../../../shared/util/url-builder';
+import {
+  FilmResponse,
+  PersonResponse,
+  ShowResponse,
+} from '../../../shared/types/models';
 
 const router: Router = express.Router();
 
@@ -78,7 +87,7 @@ router.get(
   '/films.xml',
   async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const films: Film[] = await Film.findAll({
+      const films: FilmResponse[] = await Film.findAll({
         attributes: ['id', 'name', 'updatedAt', 'mediaType'],
         order: [['updatedAt', 'DESC']],
       });
@@ -97,11 +106,30 @@ router.get(
   '/shows.xml',
   async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const films: Show[] = await Show.findAll({
+      const shows: ShowResponse[] = await Show.findAll({
         attributes: ['id', 'name', 'updatedAt', 'mediaType'],
         order: [['updatedAt', 'DESC']],
       });
-      const sitemapXml: string = buildMediaXMLSitemap(films);
+      const sitemapXml: string = buildMediaXMLSitemap(shows);
+      res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
+      res.setHeader('Content-Type', 'application/xml');
+
+      res.status(200).send(sitemapXml);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  '/people.xml',
+  async (_req: Request, res: Response, next: NextFunction) => {
+    try {
+      const people: PersonResponse[] = await Person.findAll({
+        attributes: ['id', 'name', 'updatedAt'],
+        order: [['updatedAt', 'DESC']],
+      });
+      const sitemapXml: string = buildPeopleSitemap(people);
       res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
       res.setHeader('Content-Type', 'application/xml');
 

@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import express from 'express';
 
-import { Film, Show } from '../models';
+import { Film, Person, Show } from '../models';
 import { formatDate } from '../services/sitemaps-service';
 import { BASE_URL } from '../../../shared/constants/url-constants';
 //a router for root level files we want to server from the backend.
@@ -36,12 +36,16 @@ router.get(
       //we take the latest updateAt of out Films and Shows
       const lastFilmUpdate: Date = await Film.max<Date, Film>('updatedAt');
       const lastShowUpdate: Date = await Show.max<Date, Show>('updatedAt');
+      const lastPeopleUpdate: Date = await Person.max<Date, Person>(
+        'updatedAt'
+      );
 
       //this will return today's date formatted
       const lastmodForStatic: string = formatDate();
 
       const lastmodForFilms: string = formatDate(lastFilmUpdate);
       const lastmodForShows: string = formatDate(lastShowUpdate);
+      const lastmodForPeople: string = formatDate(lastPeopleUpdate);
 
       //and we build the index for static, films and shows with accurate lastmods
       //pointing to the correct endpoint for each
@@ -58,6 +62,10 @@ router.get(
    <sitemap>
       <loc>${BASE_URL}/api/sitemaps/shows.xml</loc>
       <lastmod>${lastmodForShows}</lastmod>
+   </sitemap>
+   <sitemap>
+      <loc>${BASE_URL}/api/sitemaps/people.xml</loc>
+      <lastmod>${lastmodForPeople}</lastmod>
    </sitemap>
 </sitemapindex>`;
       //we return this as a formatted xml file

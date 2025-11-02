@@ -1,7 +1,7 @@
 import { BASE_API } from '../constants/url-constants'
 import { slugifyUrl } from '../helpers/format-helper'
 import { MediaType } from '../types/media'
-import { MediaResponse, RatingData } from '../types/models'
+import { MediaResponse, PersonResponse, RatingData } from '../types/models'
 
 //our shared logic to build links inside the webpage
 export const apiPaths = {
@@ -201,6 +201,10 @@ export const mediaPaths = {
 
 export const buildMediaLinkWithSlug = (media: MediaResponse) => {
   return slugifyUrl(buildClientMediaLink(media.mediaType, media.id), media.name)
+}
+
+export const buildPersonLinkWithSlug = (person: PersonResponse) => {
+  return slugifyUrl(clientPaths.people.byId(person.id), person.name)
 }
 
 export const buildClientMediaLink = (

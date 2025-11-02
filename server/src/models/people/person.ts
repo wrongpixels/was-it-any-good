@@ -21,6 +21,7 @@ class Person extends Model<
   declare image: string;
   declare birthDate?: string;
   declare country: CountryCode[];
+  declare updatedAt?: Date;
 
   //extended details, added only when user clicks on the persons profile
   declare addedDetails: CreationOptional<boolean>;
