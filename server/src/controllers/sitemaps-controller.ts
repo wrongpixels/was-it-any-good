@@ -3,6 +3,7 @@ import express from 'express';
 
 import { slugifyUrl } from '../../../shared/helpers/format-helper';
 import { Film } from '../models';
+import { BASE_URL } from '../../../shared/constants/url-constants';
 
 const router: Router = express.Router();
 
@@ -10,8 +11,6 @@ router.get(
   '/films',
   async (_req: Request, res: Response, next: NextFunction) => {
     try {
-      const BASE_URL: string = 'https://wiag.io';
-
       const films: Film[] = await Film.findAll({
         attributes: ['id', 'name', 'updatedAt'],
         order: [['updatedAt', 'DESC']],
@@ -31,6 +30,8 @@ router.get(
           <url>
             <loc>${fullUrl}</loc>
             <lastmod>${lastmod}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>
           </url>
         `;
         })
@@ -47,3 +48,5 @@ router.get(
     }
   }
 );
+
+export default router;

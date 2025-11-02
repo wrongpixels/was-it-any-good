@@ -3,7 +3,6 @@ import { setSEO } from './set-seo';
 export const DEF_PAGE_TITLE: string = 'WIAG';
 export const DEF_PAGE_DESCRIPTION: string =
   'Explore Films, Shows... and all the people who make them possible.';
-export const DEF_URL: string = 'https://wiag.io';
 
 export const getCurrentTitle = (): string | undefined => {
   const t = document.title;

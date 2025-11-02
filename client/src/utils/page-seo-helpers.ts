@@ -13,7 +13,6 @@ import {
 import { AuthorType } from '../../../shared/types/roles';
 import imageLinker from '../../../shared/util/image-linker';
 import { SEOData } from './set-seo';
-import { DEF_URL } from './page-info-setter';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';
 import {
@@ -22,6 +21,7 @@ import {
   routerPaths,
 } from './url-helper';
 import { getMediaAverageRating } from './ratings-helper';
+import { BASE_URL } from '../../../shared/constants/url-constants';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -32,7 +32,7 @@ export const buildPersonSEO = (
   personDetails: PersonDetailsValues
 ): SEOData => {
   const url: string = joinUrl(
-    DEF_URL,
+    BASE_URL,
     slugifyUrl(routerPaths.people.byId(person.id), person.name)
   );
   const imageUrl: string = imageLinker.getAvatarImage(person.image);
@@ -68,7 +68,7 @@ const safeTruncate = (text: string, maxLength: number = 150): string => {
 };
 
 const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
-  const url: string = joinUrl(DEF_URL, buildMediaLinkWithSlug(media));
+  const url: string = joinUrl(BASE_URL, buildMediaLinkWithSlug(media));
   const imageUrl: string = imageLinker.getPosterImage(media.image);
   const description: string = safeTruncate(media.description, 150);
   const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
@@ -197,8 +197,8 @@ export const buildSearchSeo = (
   query: string
 ): SEOData => {
   const url: string = searchTerm
-    ? `${DEF_URL}/search?${query}`
-    : `${DEF_URL}/search`;
+    ? `${BASE_URL}/search?${query}`
+    : `${BASE_URL}/search`;
 
   return {
     title: `${searchTerm ? `${searchTerm} - ` : ''}Search`,
@@ -213,7 +213,7 @@ export const buildSearchSeo = (
           name: `Search results for "${searchTerm}"`,
           url,
           isPartOf: {
-            '@id': `${DEF_URL}/#website`,
+            '@id': `${BASE_URL}/#website`,
           },
         }
       : undefined,

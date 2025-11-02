@@ -21,6 +21,7 @@ import {
   trendingRouter,
   myRouter,
   userMediaListsRouter,
+  sitemapsRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -50,6 +51,7 @@ app.use('/api/search', searchRouter);
 app.use('/api/trending', trendingRouter);
 app.use('/api/browse', browseRouter);
 app.use('/api/lists', userMediaListsRouter);
+app.use('/api/sitemaps', sitemapsRouter);
 
 app.all('/api/*rest', (_req, _res, next) => {
   next(new NotFoundError('API endpoint'));
