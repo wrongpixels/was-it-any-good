@@ -1,10 +1,10 @@
+import { BASE_URL } from '../../../shared/constants/url-constants';
 import { joinUrl } from '../../../shared/helpers/format-helper';
 
 export const DEF_PAGE_TITLE: string = 'WIAG';
 export const DEF_PAGE_DESCRIPTION: string =
   'Explore Films, Shows... and all the people who make them possible.';
-export const DEF_URL: string = 'https://wiag.io';
-export const ICON_URL: string = joinUrl(DEF_URL, 'favicon.svg');
+export const ICON_URL: string = joinUrl(BASE_URL, 'favicon.svg');
 
 export interface SEOData {
   title?: string;
@@ -29,7 +29,7 @@ const createDefaultPageSchema = (
   url: url,
   //links this page to the main WebSite schema in index.html
   isPartOf: {
-    '@id': `${DEF_URL}/#website`,
+    '@id': `${BASE_URL}/#website`,
   },
 });
 
@@ -101,7 +101,7 @@ export const setSEO = (seo: SEOData = {}) => {
   const newSeo = {
     title: seo.title || DEF_PAGE_TITLE,
     description: seo.description || DEF_PAGE_DESCRIPTION,
-    url: seo.url || DEF_URL,
+    url: seo.url || BASE_URL,
     imageUrl: seo.imageUrl || ICON_URL,
     type: seo.type || 'website',
   };

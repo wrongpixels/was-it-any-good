@@ -21,6 +21,8 @@ import {
   trendingRouter,
   myRouter,
   userMediaListsRouter,
+  sitemapsRouter,
+  rootFilesRouter,
 } from './controllers';
 import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
@@ -32,6 +34,10 @@ const app = express();
 //app.use(cors());
 app.use(express.json());
 app.use(authHandler);
+
+//for root-level endpoints and files we want to control in the backend,
+//like our sitemap.xml
+app.use('/', rootFilesRouter);
 
 //API Routes
 app.use('/api/films', filmsRouter);
@@ -50,6 +56,7 @@ app.use('/api/search', searchRouter);
 app.use('/api/trending', trendingRouter);
 app.use('/api/browse', browseRouter);
 app.use('/api/lists', userMediaListsRouter);
+app.use('/api/sitemaps', sitemapsRouter);
 
 app.all('/api/*rest', (_req, _res, next) => {
   next(new NotFoundError('API endpoint'));

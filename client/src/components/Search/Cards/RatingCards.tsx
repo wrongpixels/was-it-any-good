@@ -4,7 +4,7 @@ import {
 } from '../../../../../shared/helpers/format-helper';
 import { MediaType } from '../../../../../shared/types/media';
 import { RatingData } from '../../../../../shared/types/models';
-import { urlFromRatingData } from '../../../utils/url-helper';
+import { urlFromRatingData } from '../../../../../shared/util/url-builder';
 import Tag from '../../Common/Custom/Tag';
 import VerticalMediaPoster from '../../Posters/VerticalMediaPoster';
 

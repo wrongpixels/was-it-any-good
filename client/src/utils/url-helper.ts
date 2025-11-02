@@ -1,11 +1,6 @@
 import { MediaType } from '../../../shared/types/media';
-import { TMDB_URL } from '../../../shared/constants/url-constants';
-import { API_BASE } from '../constants/url-constants';
-import {
-  IndexMediaData,
-  MediaResponse,
-  RatingData,
-} from '../../../shared/types/models';
+import { BASE_TMDB_URL } from '../../../shared/constants/url-constants';
+import { IndexMediaData } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
 import { toCountryCodes } from '../../../shared/types/countries';
@@ -27,256 +22,22 @@ import {
 } from '../../../shared/types/search-browse';
 import { getDropdownValue } from '../../../shared/types/common';
 import { slugifyUrl } from '../../../shared/helpers/format-helper';
-
-export const apiPaths = {
-  films: {
-    base: `${API_BASE}/films`,
-    byId: (id: number | string, slug?: string) =>
-      `${apiPaths.films.base}/${id}${slug ? `/${slug}` : ''}`,
-    byTMDBId: (id: number | string) => `${apiPaths.films.base}/tmdb/${id}`,
-  },
-  shows: {
-    base: `${API_BASE}/shows`,
-    byId: (id: number | string, slug?: string) =>
-      `${apiPaths.shows.base}/${id}${slug ? `/${slug}` : ''}`,
-    byTMDBId: (id: number | string) => `${apiPaths.shows.base}/tmdb/${id}`,
-  },
-  people: {
-    base: `${API_BASE}/people`,
-    byId: (id: number | string, slug?: string) =>
-      `${apiPaths.people.base}/${id}${slug ? `/${slug}` : ''}`,
-  },
-  genres: {
-    base: `${API_BASE}/genres`,
-    byId: (id: number | string) => `${apiPaths.genres.base}/${id}`,
-  },
-  ratings: {
-    base: `${API_BASE}/ratings`,
-    matchById: (mediaType: MediaType, id: number) =>
-      `${apiPaths.ratings.base}/match/${mediaType.toLowerCase()}/${id}`,
-    byId: (id: number | string) => `${apiPaths.ratings.base}/${id}`,
-  },
-  users: {
-    base: `${API_BASE}/users`,
-    byId: (id: number | string) => `${apiPaths.users.base}/${id}`,
-  },
-  auth: {
-    base: `${API_BASE}/auth`,
-    login: () => `${apiPaths.auth.base}/login`,
-    logout: () => `${apiPaths.auth.base}/logout`,
-    sessions: {
-      base: () => `${apiPaths.auth.base}/sessions`,
-      verify: () => `${apiPaths.auth.sessions.base()}/verify`,
-    },
-  },
-  suggestions: {
-    base: `${API_BASE}/suggest`,
-    byInput: (input: string) =>
-      `${apiPaths.suggestions.base}?${new URLSearchParams({ query: input })}`,
-  },
-  search: {
-    base: `${API_BASE}/search`,
-    byQuery: (query: string) => `${apiPaths.search.base}?${query}`,
-  },
-
-  trending: {
-    base: `${API_BASE}/trending`,
-    byPage: (page: number) => `${apiPaths.trending.base}?page=${page}`,
-  },
-  browse: {
-    base: `${API_BASE}/browse`,
-    byQuery: (query: string) => `${apiPaths.browse.base}?${query}`,
-  },
-  my: {
-    base: `${API_BASE}/my`,
-    votes: {
-      base: () => `${apiPaths.my.base}/votes`,
-      byQuery: (query: string) => `${apiPaths.my.votes.base()}?${query}`,
-    },
-  },
-  watchlist: {
-    base: `${API_BASE}/lists/watchlist`,
-    toggleIndexMedia: (userId: number, indexId: number) =>
-      `${apiPaths.watchlist.base}/${userId}/${indexId}`,
-  },
-};
-export const routerPaths = {
-  home: '/',
-  films: {
-    base: '/film',
-    page: '/films',
-    idRoute: () => `${routerPaths.films.base}/:id/:slug?`,
-    TMDBIdParam: () => `/tmdb${routerPaths.films.base}/:id/:slug?`,
-    byId: (id: number | string) => `${routerPaths.films.base}/${id}`,
-    byTMDBId: (id: number | string) => `/tmdb${routerPaths.films.byId(id)}`,
-  },
-  shows: {
-    base: '/show',
-    page: '/shows',
-    idRoute: () => `${routerPaths.shows.base}/:id/:slug?`,
-    TMDBIdParam: () => `/tmdb${routerPaths.shows.base}/:id/:slug?`,
-    byId: (id: number | string) => `${routerPaths.shows.base}/${id}`,
-    byTMDBId: (id: number | string) => `/tmdb${routerPaths.shows.byId(id)}`,
-  },
-  people: {
-    base: '/person',
-    idRoute: () => `${routerPaths.people.base}/:id/:slug?`,
-    byId: (id: number | string, slug?: string) =>
-      `${routerPaths.people.base}/${id}${slug ? `/${slug}` : ''}`,
-  },
-  users: {
-    base: '/user',
-    withParam: () => `${routerPaths.users.base}/:id`,
-    byId: (id: number | string) => `${routerPaths.users.base}/${id}`,
-  },
-  search: {
-    base: `/search`,
-    query: () => `${routerPaths.search.base}?`,
-    byQuery: (query: string) => `${routerPaths.search.query()}${query}`,
-    byTerm: (term: number | string) => `${routerPaths.search.query()}q=${term}`,
-  },
-  browse: {
-    base: '/browse',
-    query: () => `${routerPaths.browse.base}?`,
-    byQuery: (query: string) => `${routerPaths.browse.query()}${query}`,
-  },
-  tops: {
-    base: '/top',
-    shows: {
-      base: () => `${routerPaths.tops.base}/shows`,
-      query: () => `${routerPaths.tops.shows.base()}?`,
-      withQuery: (query: string) => `${routerPaths.tops.shows.query()}${query}`,
-    },
-    films: {
-      base: () => `${routerPaths.tops.base}/films`,
-      query: () => `${routerPaths.tops.films.base()}?`,
-      withQuery: (query: string) => `${routerPaths.tops.films.query()}${query}`,
-    },
-    multi: {
-      base: () => `${routerPaths.tops.base}/media`,
-      query: () => `${routerPaths.tops.multi.base()}?`,
-      withQuery: (query: string) => `${routerPaths.tops.multi.query()}${query}`,
-    },
-  },
-  popular: {
-    base: '/popular',
-    shows: {
-      base: () => `${routerPaths.popular.base}/shows`,
-      query: () => `${routerPaths.popular.shows.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.popular.shows.query()}${query}`,
-    },
-    films: {
-      base: () => `${routerPaths.popular.base}/films`,
-      query: () => `${routerPaths.popular.films.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.popular.films.query()}${query}`,
-    },
-    multi: {
-      base: () => `${routerPaths.popular.base}/media`,
-      query: () => `${routerPaths.popular.multi.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.popular.multi.query()}${query}`,
-    },
-  },
-  my: {
-    base: '/my',
-    votes: {
-      base: () => `${routerPaths.my.base}/votes`,
-      query: () => `${routerPaths.my.votes.base}?`,
-      byQuery: (query: string) => `${routerPaths.my.votes.query()}${query}`,
-    },
-    watchlist: {
-      base: () => `${routerPaths.my.base}/watchlist`,
-      query: () => `${routerPaths.my.watchlist.base}?`,
-      byQuery: (query: string) => `${routerPaths.my.watchlist.query()}${query}`,
-    },
-  },
-  trending: {
-    base: '/trending',
-    shows: {
-      base: () => `${routerPaths.trending.base}/shows`,
-      query: () => `${routerPaths.trending.shows.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.trending.shows.query()}${query}`,
-    },
-    films: {
-      base: () => `${routerPaths.trending.base}/films`,
-      query: () => `${routerPaths.trending.films.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.trending.films.query()}${query}`,
-    },
-    multi: {
-      base: () => `${routerPaths.trending.base}/media`,
-      query: () => `${routerPaths.trending.multi.base()}?`,
-      withQuery: (query: string) =>
-        `${routerPaths.trending.multi.query()}${query}`,
-    },
-  },
-};
-
-export const mediaPaths = {
-  countries: {
-    base: '/flags',
-    byCode: (code: string) =>
-      `${mediaPaths.countries.base}/${code.toLowerCase()}.svg`,
-  },
-};
-
-export const buildMediaLinkWithSlug = (media: MediaResponse) => {
-  return slugifyUrl(
-    buildRouterMediaLink(media.mediaType, media.id),
-    media.name
-  );
-};
-
-export const buildRouterMediaLink = (
-  mediaType: MediaType,
-  id?: number | string,
-  useTMDB?: boolean
-): string => {
-  switch (mediaType) {
-    case MediaType.Film:
-      return !id
-        ? routerPaths.films.base
-        : useTMDB
-          ? routerPaths.films.byTMDBId(id)
-          : routerPaths.films.byId(id);
-    case MediaType.Show:
-      return !id
-        ? routerPaths.shows.base
-        : useTMDB
-          ? routerPaths.shows.byTMDBId(id)
-          : routerPaths.shows.byId(id);
-    case MediaType.Season:
-      return !id
-        ? routerPaths.shows.base
-        : useTMDB
-          ? routerPaths.shows.byTMDBId(id)
-          : routerPaths.shows.byId(id);
-    default:
-      throw new Error(`Unsupported media type: ${mediaType}`);
-  }
-};
-
-export const urlFromRatingData = (rating: RatingData): string => {
-  return buildRouterMediaLink(
-    rating.mediaType,
-    rating.mediaType === MediaType.Season ? rating.showId : rating.mediaId
-  );
-};
+import {
+  buildClientMediaLink,
+  clientPaths,
+} from '../../../shared/util/url-builder';
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
   const mediaId: number | null = getMediaId(im);
   const url: string = mediaId
-    ? buildRouterMediaLink(im.mediaType, mediaId)
-    : buildRouterMediaLink(im.mediaType, im.tmdbId, true);
+    ? buildClientMediaLink(im.mediaType, mediaId)
+    : buildClientMediaLink(im.mediaType, im.tmdbId, true);
 
   return slugifyUrl(url, im.name);
 };
 
 export const isQueryActiveInUrl = (query: string): boolean => {
-  const searchURL: string = routerPaths.search.byQuery(query);
+  const searchURL: string = clientPaths.search.byQuery(query);
   return searchURL === getURLAfterDomain();
 };
 
@@ -293,7 +54,7 @@ export const buildTMDBUrl = (
   mediaType: MediaType,
   path: string = ''
 ): string => {
-  const url = TMDB_URL;
+  const url = BASE_TMDB_URL;
   const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
   return `${url}/${prefix}/${path}`;
 };

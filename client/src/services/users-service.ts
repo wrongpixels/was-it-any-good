@@ -4,7 +4,7 @@ import {
   UserData,
   VerifyCreateUser,
 } from '../../../shared/types/models';
-import { apiPaths } from '../utils/url-helper';
+import { apiPaths } from '../../../shared/util/url-builder';
 
 export const createUser = async (
   verifiedUserData: VerifyCreateUser

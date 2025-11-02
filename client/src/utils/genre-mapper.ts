@@ -1,6 +1,6 @@
 import { MediaType } from '../../../shared/types/media';
 import { GenreResponse } from '../../../shared/types/models';
-import { routerPaths } from './url-helper';
+import { clientPaths } from '../../../shared/util/url-builder';
 import UrlQueryBuilder from './url-query-builder';
 
 export interface GenreUrlMap {
@@ -26,7 +26,7 @@ export const genreUrlMapper = (
       .byGenre(id)
       .byMediaType(mediaType)
       .toString();
-    map.push({ id: g.id, name: g.name, url: routerPaths.browse.byQuery(url) });
+    map.push({ id: g.id, name: g.name, url: clientPaths.browse.byQuery(url) });
   });
   return map;
 };

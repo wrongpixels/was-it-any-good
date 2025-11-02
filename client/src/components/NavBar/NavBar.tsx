@@ -1,5 +1,4 @@
 import { JSX } from 'react';
-import { routerPaths } from '../../utils/url-helper';
 import { NavLink } from 'react-router-dom';
 import { styles } from '../../constants/tailwind-styles';
 import IconCrown from '../Common/Icons/Badges/IconCrown';
@@ -10,6 +9,7 @@ import IconStar from '../Common/Icons/Ratings/IconStar';
 import { useAuth } from '../../hooks/use-auth';
 import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import { USER_LISTS_ENABLED } from '../UserLists/UserLists';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 interface LinkInfo {
   text: string;
@@ -25,7 +25,7 @@ const links: LinkInfo[] = [
     key: 'rb-home',
     icon: <IconHome width={15} />,
     title: 'Home / Search',
-    url: routerPaths.home,
+    url: clientPaths.home,
   } /*
   {
     text: 'Popular',
@@ -39,21 +39,21 @@ const links: LinkInfo[] = [
     key: 'rb-best',
     title: 'Films and Shows by rating',
     icon: <IconCrown width={14} />,
-    url: routerPaths.tops.multi.base(),
+    url: clientPaths.tops.multi.base(),
   },
   {
     text: 'Films',
     key: 'rb-films',
     title: 'Browse Films',
     icon: <IconFilm height={14} />,
-    url: routerPaths.films.page,
+    url: clientPaths.films.page,
   },
   {
     text: 'TV Shows',
     key: 'rb-shows',
     title: 'Browse TV Shows',
     icon: <IconShow height={16} />,
-    url: routerPaths.shows.page,
+    url: clientPaths.shows.page,
   },
 ];
 
@@ -82,7 +82,7 @@ const NavBar = (): JSX.Element => {
                     : 'border-transparent'
                 }`;
               }}
-              end={li.url === routerPaths.home}
+              end={li.url === clientPaths.home}
             >
               {li.icon ?? null}
               <span className="text-starblue hidden sm:block">{li.text}</span>
@@ -100,7 +100,7 @@ const NavBar = (): JSX.Element => {
         <div className="ml-auto text-end text-xs md:text-sm h-full items-center  flex flex-row">
           <span className={`${styles.animations.opacity70}`}>
             <NavLink
-              to={routerPaths.my.votes.base()}
+              to={clientPaths.my.votes.base()}
               title={'My Ratings'}
               className={({ isActive }) =>
                 `flex flex-row items-center gap-1.5 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
@@ -109,7 +109,7 @@ const NavBar = (): JSX.Element => {
                     : 'border-transparent'
                 }`
               }
-              end={routerPaths.my.votes.base() === routerPaths.my.votes.base()}
+              end={clientPaths.my.votes.base() === clientPaths.my.votes.base()}
             >
               {<IconStar width={16} />}
               <span className="text-starblue">{'My Ratings'}</span>
@@ -118,7 +118,7 @@ const NavBar = (): JSX.Element => {
           {USER_LISTS_ENABLED && (
             <span className={`${styles.animations.opacity70}`}>
               <NavLink
-                to={routerPaths.my.watchlist.base()}
+                to={clientPaths.my.watchlist.base()}
                 title={'Watchlist'}
                 className={({ isActive }) =>
                   `flex flex-row items-center gap-1 py-0.5 px-1.5 text-gray-600 border-b-2 rounded ${
@@ -128,8 +128,8 @@ const NavBar = (): JSX.Element => {
                   }`
                 }
                 end={
-                  routerPaths.my.watchlist.base() ===
-                  routerPaths.my.watchlist.base()
+                  clientPaths.my.watchlist.base() ===
+                  clientPaths.my.watchlist.base()
                 }
               >
                 {<IconWatchlistRemove height={16} width={14} />}

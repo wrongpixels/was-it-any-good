@@ -4,11 +4,12 @@ import { MediaType } from '../../../../../shared/types/media';
 
 import { Link } from 'react-router-dom';
 import UrlQueryBuilder from '../../../utils/url-query-builder';
-import { mediaTypeToDisplayName, routerPaths } from '../../../utils/url-helper';
+import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import { styles } from '../../../constants/tailwind-styles';
 import { GenreUrlMap, genreUrlMapper } from '../../../utils/genre-mapper';
 import Bubble from '../../Common/Custom/Bubble';
 import IconForMediaType from '../../Common/Icons/Media/IconForMediaType';
+import { clientPaths } from '../../../../../shared/util/url-builder';
 
 interface GenreSectionProps {
   genres: GenreResponse[];
@@ -32,7 +33,7 @@ const GenreSection = ({
   return (
     <div className="flex flex-row items-center text-gray-400 gap-2 relative ml-1">
       <Link
-        to={routerPaths.browse.byQuery(mediaIconUrl)}
+        to={clientPaths.browse.byQuery(mediaIconUrl)}
         className={`text-gray-600 ${styles.animations.zoomOnHover}`}
       >
         <IconForMediaType mediaType={mediaType} />

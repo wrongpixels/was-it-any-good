@@ -17,9 +17,9 @@ import {
   buildPersonDetails,
   PersonDetailsValues,
 } from '../../utils/person-details-builder';
-import { routerPaths } from '../../utils/url-helper';
 import { setSEO } from '../../utils/set-seo';
 import { buildPersonSEO } from '../../utils/page-seo-helpers';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 //to force a refresh when the slug changes
 const PersonPage = () => {
@@ -44,7 +44,7 @@ const KeyedPersonPage = (): JSX.Element | null => {
   useEffect(() => {
     if (person?.expectedSlug) {
       //if we used a wrong slug, we redirect to the actual one.
-      const slugUrl: string = routerPaths.people.byId(
+      const slugUrl: string = clientPaths.people.byId(
         personId,
         person.expectedSlug
       );

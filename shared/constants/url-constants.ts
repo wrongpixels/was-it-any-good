@@ -1,4 +1,9 @@
-export const TMDB_URL: string = "https://www.themoviedb.org";
-export const TMDB_MEDIA_URL: string = "https://media.themoviedb.org/t/p";
+export const BASE_TMDB_URL: string = 'https://www.themoviedb.org'
+export const BASE_URL: string = 'https://wiag.io'
+export const BASE_API: string = '/api'
+export const TMDB_MEDIA_URL: string = 'https://media.themoviedb.org/t/p'
+export const BASE_IMDB_URL: string = 'https://www.imdb.com/title'
+export const FLAG_URL = 'https://flagcdn.com/w40'
+export const PAGE1_PARAM: string = '&page=1'
 export const GITHUB_REPO_URL: string =
-  "https://github.com/wrongpixels/was-it-any-good";
+  'https://github.com/wrongpixels/was-it-any-good'

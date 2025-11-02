@@ -167,6 +167,7 @@ export interface PersonResponse {
   roles?: MediaRoleResponse[]
   sortedRoles?: SortedRoles
   expectedSlug?: string
+  updatedAt?: Date
 }
 
 export interface BaseResponse {

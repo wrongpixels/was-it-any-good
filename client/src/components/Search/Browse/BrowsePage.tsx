@@ -1,6 +1,5 @@
 import { useBrowseQuery } from '../../../queries/browse-queries';
 import PageResults from '../Results/PageResults';
-import { routerPaths } from '../../../utils/url-helper';
 import ErrorPage from '../../Common/Status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
 import { useEffect } from 'react';
@@ -18,6 +17,7 @@ import { OverrideParams } from '../../../../../shared/types/search-browse';
 import { useMyVotesQuery } from '../../../queries/my-votes-queries';
 import { OverrideSortOptions } from '../Results/PageResultsSort';
 import useAuthProtection from '../../../hooks/use-auth-protection';
+import { clientPaths } from '../../../../../shared/util/url-builder';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -38,7 +38,7 @@ const BrowsePage = ({
   pageTitleOptions,
   queryToUse = 'browse',
 }: BrowsePageProps) => {
-  const basePath = overrideParams?.basePath || routerPaths.browse.base;
+  const basePath = overrideParams?.basePath || clientPaths.browse.base;
   //if we are accessing user data, we check for a valid session with this hook:
   //in this case, it will only enforce it if we are checking user votes.
   useAuthProtection({ condition: queryToUse === 'votes' });

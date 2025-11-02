@@ -21,7 +21,6 @@ import LoadingPage from '../Common/Status/LoadingPage';
 import ErrorPage from '../Common/Status/ErrorPage';
 import { useAuth } from '../../hooks/use-auth';
 import { AuthContextValues } from '../../context/AuthProvider';
-import { buildRouterMediaLink } from '../../utils/url-helper';
 import SynopsisSections from './Sections/SynopsisSection';
 import { isShow } from '../../utils/ratings-helper';
 import WrongIdFormatPage from '../Common/Status/WrongIdFormatPage';
@@ -34,6 +33,7 @@ import { getNewestAirDate } from '../../utils/media-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
 import { setSEO } from '../../utils/set-seo';
 import { buildMediaSeo } from '../../utils/page-seo-helpers';
+import { buildClientMediaLink } from '../../../../shared/util/url-builder';
 
 interface MediaPageProps {
   mediaType: MediaType;
@@ -91,7 +91,7 @@ const KeyedMediaPage = ({
       //and then we navigate to our just created media page
       console.log(media);
       const slugUrl = slugifyUrl(
-        buildRouterMediaLink(media.mediaType, media.id),
+        buildClientMediaLink(media.mediaType, media.id),
         media.name
       );
       console.log('Redirecting to', slugUrl);

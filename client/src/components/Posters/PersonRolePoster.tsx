@@ -1,9 +1,9 @@
 import { JSX } from 'react';
-import { buildMediaLinkWithSlug } from '../../utils/url-helper';
 import { MediaResponse } from '../../../../shared/types/models';
 import VerticalMediaPoster from './VerticalMediaPoster';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
+import { buildMediaLinkWithSlug } from '../../../../shared/util/url-builder';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import { routerPaths } from '../../utils/url-helper';
 import { BrowseResultsType } from '../../../../shared/types/models';
 import { PropsWithChildren } from 'react';
+import { clientPaths } from '../../../../shared/util/url-builder';
 
 interface InstructionsProps {
   linkToSearch?: boolean;
@@ -23,7 +23,7 @@ const Instructions = ({ linkToSearch, resultsType }: InstructionsProps) => {
       </span>
       <span>
         {linkToSearch ? (
-          <Link to={routerPaths.search.base}>Search </Link>
+          <Link to={clientPaths.search.base}>Search </Link>
         ) : (
           <>Click on it, Search </>
         )}

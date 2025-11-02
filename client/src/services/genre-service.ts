@@ -1,5 +1,5 @@
 import { GenreResponse } from '../../../shared/types/models';
-import { apiPaths } from '../utils/url-helper';
+import { apiPaths } from '../../../shared/util/url-builder';
 import { getFromAPI } from './common-service';
 
 export const getGenreById = async (

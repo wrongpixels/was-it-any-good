@@ -16,7 +16,6 @@ import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
 import NavBar from './components/NavBar/NavBar';
 import ImageOverlay from './components/Overlay/ImageOverlay';
-import { routerPaths } from './utils/url-helper';
 import {
   BrowsePageRouterData,
   browsePageRoutes,
@@ -25,6 +24,7 @@ import Footer from './components/Footer/Footer';
 import SignUpOverlay from './components/Overlay/SignUpOverlay';
 import useScrollToTop from './hooks/use-scroll-to-top';
 import HomePage from './components/Search/HomePage';
+import { clientPaths } from '../../shared/util/url-builder';
 
 const App = (): JSX.Element => {
   return (
@@ -63,10 +63,10 @@ const AppBody = (): JSX.Element => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route
-          path={routerPaths.search.base}
+          path={clientPaths.search.base}
           element={<SearchPage key={location.search} />}
         />
-        <Route path={routerPaths.browse.base} element={<BrowsePage />} />
+        <Route path={clientPaths.browse.base} element={<BrowsePage />} />
 
         {browsePageRoutes.map((browseRoute: BrowsePageRouterData) => (
           <Route
@@ -77,22 +77,22 @@ const AppBody = (): JSX.Element => {
         ))}
 
         <Route
-          path={routerPaths.films.idRoute()}
+          path={clientPaths.films.idRoute()}
           element={<MediaPage mediaType={MediaType.Film} />}
         />
         <Route
-          path={routerPaths.shows.idRoute()}
+          path={clientPaths.shows.idRoute()}
           element={<MediaPage mediaType={MediaType.Show} />}
         />
         <Route
-          path={routerPaths.films.TMDBIdParam()}
+          path={clientPaths.films.TMDBIdParam()}
           element={<MediaPage mediaType={MediaType.Film} tmdb={true} />}
         />
         <Route
-          path={routerPaths.shows.TMDBIdParam()}
+          path={clientPaths.shows.TMDBIdParam()}
           element={<MediaPage mediaType={MediaType.Show} tmdb={true} />}
         />
-        <Route path={routerPaths.people.idRoute()} element={<PersonPage />} />
+        <Route path={clientPaths.people.idRoute()} element={<PersonPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

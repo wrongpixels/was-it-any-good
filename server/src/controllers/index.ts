@@ -14,6 +14,8 @@ import trendingRouter from './trending-controller';
 import browseRouter from './browse-controller';
 import myRouter from './my-controller';
 import userMediaListsRouter from './user-media-lists-controller';
+import rootFilesRouter from './root-files-controller';
+import sitemapsRouter from './sitemaps-controller';
 
 export {
   filmsRouter,
@@ -32,4 +34,6 @@ export {
   trendingRouter,
   myRouter,
   userMediaListsRouter,
+  rootFilesRouter,
+  sitemapsRouter,
 };
