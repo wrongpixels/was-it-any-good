@@ -15,9 +15,6 @@ const router: Router = express.Router();
 //our robots.txt file
 router.get('/robots.txt', (_req: Request, res: Response) => {
   const robotsTxtContent = `User-agent: *
-Disallow: /api/
-Allow: /api/sitemaps/
-Disallow: /search/
 
 Sitemap: ${BASE_URL}/sitemap.xml
 `;
