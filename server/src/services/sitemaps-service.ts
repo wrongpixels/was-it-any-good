@@ -9,9 +9,7 @@ export const buildMediaXMLSitemap = (media: MediaResponse[]): string => {
   const urlEntries = media
     .map((m: MediaResponse) => {
       const fullUrl: string = joinUrl(BASE_URL, buildMediaLinkWithSlug(m));
-      const lastmod: string = m.updatedAt
-        ? new Date(m.updatedAt).toISOString().split('T')[0]
-        : new Date().toISOString().split('T')[0];
+      const lastmod: string = formatDate(m.updatedAt);
 
       return `
           <url>
@@ -26,4 +24,20 @@ export const buildMediaXMLSitemap = (media: MediaResponse[]): string => {
 
   const sitemapXml: string = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urlEntries}</urlset>`;
   return sitemapXml;
+};
+
+export const formatDate = (date?: Date | string | undefined): string => {
+  //in case something is missing or fails
+  const today: string = new Date().toISOString().split('T')[0];
+
+  if (!date) {
+    return today;
+  }
+
+  const receivedDate: Date = new Date(date);
+
+  if (isNaN(receivedDate.getTime())) {
+    return today;
+  }
+  return receivedDate.toISOString().split('T')[0];
 };
