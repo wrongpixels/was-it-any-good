@@ -2,7 +2,6 @@ import { MediaType } from '../../../shared/types/media';
 import { BASE_TMDB_URL } from '../../../shared/constants/url-constants';
 import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
-import { getMediaId } from './index-media-helper';
 import { toCountryCodes } from '../../../shared/types/countries';
 import { stringToSortBy, stringToSortDir } from '../../../shared/types/browse';
 import {
@@ -21,21 +20,8 @@ import {
   URLParameters,
 } from '../../../shared/types/search-browse';
 import { getDropdownValue } from '../../../shared/types/common';
-import { slugifyUrl } from '../../../shared/helpers/format-helper';
-import {
-  buildClientMediaLink,
-  clientPaths,
-} from '../../../shared/util/url-builder';
+import { clientPaths } from '../../../shared/util/url-builder';
 import { buildTMDBorIMDBUrl } from '../services/media-service';
-
-export const urlFromIndexMedia = (im: IndexMediaData): string => {
-  const mediaId: number | null = getMediaId(im);
-  const url: string = mediaId
-    ? buildClientMediaLink(im.mediaType, mediaId)
-    : buildClientMediaLink(im.mediaType, im.tmdbId, true);
-
-  return slugifyUrl(url, im.name);
-};
 
 export const isQueryActiveInUrl = (query: string): boolean => {
   const searchURL: string = clientPaths.search.byQuery(query);
@@ -58,6 +44,15 @@ export const buildTMDBUrl = (
   const url = BASE_TMDB_URL;
   const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
   return `${url}/${prefix}/${path}`;
+};
+
+export const buildTMDBUrlForIndexMedia = (
+  indexMedia: IndexMediaData
+): string => {
+  if (!indexMedia.tmdbId) {
+    return '';
+  }
+  return buildTMDBorIMDBUrl(indexMedia.mediaType, true, indexMedia.tmdbId);
 };
 
 export const buildTMDBUrlForMedia = (media: MediaResponse): string => {

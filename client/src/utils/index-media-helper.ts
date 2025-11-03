@@ -2,41 +2,39 @@ import { MediaType } from '../../../shared/types/media';
 import { GenreResponse, IndexMediaData } from '../../../shared/types/models';
 import { GenreUrlMap, genreUrlMapper } from './genre-mapper';
 
-export const getMediaId = (indexMedia: IndexMediaData): number | null => {
-  if (!indexMedia.addedToMedia) {
-    return null;
-  }
-  switch (indexMedia.mediaType) {
-    case MediaType.Film:
-      return indexMedia.film?.id ?? null;
-
-    case MediaType.Show:
-      return indexMedia.show?.id ?? null;
-    default:
-      return null;
-  }
-};
-
 export interface IndexGenreMap {
   genreUrlMap: GenreUrlMap[];
 }
 
 //we extract the genres (if present) from the linked film or show and
-//build a map with the browse urls already baked. We only use first 3
+//build a map with the browse urls already baked. We'll only use first 3
 //for spacing reasons
-export const getMediaGenres = (
+export const getIndexMediaGenresAsUrlMap = (
   indexMedia: IndexMediaData
 ): GenreUrlMap[] | null => {
+  const genres: GenreResponse[] | null = getIndexMediaGenres(indexMedia);
+  if (!genres) {
+    return null;
+  }
+  const urlMap: GenreUrlMap[] = genreUrlMapper(
+    genres.slice(0, 2),
+    indexMedia.mediaType
+  );
+  return urlMap;
+};
+
+export const getIndexMediaGenres = (
+  indexMedia: IndexMediaData
+): GenreResponse[] | null => {
   if (indexMedia.mediaType === MediaType.Season) {
     return null;
   }
   const isFilm: boolean = indexMedia.mediaType === MediaType.Film;
   const genres: GenreResponse[] | undefined = isFilm
-    ? indexMedia.film?.genres?.slice(0, 2)
-    : indexMedia.show?.genres?.slice(0, 2);
+    ? indexMedia.film?.genres
+    : indexMedia.show?.genres;
   if (genres === undefined) {
     return null;
   }
-  const urlMap: GenreUrlMap[] = genreUrlMapper(genres, indexMedia.mediaType);
-  return urlMap;
+  return genres;
 };
