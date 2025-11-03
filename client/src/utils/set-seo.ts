@@ -27,7 +27,6 @@ const createDefaultPageSchema = (
   name: title,
   description: description,
   url: url,
-  //links this page to the main WebSite schema in index.html
   isPartOf: {
     '@id': `${BASE_URL}/#website`,
   },

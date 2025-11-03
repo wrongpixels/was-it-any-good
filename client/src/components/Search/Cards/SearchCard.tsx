@@ -6,13 +6,10 @@ import {
   getIndexMediaUserRating,
   getMediaAverageRating,
 } from '../../../utils/ratings-helper';
-import {
-  mediaTypeToDisplayName,
-  urlFromIndexMedia,
-} from '../../../utils/url-helper';
+import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import CountryFlags from '../../Media/Sections/MediaCountryFlags';
 import imageLinker from '../../../../../shared/util/image-linker';
-import { getMediaGenres } from '../../../utils/index-media-helper';
+import { getIndexMediaGenresAsUrlMap } from '../../../utils/index-media-helper';
 import { GenreUrlMap } from '../../../utils/genre-mapper';
 import React from 'react';
 import { BadgeType } from '../../../types/search-browse-types';
@@ -24,6 +21,7 @@ import LazyImage, {
 } from '../../Common/Custom/LazyImage';
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
+import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
@@ -57,13 +55,13 @@ const SearchCard = ({
   const average: number = getMediaAverageRating(media);
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
-    () => getMediaGenres(media),
+    () => getIndexMediaGenresAsUrlMap(media),
     [media]
   );
 
   return (
     <Link
-      to={urlFromIndexMedia(media)}
+      to={buildIndexMediaLinkWithSlug(media)}
       className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
       title={`${media.name} (${mediaDisplay})`}
     >

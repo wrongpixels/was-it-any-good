@@ -27,6 +27,7 @@ import { IndexMediaResults } from '../../../../shared/types/models';
 import IconAdd from '../Common/Icons/IconAdd';
 import { setSEO } from '../../utils/set-seo';
 import { clientPaths } from '../../../../shared/util/url-builder';
+import { buildHomepageTrendingSeo } from '../../utils/page-seo-helpers';
 
 //HomePage uses state to accumulate results, allowing users to load more instead of using pages.
 //the search bar navigates the user to SearchPage to handle actual search queries.
@@ -82,12 +83,11 @@ const HomePage = (): JSX.Element | null => {
         };
       });
     }
+    //we update the SEO when fetchedSearchResults change
+    setSEO(buildHomepageTrendingSeo(fetchedSearchResults?.indexMedia));
   }, [fetchedSearchResults]);
-
-  setSEO({
-    title: 'Home',
-  });
-
+  //we set it first so the title and basic Page SEO data updates
+  setSEO(buildHomepageTrendingSeo(fetchedSearchResults?.indexMedia));
   const toggleParam = (param: string) => {
     queryTypeManager.clearAll();
     queryTypeManager.toggleParamByName(searchDropToType(param));

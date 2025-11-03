@@ -5,9 +5,9 @@ import { IndexMediaData } from '../../../../shared/types/models';
 import { getMediaAverageRating } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import { Link } from 'react-router-dom';
-import { urlFromIndexMedia } from '../../utils/url-helper';
 import imageLinker from '../../../../shared/util/image-linker';
 import LazyImage from '../Common/Custom/LazyImage';
+import { buildIndexMediaLinkWithSlug } from '../../../../shared/util/url-builder';
 
 interface SuggestionPoster {
   media?: IndexMediaData | null;
@@ -21,7 +21,7 @@ const SuggestionPoster = ({ media }: SuggestionPoster): JSX.Element | null => {
 
   return (
     <Link
-      to={urlFromIndexMedia(media)}
+      to={buildIndexMediaLinkWithSlug(media)}
       className={`${styles.poster.suggestions}`}
     >
       <LazyImage

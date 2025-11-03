@@ -16,13 +16,13 @@ export const slugifyText = (textToSlug: string): string =>
     replacement: '-',
   });
 
-export const joinUrl = (url: string, toJoin?: string): string => {
+export const joinUrl = (url: string, toJoin?: string | number): string => {
   if (!toJoin) {
     return url;
   }
-  //to make sure we dont leave a trailing or start /
+  //to make sure we don't leave a trailing or start /
   const normalizedBase = url.replace(/\/$/, '');
-  const normalizedPath = toJoin.replace(/^\//, '');
+  const normalizedPath = toJoin.toString().replace(/^\//, '');
   return [normalizedBase, normalizedPath].filter(Boolean).join('/');
 };
 

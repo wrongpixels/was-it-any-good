@@ -4,9 +4,9 @@ import useListNavigation from '../../../hooks/use-list-navigation';
 import SuggestionPoster from '../../Posters/SuggestionPoster';
 import FirstSearchRow from './Rows/FirstSearchRow';
 import SearchRow from './Rows/SearchRow';
-import { urlFromIndexMedia } from '../../../utils/url-helper';
 import LoadingSearchRow from './Rows/LoadingSearchRow';
 import Separator from '../../Common/Separator';
+import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
 
 interface SearchResultsProps {
   handleSearch: (value: string | null) => void;
@@ -44,7 +44,7 @@ const SearchResults = ({
   };
   const navigateToResult = (targetIndex: number | null): void => {
     if (targetIndex && targetIndex > 0) {
-      navigateTo(urlFromIndexMedia(searchResults[targetIndex - 1]));
+      navigateTo(buildIndexMediaLinkWithSlug(searchResults[targetIndex - 1]));
     }
     //if we're on row 0, we search
     else if (targetIndex === 0) {

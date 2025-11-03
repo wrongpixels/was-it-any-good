@@ -5,6 +5,7 @@ import {
   CreditResponse,
   FilmResponse,
   GenreResponse,
+  IndexMediaData,
   MediaResponse,
   PersonResponse,
   SeasonResponse,
@@ -15,17 +16,28 @@ import imageLinker from '../../../shared/util/image-linker';
 import { SEOData } from './set-seo';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';
-import { mediaTypeToDisplayName } from './url-helper';
+import {
+  buildIMDBUrlForMedia,
+  buildTMDBUrlForIndexMedia,
+  buildTMDBUrlForMedia,
+  mediaTypeToDisplayName,
+} from './url-helper';
 import { getMediaAverageRating } from './ratings-helper';
-import { BASE_URL } from '../../../shared/constants/url-constants';
+import {
+  BASE_URL,
+  TMDB_PERSON_URL,
+} from '../../../shared/constants/url-constants';
 import {
   clientPaths,
   buildMediaLinkWithSlug,
+  buildIndexMediaLinkWithSlug,
 } from '../../../shared/util/url-builder';
+import { getIndexMediaGenres } from './index-media-helper';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
 const LIMIT_ACTORS: number = 7;
+const LIMIT_LISTS: number = 20;
 
 export const buildPersonSEO = (
   person: PersonResponse,
@@ -42,6 +54,7 @@ export const buildPersonSEO = (
     url,
     imageUrl,
     type: 'person',
+
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'Person',
@@ -55,6 +68,7 @@ export const buildPersonSEO = (
             }
           : undefined,
       url,
+      sameAs: person.tmdbId ? [joinUrl(TMDB_PERSON_URL, person.tmdbId)] : [],
       image: imageUrl,
       jobTitle: personDetails.mainRolesWithAnd,
       birthDate: person.birthDate,
@@ -71,7 +85,11 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   const url: string = joinUrl(BASE_URL, buildMediaLinkWithSlug(media));
   const imageUrl: string = imageLinker.getPosterImage(media.image);
   const description: string = safeTruncate(media.description, 150);
-  const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
+  const genre: string[] = getGenresAsStringArray(media.genres);
+  const sameAs: string[] = media.tmdbId ? [buildTMDBUrlForMedia(media)] : [];
+  if (media.imdbId) {
+    sameAs.push(buildIMDBUrlForMedia(media));
+  }
 
   let aggregateRating: object | undefined;
   const mediaAverage: number = getMediaAverageRating(media);
@@ -112,6 +130,7 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
     name: media.name,
     description,
     url,
+    sameAs,
     image: imageUrl,
     director,
     actor,
@@ -218,4 +237,99 @@ export const buildSearchSeo = (
         }
       : undefined,
   };
+};
+
+//to build the HomePage data and its nested Trending list
+export const buildHomepageTrendingSeo = (
+  trendingItems?: IndexMediaData[]
+): SEOData => {
+  const homepageUrl: string = `${BASE_URL}/`;
+  const homepageTitle: string = 'Trending Today';
+  const homepageDescription: string =
+    'Which movies and TV shows are popular today on WIAG? Explore daily updated lists, check ratings, and find your next favorite thing!';
+  let itemListElements: object[] | undefined = undefined;
+  //we don't mount the itemList unless it's defined
+  if (trendingItems) {
+    const topItems: IndexMediaData[] = trendingItems.slice(0, LIMIT_LISTS);
+    itemListElements = topItems.map((item: IndexMediaData, index: number) => {
+      const itemUrl: string = joinUrl(
+        BASE_URL,
+        buildIndexMediaLinkWithSlug(item)
+      );
+      const sameAs: string[] = item.tmdbId
+        ? [buildTMDBUrlForIndexMedia(item)]
+        : [];
+
+      const genre: string[] = getIndexMediaGenresAsStringArray(item);
+      let aggregateRating: object | undefined;
+      const average: number = getMediaAverageRating(item);
+      if (average > 0 && item.voteCount > 0) {
+        aggregateRating = {
+          '@type': 'AggregateRating',
+          ratingValue: average,
+          bestRating: 10,
+          worstRating: 1,
+          ratingCount: item.voteCount,
+        };
+      }
+
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': item.mediaType === MediaType.Film ? 'Movie' : 'TVSeries',
+          genre,
+          name: item.name,
+          url: itemUrl,
+          image: imageLinker.getPosterImage(item.image),
+          sameAs: sameAs.length > 0 ? sameAs : undefined,
+          aggregateRating: aggregateRating,
+        },
+      };
+    });
+  }
+  const collectionPageSchema: object = {
+    '@type': 'CollectionPage',
+    '@id': `${homepageUrl}#webpage`,
+    url: homepageUrl,
+    name: homepageTitle,
+    description: homepageDescription,
+
+    isPartOf: {
+      '@id': `${BASE_URL}/#website`,
+    },
+    mainEntity: itemListElements
+      ? {
+          '@type': 'ItemList',
+          name: 'Trending Today',
+          itemListOrder: 'https://schema.org/Descending',
+          numberOfItems: itemListElements.length,
+          itemListElement: itemListElements,
+        }
+      : undefined,
+  };
+
+  return {
+    title: homepageTitle,
+    description: homepageDescription,
+    url: homepageUrl,
+    imageUrl: `${BASE_URL}/og-image.png`,
+    type: 'website',
+
+    structuredData: collectionPageSchema,
+  };
+};
+
+const getGenresAsStringArray = (
+  genres: GenreResponse[] | undefined
+): string[] => genres?.map((g: GenreResponse) => g.name) || [];
+
+const getIndexMediaGenresAsStringArray = (
+  indexMedia: IndexMediaData
+): string[] => {
+  const genres: GenreResponse[] | null = getIndexMediaGenres(indexMedia);
+  if (!genres) {
+    return [];
+  }
+  return getGenresAsStringArray(genres);
 };
