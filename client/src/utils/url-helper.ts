@@ -64,14 +64,14 @@ export const buildTMDBUrlForMedia = (media: MediaResponse): string => {
   if (!media.tmdbId) {
     return '';
   }
-  return buildTMDBorIMDBUrl(media.mediaType, true, media.id);
+  return buildTMDBorIMDBUrl(media.mediaType, true, media.tmdbId);
 };
 
 export const buildIMDBUrlForMedia = (media: MediaResponse): string => {
-  if (!media.tmdbId) {
+  if (!media.imdbId) {
     return '';
   }
-  return buildTMDBorIMDBUrl(media.mediaType, false, media.id);
+  return buildTMDBorIMDBUrl(media.mediaType, false, media.imdbId);
 };
 
 export const mediaTypeToDisplayName = (mediaType: MediaType) => {
