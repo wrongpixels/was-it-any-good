@@ -33,9 +33,11 @@ const PersonRolePoster = ({
       />
       {characterNames && (
         <div
-          className={`max-w-39 pt-2 cursor-help text-center ${styles.underPosterInfo} line-clamp-3 -pb-2`}
+          className={`max-w-39 pt-2 text-center ${styles.underPosterInfo} line-clamp-3 -pb-2`}
         >
-          <span className="font-semibold text-gray-350">As:</span>{' '}
+          <span className="font-semibold text-gray-350 cursor-default">
+            {'As: '}
+          </span>
           <span className="italic text-gray-350">{characterNames}</span>
         </div>
       )}
