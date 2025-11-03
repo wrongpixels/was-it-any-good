@@ -3,7 +3,6 @@
 Currently deployed at:
 
 - [wiag.io](https://wiag.io)
-- [wiag.up.railway.app](https://wiag.up.railway.app)
 
 ## About
 
