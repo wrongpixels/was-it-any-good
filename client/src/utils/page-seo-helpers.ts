@@ -243,15 +243,15 @@ export const buildSearchSeo = (
 export const buildHomepageTrendingSeo = (
   trendingItems?: IndexMediaData[]
 ): SEOData => {
-  const homepageUrl = `${BASE_URL}/`;
-  const homepageTitle = 'Trending Today';
-  const homepageDescription =
+  const homepageUrl: string = `${BASE_URL}/`;
+  const homepageTitle: string = 'Trending Today';
+  const homepageDescription: string =
     'Which movies and TV shows are popular today on WIAG? Explore daily updated lists, check ratings, and find your next favorite thing!';
   let itemListElements: object[] | undefined = undefined;
   //we don't mount the itemList unless it's defined
   if (trendingItems) {
     const topItems: IndexMediaData[] = trendingItems.slice(0, LIMIT_LISTS);
-    itemListElements = topItems.map((item, index) => {
+    itemListElements = topItems.map((item: IndexMediaData, index: number) => {
       const itemUrl: string = joinUrl(
         BASE_URL,
         buildIndexMediaLinkWithSlug(item)
@@ -262,7 +262,7 @@ export const buildHomepageTrendingSeo = (
 
       const genre: string[] = getIndexMediaGenresAsStringArray(item);
       let aggregateRating: object | undefined;
-      const average = getMediaAverageRating(item);
+      const average: number = getMediaAverageRating(item);
       if (average > 0 && item.voteCount > 0) {
         aggregateRating = {
           '@type': 'AggregateRating',
@@ -288,7 +288,7 @@ export const buildHomepageTrendingSeo = (
       };
     });
   }
-  const collectionPageSchema = {
+  const collectionPageSchema: object = {
     '@type': 'CollectionPage',
     '@id': `${homepageUrl}#webpage`,
     url: homepageUrl,
@@ -328,5 +328,8 @@ const getIndexMediaGenresAsStringArray = (
   indexMedia: IndexMediaData
 ): string[] => {
   const genres: GenreResponse[] | null = getIndexMediaGenres(indexMedia);
-  return genres ? getGenresAsStringArray(genres) : [];
+  if (!genres) {
+    return [];
+  }
+  return getGenresAsStringArray(genres);
 };
