@@ -36,7 +36,7 @@ const EntryTitle = ({
           </span>
 
           {country && (
-            <span className="inline-block align-middle ml-1">
+            <span className="inline-block align-middle ml-2">
               <CountryFlags countryCodes={country} mediaType={mediaType} />
             </span>
           )}

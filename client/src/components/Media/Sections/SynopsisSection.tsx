@@ -2,7 +2,10 @@ import { JSX } from 'react';
 import { EntryProps } from '../../EntrySection';
 import { MediaType } from '../../../../../shared/types/media';
 import { DEF_SYNOPSIS } from '../../../../../shared/defaults/media-defaults';
-import { getYearString } from '../../../../../shared/helpers/format-helper';
+import {
+  getMinutesInHourString,
+  getYearString,
+} from '../../../../../shared/helpers/format-helper';
 
 interface SynopsisSectionProps extends EntryProps {
   mediaType: MediaType;
@@ -40,14 +43,16 @@ const SynopsisSections = ({
     <div className="mt-2 space-y-2">
       <h2 className="block text-xl font-bold">{title}</h2>
       <p className="text-sm leading-relaxed text-justify flex flex-col">
-        <span className=" text-gray-400 font-extralight">
+        <span className="cursor-default text-gray-400 font-extralight">
           {displayAny ? '(' : ''}
           {displayAny && displayDate && yearDisplay}
           {displayEpisodes && (
-            <span className="font-normal text-gray-450">{`${episodeCount} Episodes`}</span>
+            <span className="">{`${episodeCount} Episodes`}</span>
           )}
-          {!isShow && displayAny && (
-            <span className="font-normal text-gray-450">{`${runtime} minutes`}</span>
+          {!isShow && displayAny && runtime && (
+            <span title={`${runtime} minutes`}>
+              {getMinutesInHourString(runtime)}
+            </span>
           )}
           {displayAny ? ') ' : ''}
         </span>

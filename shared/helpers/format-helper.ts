@@ -72,6 +72,22 @@ export const getYearNum = (
   return isNaN(year) ? null : year;
 };
 
+export const getPluralIfMultiple = (value: number): string =>
+  value > 1 ? 's' : '';
+
+//custom logic to convert minutes in number (145) into formatted strings (2 hours 25 minutes)
+export const getMinutesInHourString = (runtime: number) => {
+  const hours: number = Math.trunc(runtime / 60);
+  const hoursString: string = hours
+    ? `${hours.toString()} hour${getPluralIfMultiple(hours)}`
+    : '';
+  const minutes: number = runtime - hours * 60;
+  const minutesString: string = minutes
+    ? `${minutes.toString()} minute${getPluralIfMultiple(minutes)}`
+    : '';
+  return [hoursString, minutesString].filter((s: string) => s).join(' ');
+};
+
 export const formatBirthPlace = (
   text: string | undefined | null
 ): string | undefined => {
