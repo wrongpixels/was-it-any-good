@@ -240,52 +240,54 @@ export const buildSearchSeo = (
 };
 
 //to build the HomePage data and its nested Trending list
-export const buildHomepageTrendingListSeo = (
-  trendingItems: IndexMediaData[]
+export const buildHomepageTrendingSeo = (
+  trendingItems?: IndexMediaData[]
 ): SEOData => {
   const homepageUrl = `${BASE_URL}/`;
   const homepageTitle = 'Trending Today';
   const homepageDescription =
-    'Which movies and TV shows are popular today in WIAG?';
+    'Which movies and TV shows are popular today on WIAG? Explore daily updated lists, check ratings, and find your next favorite thing!';
+  let itemListElements: object[] | undefined = undefined;
+  //we don't mount the itemList unless it's defined
+  if (trendingItems) {
+    const topItems: IndexMediaData[] = trendingItems.slice(0, LIMIT_LISTS);
+    itemListElements = topItems.map((item, index) => {
+      const itemUrl: string = joinUrl(
+        BASE_URL,
+        buildIndexMediaLinkWithSlug(item)
+      );
+      const sameAs: string[] = item.tmdbId
+        ? [buildTMDBUrlForIndexMedia(item)]
+        : [];
 
-  const topItems: IndexMediaData[] = trendingItems.slice(0, LIMIT_LISTS);
-  const itemListElements: object[] = topItems.map((item, index) => {
-    const itemUrl: string = joinUrl(
-      BASE_URL,
-      buildIndexMediaLinkWithSlug(item)
-    );
-    const sameAs: string[] = item.tmdbId
-      ? [buildTMDBUrlForIndexMedia(item)]
-      : [];
+      const genre: string[] = getIndexMediaGenresAsStringArray(item);
+      let aggregateRating: object | undefined;
+      const average = getMediaAverageRating(item);
+      if (average > 0 && item.voteCount > 0) {
+        aggregateRating = {
+          '@type': 'AggregateRating',
+          ratingValue: average,
+          bestRating: 10,
+          worstRating: 1,
+          ratingCount: item.voteCount,
+        };
+      }
 
-    const genre: string[] = getIndexMediaGenresAsStringArray(item);
-    let aggregateRating: object | undefined;
-    const average = getMediaAverageRating(item);
-    if (average > 0 && item.voteCount > 0) {
-      aggregateRating = {
-        '@type': 'AggregateRating',
-        ratingValue: average,
-        bestRating: 10,
-        worstRating: 1,
-        ratingCount: item.voteCount,
+      return {
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': item.mediaType === MediaType.Film ? 'Movie' : 'TVSeries',
+          genre,
+          name: item.name,
+          url: itemUrl,
+          image: imageLinker.getPosterImage(item.image),
+          sameAs: sameAs.length > 0 ? sameAs : undefined,
+          aggregateRating: aggregateRating,
+        },
       };
-    }
-
-    return {
-      '@type': 'ListItem',
-      position: index + 1,
-      item: {
-        '@type': item.mediaType === MediaType.Film ? 'Movie' : 'TVSeries',
-        genre,
-        name: item.name,
-        url: itemUrl,
-        image: imageLinker.getPosterImage(item.image),
-        sameAs: sameAs.length > 0 ? sameAs : undefined,
-        aggregateRating: aggregateRating,
-      },
-    };
-  });
-
+    });
+  }
   const collectionPageSchema = {
     '@type': 'CollectionPage',
     '@id': `${homepageUrl}#webpage`,
@@ -296,13 +298,15 @@ export const buildHomepageTrendingListSeo = (
     isPartOf: {
       '@id': `${BASE_URL}/#website`,
     },
-    mainEntity: {
-      '@type': 'ItemList',
-      name: 'Trending Today',
-      itemListOrder: 'https://schema.org/Descending',
-      numberOfItems: itemListElements.length,
-      itemListElement: itemListElements,
-    },
+    mainEntity: itemListElements
+      ? {
+          '@type': 'ItemList',
+          name: 'Trending Today',
+          itemListOrder: 'https://schema.org/Descending',
+          numberOfItems: itemListElements.length,
+          itemListElement: itemListElements,
+        }
+      : undefined,
   };
 
   return {
