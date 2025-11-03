@@ -17,7 +17,13 @@ export const getIndexMediaGenresAsUrlMap = (
     return null;
   }
   const urlMap: GenreUrlMap[] = genreUrlMapper(
-    genres.slice(0, 2),
+    //we don't have much space in the cards, so we order by shortest
+    //genre name length and take the first 3 results
+    genres
+      .sort(
+        (a: GenreResponse, b: GenreResponse) => a.name.length - b.name.length
+      )
+      .slice(0, 3),
     indexMedia.mediaType
   );
   return urlMap;
