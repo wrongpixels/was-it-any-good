@@ -2,6 +2,7 @@ import { TxtParentNodeWithSentenceNodeContent, split } from 'sentence-splitter';
 
 import {
   CLEAN_AGE_MENTION_PATTERN,
+  CLEAN_BRACKETS_PATTERN,
   CLEAN_WIKIPEDIA_DESCRIPTION,
   CLEAN_WIKIPEDIA_PARTIAL_DESCRIPTION,
 } from '../constants/format-constants';
@@ -34,7 +35,10 @@ export const cleanDescription = (text: string): string => {
     )
     .slice(0, 2)
     .map((s: string) =>
-      s.replace(/\u00A0/g, ' ').replace(CLEAN_WIKIPEDIA_PARTIAL_DESCRIPTION, '')
+      s
+        .replace(/\u00A0/g, ' ')
+        .replace(CLEAN_WIKIPEDIA_PARTIAL_DESCRIPTION, '')
+        .replace(CLEAN_BRACKETS_PATTERN, ' ')
     );
 
   if (cleanSentences.length > 1) {
@@ -82,9 +86,35 @@ export const buildDescription = (
 };
 
 //a function to clean the characterNames array into a formatted single string
-export const formatCharacterNames = (characterName: string[] | undefined) => {
-  const cleanNames: string[] | undefined = characterName?.map((c: string) =>
-    c.replace(/\s*\(voice\)/g, '').replace(/ \/ /g, ', ')
+export const formatCharacterNames = (
+  characterName: string[] | undefined
+): string => {
+  if (!characterName || characterName.length === 0) {
+    return 'Unknown';
+  }
+  //this is important as TMDB uses absolutely inconsistent separation for characters, apart from random repetitions.
+  //Long story short, different characters can appear as either different strings in the array, or as a single string
+  //of the array separated by either '/' or ',' with, of course, inconsistent spacing.
+  //eg: ['Sharon Marsh / Ms. Cartman', 'Sharon Marsh', 'News Reporter/Additional Voices'].
+  //yes, that's a real example.
+  //Thus, our best way to clean the noise as best as we can:
+  const splitCharacterNames: string[] = [];
+  characterName.forEach((c: string) =>
+    c.split('/').forEach((s: string) => s && splitCharacterNames.push(s.trim()))
   );
-  return cleanNames?.join(', ').replace(' (voice)', '') || 'Unknown';
+
+  const uniqueCleanedNames = new Set<string>();
+
+  splitCharacterNames.forEach((c: string) => {
+    const cleaned = c
+      .replace(/\s*\(voice\)/g, '')
+      .replace(/ \/ /g, ', ')
+      .trim();
+    if (cleaned) {
+      //we skip empty strings after cleaning and avoid adding the same twice.
+      uniqueCleanedNames.add(cleaned);
+    }
+  });
+
+  return Array.from(uniqueCleanedNames).join(', ') || 'Unknown';
 };
