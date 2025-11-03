@@ -83,9 +83,11 @@ const HomePage = (): JSX.Element | null => {
         };
       });
     }
+    //we update the SEO when fetchedSearchResults change
     setSEO(buildHomepageTrendingSeo(fetchedSearchResults?.indexMedia));
   }, [fetchedSearchResults]);
-
+  //we set it first so the title and basic Page SEO data updates
+  setSEO(buildHomepageTrendingSeo(fetchedSearchResults?.indexMedia));
   const toggleParam = (param: string) => {
     queryTypeManager.clearAll();
     queryTypeManager.toggleParamByName(searchDropToType(param));
