@@ -186,17 +186,17 @@ const HomePage = (): JSX.Element | null => {
       )}
 
       {searchResults && canLoadMore && (
-        <div className="pt-2">
+        <div className="pt-2 w-full">
           <Button
-            className="h-9 pb-0.5 gap-1"
+            className="h-9 pb-0.5 gap-1 w-full items-center justify-center"
             onClick={onSeeMore}
             disabled={isFetching}
           >
             {isFetching ||
             (fetchedSearchResults?.page === 2 && searchResults.page === 1) ? (
-              <IconLoadingSpinner className="text-blue-100" />
+              <IconLoadingSpinner className="text-blue-100 mt-0.5" />
             ) : (
-              <IconAdd width={17} />
+              <IconAdd width={17} className="mt-0.5" />
             )}
 
             {'See more'}
