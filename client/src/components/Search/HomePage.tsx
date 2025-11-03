@@ -194,9 +194,9 @@ const HomePage = (): JSX.Element | null => {
           >
             {isFetching ||
             (fetchedSearchResults?.page === 2 && searchResults.page === 1) ? (
-              <IconLoadingSpinner className="text-blue-100" />
+              <IconLoadingSpinner className="text-blue-100 mt-0.5" />
             ) : (
-              <IconAdd width={17} />
+              <IconAdd width={17} className="mt-0.5" />
             )}
 
             {'See more'}

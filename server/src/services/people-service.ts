@@ -76,6 +76,23 @@ export const fetchAndUpdatePersonDetails = async (
   return;
 };
 
+const addRoleToAuthorMedia = (
+  authorMedia: AuthorMedia[],
+  mediaRole: MediaRoleResponse
+) => {
+  //we look for an entry for this author type
+  const entry = authorMedia.find(
+    (a: AuthorMedia) => a.authorType === mediaRole.role
+  );
+  if (entry) {
+    //if it already exists, we add this media to the list and the characterName
+    entry.role.push(mediaRole);
+  } else {
+    //if not, we create the list and add it as the first role entry
+    authorMedia.push({ authorType: mediaRole.role, role: [mediaRole] });
+  }
+};
+
 //a custom logic that returns the media of a Person sorted by roles (Actor, Director, Producer...)
 export const sortRoles = (person: PersonResponse): SortedRoles => {
   const authorMedia: AuthorMedia[] = [];
@@ -84,24 +101,37 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
     //we check the role has a valid media linked
     const media: MediaResponse | undefined = getMediaFromRole(r);
     if (media) {
-      //we separate voice actors from regular actors
+      //we separate voice actor roles from regular actor ones.
+      //this allows us to handle actors with regular roles and voice roles in the same media.
       if (r.role === AuthorType.Actor) {
-        if (
-          r.characterName.find((chara: string) => chara.includes('(voice)'))
-        ) {
-          r.role = AuthorType.VoiceActor;
+        const voiceCharacters: string[] = [];
+        const regularCharacters: string[] = [];
+
+        for (const chara of r.characterName) {
+          if (chara.includes('(voice)')) {
+            voiceCharacters.push(chara);
+          } else {
+            regularCharacters.push(chara);
+          }
+        }
+        //and we create/add either a Voice Actor, an Actor, or both
+        if (voiceCharacters.length > 0) {
+          addRoleToAuthorMedia(authorMedia, {
+            ...r,
+            characterName: voiceCharacters,
+            role: AuthorType.VoiceActor,
+          });
+        }
+        if (regularCharacters.length > 0) {
+          addRoleToAuthorMedia(authorMedia, {
+            ...r,
+            characterName: regularCharacters,
+          });
         }
       }
-      //we look for an entry for this author type
-      const entry = authorMedia.find(
-        (a: AuthorMedia) => a.authorType === r.role
-      );
-      if (entry) {
-        //if it already exists, we add this media to the list and the characterName
-        entry.role.push(r);
-      } else {
-        //if not, we create the list and add it as the first role entry
-        authorMedia.push({ authorType: r.role, role: [r] });
+      //if not, we always add the role to AuthorMedia or create a new entry for it
+      else {
+        addRoleToAuthorMedia(authorMedia, r);
       }
     }
   });
