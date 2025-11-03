@@ -186,9 +186,9 @@ const HomePage = (): JSX.Element | null => {
       )}
 
       {searchResults && canLoadMore && (
-        <div className="pt-2">
+        <div className="pt-2 w-full">
           <Button
-            className="h-9 pb-0.5 gap-1"
+            className="h-9 pb-0.5 gap-1 w-full items-center justify-center"
             onClick={onSeeMore}
             disabled={isFetching}
           >
