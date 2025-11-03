@@ -1,6 +1,6 @@
 import { MediaType } from '../../../shared/types/media';
 import { BASE_TMDB_URL } from '../../../shared/constants/url-constants';
-import { IndexMediaData } from '../../../shared/types/models';
+import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
 import { getMediaId } from './index-media-helper';
 import { toCountryCodes } from '../../../shared/types/countries';
@@ -26,6 +26,7 @@ import {
   buildClientMediaLink,
   clientPaths,
 } from '../../../shared/util/url-builder';
+import { buildTMDBorIMDBUrl } from '../services/media-service';
 
 export const urlFromIndexMedia = (im: IndexMediaData): string => {
   const mediaId: number | null = getMediaId(im);
@@ -57,6 +58,20 @@ export const buildTMDBUrl = (
   const url = BASE_TMDB_URL;
   const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
   return `${url}/${prefix}/${path}`;
+};
+
+export const buildTMDBUrlForMedia = (media: MediaResponse): string => {
+  if (!media.tmdbId) {
+    return '';
+  }
+  return buildTMDBorIMDBUrl(media.mediaType, true, media.id);
+};
+
+export const buildIMDBUrlForMedia = (media: MediaResponse): string => {
+  if (!media.tmdbId) {
+    return '';
+  }
+  return buildTMDBorIMDBUrl(media.mediaType, false, media.id);
 };
 
 export const mediaTypeToDisplayName = (mediaType: MediaType) => {

@@ -15,9 +15,16 @@ import imageLinker from '../../../shared/util/image-linker';
 import { SEOData } from './set-seo';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';
-import { mediaTypeToDisplayName } from './url-helper';
+import {
+  buildIMDBUrlForMedia,
+  buildTMDBUrlForMedia,
+  mediaTypeToDisplayName,
+} from './url-helper';
 import { getMediaAverageRating } from './ratings-helper';
-import { BASE_URL } from '../../../shared/constants/url-constants';
+import {
+  BASE_URL,
+  TMDB_PERSON_URL,
+} from '../../../shared/constants/url-constants';
 import {
   clientPaths,
   buildMediaLinkWithSlug,
@@ -42,6 +49,7 @@ export const buildPersonSEO = (
     url,
     imageUrl,
     type: 'person',
+
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'Person',
@@ -55,6 +63,7 @@ export const buildPersonSEO = (
             }
           : undefined,
       url,
+      sameAs: person.tmdbId ? [joinUrl(TMDB_PERSON_URL, person.tmdbId)] : [],
       image: imageUrl,
       jobTitle: personDetails.mainRolesWithAnd,
       birthDate: person.birthDate,
@@ -72,6 +81,10 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   const imageUrl: string = imageLinker.getPosterImage(media.image);
   const description: string = safeTruncate(media.description, 150);
   const genre: string[] = media.genres?.map((g: GenreResponse) => g.name) || [];
+  const sameAs: string[] = media.tmdbId ? [buildTMDBUrlForMedia(media)] : [];
+  if (media.imdbId) {
+    sameAs.push(buildIMDBUrlForMedia(media));
+  }
 
   let aggregateRating: object | undefined;
   const mediaAverage: number = getMediaAverageRating(media);
@@ -112,6 +125,7 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
     name: media.name,
     description,
     url,
+    sameAs,
     image: imageUrl,
     director,
     actor,

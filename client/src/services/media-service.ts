@@ -38,9 +38,11 @@ const getMediaPath = (mediaType: MediaType) => {
 export const buildTMDBorIMDBUrl = (
   mediaType: MediaType,
   tmdb: boolean,
-  id?: string
+  id: string | number
 ): string => {
-  if (!id) return '';
+  if (!id) {
+    return '';
+  }
 
   if (!tmdb) {
     return `${BASE_IMDB_URL}/${id}`;
