@@ -57,6 +57,7 @@ export const fetchAndUpdatePersonDetails = async (
     const countryString: string = normalizedBirthPlace.split(', ').pop() ?? '';
     await person.update({
       addedDetails: true,
+      gender: personDetails.gender,
       birthPlace: formatBirthPlace(normalizedBirthPlace),
       birthDate: personDetails.birthday || undefined,
       deathDate: personDetails.deathday || undefined,
