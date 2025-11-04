@@ -1,18 +1,18 @@
-import { MediaType } from "../types/media";
+import { MediaType } from '../types/media';
 import {
   MediaResponse,
   MediaRoleResponse,
   SeasonResponse,
   ShowResponse,
-} from "../types/models";
+} from '../types/models';
 
 export const stringToMediaType = (media: string): MediaType | null => {
   switch (media.toLowerCase()) {
-    case "film":
+    case 'film':
       return MediaType.Film;
-    case "show":
+    case 'show':
       return MediaType.Show;
-    case "season":
+    case 'season':
       return MediaType.Season;
     default:
       return null;
@@ -48,3 +48,7 @@ export const getMediaFromRole = (
   }
   return undefined;
 };
+
+//an easy accessor to out media popularity, which defaults to 0
+export const getMediaRolePopularity = (role: MediaRoleResponse): number =>
+  getMediaFromRole(role)?.popularity || 0;

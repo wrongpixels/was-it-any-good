@@ -25,16 +25,16 @@ const PersonRoleCredits = ({
   gender,
 }: PersonRoleCreditsProps) => {
   const placeholderCount: number =
-    PLACEHOLDER_COUNT_PERSON - authorMedia.role.length;
+    PLACEHOLDER_COUNT_PERSON - authorMedia.mediaRoles.length;
   return (
     <div className="h-full">
       {!isFirst && <Separator className="w-full pb-2" />}
       <h2 className="text-left font-bold text-lg pb-1">
-        {`${getGenderedAuthor(gender, authorMedia.authorType)} (${authorMedia.role.length})`}
+        {`${getGenderedAuthor(gender, authorMedia.authorType)} (${authorMedia.mediaRoles.length})`}
       </h2>
 
       <ScrollableDiv className="ml-4">
-        {authorMedia.role.map((r: MediaRoleResponse) => {
+        {authorMedia.mediaRoles.map((r: MediaRoleResponse) => {
           const media: MediaResponse | undefined = getMediaFromRole(r);
           return (
             media && (

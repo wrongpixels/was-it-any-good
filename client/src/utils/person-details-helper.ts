@@ -11,6 +11,11 @@ import {
   startsWithVowel,
   toFirstUpperCase,
 } from '../../../shared/helpers/format-helper';
+import { AuthorType, MergedPersonMediaRole } from '../../../shared/types/roles';
+import { MediaResponse } from '../../../shared/types/models';
+import { joinWithAnd } from './common-format-helper';
+import { getBeVerb, getPronoun } from '../../../shared/helpers/people-helper';
+import { PersonGender } from '../../../shared/types/people';
 
 //a function that builds a simple 1 sentence description for people
 //that have no TMDB biography
@@ -59,7 +64,9 @@ export const cleanDescription = (text: string): string => {
 //formatting
 
 export const buildDescription = (
-  personDetailsValues: PersonDetailsValues
+  personDetailsValues: PersonDetailsValues,
+  mergedMediaRoles: MergedPersonMediaRole[],
+  gender: PersonGender
 ): string => {
   if (personDetailsValues.description) {
     return toFirstUpperCase(cleanDescription(personDetailsValues.description));
@@ -76,13 +83,101 @@ export const buildDescription = (
     personDetailsValues.formattedDeathDate
       ? ` — ${personDetailsValues.formattedDeathDate}`
       : '';
-  const bornDate: string = personDetailsValues.formattedBornDate
-    ? ` (${personDetailsValues.formattedBornDate}${deathDate}), `
+
+  const bornDateString: string = !personDetailsValues.formattedBornDate
+    ? ''
+    : !personDetailsValues.personPassedAway
+      ? `born ${personDetailsValues.formattedBornDate}`
+      : personDetailsValues.formattedBornDate;
+  const bornDate: string = bornDateString
+    ? ` (${bornDateString}${deathDate}), `
     : '';
 
-  console.log(personDetailsValues);
-  const finalDescription: string = `${personDetailsValues.personName}${bornDate} ${verb} ${particle} ${personDetailsValues.mainRolesWithAnd}${location}.`;
+  const rolesString: string = ` ${toFirstUpperCase(getPronoun(gender))} ${getBeVerb(gender)} best known for ${buildRolesString(mergedMediaRoles)}`;
+
+  const finalDescription: string = `${personDetailsValues.personName}${bornDate} ${verb} ${particle} ${personDetailsValues.mainRolesWithAnd}${location}.${rolesString}.`;
+
   return finalDescription;
+};
+
+interface MergedRoleStringValues {
+  //to know if this media had a single role and its authorType if so.
+  monoRole: AuthorType | false;
+  mergedRoleString: string;
+}
+
+const getConnector = (index: number, maxIndex: number): string => {
+  const remaining: number = maxIndex - index;
+  switch (remaining) {
+    case 2:
+      return maxIndex === 2 ? '' : ' as well as';
+    case 1:
+      return maxIndex > 1 ? ' and' : 'as well as';
+    case 0:
+      return maxIndex == 0
+        ? ''
+        : maxIndex === 1
+          ? ' as well as'
+          : ' as well as';
+    default:
+      return ' and';
+  }
+};
+
+const buildRolesString = (mergedRoles: MergedPersonMediaRole[]) => {
+  const maxIndex: number = mergedRoles.length - 1;
+  let prevRoleWasMono: AuthorType | false;
+
+  const rolesStrings: string[] = mergedRoles.map(
+    (m: MergedPersonMediaRole, i: number) => {
+      const { monoRole, mergedRoleString } = buildSingleRoleString(
+        m,
+        prevRoleWasMono
+      );
+      prevRoleWasMono = monoRole;
+      return `${getConnector(i, maxIndex)} ${mergedRoleString}`;
+    }
+  );
+  return rolesStrings.join();
+};
+
+const buildSingleRoleString = (
+  mergedRole: MergedPersonMediaRole,
+  prevRoleWasMono: AuthorType | false
+): MergedRoleStringValues => {
+  const monoRole: AuthorType | false =
+    mergedRole.authorType.length === 1 ? mergedRole.authorType[0] : false;
+  //if this and previous role were the same, we skip the 'directing', 'creating' etc verb.
+  const skipAuthorVerb: boolean = monoRole && prevRoleWasMono === monoRole;
+  const authorStrings: string[] = mergedRole.authorType.map((a: AuthorType) =>
+    buildAuthorString(a, mergedRole.characterName, skipAuthorVerb)
+  );
+  return {
+    monoRole,
+    mergedRoleString: `${joinWithAnd(authorStrings)} ${buildMediaNameString(mergedRole.media)}`,
+  };
+};
+
+const buildMediaNameString = (media: MediaResponse) => `${media.name}`;
+
+const buildAuthorString = (
+  author: AuthorType,
+  characterName: string[],
+  skipAuthorVerb: boolean
+): string => {
+  switch (author) {
+    case AuthorType.Director:
+      return skipAuthorVerb ? '' : 'directing';
+    case AuthorType.Writer:
+      return skipAuthorVerb ? '' : 'writing';
+    case AuthorType.Creator:
+      return skipAuthorVerb ? '' : 'creating';
+    case AuthorType.VoiceActor:
+    case AuthorType.Actor:
+      return `${skipAuthorVerb ? '' : 'playing '}${formatCharacterNamesForDescription(characterName)} in`;
+    default:
+      return 'their work';
+  }
 };
 
 //a function to clean the characterNames array into a formatted single string
@@ -117,4 +212,16 @@ export const formatCharacterNames = (
   });
 
   return Array.from(uniqueCleanedNames).join(', ') || 'Unknown';
+};
+
+//a special function to enum the main acting roles limited to 3.
+const formatCharacterNamesForDescription = (characterNames: string[]) => {
+  let splitNames: string[] = formatCharacterNames(characterNames).split(', ');
+  //if we have too many roles for a single media, we get a max of 3.
+  if (splitNames.length > 3) {
+    splitNames = splitNames.splice(0, 3);
+    //we also add a 'more' at the end
+    splitNames.push('more');
+  }
+  return joinWithAnd(splitNames);
 };

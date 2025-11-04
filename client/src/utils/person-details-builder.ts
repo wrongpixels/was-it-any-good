@@ -3,13 +3,28 @@ import {
   getAge,
   tryAddParenthesis,
 } from '../../../shared/helpers/format-helper';
+import {
+  getMediaFromRole,
+  getMediaRolePopularity,
+} from '../../../shared/helpers/media-helper';
 import { getGenderedAuthors } from '../../../shared/helpers/people-helper';
 import { CountryCode } from '../../../shared/types/countries';
-import { PersonResponse } from '../../../shared/types/models';
+import {
+  MediaResponse,
+  MediaRoleResponse,
+  PersonResponse,
+} from '../../../shared/types/models';
 import { PersonGender } from '../../../shared/types/people';
-import { AuthorType } from '../../../shared/types/roles';
+import {
+  AuthorMedia,
+  AuthorType,
+  MergedPersonMediaRole,
+} from '../../../shared/types/roles';
 import { joinWithAnd } from './common-format-helper';
 import { buildDescription } from './person-details-helper';
+
+const MAX_ROLES_DESCRIPTION: number = 3;
+const MAX_MEDIA_PER_ROLE_DESCRIPTION: number = 2;
 
 //a function that provides PersonDetails formatted in the different
 //ways our PersonPage and its sub-components will need
@@ -96,6 +111,54 @@ export const buildPersonDetails = (
     genderedRoles.map((s: string) => s.toLowerCase()) ?? []
   );
 
+  const mainCreatorRoles = getMainRolesByAuthorType(
+    person.sortedRoles?.mediaByRole,
+    AuthorType.Creator
+  );
+  const mainDirectorRoles = getMainRolesByAuthorType(
+    person.sortedRoles?.mediaByRole,
+    AuthorType.Director
+  );
+  const mainWriterRoles = getMainRolesByAuthorType(
+    person.sortedRoles?.mediaByRole,
+    AuthorType.Writer
+  );
+  const mainActorRoles = getMainRolesByAuthorTypes(
+    person.sortedRoles?.mediaByRole,
+    [AuthorType.Actor, AuthorType.VoiceActor]
+  );
+  //we combine them all
+  const allMainRoles: MediaRoleResponse[] = [
+    ...mainDirectorRoles,
+    ...mainCreatorRoles,
+    ...mainWriterRoles,
+    ...mainActorRoles,
+  ];
+
+  //and we merge all the roles per media entry
+  const mergedRoles = new Map<MediaResponse, MergedPersonMediaRole>();
+  allMainRoles.forEach((mr: MediaRoleResponse) => {
+    const media: MediaResponse | undefined = getMediaFromRole(mr);
+    if (media) {
+      const entry = mergedRoles.get(media);
+      if (entry) {
+        entry.characterName = [...entry.characterName, ...mr.characterName];
+        entry.authorType = [...entry.authorType, mr.role];
+      }
+      mergedRoles.set(media, {
+        media,
+        authorType: [mr.role],
+        characterName: mr.characterName,
+      });
+    }
+  });
+  //and finally, we extract the merged roles, sort them by number of author types and slice to MAX_ROLES_DESCRIPTION
+  const orderedMergedRoles: MergedPersonMediaRole[] = Array.from(
+    mergedRoles.values()
+  )
+    .sort((a, b) => a.authorType.length + b.authorType.length)
+    .slice(0, MAX_ROLES_DESCRIPTION);
+
   //DESCRIPTION
   //if the person has a default description, we format it, trim it a bit,
   //and use it as it is. If not, we build one with the data we just created.
@@ -118,7 +181,48 @@ export const buildPersonDetails = (
     description: person.description || '',
   };
 
-  const finalDescription: string = buildDescription(personDetailsValues);
+  const finalDescription: string = buildDescription(
+    personDetailsValues,
+    orderedMergedRoles,
+    person.gender
+  );
 
   return { ...personDetailsValues, description: finalDescription };
+};
+
+const getMainRolesByAuthorType = (
+  authorMedia: AuthorMedia[] | undefined,
+  authorType: AuthorType
+): MediaRoleResponse[] => {
+  return !authorMedia
+    ? []
+    : getMainRoles(
+        authorMedia.find((am: AuthorMedia) => am.authorType === authorType)
+      );
+};
+
+//to group different AuthorType in the same category
+const getMainRolesByAuthorTypes = (
+  authorMedia: AuthorMedia[] | undefined,
+  authorTypes: AuthorType[],
+  limit: number = MAX_MEDIA_PER_ROLE_DESCRIPTION
+) => {
+  if (!authorMedia) {
+    return [];
+  }
+  const filteredByAuthorTypes: AuthorMedia[] = authorMedia.filter(
+    (am: AuthorMedia) => authorTypes.includes(am.authorType)
+  );
+  //we combine the roles of all the authorTypes requested, order by popularity, and slice by limit
+  return filteredByAuthorTypes
+    .flatMap((am: AuthorMedia) => getMainRoles(am))
+    .sort((a, b) => getMediaRolePopularity(a) + getMediaRolePopularity(b))
+    .slice(0, limit);
+};
+
+const getMainRoles = (
+  am: AuthorMedia | undefined,
+  limit: number = MAX_MEDIA_PER_ROLE_DESCRIPTION
+): MediaRoleResponse[] => {
+  return !am ? [] : am.mediaRoles.slice(0, limit);
 };

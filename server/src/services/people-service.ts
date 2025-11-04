@@ -19,7 +19,10 @@ import {
 import { tmdbAPI } from '../util/config';
 import { tmdbPaths } from '../util/url-helper';
 import { formatBirthPlace } from '../../../shared/helpers/format-helper';
-import { getMediaFromRole } from '../../../shared/helpers/media-helper';
+import {
+  getMediaFromRole,
+  getMediaRolePopularity,
+} from '../../../shared/helpers/media-helper';
 
 //an extra call to TMDB API that populates extra options information for people.
 //this is not done on creation for performance reason, and this info is only fetched
@@ -87,10 +90,10 @@ const addRoleToAuthorMedia = (
   );
   if (entry) {
     //if it already exists, we add this media to the list and the characterName
-    entry.role.push(mediaRole);
+    entry.mediaRoles.push(mediaRole);
   } else {
     //if not, we create the list and add it as the first role entry
-    authorMedia.push({ authorType: mediaRole.role, role: [mediaRole] });
+    authorMedia.push({ authorType: mediaRole.role, mediaRoles: [mediaRole] });
   }
 };
 
@@ -136,9 +139,18 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
       }
     }
   });
+  //now we sort the mediaRoles on each authorMedia by its popularity
+  authorMedia.forEach(
+    (am: AuthorMedia) =>
+      (am.mediaRoles = am.mediaRoles.sort(
+        (a, b) => getMediaRolePopularity(a) + getMediaRolePopularity(b)
+      ))
+  );
+
+  //and then each role itself by our own order of importance (Creator > Director > Actor ...)
   authorMedia.sort((a, b) => {
-    const countB = b.role.length;
-    const countA = a.role.length;
+    const countB = b.mediaRoles.length;
+    const countA = a.mediaRoles.length;
     if (countA !== countB) {
       return countB - countA;
     }
