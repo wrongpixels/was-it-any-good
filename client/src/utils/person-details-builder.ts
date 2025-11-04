@@ -3,8 +3,11 @@ import {
   getAge,
   tryAddParenthesis,
 } from '../../../shared/helpers/format-helper';
+import { getGenderedAuthors } from '../../../shared/helpers/people-helper';
 import { CountryCode } from '../../../shared/types/countries';
 import { PersonResponse } from '../../../shared/types/models';
+import { PersonGender } from '../../../shared/types/people';
+import { AuthorType } from '../../../shared/types/roles';
 import { joinWithAnd } from './common-format-helper';
 import { buildDescription } from './person-details-helper';
 
@@ -81,10 +84,16 @@ export const buildPersonDetails = (
 
   //PERSON ROLES
   //We list the main roles of the Person with and without 'and'
-  const mainRoles: string | undefined =
-    person.sortedRoles?.mainRoles.join(', ');
+  console.log(person.gender);
+  const genderedRoles: string[] | AuthorType[] = person.sortedRoles?.mainRoles
+    ? person.gender !== PersonGender.Female
+      ? person.sortedRoles.mainRoles
+      : getGenderedAuthors(person.gender, person.sortedRoles.mainRoles)
+    : [];
+
+  const mainRoles: string = genderedRoles.join(', ') ?? '';
   const mainRolesWithAnd: string = joinWithAnd(
-    person.sortedRoles?.mainRoles.map((s: string) => s.toLowerCase()) ?? []
+    genderedRoles.map((s: string) => s.toLowerCase()) ?? []
   );
 
   //DESCRIPTION

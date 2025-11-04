@@ -69,10 +69,20 @@ export const getPossessivePronoun = (gender: PersonGender): string => {
   }
 };
 
+export const getGenderedAuthors = (
+  gender: PersonGender,
+  roles: AuthorType[]
+): string[] => {
+  console.log('Gendering 0');
+
+  return roles.map((r: AuthorType) => getGenderedAuthor(gender, r));
+};
+
 export const getGenderedAuthor = (
   gender: PersonGender,
   role: AuthorType
 ): string => {
+  console.log('Gendering');
   if (gender === PersonGender.Female) {
     switch (role) {
       case AuthorType.Actor:
