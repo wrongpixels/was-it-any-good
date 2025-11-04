@@ -1,4 +1,4 @@
-import { MediaRoleResponse } from './models';
+import { MediaResponse, MediaRoleResponse } from './models';
 
 export enum AuthorType {
   Director = 'Director',
@@ -29,5 +29,12 @@ export interface SortedRoles {
 
 export interface AuthorMedia {
   authorType: AuthorType;
-  role: MediaRoleResponse[];
+  mediaRoles: MediaRoleResponse[];
+}
+
+//a special combined version of all the roles of the person in a single media
+export interface MergedPersonMediaRole {
+  media: MediaResponse;
+  authorType: AuthorType[];
+  characterName: string[];
 }

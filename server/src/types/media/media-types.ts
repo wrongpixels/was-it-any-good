@@ -9,6 +9,7 @@ import { Image } from '../../../../shared/types/common';
 import { ActiveUser } from '../../../../shared/types/models';
 import { FindOptions, ScopeOptions, Transaction } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
+import { PersonGender } from '../../../../shared/types/people';
 
 export interface BirthDate {
   year: number;
@@ -70,6 +71,7 @@ export interface IndividualData {
   name: string;
   country?: CountryCode;
   image: Image;
+  gender: PersonGender;
   tmdbId?: number;
 }
 

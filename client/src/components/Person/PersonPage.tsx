@@ -101,6 +101,7 @@ const KeyedPersonPage = (): JSX.Element | null => {
                   key={media.authorType}
                   authorMedia={media}
                   isFirst={index === 0}
+                  gender={person.gender}
                 />
               )
             )}

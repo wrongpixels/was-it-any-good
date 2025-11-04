@@ -6,7 +6,7 @@ export const TMDBPersonDetailsSchema = z.object({
   birthday: z.string().optional().nullable(),
   deathday: z.string().optional().nullable(),
   biography: z.string().optional().nullable(),
-  gender: z.number().optional().nullable(),
+  gender: z.number(),
   place_of_birth: z.string().optional().nullable(),
   profile_path: z.string().optional().nullable(),
 });

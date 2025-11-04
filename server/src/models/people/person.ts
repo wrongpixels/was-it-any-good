@@ -9,6 +9,7 @@ import { sequelize } from '../../util/db/initialize-db';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import IndexMedia from '../media/indexMedia';
+import { PersonGender } from '../../../../shared/types/people';
 
 class Person extends Model<
   InferAttributes<Person>,
@@ -21,6 +22,7 @@ class Person extends Model<
   declare image: string;
   declare birthDate?: string;
   declare country: CountryCode[];
+  declare gender: PersonGender;
   declare updatedAt?: Date;
 
   //extended details, added only when user clicks on the persons profile
@@ -45,6 +47,11 @@ Person.init(
       type: DataTypes.INTEGER,
       unique: true,
       allowNull: true,
+    },
+    gender: {
+      type: DataTypes.TINYINT,
+      defaultValue: 0,
+      validate: { min: 0, max: 3, isInt: true },
     },
     gamedbId: {
       type: DataTypes.STRING,

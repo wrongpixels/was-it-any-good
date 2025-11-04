@@ -10,27 +10,31 @@ import { PLACEHOLDER_COUNT_PERSON } from '../../constants/placeholder-results-co
 import Separator from '../Common/Separator';
 import { getMediaFromRole } from '../../../../shared/helpers/media-helper';
 import { formatCharacterNames } from '../../utils/person-details-helper';
+import { getGenderedAuthor } from '../../../../shared/helpers/people-helper';
+import { PersonGender } from '../../../../shared/types/people';
 
 interface PersonRoleCreditsProps {
   authorMedia: AuthorMedia;
   isFirst: boolean;
+  gender: PersonGender;
 }
 
 const PersonRoleCredits = ({
   authorMedia,
   isFirst,
+  gender,
 }: PersonRoleCreditsProps) => {
   const placeholderCount: number =
-    PLACEHOLDER_COUNT_PERSON - authorMedia.role.length;
+    PLACEHOLDER_COUNT_PERSON - authorMedia.mediaRoles.length;
   return (
     <div className="h-full">
       {!isFirst && <Separator className="w-full pb-2" />}
       <h2 className="text-left font-bold text-lg pb-1">
-        {`${authorMedia.authorType} (${authorMedia.role.length})`}
+        {`${getGenderedAuthor(gender, authorMedia.authorType)} (${authorMedia.mediaRoles.length})`}
       </h2>
 
       <ScrollableDiv className="ml-4">
-        {authorMedia.role.map((r: MediaRoleResponse) => {
+        {authorMedia.mediaRoles.map((r: MediaRoleResponse) => {
           const media: MediaResponse | undefined = getMediaFromRole(r);
           return (
             media && (
