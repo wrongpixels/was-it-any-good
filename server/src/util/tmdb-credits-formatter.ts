@@ -18,6 +18,7 @@ export const mediaPersonToCreatePerson = (
 ): CreatePerson => ({
   name: mediaPerson.name,
   tmdbId: mediaPerson.tmdbId,
+  gender: mediaPerson.gender,
   image: mediaPerson.image,
   country: mediaPerson.country ? [mediaPerson.country] : ['UNKNOWN'],
 });

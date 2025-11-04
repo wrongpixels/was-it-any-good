@@ -35,6 +35,7 @@ import {
 import { DEF_IMAGE_PERSON } from '../../../shared/defaults/media-defaults';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { createIndexForFilmBulk } from './film-factory';
+import { PersonGender } from '../../../shared/types/people';
 
 export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
   tmdbId: tmdb.id,
@@ -136,6 +137,7 @@ export const createCrewMember = (
   name: crewMember.name,
   image: crewMember.profile_path ? crewMember.profile_path : DEF_IMAGE_PERSON,
   tmdbId: crewMember.id,
+  gender: crewMember.gender || PersonGender.Unknown,
 });
 
 export const createDirector = (crewMember: TMDBCrewData): AuthorData => ({

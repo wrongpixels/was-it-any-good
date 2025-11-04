@@ -4,6 +4,7 @@ import {
 } from '../../../shared/defaults/media-defaults';
 import { CountryCode } from '../../../shared/types/countries';
 import { MediaType } from '../../../shared/types/media';
+import { PersonGender } from '../../../shared/types/people';
 import {
   BirthDate,
   IndividualData,
@@ -36,6 +37,7 @@ export const DEF_MEDIA_RATING: number = 0;
 export const DEF_INDIVIDUAL: IndividualData = {
   name: 'Unknown',
   country: 'UNKNOWN',
+  gender: PersonGender.Unknown,
   image: DEF_IMAGE_PERSON,
 };
 
