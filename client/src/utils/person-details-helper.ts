@@ -108,17 +108,16 @@ interface MergedRoleStringValues {
 
 const getConnector = (index: number, maxIndex: number): string => {
   const remaining: number = maxIndex - index;
+  if (index === 0) {
+    return '';
+  }
   switch (remaining) {
     case 2:
-      return maxIndex === 2 ? '' : ' as well as';
+      return ' as well as';
     case 1:
-      return maxIndex > 1 ? ' and' : 'as well as';
+      return ' as well as';
     case 0:
-      return maxIndex == 0
-        ? ''
-        : maxIndex === 1
-          ? ' as well as'
-          : ' as well as';
+      return maxIndex == 0 ? '' : ' and';
     default:
       return ' and';
   }
@@ -158,7 +157,7 @@ const buildSingleRoleString = (
   };
 };
 
-const buildMediaNameString = (media: MediaResponse) => `${media.name}`;
+const buildMediaNameString = (media: MediaResponse) => `'${media.name}'`;
 
 const buildAuthorString = (
   author: AuthorType,
@@ -173,6 +172,7 @@ const buildAuthorString = (
     case AuthorType.Creator:
       return skipAuthorVerb ? '' : 'creating';
     case AuthorType.VoiceActor:
+      return `${skipAuthorVerb ? '' : 'voicing '}${formatCharacterNamesForDescription(characterName)} in`;
     case AuthorType.Actor:
       return `${skipAuthorVerb ? '' : 'playing '}${formatCharacterNamesForDescription(characterName)} in`;
     default:
