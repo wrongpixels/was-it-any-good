@@ -3,6 +3,8 @@ import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import IconStarLogo from '../Common/Icons/Logos/IconStarLogo';
 import { clientPaths } from '../../../../shared/util/url-builder';
+import IconWIAGLogoImage from '../Common/Icons/Logos/IconWIAGImage';
+import IconWIAGLogo from '../Common/Icons/Logos/IconWIAGLogo';
 
 const HeaderLogo = (props: OptClassNameProps) => {
   return (
@@ -12,23 +14,19 @@ const HeaderLogo = (props: OptClassNameProps) => {
         className="flex items-center flex-shrink-0"
         title="Home / Search"
       >
-        <span
-          className={`font-bold text-white text-2xl flex items-baseline pb-1 ${styles.shadow.textShadow}`}
+        <div
+          className={`font-bold text-white text-2xl flex flex-row items-center pb-1 ${styles.shadow.textShadow}`}
         >
-          <span className="flex flex-row items-center">
-            {'WI'}
-            <span className="flex items-center -mx-[2px] text-staryellow drop-shadow mt-0.5">
-              <IconStarLogo width={26} />
+          <div className="flex flex-row pt-1">
+            <IconWIAGLogo className="drop-shadow-xs/40 opacity-90" />
+            <span className="font-normal italic ml-2 text-xs text-amber-200 hidden sm:inline pt-0.5">
+              {'Was It Any Good'}
+              <span className="font-medium italic ml-0.5 hidden sm:inline text-white">
+                {'?'}
+              </span>
             </span>
-            {'G'}
-          </span>
-          <span className="font-normal italic ml-2 text-xs mt-1 text-amber-200 hidden sm:inline">
-            {'Was It Any Good'}
-          </span>
-          <span className="font-medium italic ml-0.5 text-sm mt-1 hidden sm:inline">
-            {'?'}
-          </span>
-        </span>
+          </div>
+        </div>
       </Link>
     </div>
   );

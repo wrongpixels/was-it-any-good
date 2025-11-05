@@ -106,8 +106,9 @@ export const setSEO = (seo: SEOData = {}) => {
   };
 
   const pageTitle =
-    newSeo.title === DEF_PAGE_TITLE ? DEF_PAGE_TITLE : `${newSeo.title} | WIAG`;
-
+    newSeo.title === DEF_PAGE_TITLE
+      ? DEF_PAGE_TITLE
+      : `${newSeo.title}${!newSeo.title.includes(DEF_PAGE_TITLE) ? ` - ${DEF_PAGE_TITLE}` : ''}`;
   document.title = pageTitle;
   replaceMetaTag('name', 'description', newSeo.description);
   replaceLinkTag('canonical', newSeo.url);
