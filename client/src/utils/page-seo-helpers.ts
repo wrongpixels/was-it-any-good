@@ -244,9 +244,9 @@ export const buildHomepageTrendingSeo = (
   trendingItems?: IndexMediaData[]
 ): SEOData => {
   const homepageUrl: string = `${BASE_URL}/`;
-  const homepageTitle: string = 'Trending Today';
+  const homepageTitle: string = 'WIAG: The Media Database that builds itself';
   const homepageDescription: string =
-    'Which movies and TV shows are popular today on WIAG? Explore daily updated lists, check ratings, and find your next favorite thing!';
+    'Explore trending Films and TV Shows, rate them, and find your next favorite thing!';
   let itemListElements: object[] | undefined = undefined;
   //we don't mount the itemList unless it's defined
   if (trendingItems) {
