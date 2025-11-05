@@ -143,12 +143,12 @@ export const sortRoles = (person: PersonResponse): SortedRoles => {
   authorMedia.forEach(
     (am: AuthorMedia) =>
       (am.mediaRoles = am.mediaRoles.sort(
-        (a, b) => getMediaRolePopularity(a) + getMediaRolePopularity(b)
+        (a, b) => getMediaRolePopularity(b) - getMediaRolePopularity(a)
       ))
   );
 
   //and then each role itself by our own order of importance (Creator > Director > Actor ...)
-  authorMedia.sort((a, b) => {
+  authorMedia.sort((a: AuthorMedia, b: AuthorMedia) => {
     const countB = b.mediaRoles.length;
     const countA = a.mediaRoles.length;
     if (countA !== countB) {

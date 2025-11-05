@@ -24,7 +24,7 @@ import { joinWithAnd } from './common-format-helper';
 import { buildDescription } from './person-details-helper';
 
 const MAX_ROLES_DESCRIPTION: number = 3;
-const MAX_MEDIA_PER_ROLE_DESCRIPTION: number = 2;
+const MAX_MEDIA_PER_ROLE_DESCRIPTION: number = 3;
 
 //a function that provides PersonDetails formatted in the different
 //ways our PersonPage and its sub-components will need
@@ -99,7 +99,6 @@ export const buildPersonDetails = (
 
   //PERSON ROLES
   //We list the main roles of the Person with and without 'and'
-  console.log(person.gender);
   const genderedRoles: string[] | AuthorType[] = person.sortedRoles?.mainRoles
     ? person.gender !== PersonGender.Female
       ? person.sortedRoles.mainRoles
@@ -136,27 +135,49 @@ export const buildPersonDetails = (
   ];
 
   //and we merge all the roles per media entry
-  const mergedRoles = new Map<MediaResponse, MergedPersonMediaRole>();
+  const mergedRoles = new Map<number, MergedPersonMediaRole>();
   allMainRoles.forEach((mr: MediaRoleResponse) => {
     const media: MediaResponse | undefined = getMediaFromRole(mr);
     if (media) {
-      const entry = mergedRoles.get(media);
+      const isActorRole: boolean = [
+        AuthorType.Actor,
+        AuthorType.VoiceActor,
+      ].includes(mr.role);
+      const entry = mergedRoles.get(media.indexId);
       if (entry) {
+        //if the person has director-writer-creator roles, they override the acting roles.
+        //
+        const hasCreationRoles: boolean = !!!entry.authorType?.find(
+          (a: AuthorType) =>
+            [AuthorType.Actor, AuthorType.VoiceActor].includes(a)
+        );
+        if (isActorRole && hasCreationRoles) {
+          return;
+        }
+        if (!isActorRole && !hasCreationRoles) {
+          entry.characterName = [];
+          entry.authorType = [mr.role];
+          return;
+        }
+
         entry.characterName = [...entry.characterName, ...mr.characterName];
         entry.authorType = [...entry.authorType, mr.role];
+      } else {
+        mergedRoles.set(media.indexId, {
+          media,
+          authorType: [mr.role],
+          characterName: mr.characterName,
+        });
       }
-      mergedRoles.set(media, {
-        media,
-        authorType: [mr.role],
-        characterName: mr.characterName,
-      });
     }
   });
+
+  console.log(mergedRoles);
   //and finally, we extract the merged roles, sort them by number of author types and slice to MAX_ROLES_DESCRIPTION
   const orderedMergedRoles: MergedPersonMediaRole[] = Array.from(
     mergedRoles.values()
   )
-    .sort((a, b) => a.authorType.length + b.authorType.length)
+    .sort((a, b) => b.authorType.length - a.authorType.length)
     .slice(0, MAX_ROLES_DESCRIPTION);
 
   //DESCRIPTION
@@ -214,10 +235,16 @@ const getMainRolesByAuthorTypes = (
     (am: AuthorMedia) => authorTypes.includes(am.authorType)
   );
   //we combine the roles of all the authorTypes requested, order by popularity, and slice by limit
-  return filteredByAuthorTypes
-    .flatMap((am: AuthorMedia) => getMainRoles(am))
-    .sort((a, b) => getMediaRolePopularity(a) + getMediaRolePopularity(b))
-    .slice(0, limit);
+  return (
+    filteredByAuthorTypes
+      .flatMap((am: AuthorMedia) => getMainRoles(am))
+      //we combine the roles of all the authorTypes requested, order by popularity, and slice by limit
+      .sort(
+        (a: MediaRoleResponse, b: MediaRoleResponse) =>
+          getMediaRolePopularity(b) - getMediaRolePopularity(a)
+      )
+      .slice(0, limit)
+  );
 };
 
 const getMainRoles = (

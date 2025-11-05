@@ -14,7 +14,11 @@ import {
 import { AuthorType, MergedPersonMediaRole } from '../../../shared/types/roles';
 import { MediaResponse } from '../../../shared/types/models';
 import { joinWithAnd } from './common-format-helper';
-import { getBeVerb, getPronoun } from '../../../shared/helpers/people-helper';
+import {
+  getBeVerb,
+  getPossessiveAdjective,
+  getPronoun,
+} from '../../../shared/helpers/people-helper';
 import { PersonGender } from '../../../shared/types/people';
 
 //a function that builds a simple 1 sentence description for people
@@ -93,7 +97,7 @@ export const buildDescription = (
     ? ` (${bornDateString}${deathDate}), `
     : '';
 
-  const rolesString: string = ` ${toFirstUpperCase(getPronoun(gender))} ${getBeVerb(gender)} best known for ${buildRolesString(mergedMediaRoles)}`;
+  const rolesString: string = ` ${toFirstUpperCase(getPronoun(gender))} ${getBeVerb(gender)} best known for ${buildRolesString(mergedMediaRoles, gender)}`;
 
   const finalDescription: string = `${personDetailsValues.personName}${bornDate} ${verb} ${particle} ${personDetailsValues.mainRolesWithAnd}${location}.${rolesString}.`;
 
@@ -108,23 +112,25 @@ interface MergedRoleStringValues {
 
 const getConnector = (index: number, maxIndex: number): string => {
   const remaining: number = maxIndex - index;
+  if (index === 0) {
+    return '';
+  }
   switch (remaining) {
     case 2:
-      return maxIndex === 2 ? '' : ' as well as';
+      return ' as well as';
     case 1:
-      return maxIndex > 1 ? ' and' : 'as well as';
+      return ' as well as';
     case 0:
-      return maxIndex == 0
-        ? ''
-        : maxIndex === 1
-          ? ' as well as'
-          : ' as well as';
+      return maxIndex == 0 ? '' : ' and';
     default:
       return ' and';
   }
 };
 
-const buildRolesString = (mergedRoles: MergedPersonMediaRole[]) => {
+const buildRolesString = (
+  mergedRoles: MergedPersonMediaRole[],
+  gender: PersonGender
+) => {
   const maxIndex: number = mergedRoles.length - 1;
   let prevRoleWasMono: AuthorType | false;
 
@@ -132,7 +138,8 @@ const buildRolesString = (mergedRoles: MergedPersonMediaRole[]) => {
     (m: MergedPersonMediaRole, i: number) => {
       const { monoRole, mergedRoleString } = buildSingleRoleString(
         m,
-        prevRoleWasMono
+        prevRoleWasMono,
+        gender
       );
       prevRoleWasMono = monoRole;
       return `${getConnector(i, maxIndex)} ${mergedRoleString}`;
@@ -143,14 +150,15 @@ const buildRolesString = (mergedRoles: MergedPersonMediaRole[]) => {
 
 const buildSingleRoleString = (
   mergedRole: MergedPersonMediaRole,
-  prevRoleWasMono: AuthorType | false
+  prevRoleWasMono: AuthorType | false,
+  gender: PersonGender
 ): MergedRoleStringValues => {
   const monoRole: AuthorType | false =
     mergedRole.authorType.length === 1 ? mergedRole.authorType[0] : false;
   //if this and previous role were the same, we skip the 'directing', 'creating' etc verb.
   const skipAuthorVerb: boolean = monoRole && prevRoleWasMono === monoRole;
   const authorStrings: string[] = mergedRole.authorType.map((a: AuthorType) =>
-    buildAuthorString(a, mergedRole.characterName, skipAuthorVerb)
+    buildAuthorString(a, mergedRole.characterName, skipAuthorVerb, gender)
   );
   return {
     monoRole,
@@ -158,12 +166,13 @@ const buildSingleRoleString = (
   };
 };
 
-const buildMediaNameString = (media: MediaResponse) => `${media.name}`;
+const buildMediaNameString = (media: MediaResponse) => `'${media.name}'`;
 
 const buildAuthorString = (
   author: AuthorType,
   characterName: string[],
-  skipAuthorVerb: boolean
+  skipAuthorVerb: boolean,
+  gender: PersonGender
 ): string => {
   switch (author) {
     case AuthorType.Director:
@@ -173,8 +182,9 @@ const buildAuthorString = (
     case AuthorType.Creator:
       return skipAuthorVerb ? '' : 'creating';
     case AuthorType.VoiceActor:
+      return `${skipAuthorVerb ? '' : 'voicing '}${formatCharacterNamesForDescription(characterName)} in`;
     case AuthorType.Actor:
-      return `${skipAuthorVerb ? '' : 'playing '}${formatCharacterNamesForDescription(characterName)} in`;
+      return `${skipAuthorVerb ? '' : `${getPossessiveAdjective(gender)} role as `}${formatCharacterNamesForDescription(characterName)} in`;
     default:
       return 'their work';
   }

@@ -89,7 +89,6 @@ const KeyedMediaPage = ({
         exact: false,
       });
       //and then we navigate to our just created media page
-      console.log(media);
       const slugUrl = slugifyUrl(
         buildClientMediaLink(media.mediaType, media.id),
         media.name

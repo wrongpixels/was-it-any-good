@@ -16,6 +16,7 @@ import { QueryToUse } from '../types/search-browse-types';
 import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
 import IconWatchlistAdd from '../components/Common/Icons/Lists/IconWatchlistAdd';
 import { clientPaths } from '../../../shared/util/url-builder';
+import { BasePageRoutes } from '../constants/search-browse-constants';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -96,35 +97,35 @@ const buildPageRoute = ({
 //example: top/shows, popular/media or my/votes
 export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
-    title: 'Popular Media',
+    title: BasePageRoutes.PopularMedia,
     subtitle: 'Most popular media in WIAG database',
     path: clientPaths.popular.multi.base(),
     sortBy: SortBy.Popularity,
     searchType: SearchType.Multi,
   }),
   buildPageRoute({
-    title: 'Top Rated Media',
+    title: BasePageRoutes.TopMedia,
     subtitle: 'Highest rated media in WIAG database',
     path: clientPaths.tops.multi.base(),
     sortBy: SortBy.Rating,
     searchType: SearchType.Multi,
   }),
   buildPageRoute({
-    title: 'Films',
+    title: BasePageRoutes.Films,
     subtitle: 'Films in WIAG database',
     path: clientPaths.films.page,
     sortBy: SortBy.Rating,
     searchType: SearchType.Film,
   }),
   buildPageRoute({
-    title: 'TV Shows',
+    title: BasePageRoutes.Shows,
     subtitle: 'Shows in WIAG database',
     path: clientPaths.shows.page,
     sortBy: SortBy.Rating,
     searchType: SearchType.Show,
   }),
   buildPageRoute({
-    title: 'Top Films',
+    title: BasePageRoutes.TopFilms,
     subtitle: 'Best Films in WIAG database',
     path: clientPaths.tops.films.base(),
     sortBy: SortBy.Rating,
@@ -134,7 +135,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     },
   }),
   buildPageRoute({
-    title: 'Top TV Shows',
+    title: BasePageRoutes.TopShows,
     subtitle: 'Best Shows in WIAG database',
     path: clientPaths.tops.shows.base(),
     sortBy: SortBy.Rating,
@@ -144,7 +145,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     },
   }),
   buildPageRoute({
-    title: 'My Ratings',
+    title: BasePageRoutes.MyVotes,
     queryToUse: 'votes',
     path: clientPaths.my.votes.base(),
     searchType: SearchType.Multi,
@@ -155,7 +156,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     },
   }),
   buildPageRoute({
-    title: 'Watchlist',
+    title: BasePageRoutes.Watchlist,
     path: clientPaths.my.watchlist.base(),
     searchType: SearchType.Multi,
     icon: <IconWatchlistAdd {...defIconProps} />,
