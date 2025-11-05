@@ -33,6 +33,7 @@ import {
   buildIndexMediaLinkWithSlug,
 } from '../../../shared/util/url-builder';
 import { getIndexMediaGenres } from './index-media-helper';
+import { SEOListType } from '../types/seo-types';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -241,17 +242,61 @@ export const buildSearchSeo = (
 
 //to build the HomePage data and its nested Trending list
 export const buildHomepageTrendingSeo = (
-  trendingItems?: IndexMediaData[]
+  allItems?: IndexMediaData[]
 ): SEOData => {
-  const homepageUrl: string = `${BASE_URL}/`;
-  const homepageTitle: string = 'WIAG: The Media Database that builds itself';
-  const homepageDescription: string =
-    'Explore trending Films and TV Shows, rate them, and find your next favorite thing!';
+  return buildMediaListPageSeo({
+    url: `${BASE_URL}/`,
+    title: 'WIAG: The Media Database that builds itself',
+    description:
+      'Explore trending Films and TV Shows, rate them, and find your next favorite thing!',
+    allItems,
+  });
+};
+
+interface BuildMediaListSeoValues {
+  title: string;
+  description: string;
+  url: string;
+  allItems?: IndexMediaData[];
+  seoListType?: SEOListType;
+}
+
+const buildMediaListPageSeo = ({
+  title,
+  description,
+  url,
+  allItems,
+  seoListType,
+}: BuildMediaListSeoValues) => {
+  return {
+    title,
+    description,
+    url,
+    imageUrl: `${BASE_URL}/og-image.png`,
+    type: 'website',
+    structuredData: buildMediaListSchema(
+      title,
+      description,
+      url,
+      allItems,
+      seoListType
+    ),
+  };
+};
+
+const buildMediaListSchema = (
+  title: string,
+  description: string,
+  url: string,
+  allItems?: IndexMediaData[],
+  seoListType: SEOListType = 'Mixed'
+): object | undefined => {
   let itemListElements: object[] | undefined = undefined;
-  //we don't mount the itemList unless it's defined
-  if (trendingItems) {
-    const topItems: IndexMediaData[] = trendingItems.slice(0, LIMIT_LISTS);
-    itemListElements = topItems.map((item: IndexMediaData, index: number) => {
+
+  if (allItems) {
+    //we build the schema for each element of the list adding as much info as we can
+    const limitItems: IndexMediaData[] = allItems.slice(0, LIMIT_LISTS);
+    itemListElements = limitItems.map((item: IndexMediaData, index: number) => {
       const itemUrl: string = joinUrl(
         BASE_URL,
         buildIndexMediaLinkWithSlug(item)
@@ -272,7 +317,6 @@ export const buildHomepageTrendingSeo = (
           ratingCount: item.voteCount,
         };
       }
-
       return {
         '@type': 'ListItem',
         position: index + 1,
@@ -287,37 +331,37 @@ export const buildHomepageTrendingSeo = (
         },
       };
     });
+    //and then we build the whole collection's schema itself
+    const collectionPageSchema: object = {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      '@id': `${url}#webpage`,
+      url,
+      name: title,
+      description,
+      //if it's a specific type of list, we add the specific 'about' section for the collection
+      about:
+        seoListType === 'Mixed'
+          ? undefined
+          : {
+              '@type': 'Thing',
+              name: seoListType === 'TVSeries' ? 'TV Series' : seoListType,
+              '@id': `https://schema.org/${seoListType}`,
+            },
+
+      isPartOf: {
+        '@id': `${BASE_URL}/#website`,
+      },
+      mainEntity: {
+        '@type': 'ItemList',
+        name: title,
+        itemListOrder: 'https://schema.org/Descending',
+        numberOfItems: itemListElements.length,
+        itemListElement: itemListElements,
+      },
+    };
+    return collectionPageSchema;
   }
-  const collectionPageSchema: object = {
-    '@type': 'CollectionPage',
-    '@id': `${homepageUrl}#webpage`,
-    url: homepageUrl,
-    name: homepageTitle,
-    description: homepageDescription,
-
-    isPartOf: {
-      '@id': `${BASE_URL}/#website`,
-    },
-    mainEntity: itemListElements
-      ? {
-          '@type': 'ItemList',
-          name: 'Trending Today',
-          itemListOrder: 'https://schema.org/Descending',
-          numberOfItems: itemListElements.length,
-          itemListElement: itemListElements,
-        }
-      : undefined,
-  };
-
-  return {
-    title: homepageTitle,
-    description: homepageDescription,
-    url: homepageUrl,
-    imageUrl: `${BASE_URL}/og-image.png`,
-    type: 'website',
-
-    structuredData: collectionPageSchema,
-  };
 };
 
 const getGenresAsStringArray = (

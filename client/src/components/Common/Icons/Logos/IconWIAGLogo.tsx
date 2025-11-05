@@ -6,11 +6,11 @@ type IconWIGProps = OptIconProps & {
 };
 
 const IconWIAGLogo = ({
-  width = 88,
+  width = 80,
   height,
   url,
   newTab,
-  starColor = '#dfe36b',
+  starColor = '#ffdd66',
   ...rest
 }: IconWIGProps) => (
   <span {...rest}>
