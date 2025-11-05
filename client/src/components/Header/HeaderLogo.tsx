@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
-import IconStarLogo from '../Common/Icons/Logos/IconStarLogo';
 import { clientPaths } from '../../../../shared/util/url-builder';
-import IconWIAGLogoImage from '../Common/Icons/Logos/IconWIAGImage';
 import IconWIAGLogo from '../Common/Icons/Logos/IconWIAGLogo';
 
 const HeaderLogo = (props: OptClassNameProps) => {
@@ -17,8 +15,12 @@ const HeaderLogo = (props: OptClassNameProps) => {
         <div
           className={`font-bold text-white text-2xl flex flex-row items-center pb-1 ${styles.shadow.textShadow}`}
         >
-          <div className="flex flex-row pt-1">
-            <IconWIAGLogo className="drop-shadow-xs/40 opacity-90" />
+          <div
+            className={
+              'flex flex-row pt-1 opacity-90 hover:brightness-105 hover:saturate-75 hover:opacity-100 transition-all'
+            }
+          >
+            <IconWIAGLogo className={'drop-shadow-xs/40'} />
             <span className="font-normal italic ml-2 text-xs text-amber-200 hidden sm:inline pt-0.5">
               {'Was It Any Good'}
               <span className="font-medium italic ml-0.5 hidden sm:inline text-white">
