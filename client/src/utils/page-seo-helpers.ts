@@ -13,7 +13,7 @@ import {
 } from '../../../shared/types/models';
 import { AuthorType } from '../../../shared/types/roles';
 import imageLinker from '../../../shared/util/image-linker';
-import { SEOData } from './set-seo';
+import { SEOData, setSEO } from './set-seo';
 import { PersonDetailsValues } from './person-details-builder';
 import { isSpecialSeason } from './seasons-setter';
 import {
@@ -34,6 +34,7 @@ import {
 } from '../../../shared/util/url-builder';
 import { getIndexMediaGenres } from './index-media-helper';
 import { SEOListType } from '../types/seo-types';
+import { BasePageRoutes } from '../constants/search-browse-constants';
 
 const LIMIT_DIRECTORS: number = 3;
 const LIMIT_CREATORS: number = 3;
@@ -252,6 +253,80 @@ export const buildHomepageTrendingSeo = (
     allItems,
   });
 };
+
+interface SetBrowsePageSeoValues {
+  title: string;
+  page?: number;
+  allItems?: IndexMediaData[];
+}
+
+//to build a builtin media collection schema by BasePageRoute or just set the tile
+export const setBrowsePageSeo = ({
+  title,
+  page = 1,
+  allItems,
+}: SetBrowsePageSeoValues): void => {
+  switch (title) {
+    case BasePageRoutes.Films:
+      setSEO(buildFilmsPageSeo(page, allItems));
+      break;
+    case BasePageRoutes.Shows:
+      setSEO(buildShowsPageSeo(page, allItems));
+      break;
+    case BasePageRoutes.TopMedia:
+      setSEO(buildTopMediaPageSeo(page, allItems));
+      break;
+    //if it's not a built in PageRoute, we simply set the title
+    default:
+      setSEO({
+        title: title,
+      });
+  }
+};
+
+//to build the Best Films data and its nested Trending list
+export const buildFilmsPageSeo = (
+  page: number,
+  allItems?: IndexMediaData[]
+): SEOData => {
+  return buildMediaListPageSeo({
+    url: `${BASE_URL}${clientPaths.films.page}`,
+    title: applyPageToTitle(BasePageRoutes.Films, page),
+    description: 'Explore, rate and sort the best Films available on WIAG!',
+    allItems,
+    seoListType: 'Movie',
+  });
+};
+
+//to build the Best TV Shows data and its nested Trending list
+export const buildShowsPageSeo = (
+  page: number,
+  allItems?: IndexMediaData[]
+): SEOData => {
+  return buildMediaListPageSeo({
+    url: `${BASE_URL}${clientPaths.shows.page}`,
+    title: applyPageToTitle(BasePageRoutes.Shows, page),
+    description: 'Explore, rate and sort the best TV Shows available on WIAG!',
+    allItems,
+    seoListType: 'TVSeries',
+  });
+};
+
+//to build the Best Media data and its nested Trending list
+export const buildTopMediaPageSeo = (
+  page: number,
+  allItems?: IndexMediaData[]
+): SEOData => {
+  return buildMediaListPageSeo({
+    url: `${BASE_URL}${clientPaths.tops.multi.base()}`,
+    title: applyPageToTitle(BasePageRoutes.TopMedia, page),
+    description: 'Explore, rate and sort the best media available on WIAG!',
+    allItems,
+  });
+};
+
+const applyPageToTitle = (title: string, page: number) =>
+  `${title}${page > 1 ? ` (Page ${page})` : ''}`;
 
 interface BuildMediaListSeoValues {
   title: string;

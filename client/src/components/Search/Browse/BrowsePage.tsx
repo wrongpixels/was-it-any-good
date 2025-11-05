@@ -19,6 +19,8 @@ import { OverrideSortOptions } from '../Results/PageResultsSort';
 import useAuthProtection from '../../../hooks/use-auth-protection';
 import { clientPaths } from '../../../../../shared/util/url-builder';
 
+import { setBrowsePageSeo } from '../../../utils/page-seo-helpers';
+
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
 //when an override params is provided, the equivalent url one will be ignored.
@@ -91,8 +93,18 @@ const BrowsePage = ({
     : getBrowseOperation({ urlParams, genreResults });
 
   if (pageTitleOptions) {
-    setPageInfo({
-      title: pageTitleOptions.tabTitle || pageTitleOptions.title,
+    //if it's one of our BaseRoutes (Film, Top Media...) we set their advanced list SEO, if not, we'll just change the title.
+
+    //to avoid setting items in the wrong order, we don't send the results if any additional
+    //query is applied
+    const hasAdditionalQueries: boolean = currentQuery.includes('&');
+    setBrowsePageSeo({
+      title: pageTitleOptions.title,
+      page: urlParams.searchPage,
+      allItems:
+        !hasAdditionalQueries && browseResults?.resultsType === 'browse'
+          ? browseResults?.indexMedia
+          : undefined,
     });
   } else if (operationString) {
     setPageInfo({
