@@ -16,6 +16,7 @@ import {
   mediaDataToCreateIndexMedia,
 } from './index-media-service';
 import { buildCreditsAndGenres } from './media-service';
+import { isUnreleased } from '../../../shared/helpers/media-helper';
 
 export const buildFilmEntry = async (
   params: MediaQueryValues
@@ -68,11 +69,22 @@ export const fetchTMDBFilm = async (
   return actualFilmData;
 };
 
-export const buildFilm = (filmData: FilmData, indexId: number): CreateFilm => ({
-  ...filmData,
-  indexId,
-  imdbId: filmData.imdbId ? filmData.imdbId : undefined,
-  releaseDate: filmData.releaseDate,
-  country: filmData.countries,
-  parentalGuide: null,
-});
+export const buildFilm = (filmData: FilmData, indexId: number): CreateFilm => {
+  //because TMDB for some reason allows people to vote before release date, we have to do this mess
+  //to avoid setting an early baseRating and rating.
+  const releaseDate: string | null = filmData.releaseDate;
+  const unreleased: boolean = isUnreleased(releaseDate);
+  //to overwrite the possible baseRating.
+  const correctedRating: number | undefined = unreleased ? 0 : undefined;
+  return {
+    ...filmData,
+    indexId,
+    imdbId: filmData.imdbId ? filmData.imdbId : undefined,
+    releaseDate: filmData.releaseDate,
+    country: filmData.countries,
+    parentalGuide: null,
+    baseRating: correctedRating ?? filmData.baseRating,
+    rating: correctedRating ?? filmData.rating,
+    voteCount: unreleased ? 0 : filmData.voteCount,
+  };
+};

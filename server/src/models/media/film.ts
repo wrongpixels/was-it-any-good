@@ -25,6 +25,7 @@ class Film extends Media<InferAttributes<Film>, InferCreationAttributes<Film>> {
   static associate() {
     this.doAssociate(MediaType.Film);
   }
+
   static async findBy(params: Omit<MediaQueryValues, 'mediaType'>) {
     const mediaType = MediaType.Film;
     const media: Show | Film | Season | null = await this.findMediaBy({

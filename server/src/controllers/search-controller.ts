@@ -15,7 +15,6 @@ import {
   TMDBSearchResult,
 } from '../schemas/tmdb-index-media-schemas';
 import { toPlainArray } from '../util/model-helpers';
-import { Op } from 'sequelize';
 import { fetchSearchFromTMDBAndParse } from '../services/search-service';
 import {
   buildIndexMediaInclude,
@@ -184,21 +183,10 @@ router.get(
         ...createIndexForShowBulk(shows),
       ];
 
-      //we bulk create or update if existing, returning so we know the involved ids
-      const entries: IndexMedia[] = await bulkUpsertIndexMedia(indexMedia);
-      const ids = entries.map((i: IndexMedia) => i.id);
-
-      //we find them again to get the show/film ids and the genres of the
-      //IndexMedia entries of media already in our db. Even if we have the reference
-      //to the entries, reloading them individually is simply less efficient.
-      const populatedEntries = await IndexMedia /*.scope(
-        'withMediaAndGenres'
-      )*/.findAll({
-        where: {
-          id: {
-            [Op.in]: ids,
-          },
-        },
+      //our custom bulk create IndexMedia creates or updates the entries and then populates them
+      //with the include we provided to add the associations
+      const populatedEntries: IndexMedia[] = await bulkUpsertIndexMedia({
+        indexMedia,
         include: buildIndexMediaInclude(req.activeUser),
       });
 

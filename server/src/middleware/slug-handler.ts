@@ -41,7 +41,7 @@ export const slugHandler = (
       console.log('Redirecting to:', expectedSlug);
       res.json({ ...toPlain(entry), expectedSlug });
     } else {
-      console.log('Correct slug');
+      console.log('Correct slug', `'${slug}'`);
       next();
     }
   };

@@ -12,7 +12,7 @@ import {
   TMDBIndexShow,
 } from '../schemas/tmdb-index-media-schemas';
 import { toPlainArray } from '../util/model-helpers';
-import { Op } from 'sequelize';
+import { Transaction } from 'sequelize';
 import { fetchTrendingFromTMDBAndParse } from '../services/trending-service';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
@@ -21,6 +21,8 @@ import {
   buildIndexMediaInclude,
   bulkUpsertIndexMedia,
 } from '../services/index-media-service';
+import { sequelize } from '../util/db/initialize-db';
+import CustomError from '../util/customError';
 
 const router: Router = express.Router();
 
@@ -39,11 +41,12 @@ router.get(
   '/',
   useCache<IndexMediaResults>({ baseKey: 'trending', addQueries: true }),
   async (req: Request, res, next) => {
-    try {
-      let films: TMDBIndexFilm[] = [];
-      let shows: TMDBIndexShow[] = [];
+    let transaction: Transaction | null = null;
 
-      //'page' can be 1 or 2
+    try {
+      const t0 = Date.now();
+      console.log('Home request received. Calling TMDB.');
+
       const page: number = Math.max(
         1,
         Math.min(Number(req.query[UPARAM_PAGE]) || 1, 2)
@@ -51,6 +54,8 @@ router.get(
 
       const [trendingFilms, trendingShows] =
         await fetchTrendingFromTMDBAndParse();
+      const t1 = Date.now();
+      console.log('TMDB replied.', `Took ${t1 - t0}ms`, 'Processing data.');
 
       if (!trendingFilms || !trendingShows) {
         res.json(null);
@@ -70,10 +75,10 @@ router.get(
         page === 1 ? combined.slice(0, 21) : combined.slice(21, 39);
 
       //we filter the results back into their respective types for processing.
-      films = trendingSlice.filter(
+      const films: TMDBIndexFilm[] = trendingSlice.filter(
         (item): item is TMDBIndexFilm => 'title' in item
       );
-      shows = trendingSlice.filter(
+      const shows: TMDBIndexShow[] = trendingSlice.filter(
         (item): item is TMDBIndexShow => 'name' in item
       );
 
@@ -82,23 +87,16 @@ router.get(
         ...createIndexForShowBulk(shows),
       ];
 
-      //we bulk create or update if existing, returning so we know the involved ids
-      const entries: IndexMedia[] = await bulkUpsertIndexMedia(indexMedia);
+      transaction = await sequelize.transaction();
 
-      const ids = entries.map((i: IndexMedia) => i.id);
-
-      //we find them again to get the show/film ids and the genres of the
-      //IndexMedia entries of media already in our db.
-      const populatedEntries: IndexMedia[] = await IndexMedia./*scope(
-        'withMediaAndGenres'
-      ).*/ findAll({
-        where: {
-          id: {
-            [Op.in]: ids,
-          },
-        },
+      //our custom bulk create IndexMedia creates or updates the entries and then populates them
+      //with the include we provided to add the associations
+      const populatedEntries: IndexMedia[] = await bulkUpsertIndexMedia({
+        indexMedia,
+        transaction,
         include: buildIndexMediaInclude(req.activeUser),
       });
+      await transaction.commit();
 
       //we build our custom results object for the frontend, limited to
       //2 pages
@@ -110,10 +108,19 @@ router.get(
         totalResults: combined.length,
         resultsType: 'browse',
       };
+      const t2 = Date.now();
+      console.log('Data ready.', `Took ${t2 - t1}ms`, 'Responding to client.');
       res.status(200).json(results);
       setActiveCache(req, results);
     } catch (error) {
-      next(error);
+      if (transaction) {
+        await transaction.rollback();
+      }
+      if (!(error instanceof Error)) {
+        next(new CustomError('Error updating IndexMedia', 400, 'DB_ERROR'));
+      } else {
+        next(error);
+      }
     }
   }
 );

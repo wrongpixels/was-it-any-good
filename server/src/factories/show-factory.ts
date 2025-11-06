@@ -15,6 +15,7 @@ import { TMDBIndexShow } from '../schemas/tmdb-index-media-schemas';
 import { MediaType } from '../../../shared/types/media';
 import { CreateIndexMedia } from '../../../shared/types/models';
 import { getYearNum } from '../../../shared/helpers/format-helper';
+import { isUnreleased } from '../../../shared/helpers/media-helper';
 
 export const createShow = (tmdb: TMDBShowData): ShowData => {
   //we filter out seasons with null releaseDates or invalid ones.
@@ -44,14 +45,27 @@ export const createShow = (tmdb: TMDBShowData): ShowData => {
   };
 };
 
-export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => ({
-  ...createTMDBIndexBase(tmdb),
-  name: tmdb.name,
-  year: getYearNum(tmdb.first_air_date),
-  addedToMedia: false,
-  mediaType: MediaType.Show,
-  releaseDate: getAirDate(tmdb.first_air_date),
-});
+export const createIndexForShow = (tmdb: TMDBIndexShow): CreateIndexMedia => {
+  //to avoid adding a baseRating because of TMDB for some reason allowing people to vote before
+  //release date, we have to do all this.
+  const releaseDate: string | null = getAirDate(tmdb.first_air_date);
+  const unreleased: boolean = isUnreleased(releaseDate);
+  //to overwrite the possible baseRating.
+
+  const base = createTMDBIndexBase(tmdb);
+  const correctedRating: number | undefined = unreleased ? 0 : undefined;
+  return {
+    ...base,
+    name: tmdb.name,
+    year: getYearNum(releaseDate),
+    addedToMedia: false,
+    mediaType: MediaType.Show,
+    releaseDate,
+    baseRating: correctedRating ?? base.baseRating,
+    rating: correctedRating ?? base.rating,
+    voteCount: unreleased ? 0 : base.voteCount,
+  };
+};
 
 export const createIndexForShowBulk = (
   tmdbs: TMDBIndexShow[]
