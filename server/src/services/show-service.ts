@@ -30,7 +30,10 @@ import {
   bulkUpsertIndexMedia,
 } from './index-media-service';
 import { formatTMDBShowCredits } from '../util/tmdb-credits-formatter';
-import { reorderSeasons } from '../../../shared/helpers/media-helper';
+import {
+  isUnreleased,
+  reorderSeasons,
+} from '../../../shared/helpers/media-helper';
 import { AxiosResponse } from 'axios';
 import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
@@ -71,10 +74,10 @@ export const buildShowEntry = async (
     (s: SeasonData) => mediaDataToCreateIndexMedia(s, showData.name)
   );
   //and we save them in the db
-  const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia(
-    createSeasonsIndexMedia,
-    params.transaction
-  );
+  const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia({
+    indexMedia: createSeasonsIndexMedia,
+    transaction: params.transaction,
+  });
 
   const seasons: CreateSeason[] = showData.seasons.map((s: SeasonData) =>
     buildSeason(
@@ -210,10 +213,10 @@ export const updateShowEntry = async (showEntry: Show) => {
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
         );
         //we bulk upsert the indexMedia of all seasons, which will update basic fields
-        const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia(
-          createSeasonsIndexMedia,
-          transaction
-        );
+        const seasonsIndexMedia: IndexMedia[] = await bulkUpsertIndexMedia({
+          indexMedia: createSeasonsIndexMedia,
+          transaction,
+        });
         const newSeasons: CreateSeason[] = newSeasonsData.map((s: SeasonData) =>
           buildSeason(
             s,
@@ -265,15 +268,27 @@ export const fetchTMDBShowData = async (tmdbId: number | string) => {
   return showInfoData;
 };
 
-export const buildShow = (showData: ShowData, indexId: number): CreateShow => ({
-  ...showData,
-  seasons: undefined,
-  indexId,
-  imdbId: showData.imdbId ? showData.imdbId : undefined,
-  releaseDate: showData.releaseDate,
-  country: showData.countries,
-  parentalGuide: null,
-});
+export const buildShow = (showData: ShowData, indexId: number): CreateShow => {
+  //because TMDB for some reason allows people to vote before release date, we have to do this mess
+  //to avoid setting an early baseRating and rating.
+  const releaseDate: string | null = showData.releaseDate;
+  const unreleased: boolean = isUnreleased(releaseDate);
+  //to overwrite the possible baseRating.
+  const correctedRating: number | undefined = unreleased ? 0 : undefined;
+
+  return {
+    ...showData,
+    seasons: undefined,
+    indexId,
+    imdbId: showData.imdbId ? showData.imdbId : undefined,
+    releaseDate: showData.releaseDate,
+    country: showData.countries,
+    parentalGuide: null,
+    baseRating: correctedRating ?? showData.baseRating,
+    rating: correctedRating ?? showData.rating,
+    voteCount: unreleased ? 0 : showData.voteCount,
+  };
+};
 
 const buildSeason = (
   seasonData: SeasonData,
@@ -283,10 +298,19 @@ const buildSeason = (
   if (!indexMedia?.id) {
     throw new CustomError('Error creating Index Media', 400);
   }
+  //because TMDB for some reason allows people to vote before release date, we have to do this mess
+  //to avoid setting an early baseRating and rating.
+  const releaseDate: string | null = seasonData.releaseDate;
+  const unreleased: boolean = isUnreleased(releaseDate);
+  //to overwrite the possible baseRating.
+  const correctedRating: number | undefined = unreleased ? 0 : undefined;
   return {
     ...seasonData,
     showId: showEntry.id,
     country: showEntry.country,
     indexId: indexMedia.id,
+    baseRating: correctedRating ?? seasonData.baseRating,
+    rating: correctedRating ?? seasonData.rating,
+    voteCount: unreleased ? 0 : seasonData.voteCount,
   };
 };

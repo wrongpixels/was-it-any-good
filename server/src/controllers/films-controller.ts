@@ -68,6 +68,7 @@ router.get(
       if (!filmEntry) {
         throw new NotFoundError('Film');
       }
+
       //we add the expected slug for the redirect
       filmEntry.expectedSlug = slugifyText(filmEntry.name);
       //we set the cache for the id page

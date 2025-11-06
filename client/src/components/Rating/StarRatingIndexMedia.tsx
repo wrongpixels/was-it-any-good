@@ -47,7 +47,7 @@ const StarRatingIndexMedia = ({
       )}
       <DisplayRating
         className="-mt-0.5"
-        rating={rating}
+        rating={unreleased ? 0 : rating}
         isVote={isVote || !!userRating}
         starWidth={DEF_MINI_STAR_WIDTH}
       />

@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { formatRatingDate } from '../../../shared/helpers/format-helper';
 import { UserVote } from '../../../shared/types/common';
 import { MediaType } from '../../../shared/types/media';
@@ -21,6 +20,7 @@ import {
 } from '../constants/query-key-constants';
 import { NO_RATINGS, NOT_RELEASED } from '../constants/ratings-constants';
 import { buildPathUrl } from './url-helper';
+import { isUnreleased } from '../../../shared/helpers/media-helper';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
   QUERY_KEY_RATING,
@@ -235,9 +235,7 @@ export const getCardRatingData = (
   const releaseDate: Date | null = !mediaReleaseDate
     ? null
     : new Date(mediaReleaseDate);
-  const unreleased: boolean = !releaseDate
-    ? false
-    : dayjs(releaseDate).isAfter(dayjs(), 'day');
+  const unreleased: boolean = isUnreleased(mediaReleaseDate);
   const hasRatingText: boolean = rating <= 0 || unreleased;
   const ratingText: string = unreleased
     ? !releaseDate

@@ -28,7 +28,7 @@ import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { AuthorType } from '../../../../shared/types/roles';
 import { sequelize } from '../../util/db/initialize-db';
-import { RatingStats } from '../../../../shared/types/models';
+import { RatingData, RatingStats } from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 import {
   MediaQueryValues,
@@ -244,10 +244,15 @@ class Media<
   //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
   //this counts every valid vote linked to the entry and calculates a new average
   static async refreshRatings(
-    ratingEntry: Rating,
+    mediaData:
+      | RatingData
+      | {
+          mediaId: number;
+          mediaType: MediaType;
+        },
     transaction?: Transaction
   ): Promise<RatingStats> {
-    const { mediaType, mediaId } = ratingEntry;
+    const { mediaType, mediaId } = mediaData;
     const model =
       mediaType === MediaType.Show
         ? Show
@@ -282,17 +287,18 @@ class Media<
     if (affectedCount === 0 || !updatedMedia) {
       return DEF_RATING_STATS;
     }
-    //we also sync the cached Redis entry
-    updateVotedMediaCache(
-      {
-        rating: updatedMedia.rating,
-        voteCount: updatedMedia.voteCount,
-      },
-      ratingEntry,
-      updatedMedia.mediaType === MediaType.Season
-        ? updatedMedia.showId
-        : undefined
-    );
+    //we also sync the cached Redis entry if we passed a RatingData object
+    'userId' in mediaData &&
+      updateVotedMediaCache(
+        {
+          rating: updatedMedia.rating,
+          voteCount: updatedMedia.voteCount,
+        },
+        mediaData,
+        updatedMedia.mediaType === MediaType.Season
+          ? updatedMedia.showId
+          : undefined
+      );
 
     //we need to sync the linked indexMedia after each vote/unvote.
     //searches and rankings read from indexMedia as a cached snapshot of the
@@ -396,19 +402,20 @@ class Media<
   //add the voteCount 1 if it was a media with no rating at all.
   //in the next user vote, the fresh baseRating will be used for the average
   public async updateBaseRating() {
-    if (this.indexMedia && this.indexMedia.baseRating !== this.baseRating) {
-      const updateVoteCount =
-        this.voteCount === 0 &&
-        this.baseRating <= 0 &&
-        this.indexMedia.baseRating > 0;
+    if (
+      this.indexMedia?.baseRating &&
+      this.indexMedia.baseRating !== this.baseRating &&
+      (this.voteCount === 0 || (this.voteCount === 1 && this.baseRating))
+    ) {
+      const updateVoteCount = this.voteCount === 0;
       const initialBaseRating: number = this.baseRating;
 
       const updateValues: Partial<TAttributes> = {
         baseRating: this.indexMedia.baseRating,
+        rating: this.indexMedia.baseRating,
       } as unknown as Partial<TAttributes>;
       if (updateVoteCount) {
         updateValues.voteCount = 1;
-        updateValues.rating = this.indexMedia.baseRating;
       }
       await this.update(updateValues);
       console.log(

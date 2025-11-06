@@ -37,15 +37,17 @@ import { CreateIndexMedia } from '../../../shared/types/models';
 import { createIndexForFilmBulk } from './film-factory';
 import { PersonGender } from '../../../shared/types/people';
 
-export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => ({
-  tmdbId: tmdb.id,
-  baseRating: tmdb.vote_average,
-  country: validateCountries(tmdb.origin_country || []),
-  rating: tmdb.vote_average || 0,
-  popularity: tmdb.popularity,
-  voteCount: tmdb.vote_average > 0 ? 1 : 0,
-  image: tmdb.poster_path ? tmdb.poster_path : DEF_FILM.image,
-});
+export const createTMDBIndexBase = (tmdb: TMDBIndexMedia | TMDBMediaData) => {
+  return {
+    tmdbId: tmdb.id,
+    baseRating: tmdb.vote_average,
+    country: validateCountries(tmdb.origin_country || []),
+    rating: tmdb.vote_average || 0,
+    popularity: tmdb.popularity,
+    voteCount: tmdb.vote_average > 0 ? 1 : 0,
+    image: tmdb.poster_path ? tmdb.poster_path : DEF_FILM.image,
+  };
+};
 
 export const createIndexForMediaBulk = (
   tmdbFilms: TMDBIndexFilm[],
@@ -55,16 +57,18 @@ export const createIndexForMediaBulk = (
   ...createIndexForShowBulk(tmdbShows),
 ];
 
-export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => ({
-  ...createTMDBIndexBase(tmdb),
-  countries: validateCountries(tmdb.origin_country || []),
-  imdbId: tmdb.imdb_id,
-  description: tmdb.overview,
-  genres: mapTMDBGenres(tmdb.genres),
-  cast: createCast(tmdb.credits.cast),
-  crew: getCrew(tmdb),
-  studios: createStudios(tmdb.production_companies),
-});
+export const createTMDBMediaBase = (tmdb: TMDBMediaData): TMDBData => {
+  return {
+    ...createTMDBIndexBase(tmdb),
+    countries: validateCountries(tmdb.origin_country || []),
+    imdbId: tmdb.imdb_id,
+    description: tmdb.overview,
+    genres: mapTMDBGenres(tmdb.genres),
+    cast: createCast(tmdb.credits.cast),
+    crew: getCrew(tmdb),
+    studios: createStudios(tmdb.production_companies),
+  };
+};
 
 export const getCrew = (tmdb: TMDBMediaData): AuthorData[] => {
   if (isShow(tmdb)) {

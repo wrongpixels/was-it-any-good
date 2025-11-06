@@ -49,6 +49,8 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
     if (media.seasons) {
       media.seasons = reorderSeasons(media);
     }
+    await media.syncBaseRatingFromIndex();
+
     return params.plainData ? toPlain<Show>(media) : media;
   }
   static async refreshRating(
@@ -56,6 +58,19 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
     options: RatingUpdateOptions
   ) {
     return await this.update(values, options);
+  }
+
+  async syncBaseRatingFromIndex() {
+    if (
+      this.indexMedia?.baseRating &&
+      this.indexMedia.baseRating !== this.baseRating
+    ) {
+      const newBaseRating: number = this.indexMedia.baseRating;
+      console.log('Updating BaseRating for', this.name, 'via IndexMedia');
+      await this.update({
+        baseRating: newBaseRating,
+      });
+    }
   }
 
   static associate() {

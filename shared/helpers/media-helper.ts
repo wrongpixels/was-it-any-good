@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { MediaType } from '../types/media';
 import {
   MediaResponse,
@@ -52,3 +53,13 @@ export const getMediaFromRole = (
 //an easy accessor to out media popularity, which defaults to 0
 export const getMediaRolePopularity = (role: MediaRoleResponse): number =>
   getMediaFromRole(role)?.popularity || 0;
+
+export const isUnreleased = (releaseDate: string | null | undefined | Date) => {
+  const releaseDateVar: Date | null = !releaseDate
+    ? null
+    : new Date(releaseDate);
+  const unreleased: boolean = !releaseDateVar
+    ? false
+    : dayjs(releaseDateVar).isAfter(dayjs(), 'day');
+  return unreleased;
+};

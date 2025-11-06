@@ -52,6 +52,19 @@ class Season extends Media<
       as: 'show',
     });
   }
+
+  async syncBaseRatingFromIndex() {
+    if (
+      this.indexMedia?.baseRating &&
+      this.indexMedia.baseRating !== this.baseRating
+    ) {
+      const newBaseRating: number = this.indexMedia.baseRating;
+      console.log('Updating BaseRating for', this.name, 'via IndexMedia');
+      await this.update({
+        baseRating: newBaseRating,
+      });
+    }
+  }
   static async refreshRating(
     values: RatingUpdateValues,
     options: RatingUpdateOptions
@@ -68,6 +81,8 @@ class Season extends Media<
     if (media?.mediaType !== mediaType) {
       return null;
     }
+    await media.syncBaseRatingFromIndex();
+
     return params.plainData ? toPlain(media) : media;
   }
 }
