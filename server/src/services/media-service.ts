@@ -100,7 +100,7 @@ export const buildGenres = async (
     mediaType,
     genreId: g.id,
   }));
-  console.log(createMediaGenres);
+  // console.log(createMediaGenres);
   const mediaGenres: MediaGenre[] = await MediaGenre.bulkCreate(
     createMediaGenres,
     { ignoreDuplicates: true, transaction }
@@ -127,7 +127,13 @@ const bulkCreatePeople = async (
   //of all valid people involved in the media
   const peopleEntries: Person[] = await Person.bulkCreate(peopleToCreate, {
     transaction,
-    updateOnDuplicate: ['image'],
+    updateOnDuplicate: [
+      'image',
+      'birthDate',
+      'birthPlace',
+      'deathDate',
+      'description',
+    ],
     returning: true,
   });
 
@@ -164,7 +170,7 @@ export const bulkCreateMediaRoles = async (
     //a person can have multiple jobs in a movie/show, but not 2 of the same type, so if a
     //role is present twice, we simply keep the last.
     const key = `${dbId}_${mediaId}_${mediaType}_${mediaPerson.type}_${mediaPerson.name}`;
-    console.log(key);
+    //    console.log(key);
     const createRole: CreateMediaRole = {
       personId: dbId,
       mediaId,

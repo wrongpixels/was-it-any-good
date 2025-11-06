@@ -64,8 +64,6 @@ router.get('/tmdb/:id', idFormatChecker, async (req: Request, res, next) => {
         }
         throw error;
       }
-    } else {
-      console.log(showEntry);
     }
     if (!showEntry) {
       throw new NotFoundError('Show');
