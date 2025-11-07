@@ -51,7 +51,7 @@ export const styles = {
     'rounded bg-gradient-to-t from-gray-300 to-gray-300 via-gray-300/70 shadow',
   poster: {
     regular: () =>
-      `bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-default`,
+      'bg-gradient-to-t from-gray-200/60 via-white to-white rounded-sm min-w-42 min-h-58 shadow-md ring-1 ring-gray-300 flex flex-col p-2 cursor-default',
 
     animated: () =>
       `${styles.animations.posterZoom} ${styles.poster.regular()} cursor-pointer`,
