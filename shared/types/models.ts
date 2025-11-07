@@ -1,118 +1,118 @@
-import { CountryCode } from './countries';
-import { MediaType } from './media';
-import { PersonGender } from './people';
-import { AuthorType, SortedRoles } from './roles';
+import { CountryCode } from './countries'
+import { MediaType } from './media'
+import { PersonGender } from './people'
+import { AuthorType, SortedRoles } from './roles'
 
 export interface MediaRoleResponse {
-  id: number;
-  role: AuthorType;
-  mediaId: number;
-  mediaType: MediaType;
-  characterName: string[];
-  film?: FilmResponse;
-  show?: ShowResponse;
+  id: number
+  role: AuthorType
+  mediaId: number
+  mediaType: MediaType
+  characterName: string[]
+  film?: FilmResponse
+  show?: ShowResponse
 }
 
 export interface CreateIndexMedia {
-  tmdbId: number;
+  tmdbId: number
   //optional field for seasons
-  showId?: number;
-  addedToMedia: boolean;
-  country: CountryCode[];
-  name: string;
-  image: string;
-  rating: number;
-  year: number | null;
-  releaseDate: string | null;
-  baseRating: number;
-  voteCount: number;
-  popularity: number;
-  mediaType: MediaType;
+  showId?: number
+  addedToMedia: boolean
+  country: CountryCode[]
+  name: string
+  image: string
+  rating: number
+  year: number | null
+  releaseDate: string | null
+  baseRating: number
+  voteCount: number
+  popularity: number
+  mediaType: MediaType
 }
 
 export interface IndexMediaData extends CreateIndexMedia {
-  id: number;
-  film?: FilmResponse;
-  show?: ShowResponse;
-  season?: SeasonResponse;
+  id: number
+  film?: FilmResponse
+  show?: ShowResponse
+  season?: SeasonResponse
 }
 
-export type BrowseResultsType = 'browse' | 'votes';
+export type BrowseResultsType = 'browse' | 'votes'
 
 //for browse/search results
 interface BrowseResults {
-  page: number;
-  totalPages: number;
-  totalResults: number;
-  resultsType: BrowseResultsType;
-  totalFilms?: number;
-  totalShows?: number;
-  totalSeasons?: number;
+  page: number
+  totalPages: number
+  totalResults: number
+  resultsType: BrowseResultsType
+  totalFilms?: number
+  totalShows?: number
+  totalSeasons?: number
 }
 
 export interface IndexMediaResults extends BrowseResults {
-  indexMedia: IndexMediaData[];
-  resultsType: 'browse';
+  indexMedia: IndexMediaData[]
+  resultsType: 'browse'
 }
 
 export interface RatingResults extends BrowseResults {
-  ratings: RatingData[];
-  resultsType: 'votes';
+  ratings: RatingData[]
+  resultsType: 'votes'
 }
 export interface RatingData {
-  id: number;
-  indexId: number;
-  userId: number;
-  mediaId: number;
-  userScore: number;
-  mediaType: MediaType;
-  updatedAt?: Date;
-  indexMedia?: IndexMediaData;
-  showId?: number;
-  show?: ShowResponse;
-  film?: FilmResponse;
-  season?: SeasonResponse;
+  id: number
+  indexId: number
+  userId: number
+  mediaId: number
+  userScore: number
+  mediaType: MediaType
+  updatedAt?: Date
+  indexMedia?: IndexMediaData
+  showId?: number
+  show?: ShowResponse
+  film?: FilmResponse
+  season?: SeasonResponse
 }
 
 export interface RatingStats {
-  rating: number;
-  voteCount: number;
+  rating: number
+  voteCount: number
 }
 
 export interface CreateRatingResponse extends RatingData {
-  ratingStats: RatingStats;
+  ratingStats: RatingStats
 }
 
 export interface CreateRating extends Omit<RatingData, 'id' | 'userId'> {}
 export interface CreateRatingData extends Omit<CreateRating, 'seasonId'> {
-  userId: number;
+  userId: number
 }
 export interface CheckRating extends Omit<CreateRating, 'userScore'> {
-  userId?: number;
+  userId?: number
 }
 
 export interface RemoveRatingResponse extends CheckRating {
-  ratingStats: RatingStats;
+  ratingStats: RatingStats
 }
 
 export interface ActiveUser {
-  isValid?: boolean;
-  id: number;
-  name: string | null;
-  username: string;
-  isAdmin: boolean;
-  isActive: boolean;
-  lastActive: Date | null;
+  isValid?: boolean
+  id: number
+  name: string | null
+  username: string
+  isAdmin: boolean
+  isActive: boolean
+  lastActive: Date | null
 }
 
 export interface UserData extends Omit<ActiveUser, 'isValid'> {
-  hash: string;
-  email: string;
-  pfp: string | null;
+  hash: string
+  email: string
+  pfp: string | null
 }
 
 export interface CreateUser extends Omit<UserData, 'id' | 'hash'> {
-  password: string;
+  password: string
 }
 
 export interface VerifyCreateUser
@@ -120,154 +120,155 @@ export interface VerifyCreateUser
     CreateUser,
     'pfp' | 'name' | 'isActive' | 'lastActive' | 'isAdmin'
   > {
-  isAdmin?: boolean;
-  isActive?: boolean;
+  isAdmin?: boolean
+  isActive?: boolean
 }
 export interface CreateUserData extends Omit<UserData, 'id'> {}
 
 export interface UserSessionData {
-  id: number;
-  userId: number;
-  username: string;
-  token: string;
-  expired: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  id: number
+  userId: number
+  username: string
+  token: string
+  expired: boolean
+  createdAt: Date
+  updatedAt: Date
 }
 
 export interface CreateUserSessionData
   extends Omit<UserSessionData, 'id' | 'createdAt' | 'updatedAt'> {}
 
 export interface LoginData {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 export interface DefaultUser
   extends Pick<UserData, 'pfp' | 'lastActive' | 'isActive' | 'isAdmin'> {}
 
 export interface GenreResponse {
-  id: number;
-  name: string;
-  tmdbId?: number | undefined;
-  gamedbId?: number | undefined;
+  id: number
+  name: string
+  tmdbId?: number | undefined
+  gamedbId?: number | undefined
 }
 
 export interface PersonResponse {
-  id: number;
-  name: string;
-  gender: PersonGender;
-  tmdbId?: number;
-  gamedbId?: string | undefined;
-  image: string;
-  birthDate?: string | undefined;
-  country: CountryCode[];
-  addedDetails: boolean;
-  birthPlace?: string;
-  deathDate?: string;
-  description?: string;
-  roles?: MediaRoleResponse[];
-  sortedRoles?: SortedRoles;
-  expectedSlug?: string;
-  updatedAt?: Date;
+  id: number
+  name: string
+  gender: PersonGender
+  tmdbId?: number
+  gamedbId?: string | undefined
+  image: string
+  birthDate?: string | undefined
+  country: CountryCode[]
+  addedDetails: boolean
+  birthPlace?: string
+  deathDate?: string
+  description?: string
+  roles?: MediaRoleResponse[]
+  sortedRoles?: SortedRoles
+  expectedSlug?: string
+  updatedAt?: Date
 }
 
 export interface BaseResponse {
-  id: number;
-  tmdbId?: number;
-  imdbId?: string;
-  name: string;
-  originalName: string;
-  description: string;
-  image: string;
-  voteCount: number;
-  baseRating: number;
-  popularity: number;
-  rating: number;
-  mediaType: MediaType;
-  releaseDate: string | null;
-  expectedSlug?: string;
+  id: number
+  tmdbId?: number
+  imdbId?: string
+  name: string
+  originalName: string
+  description: string
+  image: string
+  voteCount: number
+  baseRating: number
+  popularity: number
+  rating: number
+  mediaType: MediaType
+  releaseDate: string | null
+  expectedSlug?: string
 }
 
 export interface SeasonResponse extends BaseResponse {
-  index: number;
-  indexId: number;
+  index: number
+  indexId: number
 
-  episodeCount: number;
-  showId: number;
-  mediaType: MediaType.Season;
-  userRating?: RatingData | null;
+  episodeCount: number
+  showId: number
+  mediaType: MediaType.Season
+  userRating?: RatingData | null
+  userWatchlist?: UserMediaListItemData
 }
 
 export interface BrowseResponse {
-  totalFilmResults: number;
-  totalShowResults: number;
-  page: number;
-  totalPages: number;
-  showResults?: IndexMediaData[];
-  filmResults?: IndexMediaData[];
+  totalFilmResults: number
+  totalShowResults: number
+  page: number
+  totalPages: number
+  showResults?: IndexMediaData[]
+  filmResults?: IndexMediaData[]
 }
 
 export interface BaseMediaResponse extends BaseResponse {
-  sortName: string;
-  country: CountryCode[];
-  status: string;
-  runtime: number | null;
-  indexId: number;
-  updatedAt?: Date;
-  userRating?: RatingData | null;
-  cast?: CreditResponse[];
-  crew?: CreditResponse[];
-  genres?: GenreResponse[];
-  mergedCrew?: MergedCredits[];
-  indexMedia?: IndexMediaData;
-  userWatchlist?: UserMediaListItemData;
+  sortName: string
+  country: CountryCode[]
+  status: string
+  runtime: number | null
+  indexId: number
+  updatedAt?: Date
+  userRating?: RatingData | null
+  cast?: CreditResponse[]
+  crew?: CreditResponse[]
+  genres?: GenreResponse[]
+  mergedCrew?: MergedCredits[]
+  indexMedia?: IndexMediaData
+  userWatchlist?: UserMediaListItemData
 }
 
 export interface FilmResponse extends BaseMediaResponse {
-  mediaType: MediaType.Film;
+  mediaType: MediaType.Film
 }
 
 export interface ShowResponse extends BaseMediaResponse {
-  mediaType: MediaType.Show;
-  lastAirDate: string | null;
-  episodeCount: number;
-  seasonCount: number;
-  indexId: number;
-  seasons?: SeasonResponse[];
+  mediaType: MediaType.Show
+  lastAirDate: string | null
+  episodeCount: number
+  seasonCount: number
+  indexId: number
+  seasons?: SeasonResponse[]
 }
 
-export type MediaResponse = FilmResponse | ShowResponse;
+export type MediaResponse = FilmResponse | ShowResponse
 
 export interface CreditResponse {
-  id: number;
-  role: AuthorType;
-  characterName?: string[];
-  order?: number;
-  person: PersonResponse;
+  id: number
+  role: AuthorType
+  characterName?: string[]
+  order?: number
+  person: PersonResponse
 }
 
 export interface MergedCredits {
-  mergedRoles: AuthorType[];
-  order: number;
-  person: PersonResponse;
+  mergedRoles: AuthorType[]
+  order: number
+  person: PersonResponse
 }
 
 export interface CreateMediaGenre {
-  mediaId: number;
-  genreId: number;
-  mediaType: MediaType;
+  mediaId: number
+  genreId: number
+  mediaType: MediaType
 }
 
 export interface UserMediaListItemData {
-  id: number;
-  indexInList: number;
-  userListId: number;
-  userList?: UserMediaListData;
-  indexId: number;
-  indexMedia?: IndexMediaData;
-  createdAt?: Date;
-  updatedAt?: Date;
+  id: number
+  indexInList: number
+  userListId: number
+  userList?: UserMediaListData
+  indexId: number
+  indexMedia?: IndexMediaData
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export const USER_MEDIA_LIST_ICONS = [
@@ -281,9 +282,9 @@ export const USER_MEDIA_LIST_ICONS = [
   'like',
   'watchlist',
   'other',
-] as const;
+] as const
 
-export type UserMediaListIcon = (typeof USER_MEDIA_LIST_ICONS)[number];
+export type UserMediaListIcon = (typeof USER_MEDIA_LIST_ICONS)[number]
 
 export interface CreateUserMediaListItem
   extends Omit<
@@ -292,20 +293,21 @@ export interface CreateUserMediaListItem
   > {}
 
 export interface UserMediaListData {
-  id: number;
-  name: string;
-  description: string;
-  userId: number;
-  indexInUserLists: number;
-  mediaTypes: MediaType[];
-  lockedMediaType: boolean;
-  private: boolean;
-  autoCleanItems: boolean;
-  canBeModified: boolean;
-  icon: UserMediaListIcon;
-  createdAt?: Date;
-  updatedAt?: Date;
-  listItems?: UserMediaListItemData[];
+  id: number
+  name: string
+  description: string
+  userId: number
+  indexInUserLists: number
+  mediaTypes: MediaType[]
+  lockedMediaType: boolean
+  private: boolean
+  autoCleanItems: boolean
+  canBeModified: boolean
+  icon: UserMediaListIcon
+  itemCount: number
+  createdAt?: Date
+  updatedAt?: Date
+  listItems?: UserMediaListItemData[]
 }
 
 export interface CreateUserMediaList
@@ -313,6 +315,6 @@ export interface CreateUserMediaList
     UserMediaListData,
     'id' | 'listItems' | 'createdAt' | 'updatedAt' | 'icon' | 'canBeModified'
   > {
-  icon?: UserMediaListIcon;
-  canBeModified?: boolean;
+  icon?: UserMediaListIcon
+  canBeModified?: boolean
 }

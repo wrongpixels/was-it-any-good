@@ -1,7 +1,25 @@
 import axios, { AxiosResponse } from 'axios';
-import { UserMediaListItemData } from '../../../shared/types/models';
+import {
+  IndexMediaResults,
+  UserMediaListItemData,
+} from '../../../shared/types/models';
 import { WatchlistMutationOptions } from '../mutations/watchlist-mutations';
 import { apiPaths } from '../../../shared/util/url-builder';
+
+export const getUserWatchlist = async (userId: number, query: string) => {
+  const { data }: AxiosResponse<IndexMediaResults> = await axios.get(
+    apiPaths.watchlist.getFromUserId(userId, query)
+  );
+  return data;
+};
+
+export const getActiveUserWatchlist = async (query: string = '') => {
+  console.log(apiPaths.watchlist.getFromActiveUser(query));
+  const { data }: AxiosResponse<IndexMediaResults> = await axios.get(
+    apiPaths.watchlist.getFromActiveUser(query)
+  );
+  return data;
+};
 
 export const toggleFromWatchlist = async ({
   inList,

@@ -80,11 +80,12 @@ export const useRatingInteractions = (
     ) {
       if (userRating) {
         sendPosterNotification(`Unvoted ${mediaType}`);
-        handleUnvote(showId);
+        handleUnvote();
         handleVoteAnimation();
       }
     } else if (hoverScore) {
-      handleVote(hoverScore, showId);
+      //we provide the active userId to remove the media from watchlist on vote!
+      handleVote(hoverScore, session.userId);
       handleVoteAnimation();
     }
     setStatus('locked');

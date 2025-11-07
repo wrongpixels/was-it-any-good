@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { ForbiddenError, NotFoundError } from '../util/customError';
+import { AuthError, ForbiddenError, NotFoundError } from '../util/customError';
 import { authRequired } from '../middleware/auth-requirements';
 import { IndexMedia, UserMediaList, UserMediaListItem } from '../models';
 import {
@@ -8,6 +8,8 @@ import {
 } from '../schemas/user-media-list-schemas';
 import {
   CreateUserMediaListItem,
+  IndexMediaData,
+  IndexMediaResults,
   UserMediaListData,
   UserMediaListItemData,
 } from '../../../shared/types/models';
@@ -16,9 +18,52 @@ import { Transaction } from 'sequelize';
 import { sequelize } from '../util/db/initialize-db';
 import { toPlain } from '../util/model-helpers';
 import { getUserWatchlist } from '../services/user-media-lists-service';
+import { PAGE_LENGTH_BROWSE } from '../../../shared/types/search-browse';
 
 const router: Router = express.Router();
 
+router.get(
+  '/watchlist/my/',
+  authRequired,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      if (!req.activeUser) {
+        throw new AuthError();
+      }
+      const watchlist: UserMediaList | null = await getUserWatchlist({
+        userId: req.activeUser.id,
+        includeItems: true,
+        includeItemsIndexMedia: true,
+      });
+      if (!watchlist) {
+        throw new NotFoundError('watchlist');
+      }
+      //only admins and the users themselves can access their watchlist
+      if (watchlist.userId !== req.activeUser.id && !req.activeUser.isAdmin) {
+        throw new ForbiddenError();
+      }
+      const watchlistResponse: UserMediaListData = toPlain(watchlist);
+      const indexMedia: IndexMediaData[] = [];
+      watchlistResponse.listItems?.map((li: UserMediaListItemData) => {
+        if (li.indexMedia) {
+          indexMedia.push(li.indexMedia);
+        }
+      });
+      const results: IndexMediaResults = {
+        page: 1,
+        totalResults: watchlistResponse.itemCount,
+        //we consider no results a blank page #1
+        totalPages:
+          Math.ceil(watchlistResponse.itemCount / PAGE_LENGTH_BROWSE) || 1,
+        indexMedia,
+        resultsType: 'browse',
+      };
+      res.json(results);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 router.get(
   '/watchlist/:userId',
   authRequired,
@@ -30,12 +75,14 @@ router.get(
       //only admins and the users themselves can access their watchlist
       if (
         !req.activeUser ||
-        !req.activeUser.isAdmin ||
-        userId !== req.activeUser.id
+        (!req.activeUser.isAdmin && userId !== req.activeUser.id)
       ) {
         throw new ForbiddenError();
       }
-      const watchlist: UserMediaList | null = await getUserWatchlist(userId);
+      const watchlist: UserMediaList | null = await getUserWatchlist({
+        userId,
+        includeItems: true,
+      });
       if (!watchlist) {
         throw new NotFoundError('watchlist');
       }
@@ -66,7 +113,7 @@ router.post(
       }
       //we get the target watchlist and the indexMedia to make sure both exist
       const [targetList, targetMedia] = await Promise.all([
-        getUserWatchlist(userId),
+        getUserWatchlist({ userId }),
         IndexMedia.findByPk(indexId),
       ]);
       if (!targetList || !targetMedia) {
@@ -112,7 +159,9 @@ router.delete(
         throw new ForbiddenError();
       }
       //we get the target watchlist to find the item to remove
-      const targetList: UserMediaList | null = await getUserWatchlist(userId);
+      const targetList: UserMediaList | null = await getUserWatchlist({
+        userId,
+      });
       if (!targetList) {
         throw new NotFoundError('watchlist');
       }
@@ -132,6 +181,11 @@ router.delete(
         const deletedItemResponse: UserMediaListItemData =
           toPlain(targetListItem);
         res.status(200).json(deletedItemResponse);
+        console.log(
+          'Removed item',
+          targetListItem.indexId,
+          'from active user watchlist'
+        );
       } catch (error) {
         await transaction.rollback();
         next(error);
@@ -149,8 +203,8 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userListId: string = req.params.listId;
-      if (!req.activeUser || !req.activeUser.isAdmin) {
-        throw new ForbiddenError();
+      if (!req.activeUser) {
+        throw new AuthError();
       }
       const listItemData: AddMediaToList = AddMediaToListSchema.parse(req.body);
       //we get both the targetList and the target media. We'll check both exist and match
@@ -205,8 +259,8 @@ router.delete(
     try {
       const userListId: string = req.params.listId;
       const userListItemId: string = req.params.itemId;
-      if (!req.activeUser || !req.activeUser.isAdmin) {
-        throw new ForbiddenError();
+      if (!req.activeUser) {
+        throw new AuthError();
       }
       //we get both the targetList and the targetItem. We'll check both exist and match
       //our expected data to avoid malicious payloads and forbidden actions

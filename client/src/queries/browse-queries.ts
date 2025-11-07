@@ -8,6 +8,7 @@ export const useBrowseQuery = (
 ): UseQueryResult<IndexMediaResults, Error> => {
   return useQuery({
     queryKey: [QUERY_KEY_BROWSE, query],
+    retry: false,
     queryFn: () => getBrowseResults(query),
   });
 };

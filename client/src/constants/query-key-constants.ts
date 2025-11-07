@@ -10,5 +10,6 @@ export const QUERY_KEY_MY_VOTES: string = 'my-votes' as const;
 export const QUERY_KEY_PEOPLE: string = 'people' as const;
 export const QUERY_KEY_SEARCH: string = 'search' as const;
 export const QUERY_KEY_SUGGESTIONS: string = 'suggest' as const;
+export const QUERY_KEY_WATCHLIST: string = 'watchlist' as const;
 
 export const MUTATION_KEY_VOTE: string = 'vote' as const;

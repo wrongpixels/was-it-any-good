@@ -12,6 +12,7 @@ export const useInputField = ({
   rules,
   initialValue = '',
   placeholder,
+  autoComplete,
   type = 'text',
   label,
 }: InputFieldHookConfig): InputFieldHookValues => {
@@ -61,6 +62,7 @@ export const useInputField = ({
     value,
     onChange,
     placeholder,
+    autoComplete: autoComplete,
     type,
     label,
     isError,

@@ -1,12 +1,12 @@
-import { BASE_API } from '../constants/url-constants';
-import { slugifyUrl } from '../helpers/format-helper';
-import { MediaType } from '../types/media';
+import { BASE_API } from '../constants/url-constants'
+import { slugifyUrl } from '../helpers/format-helper'
+import { MediaType } from '../types/media'
 import {
   IndexMediaData,
   MediaResponse,
   PersonResponse,
   RatingData,
-} from '../types/models';
+} from '../types/models'
 
 //our shared logic to build links inside the webpage
 export const apiPaths = {
@@ -77,10 +77,15 @@ export const apiPaths = {
   },
   watchlist: {
     base: `${BASE_API}/lists/watchlist`,
+    getFromUserId: (userId: number, query: string) =>
+      `${apiPaths.watchlist.base}/${userId}/${query}`,
+    getFromActiveUser: (query: string) =>
+      `${apiPaths.watchlist.base}/my/${query}`,
+
     toggleIndexMedia: (userId: number, indexId: number) =>
       `${apiPaths.watchlist.base}/${userId}/${indexId}`,
   },
-};
+}
 export const clientPaths = {
   home: '/',
   films: {
@@ -194,7 +199,7 @@ export const clientPaths = {
         `${clientPaths.trending.multi.query()}${query}`,
     },
   },
-};
+}
 
 export const mediaPaths = {
   countries: {
@@ -202,58 +207,55 @@ export const mediaPaths = {
     byCode: (code: string) =>
       `${mediaPaths.countries.base}/${code.toLowerCase()}.svg`,
   },
-};
+}
 
 export const buildMediaLinkWithSlug = (media: MediaResponse) => {
-  return slugifyUrl(
-    buildClientMediaLink(media.mediaType, media.id),
-    media.name
-  );
-};
+  return slugifyUrl(buildClientMediaLink(media.mediaType, media.id), media.name)
+}
 
 export const buildPersonLinkWithSlug = (person: PersonResponse) => {
-  return slugifyUrl(clientPaths.people.byId(person.id), person.name);
-};
+  return slugifyUrl(clientPaths.people.byId(person.id), person.name)
+}
 
 export const getMediaFromIndexMedia = (indexMedia: IndexMediaData) => {
   if (!indexMedia.addedToMedia) {
-    return null;
+    return null
   }
   switch (indexMedia.mediaType) {
     case MediaType.Film:
-      return indexMedia.film ?? null;
+      return indexMedia.film ?? null
 
     case MediaType.Show:
-      return indexMedia.show ?? null;
+      return indexMedia.show ?? null
     case MediaType.Season:
-      return indexMedia.season ?? null;
+      return indexMedia.season ?? null
     default:
-      return null;
+      return null
   }
-};
+}
 
 export const getMediaIdFromIndexMedia = (
-  indexMedia: IndexMediaData
+  indexMedia: IndexMediaData,
 ): number | null => {
   if (!indexMedia.addedToMedia) {
-    return null;
+    return null
   }
-  return getMediaFromIndexMedia(indexMedia)?.id || null;
-};
+  return getMediaFromIndexMedia(indexMedia)?.id || null
+}
 
 export const buildIndexMediaLinkWithSlug = (im: IndexMediaData): string => {
-  const mediaId: number | null = getMediaIdFromIndexMedia(im);
+  const mediaId: number | null = getMediaIdFromIndexMedia(im)
   const url: string = mediaId
     ? buildClientMediaLink(im.mediaType, mediaId)
-    : buildClientMediaLink(im.mediaType, im.tmdbId, true);
+    : buildClientMediaLink(im.mediaType, im.tmdbId, true)
 
-  return slugifyUrl(url, im.name);
-};
+  return slugifyUrl(url, im.name)
+}
 
 export const buildClientMediaLink = (
   mediaType: MediaType,
   id?: number | string,
-  useTMDB?: boolean
+  useTMDB?: boolean,
 ): string => {
   switch (mediaType) {
     case MediaType.Film:
@@ -261,27 +263,27 @@ export const buildClientMediaLink = (
         ? clientPaths.films.base
         : useTMDB
           ? clientPaths.films.byTMDBId(id)
-          : clientPaths.films.byId(id);
+          : clientPaths.films.byId(id)
     case MediaType.Show:
       return !id
         ? clientPaths.shows.base
         : useTMDB
           ? clientPaths.shows.byTMDBId(id)
-          : clientPaths.shows.byId(id);
+          : clientPaths.shows.byId(id)
     case MediaType.Season:
       return !id
         ? clientPaths.shows.base
         : useTMDB
           ? clientPaths.shows.byTMDBId(id)
-          : clientPaths.shows.byId(id);
+          : clientPaths.shows.byId(id)
     default:
-      throw new Error(`Unsupported media type: ${mediaType}`);
+      throw new Error(`Unsupported media type: ${mediaType}`)
   }
-};
+}
 
 export const urlFromRatingData = (rating: RatingData): string => {
   return buildClientMediaLink(
     rating.mediaType,
-    rating.mediaType === MediaType.Season ? rating.showId : rating.mediaId
-  );
-};
+    rating.mediaType === MediaType.Season ? rating.showId : rating.mediaId,
+  )
+}

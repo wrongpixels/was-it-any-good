@@ -11,17 +11,24 @@ import {
   useVoteMutation,
   useUnvoteMutation,
 } from '../mutations/rating-mutations';
+import { useWatchlistMutation } from '../mutations/watchlist-mutations';
 
 export const useRatingMutations = (
   media: MediaResponse | SeasonResponse,
   userRating: RatingData | null,
   onVote?: () => void
 ) => {
-  const voteMutation = useVoteMutation();
-  const unVoteMutation = useUnvoteMutation();
-  const { playAnim } = useAnimEngine();
+  //if the media is in user's watchlist, we try to remove it
 
-  const handleVote = (rating: UserVote, showId?: number): void => {
+  const removeFromWatchlist: boolean = !!media.userWatchlist?.userList?.userId;
+  const voteMutation = useVoteMutation(removeFromWatchlist);
+  const unVoteMutation = useUnvoteMutation();
+  const watchlistMutation = useWatchlistMutation();
+  const { playAnim } = useAnimEngine();
+  const showId: number | undefined =
+    media.mediaType === MediaType.Season ? media.showId : undefined;
+
+  const handleVote = (rating: UserVote, userId?: number): void => {
     const ratingData: CreateRating = {
       indexId: media.indexId,
       mediaId: media.id,
@@ -29,7 +36,21 @@ export const useRatingMutations = (
       userScore: rating,
       showId,
     };
+
     voteMutation.mutate(ratingData);
+    //we only call the mutation for the watchlist removal if
+    // the provided userId matches the owner of the list.
+    if (
+      userId &&
+      removeFromWatchlist &&
+      media.userWatchlist?.userList?.userId === userId
+    ) {
+      watchlistMutation.mutate({
+        inList: true,
+        userId: userId,
+        indexId: media.indexId,
+      });
+    }
     onVote?.();
     playAnim({
       animKey: `${media.mediaType}-score-${media.id}`,
@@ -42,7 +63,7 @@ export const useRatingMutations = (
       });
   };
 
-  const handleUnvote = (showId?: number): void => {
+  const handleUnvote = (): void => {
     if (userRating) {
       unVoteMutation.mutate(userRating);
       onVote?.();

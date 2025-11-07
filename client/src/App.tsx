@@ -25,6 +25,7 @@ import SignUpOverlay from './components/Overlay/SignUpOverlay';
 import useScrollToTop from './hooks/use-scroll-to-top';
 import HomePage from './components/Search/HomePage';
 import { clientPaths } from '../../shared/util/url-builder';
+import UserListPage from './components/UserLists/UserListPage';
 
 const App = (): JSX.Element => {
   return (
@@ -75,6 +76,10 @@ const AppBody = (): JSX.Element => {
             element={<BrowsePage {...browseRoute.browseProps} />}
           />
         ))}
+        <Route
+          path={clientPaths.my.watchlist.base()}
+          element={<UserListPage />}
+        />
 
         <Route
           path={clientPaths.films.idRoute()}

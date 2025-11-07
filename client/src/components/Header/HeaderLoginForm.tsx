@@ -28,6 +28,7 @@ const HeaderLoginForm = ({ notification, login }: HeaderLoginFormProps) => {
   const userInput: InputFieldHookValues = useInputField({
     name: 'username',
     placeholder: 'User',
+    autoComplete: 'username',
     rules: {
       minLength: 4,
       maxLength: 20,
@@ -37,6 +38,7 @@ const HeaderLoginForm = ({ notification, login }: HeaderLoginFormProps) => {
     name: 'password',
     placeholder: 'Password',
     type: 'password',
+    autoComplete: 'current-password',
     rules: {
       minLength: 8,
       maxLength: 72,
