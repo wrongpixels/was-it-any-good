@@ -1,46 +1,47 @@
-import { MediaType } from "../types/media";
-import { CreateUserMediaList } from "../types/models";
+import { MediaType } from '../types/media'
+import { CreateUserMediaList } from '../types/models'
 
-export const MAX_ITEMS_LIST_INDEX: number = 99;
-export const MAX_USER_LISTS_INDEX: number = 99;
+export const MAX_ITEMS_LIST_INDEX: number = 99
+export const MAX_USER_LISTS_INDEX: number = 99
 
-export const MAX_LENGTH_NAME: number = 75;
-export const MIN_LENGTH_NAME: number = 3;
+export const MAX_LENGTH_NAME: number = 75
+export const MIN_LENGTH_NAME: number = 3
 
-export const MAX_LENGTH_DESCRIPTION: number = 150;
-export const MIN_LENGTH_DESCRIPTION: number = 0;
+export const MAX_LENGTH_DESCRIPTION: number = 150
+export const MIN_LENGTH_DESCRIPTION: number = 0
 
 export const DEF_LIST_NEW: CreateUserMediaList = {
-  name: "My New List",
-  description: "",
+  name: 'My New List',
+  description: '',
   mediaTypes: [MediaType.Film, MediaType.Show],
   lockedMediaType: false,
   autoCleanItems: false,
   private: false,
   indexInUserLists: -1,
   userId: -1,
-  icon: "multi",
-};
+  icon: 'multi',
+  itemCount: 0,
+}
 
 export const DEF_LIST_NEW_FILM: CreateUserMediaList = {
   ...DEF_LIST_NEW,
-  name: "My New Film List",
+  name: 'My New Film List',
   mediaTypes: [MediaType.Film],
   lockedMediaType: true,
-  icon: "film",
-};
+  icon: 'film',
+}
 
 export const DEF_LIST_NEW_SHOW: CreateUserMediaList = {
   ...DEF_LIST_NEW,
-  name: "My New TV List",
+  name: 'My New TV List',
   mediaTypes: [MediaType.Show],
   lockedMediaType: true,
-  icon: "show",
-};
+  icon: 'show',
+}
 
 export const DEF_LIST_LIKES: CreateUserMediaList = {
-  name: "Likes",
-  description: "My Liked Media",
+  name: 'Likes',
+  description: 'My Liked Media',
   mediaTypes: [MediaType.Show, MediaType.Film],
   lockedMediaType: true,
   indexInUserLists: 0,
@@ -48,12 +49,13 @@ export const DEF_LIST_LIKES: CreateUserMediaList = {
   autoCleanItems: true,
   private: false,
   canBeModified: false,
-  icon: "like",
-};
+  icon: 'like',
+  itemCount: 0,
+}
 
 export const DEF_LIST_WATCHLIST: CreateUserMediaList = {
-  name: "Watchlist",
-  description: "What am I watching next?",
+  name: 'Watchlist',
+  description: 'What am I watching next?',
   mediaTypes: [MediaType.Film, MediaType.Show, MediaType.Season],
   lockedMediaType: true,
   autoCleanItems: true,
@@ -61,12 +63,13 @@ export const DEF_LIST_WATCHLIST: CreateUserMediaList = {
   private: false,
   indexInUserLists: 1,
   userId: -1,
-  icon: "watchlist",
-};
+  icon: 'watchlist',
+  itemCount: 0,
+}
 
 export const DEF_LIST_FAV_FILMS: CreateUserMediaList = {
-  name: "Favorite Films",
-  description: "My favorite Films",
+  name: 'Favorite Films',
+  description: 'My favorite Films',
   mediaTypes: [MediaType.Film],
   lockedMediaType: true,
   indexInUserLists: 2,
@@ -74,12 +77,13 @@ export const DEF_LIST_FAV_FILMS: CreateUserMediaList = {
   autoCleanItems: false,
   canBeModified: false,
   private: false,
-  icon: "fav-film",
-};
+  icon: 'fav-film',
+  itemCount: 0,
+}
 
 export const DEF_LIST_FAV_SHOWS: CreateUserMediaList = {
-  name: "Favorite TV Shows",
-  description: "My favorite TV Shows",
+  name: 'Favorite TV Shows',
+  description: 'My favorite TV Shows',
   mediaTypes: [MediaType.Show],
   lockedMediaType: true,
   indexInUserLists: 3,
@@ -87,5 +91,6 @@ export const DEF_LIST_FAV_SHOWS: CreateUserMediaList = {
   autoCleanItems: false,
   canBeModified: false,
   private: false,
-  icon: "fav-show",
-};
+  icon: 'fav-show',
+  itemCount: 0,
+}
