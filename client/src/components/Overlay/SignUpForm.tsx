@@ -31,32 +31,37 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
   const userField = useInputField({
     name: 'username',
     placeholder: 'Username',
+    autoComplete: 'username',
     rules: {
       minLength: 4,
       maxLength: 20,
       blackList: BLACKLISTED_USERNAMES,
-      visualValidation: true
+      visualValidation: true,
     },
   });
   const passwordField = useInputField({
     name: 'password',
     placeholder: 'Password',
     type: 'password',
+    autoComplete: 'new-password',
+
     rules: {
       minLength: 8,
       maxLength: 72,
       includeNumber: true,
-      visualValidation: true
+      visualValidation: true,
     },
   });
   const emailField = useInputField({
     name: 'email',
     placeholder: 'E-mail**',
     type: 'email',
+    autoComplete: 'email',
+
     rules: {
       maxLength: 72,
       isEmail: true,
-      visualValidation: true
+      visualValidation: true,
     },
   });
 
