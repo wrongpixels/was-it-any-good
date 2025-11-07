@@ -20,6 +20,28 @@ import { getUserWatchlist } from '../services/user-media-lists-service';
 const router: Router = express.Router();
 
 router.get(
+  '/watchlist/my',
+  authRequired,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //only admins and the users themselves can access their watchlist
+      if (!req.activeUser || !req.activeUser.isAdmin) {
+        throw new ForbiddenError();
+      }
+      const watchlist: UserMediaList | null = await getUserWatchlist(
+        req.activeUser.id
+      );
+      if (!watchlist) {
+        throw new NotFoundError('watchlist');
+      }
+      const watchlistResponse: UserMediaListData = toPlain(watchlist);
+      res.json(watchlistResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.get(
   '/watchlist/:userId',
   authRequired,
   customIdFormatChecker('userId'),

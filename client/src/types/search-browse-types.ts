@@ -8,7 +8,7 @@ export interface BrowsePageTitleOptions {
   tabTitle?: string;
 }
 
-export type QueryToUse = 'browse' | 'search' | 'votes';
+export type QueryToUse = 'browse' | 'search' | 'votes' | 'userList';
 
 export interface QueryOpts {
   newTerm?: string;

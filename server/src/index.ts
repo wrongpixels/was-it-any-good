@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request } from 'express';
 //import cors from 'cors';
 import path from 'path';
 
@@ -58,8 +58,8 @@ app.use('/api/browse', browseRouter);
 app.use('/api/lists', userMediaListsRouter);
 app.use('/api/sitemaps', sitemapsRouter);
 
-app.all('/api/*rest', (_req, _res, next) => {
-  next(new NotFoundError('API endpoint'));
+app.all('/api/*rest', (req: Request, _res, next) => {
+  next(new NotFoundError('API endpoint:', req.originalUrl));
 });
 
 if (PRODUCTION) {

@@ -3,7 +3,6 @@ import { JSX } from 'react';
 import {
   SortBy,
   sortByUserValues,
-  sortByUserWatchlistValues,
   SortDir,
 } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
@@ -14,7 +13,7 @@ import IconShow from '../components/Common/Icons/Media/IconShow';
 import IconStar from '../components/Common/Icons/Ratings/IconStar';
 import { QueryToUse } from '../types/search-browse-types';
 import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
-import IconWatchlistAdd from '../components/Common/Icons/Lists/IconWatchlistAdd';
+
 import { clientPaths } from '../../../shared/util/url-builder';
 import { BasePageRoutes } from '../constants/search-browse-constants';
 export interface BrowsePageRouterData {
@@ -155,14 +154,15 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
       overrideOptions: sortByUserValues,
     },
   }),
+  /*
   buildPageRoute({
     title: BasePageRoutes.Watchlist,
     path: clientPaths.my.watchlist.base(),
     searchType: SearchType.Multi,
-    icon: <IconWatchlistAdd {...defIconProps} />,
+    icon: <IconWatchlistRemove {...defIconProps} />,
     sortBy: SortBy.AddedDate,
     overrideSortOptions: {
       overrideOptions: sortByUserWatchlistValues,
     },
-  }),
+  }),*/
 ];
