@@ -61,9 +61,11 @@ export const getTmdbMediaKey = (
 
 export const addVoteToMedia = (
   media: MediaResponse,
-  newRating: number
+  newRating: number,
+  removeFromWatchlist?: boolean
 ): MediaResponse => ({
   ...media,
+  userWatchlist: removeFromWatchlist ? undefined : media.userWatchlist,
   ...recalculateRating(
     newRating,
     getMediaCurrentRating(media),
@@ -75,9 +77,12 @@ export const addVoteToMedia = (
 
 export const addVoteToSeason = (
   media: SeasonResponse,
-  newRating: number
+  newRating: number,
+  removeFromWatchlist?: boolean
 ): SeasonResponse => ({
   ...media,
+  userWatchlist: removeFromWatchlist ? undefined : media.userWatchlist,
+
   ...recalculateRating(
     newRating,
     getMediaCurrentRating(media),

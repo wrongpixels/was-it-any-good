@@ -84,7 +84,8 @@ export const useRatingInteractions = (
         handleVoteAnimation();
       }
     } else if (hoverScore) {
-      handleVote(hoverScore);
+      //we provide the active userId to remove the media from watchlist on vote!
+      handleVote(hoverScore, session.userId);
       handleVoteAnimation();
     }
     setStatus('locked');

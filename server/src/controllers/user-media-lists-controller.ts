@@ -132,6 +132,11 @@ router.delete(
         const deletedItemResponse: UserMediaListItemData =
           toPlain(targetListItem);
         res.status(200).json(deletedItemResponse);
+        console.log(
+          'Removed item',
+          targetListItem.indexId,
+          'from active user watchlist'
+        );
       } catch (error) {
         await transaction.rollback();
         next(error);

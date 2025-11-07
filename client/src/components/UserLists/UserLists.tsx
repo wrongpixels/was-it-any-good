@@ -1,4 +1,4 @@
-import { JSX, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import {
   MediaResponse,
   UserMediaListData,
@@ -31,6 +31,17 @@ const UserLists = ({
   const queryClient: QueryClient = useQueryClient();
   const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
   const [watchTrigger, setWatchTrigger] = useAnimationTrigger();
+
+  //if the watchlist disappears from the media due to voting, we trigger an setInList
+  useEffect(() => {
+    if (media.userWatchlist) {
+      setInList(true);
+    } else {
+      setInList(false);
+      setWatchTrigger();
+    }
+  }, [media.userWatchlist]);
+
   const toggleWatchlist = () => {
     watchlistMutation.mutate(
       {
@@ -78,7 +89,7 @@ const UserLists = ({
           width={17}
           className={`
         ${!inList ? 'text-gray-300' : 'text-starbright'}
-        transition-all duration-150 ease-in-out ${watchTrigger && (inList ? 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1]' : 'animate-ping scale-110 [animation-iteration-count:1]')} `}
+        transition-all duration-250 ease-in-out ${watchTrigger && (inList ? 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1]' : 'animate-ping scale-110 [animation-iteration-count:1]')} `}
         />
         <span
           className={`transition-all text-xs font-normal ${watchTrigger && (inList ? 'animate-pulse opacity-0 scale-102' : 'animate-shake')} ${(inList && 'text-amber-900/50') || 'text-gray-350'}`}

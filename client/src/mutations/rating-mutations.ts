@@ -26,7 +26,7 @@ import {
   QUERY_KEY_TRENDING,
 } from '../constants/query-key-constants';
 
-export const useVoteMutation = () => {
+export const useVoteMutation = (removeFromWatchlist?: boolean) => {
   const queryClient: QueryClient = useQueryClient();
 
   return useMutation({
@@ -46,7 +46,8 @@ export const useVoteMutation = () => {
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = addVoteToSeason(
             queryManager.seasonMedia,
-            rating.userScore
+            rating.userScore,
+            removeFromWatchlist
           );
           console.log('mutating season');
           console.log(rating);
@@ -56,8 +57,10 @@ export const useVoteMutation = () => {
         console.log(rating.userScore);
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
-          rating.userScore
+          rating.userScore,
+          removeFromWatchlist
         );
+
         queryManager.setMedia(updatedMedia);
       }
     },
@@ -104,7 +107,7 @@ export const useVoteMutation = () => {
           userRating: rating,
         };
         queryManager.setMedia(updatedMedia);
-        console.log(ratingStats);
+        console.log(ratingStats, updatedMedia.userWatchlist);
       }
     },
   });
