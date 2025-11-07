@@ -197,6 +197,7 @@ export interface SeasonResponse extends BaseResponse {
   showId: number;
   mediaType: MediaType.Season;
   userRating?: RatingData | null;
+  userWatchlist?: UserMediaListItemData;
 }
 
 export interface BrowseResponse {

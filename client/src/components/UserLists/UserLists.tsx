@@ -78,10 +78,10 @@ const UserLists = ({
           width={17}
           className={`
         ${!inList ? 'text-gray-300' : 'text-starbright'}
-        transition-all duration-150 ease-in-out ${watchTrigger && 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1]'} `}
+        transition-all duration-150 ease-in-out ${watchTrigger && (inList ? 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1]' : 'animate-ping scale-110 [animation-iteration-count:1]')} `}
         />
         <span
-          className={`transition-all text-xs font-normal ${watchTrigger && 'animate-pulse opacity-0 scale-102'} ${(inList && 'text-amber-900/50') || 'text-gray-350'}`}
+          className={`transition-all text-xs font-normal ${watchTrigger && (inList ? 'animate-pulse opacity-0 scale-102' : 'animate-shake')} ${(inList && 'text-amber-900/50') || 'text-gray-350'}`}
         >
           {`${inList ? 'In your ' : 'Add to '}Watchlist`}
         </span>
