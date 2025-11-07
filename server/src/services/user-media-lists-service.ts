@@ -45,10 +45,18 @@ export const createFavTVList = (userId: number): CreateUserMediaList => ({
   indexInUserLists: 3,
 });
 
-//to get a users watchlist
-export const getUserWatchlist = async (
-  userId: number | string
-): Promise<UserMediaList | null> =>
+interface FindWatchlistOptions {
+  userId: number;
+  includeItems?: boolean;
+  includeItemsIndexMedia?: boolean;
+}
+
+//to get a users watchlist with some options for light or heavy fetches
+export const getUserWatchlist = async ({
+  userId,
+  includeItems,
+  includeItemsIndexMedia,
+}: FindWatchlistOptions): Promise<UserMediaList | null> =>
   await UserMediaList.findOne({
     where: {
       userId,
@@ -56,4 +64,12 @@ export const getUserWatchlist = async (
       canBeModified: false,
       icon: 'watchlist',
     },
+    include: includeItems
+      ? [
+          {
+            association: 'listItems',
+            include: includeItemsIndexMedia ? ['indexMedia'] : [],
+          },
+        ]
+      : [],
   });

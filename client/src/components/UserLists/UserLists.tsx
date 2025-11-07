@@ -14,7 +14,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { getMediaKey } from '../../utils/ratings-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
 
-export const USER_LISTS_ENABLED: boolean = true;
+export const USER_LISTS_ENABLED: boolean = false;
 
 interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
