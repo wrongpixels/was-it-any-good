@@ -3,6 +3,7 @@ import { styles } from '../../constants/tailwind-styles';
 import { OptClassNameProps } from '../../types/common-props-types';
 import { clientPaths } from '../../../../shared/util/url-builder';
 import IconWIAGLogo from '../Common/Icons/Logos/IconWIAGLogo';
+import IconWIAGLogoImage from '../Common/Icons/Logos/IconWIAGImage';
 
 const HeaderLogo = (props: OptClassNameProps) => {
   return (
@@ -17,11 +18,11 @@ const HeaderLogo = (props: OptClassNameProps) => {
         >
           <div
             className={
-              'flex flex-row pt-1 opacity-90 hover:brightness-105 hover:saturate-75 hover:opacity-100 transition-all'
+              'flex flex-row pt-1 opacity-95 hover:brightness-105 hover:saturate-75 hover:opacity-100 transition-all'
             }
           >
-            <IconWIAGLogo className={'drop-shadow-xs/40'} />
-            <span className="font-normal italic ml-2 text-xs text-amber-200 hidden sm:inline pt-0.5">
+            <IconWIAGLogoImage className={'drop-shadow-xs/50'} />
+            <span className="font-normal italic ml-2 text-xs text-staryellow-bright/90 hidden sm:inline pt-0.5">
               {'Was It Any Good'}
               <span className="font-medium italic ml-0.5 hidden sm:inline text-white">
                 {'?'}
