@@ -24,6 +24,7 @@ const createDefaultPageSchema = (
 ): object => ({
   '@context': 'https://schema.org',
   '@type': 'WebPage',
+  '@id': url,
   name: title,
   description: description,
   url: url,
@@ -136,6 +137,34 @@ export const setSEO = (seo: SEOData = {}) => {
       newSeo.url
     );
   }
-
   updateStructuredDataScripts(pageSchema);
+  setGoogleAnalytics({ page_location: newSeo.url, page_title: newSeo.title });
+};
+
+interface AnalyticsPageOptions {
+  page_path?: string;
+  page_title: string;
+  page_location: string;
+}
+
+//to update the data on our Google Analytics Tag
+export const setGoogleAnalytics = (options: AnalyticsPageOptions) => {
+  if (!window.gtag) {
+    return;
+  }
+  //to avoid modifying the original options and cause a side effect
+  const configOptions: AnalyticsPageOptions = { ...options };
+
+  if (!options.page_path) {
+    try {
+      //we parse the URL and extract the path and params
+      const url = new URL(options.page_location);
+      configOptions.page_path = url.pathname + url.search;
+    } catch (e) {
+      //if we fail, we fallback to use the page_location and infer path from it
+      configOptions.page_path = undefined;
+    }
+  }
+
+  window.gtag('config', 'G-6EKZ3GJKN9', configOptions);
 };

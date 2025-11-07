@@ -19,12 +19,20 @@ const queryClient = new QueryClient({
 });
 
 setupAxiosInterceptors(queryClient);
-
+//we declare our global vars here
 declare global {
   interface Window {
     __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient;
   }
 }
+
+//to access gtag safely in window
+declare global {
+  interface Window {
+    gtag?: (operation: string, id: string, options: object) => {};
+  }
+}
+
 window.__TANSTACK_QUERY_CLIENT__ = queryClient;
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
