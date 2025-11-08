@@ -4,7 +4,7 @@ import RatingPoster from './PosterRating';
 import {
   CardRatingData,
   getCardRatingData,
-  getMediaAverageRating,
+  getAnyMediaDisplayRating,
 } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
@@ -17,7 +17,7 @@ interface MediaPagePosterProps {
 }
 
 const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
-  const average: number = getMediaAverageRating(media);
+  const average: number = getAnyMediaDisplayRating(media);
   const cardRatingData: CardRatingData = getCardRatingData(
     media.releaseDate,
     average,

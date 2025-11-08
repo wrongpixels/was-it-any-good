@@ -49,18 +49,16 @@ export const useVoteMutation = (removeFromWatchlist?: boolean) => {
             rating.userScore,
             removeFromWatchlist
           );
-          console.log('mutating season');
-          console.log(rating);
+          console.log('New season rating should be', updatedSeason.rating);
           queryManager.setSeason(updatedSeason);
         }
       } else {
-        console.log(rating.userScore);
         const updatedMedia: MediaResponse = addVoteToMedia(
           queryManager.media,
           rating.userScore,
           removeFromWatchlist
         );
-
+        console.log('New media rating should be', updatedMedia.rating);
         queryManager.setMedia(updatedMedia);
       }
     },
@@ -87,8 +85,6 @@ export const useVoteMutation = (removeFromWatchlist?: boolean) => {
         return;
       }
       if (queryManager.isSeason) {
-        console.log(ratingResponse);
-
         //we replace the optimistic data onMutate with the actual server values
         if (queryManager.seasonMedia) {
           const updatedSeason: SeasonResponse = {
@@ -97,8 +93,7 @@ export const useVoteMutation = (removeFromWatchlist?: boolean) => {
             userRating: rating,
           };
           queryManager.setSeason(updatedSeason);
-          console.log('success in season');
-          console.log(ratingStats);
+          console.log('Server says new season rating is', updatedSeason.rating);
         }
       } else {
         const updatedMedia: MediaResponse = {
@@ -107,7 +102,11 @@ export const useVoteMutation = (removeFromWatchlist?: boolean) => {
           userRating: rating,
         };
         queryManager.setMedia(updatedMedia);
-        console.log(ratingStats, updatedMedia.userWatchlist);
+        console.log(
+          'Server says new ratings are',
+          ratingStats,
+          updatedMedia.userWatchlist
+        );
       }
     },
   });

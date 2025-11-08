@@ -40,7 +40,7 @@ import {
   RatingUpdateOptions,
   RatingUpdateValues,
 } from '../../types/helper-types';
-import { calculateShowAverage } from '../../../../shared/util/rating-average-calculator';
+import { calculateShowRating } from '../../../../shared/util/rating-average-calculator';
 import { updateVotedMediaCache } from '../../util/redis-helpers';
 
 class Media<
@@ -438,7 +438,7 @@ class Media<
     try {
       const rating =
         this instanceof Show && !!this.seasons
-          ? calculateShowAverage(this)
+          ? calculateShowRating(this)
           : this.rating;
       console.log(rating);
       await IndexMedia.update(
