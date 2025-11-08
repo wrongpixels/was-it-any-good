@@ -157,11 +157,12 @@ class Media<
         type: DataTypes.STRING,
       },
       rating: {
-        type: DataTypes.DECIMAL(3, 1),
+        type: DataTypes.FLOAT,
         defaultValue: 0,
       },
       baseRating: {
-        type: DataTypes.DECIMAL(3, 1),
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
       },
       voteCount: {
         type: DataTypes.INTEGER,
@@ -403,7 +404,8 @@ class Media<
   //in the next user vote, the fresh baseRating will be used for the average
   public async updateBaseRating() {
     if (
-      this.indexMedia?.baseRating &&
+      this.indexMedia &&
+      this.indexMedia.baseRating > 0 &&
       this.indexMedia.baseRating !== this.baseRating &&
       (this.voteCount === 0 || (this.voteCount === 1 && this.baseRating))
     ) {
@@ -419,13 +421,16 @@ class Media<
       }
       await this.update(updateValues);
       console.log(
-        'Updated baseRating from',
+        `Updated baseRating of ${this.name} from`,
         initialBaseRating,
-        'to',
+        'to its indexMedia',
         this.baseRating
       );
       if (updateVoteCount) {
-        console.log('Media now has a valid base vote of', this.rating);
+        console.log(
+          `${this.name} now has a valid base vote of`,
+          this.baseRating
+        );
       }
     }
   }

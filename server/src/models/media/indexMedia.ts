@@ -107,11 +107,12 @@ IndexMedia.init(
       type: DataTypes.STRING,
     },
     rating: {
-      type: DataTypes.DECIMAL(3, 1),
+      type: DataTypes.FLOAT,
       defaultValue: 0,
     },
     baseRating: {
-      type: DataTypes.DECIMAL(3, 1),
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
     },
     voteCount: {
       type: DataTypes.INTEGER,
