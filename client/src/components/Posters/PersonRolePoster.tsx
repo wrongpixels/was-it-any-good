@@ -1,7 +1,7 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import VerticalMediaPoster from './VerticalMediaPoster';
-import { getMediaAverageRating } from '../../utils/ratings-helper';
+import { getAnyMediaDisplayRating } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import { buildMediaLinkWithSlug } from '../../../../shared/util/url-builder';
 
@@ -26,7 +26,7 @@ const PersonRolePoster = ({
         releaseDate={mediaResponse.releaseDate}
         rating={
           mediaResponse.indexMedia
-            ? getMediaAverageRating(mediaResponse.indexMedia)
+            ? getAnyMediaDisplayRating(mediaResponse.indexMedia)
             : 0
         }
         userRating={mediaResponse.userRating || undefined}

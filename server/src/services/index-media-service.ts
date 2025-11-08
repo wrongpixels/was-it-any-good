@@ -134,15 +134,11 @@ export const bulkUpsertIndexMedia = async ({
       }
       //we get the matching indexMedia by tmdbId
       const entry = originalMediaMap.get(im.tmdbId);
-      const newBaseRating: number =
-        Math.round(Number(entry?.baseRating.toString() || 0) * 10) / 10;
+      const newBaseRating: number = entry?.baseRating || 0;
       //and only accept a valid and different newBaseRatings
-      if (
-        newBaseRating &&
-        newBaseRating !== Math.round(im.baseRating * 10) / 10
-      ) {
+      if (newBaseRating && newBaseRating !== im.baseRating) {
         console.log(
-          'Updating base rating of',
+          'Updating indexMedia base rating of',
           im.name,
           newBaseRating,
           im.baseRating

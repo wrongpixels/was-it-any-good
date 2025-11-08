@@ -22,7 +22,7 @@ import {
   buildTMDBUrlForMedia,
   mediaTypeToDisplayName,
 } from './url-helper';
-import { getMediaAverageRating } from './ratings-helper';
+import { getAnyMediaDisplayRating } from './ratings-helper';
 import {
   BASE_URL,
   TMDB_PERSON_URL,
@@ -94,7 +94,7 @@ const buildBaseMediaSEO = (media: MediaResponse): SEOData => {
   }
 
   let aggregateRating: object | undefined;
-  const mediaAverage: number = getMediaAverageRating(media);
+  const mediaAverage: number = getAnyMediaDisplayRating(media);
   if (mediaAverage > 0 && media.voteCount > 0) {
     aggregateRating = {
       '@type': 'AggregateRating',
@@ -382,7 +382,7 @@ const buildMediaListSchema = (
 
       const genre: string[] = getIndexMediaGenresAsStringArray(item);
       let aggregateRating: object | undefined;
-      const average: number = getMediaAverageRating(item);
+      const average: number = getAnyMediaDisplayRating(item);
       if (average > 0 && item.voteCount > 0) {
         aggregateRating = {
           '@type': 'AggregateRating',

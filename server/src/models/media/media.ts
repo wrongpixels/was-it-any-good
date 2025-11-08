@@ -40,7 +40,7 @@ import {
   RatingUpdateOptions,
   RatingUpdateValues,
 } from '../../types/helper-types';
-import { calculateShowAverage } from '../../../../shared/util/rating-average-calculator';
+import { calculateShowRating } from '../../../../shared/util/rating-average-calculator';
 import { updateVotedMediaCache } from '../../util/redis-helpers';
 
 class Media<
@@ -157,11 +157,12 @@ class Media<
         type: DataTypes.STRING,
       },
       rating: {
-        type: DataTypes.DECIMAL(3, 1),
+        type: DataTypes.FLOAT,
         defaultValue: 0,
       },
       baseRating: {
-        type: DataTypes.DECIMAL(3, 1),
+        type: DataTypes.FLOAT,
+        defaultValue: 0,
       },
       voteCount: {
         type: DataTypes.INTEGER,
@@ -243,6 +244,10 @@ class Media<
 
   //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
   //this counts every valid vote linked to the entry and calculates a new average
+  //------
+  //NOTE: The average calculated will have a max of 4 decimals, so we have to round to that
+  //on our frontend when calculating optimistic new ratings. Weighted Show ratings (which include seasons ratings)
+  //can go over 4 decimals, as those are calculated on the frontend, avoiding this logic and its limitation.
   static async refreshRatings(
     mediaData:
       | RatingData
@@ -403,7 +408,8 @@ class Media<
   //in the next user vote, the fresh baseRating will be used for the average
   public async updateBaseRating() {
     if (
-      this.indexMedia?.baseRating &&
+      this.indexMedia &&
+      this.indexMedia.baseRating > 0 &&
       this.indexMedia.baseRating !== this.baseRating &&
       (this.voteCount === 0 || (this.voteCount === 1 && this.baseRating))
     ) {
@@ -419,13 +425,16 @@ class Media<
       }
       await this.update(updateValues);
       console.log(
-        'Updated baseRating from',
+        `Updated baseRating of ${this.name} from`,
         initialBaseRating,
-        'to',
+        'to its indexMedia',
         this.baseRating
       );
       if (updateVoteCount) {
-        console.log('Media now has a valid base vote of', this.rating);
+        console.log(
+          `${this.name} now has a valid base vote of`,
+          this.baseRating
+        );
       }
     }
   }
@@ -433,7 +442,7 @@ class Media<
     try {
       const rating =
         this instanceof Show && !!this.seasons
-          ? calculateShowAverage(this)
+          ? calculateShowRating(this)
           : this.rating;
       console.log(rating);
       await IndexMedia.update(

@@ -2,7 +2,7 @@ import { JSX } from 'react';
 import { DEF_MINI_STAR_WIDTH } from '../../constants/ratings-constants';
 import DisplayRating from '../Rating/DisplayRating';
 import { IndexMediaData } from '../../../../shared/types/models';
-import { getMediaAverageRating } from '../../utils/ratings-helper';
+import { getAnyMediaDisplayRating } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import { Link } from 'react-router-dom';
 import imageLinker from '../../../../shared/util/image-linker';
@@ -17,7 +17,7 @@ const SuggestionPoster = ({ media }: SuggestionPoster): JSX.Element | null => {
   if (!media) {
     return null;
   }
-  const average: number = getMediaAverageRating(media);
+  const average: number = getAnyMediaDisplayRating(media);
 
   return (
     <Link

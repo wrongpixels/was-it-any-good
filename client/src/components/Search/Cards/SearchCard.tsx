@@ -4,7 +4,7 @@ import { IndexMediaData } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
-  getMediaAverageRating,
+  getAnyMediaDisplayRating,
 } from '../../../utils/ratings-helper';
 import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import CountryFlags from '../../Media/Sections/MediaCountryFlags';
@@ -52,7 +52,7 @@ const SearchCard = ({
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
       : badgeType;
-  const average: number = getMediaAverageRating(media);
+  const average: number = getAnyMediaDisplayRating(media);
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
     () => getIndexMediaGenresAsUrlMap(media),

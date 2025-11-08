@@ -6,12 +6,10 @@ import {
   MediaResponse,
   RatingData,
   SeasonResponse,
-  ShowResponse,
 } from '../../../shared/types/models';
 import {
-  getMediaCurrentRating,
-  calculateShowAverage,
-  calculateAverage,
+  getRatingInMedia,
+  getAnyMediaRating,
 } from '../../../shared/util/rating-average-calculator';
 import {
   QUERY_KEY_MEDIA,
@@ -68,7 +66,7 @@ export const addVoteToMedia = (
   userWatchlist: removeFromWatchlist ? undefined : media.userWatchlist,
   ...recalculateRating(
     newRating,
-    getMediaCurrentRating(media),
+    getRatingInMedia(media),
     media.voteCount,
     media.userRating?.userScore
   ),
@@ -85,7 +83,7 @@ export const addVoteToSeason = (
 
   ...recalculateRating(
     newRating,
-    getMediaCurrentRating(media),
+    getRatingInMedia(media),
     media.voteCount,
     media.userRating?.userScore
   ),
@@ -118,7 +116,7 @@ export const removeVoteFromSeason = (
   ...media,
   ...recalculateRating(
     0,
-    getMediaCurrentRating(media),
+    getRatingInMedia(media),
     media.voteCount,
     media.userRating?.userScore
   ),
@@ -129,7 +127,7 @@ export const removeVoteFromMedia = (media: MediaResponse): MediaResponse => ({
   ...media,
   ...recalculateRating(
     0,
-    getMediaCurrentRating(media),
+    getRatingInMedia(media),
     media.voteCount,
     media.userRating?.userScore
   ),
@@ -167,9 +165,9 @@ export const recalculateRating = (
     const newTotalVotes = totalVotes - 1;
     console.log(totalSum, newTotalVotes, previousRating);
     return {
-      //we round to replicate json response and avoid decimal flickering
-      rating:
-        Math.round(((totalSum - previousRating) / newTotalVotes) * 10) / 10,
+      rating: roundToServerDecimals(
+        (totalSum - previousRating) / newTotalVotes
+      ),
       voteCount: newTotalVotes,
     };
   }
@@ -179,8 +177,7 @@ export const recalculateRating = (
     const newSum = totalSum - previousRating + userRating;
 
     return {
-      //we round to replicate json response and avoid decimal flickering
-      rating: Math.round((newSum / totalVotes) * 10) / 10,
+      rating: roundToServerDecimals(newSum / totalVotes),
       voteCount: totalVotes,
     };
   }
@@ -191,8 +188,7 @@ export const recalculateRating = (
   console.log('Votes are ', newTotalVotes);
 
   return {
-    //we round to replicate json response and avoid decimal flickering
-    rating: Math.round(((totalSum + userRating) / newTotalVotes) * 10) / 10,
+    rating: roundToServerDecimals((totalSum + userRating) / newTotalVotes),
     voteCount: newTotalVotes,
   };
 };
@@ -204,18 +200,18 @@ export const isIndexMedia = (
   media: MediaResponse | SeasonResponse | IndexMediaData
 ): media is IndexMediaData => 'addedToMedia' in media;
 
-export const isShow = (
-  media: MediaResponse | SeasonResponse | IndexMediaData
-): media is ShowResponse => 'seasonCount' in media;
+//for the final display with only one decimal
+export const roundToOneDecimal = (value: number) => Math.round(value * 10) / 10;
 
-export const getMediaAverageRating = (
+//the server stores a max of 4 decimals, so we round our calculation to match what we should receive
+//from the server
+export const roundToServerDecimals = (value: number) =>
+  Math.round(value * 10000) / 10000;
+
+//the final rounded version to display on the client
+export const getAnyMediaDisplayRating = (
   media: MediaResponse | SeasonResponse | IndexMediaData
-): number => {
-  if (isShow(media)) {
-    return calculateShowAverage(media) || 0;
-  }
-  return calculateAverage(media) || 0;
-};
+): number => roundToOneDecimal(getAnyMediaRating(media));
 
 export const getIndexMediaUserRating = (
   indexMedia: IndexMediaData

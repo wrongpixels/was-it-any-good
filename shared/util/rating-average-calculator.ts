@@ -2,26 +2,30 @@
 //shows take into account each season for the overall calculation.
 
 import { SEASONS_WEIGHT, SHOW_WEIGHT } from '../constants/rating-constants'
+import { isShow } from '../helpers/media-helper'
 import {
   ShowResponse,
   SeasonResponse,
   MediaResponse,
   IndexMediaData,
 } from '../types/models'
-export const getMediaCurrentRating = (
+
+export const getAnyMediaRating = (
+  media: MediaResponse | SeasonResponse | IndexMediaData,
+): number => {
+  if (isShow(media)) {
+    return calculateShowRating(media) || 0
+  }
+  return getRatingInMedia(media) || 0
+}
+
+export const getRatingInMedia = (
   media: MediaResponse | SeasonResponse | IndexMediaData,
 ): number => (media.rating > 0 ? media.rating : media.baseRating)
 
-export const calculateAverage = (
-  media: MediaResponse | SeasonResponse | IndexMediaData,
-): number => {
-  const globalAverage: number = getMediaCurrentRating(media)
-  return Math.round(globalAverage * 10) / 10
-}
-
 //their individual ratings into consideration
-export const calculateShowAverage = (media: ShowResponse): number => {
-  const globalAverage: number = calculateAverage(media)
+export const calculateShowRating = (media: ShowResponse): number => {
+  const globalAverage: number = getRatingInMedia(media)
 
   if (!media.seasons || media.seasonCount === 0) {
     return globalAverage
@@ -41,13 +45,10 @@ export const calculateShowAverage = (media: ShowResponse): number => {
     ) / validSeasons.length
   //if the show itself has not been voted, we return the seasons
   if (globalAverage === 0 && seasonsAverage) {
-    return Math.round(seasonsAverage * 10) / 10
+    return seasonsAverage
   }
 
-  //We round the result to only 1 decimal
   return seasonsAverage > 0
-    ? Math.round(
-        (globalAverage * SHOW_WEIGHT + seasonsAverage * SEASONS_WEIGHT) * 10,
-      ) / 10
+    ? globalAverage * SHOW_WEIGHT + seasonsAverage * SEASONS_WEIGHT
     : globalAverage
 }
