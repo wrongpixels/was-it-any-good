@@ -1,4 +1,5 @@
 import axios from 'axios';
+import https from 'https';
 import { TMDB_API_URL } from '../constants/url-constants';
 import { RedisClientType } from 'redis';
 import { initializeRedis } from '../redis/redis-client';
@@ -48,8 +49,12 @@ if (isNaN(PORT)) {
 
 const redisClient: RedisClientType | undefined = initializeRedis(REDIS_URI);
 
+//TMDB broke something and now we have to force IPv4...
+const httpsAgent: https.Agent = new https.Agent({ family: 4 });
+
 const tmdbAPI = axios.create({
   baseURL: TMDB_API_URL,
+  httpsAgent,
   headers: {
     Authorization: `Bearer ${API_TOKEN_TMDB}`,
     'Content-Type': 'application/json',
