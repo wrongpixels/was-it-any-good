@@ -244,7 +244,7 @@ class Media<
 
   //an SQL approach to calculate and update ratings using queries instead of 2 sequelize calls.
   //this counts every valid vote linked to the entry and calculates a new average
-  //-----
+  //------
   //NOTE: The average calculated will have a max of 4 decimals, so we have to round to that
   //on our frontend when calculating optimistic new ratings. Weighted Show ratings (which include seasons ratings)
   //can go over 4 decimals, as those are calculated on the frontend, avoiding this logic and its limitation.
