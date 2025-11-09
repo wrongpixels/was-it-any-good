@@ -1,4 +1,4 @@
-import express, { Request } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 //import cors from 'cors';
 import path from 'path';
 
@@ -28,10 +28,28 @@ import errorHandler from './middleware/error-handler';
 import { authHandler } from './middleware/auth-handler';
 import { NotFoundError } from './util/customError';
 import { authRequired } from './middleware/auth-requirements';
+import {
+  BASE_RAILWAY_DOMAIN,
+  BASE_URL,
+} from '../../shared/constants/url-constants';
+import { joinUrl } from '../../shared/helpers/format-helper';
 
 const app = express();
 //Not needed yet
 //app.use(cors());
+
+//if our railway clone is hit, we redirect to our canonical url
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const host: string = req.headers.host?.toLowerCase() || '';
+  if (host === BASE_RAILWAY_DOMAIN) {
+    const newUrl: string = joinUrl(`${BASE_URL}`, `${req.originalUrl}`);
+    console.log('Redirecting to', newUrl);
+    res.redirect(301, newUrl);
+    return;
+  }
+  next();
+});
+
 app.use(express.json());
 app.use(authHandler);
 
