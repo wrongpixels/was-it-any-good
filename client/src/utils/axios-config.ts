@@ -6,7 +6,9 @@ import { logoutClientSide } from './session-handler';
 export const setupAxiosInterceptors = (queryClient: QueryClient): void => {
   console.log('Axios interceptors set up');
   axios.interceptors.response.use(
-    (res) => res,
+    (res) => {
+      return res;
+    },
     (error) => {
       if (isSessionAuthError(error)) {
         console.log('SessionAuthError! Logging out client-side.', error);
