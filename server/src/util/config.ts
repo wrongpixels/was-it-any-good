@@ -52,8 +52,11 @@ const redisClient: RedisClientType | undefined = initializeRedis(REDIS_URI);
 //TMDB broke something and now we have to force IPv4...
 const httpsAgent: https.Agent = new https.Agent({ family: 4 });
 
+//Now TMDB won't let me access their API, so i have to add a timeout and test.
+//thanks for the constant trouble! :)
 const tmdbAPI = axios.create({
   baseURL: TMDB_API_URL,
+  timeout: 3000,
   httpsAgent,
   headers: {
     Authorization: `Bearer ${API_TOKEN_TMDB}`,
