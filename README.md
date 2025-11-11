@@ -37,13 +37,14 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
   - **Filter & Sort:** Filter media by Genre, Country, or Year, and sort results by Ranking, Popularity, Title or Release date.
 - **Dynamic Rating System:** Users can create accounts and submit weighted ratings for Films, Shows and their individual seasons. All rating calculations happen in real-time and update instantly on the front end without a page refresh.
 - **User Authentication:** Secure user registration, login, and session management using JSON Web Tokens (JWT).
+- **Collections:** User-created lists and auto-updating watchlists.
+
 
 ### ⏳ In Development / Planned
 
 - 🎮 **Game Integration:** Adding IGDB API support to expand the library to video games and DLCs.
 - 👥 **Social Features:** Friend-following system and personalized activity feeds.
 - 📝 **Community Engagement:** Written reviews and comment sections.
-- 📋 **Collections:** Custom user-created lists and auto-updating watchlists.
 
 ---
 
