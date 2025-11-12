@@ -4,6 +4,7 @@ export interface NotificationProps {
   message: string;
   isError: boolean;
   duration: number;
+  id?: number;
   onComplete?: VoidFunction;
   offset?: offset;
   anchorRef?: React.RefObject<HTMLDivElement | null>;

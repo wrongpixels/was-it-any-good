@@ -74,7 +74,14 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const show = useCallback((props: NotificationProps) => {
-    setActiveNotification(props);
+    setActiveNotification((currentNoti: NotificationProps | null) => {
+      console.log(currentNoti?.id);
+      return {
+        ...props,
+        //we now set an id to rebuild the NotificationAlert component when a new one is created
+        id: currentNoti?.id !== undefined ? currentNoti.id + 1 : 0,
+      };
+    });
   }, []);
 
   const handleComplete = useCallback(() => {
@@ -85,7 +92,10 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   return (
     <NotificationContext.Provider value={{ show, setNotification, setError }}>
       {children}
-      <div className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999]">
+      <div
+        className="fixed top-0 left-0 w-full h-full pointer-events-none z-[9999]"
+        key={activeNotification?.id || 0}
+      >
         {activeNotification && (
           <NotificationAlert
             {...activeNotification}
