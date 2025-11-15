@@ -31,6 +31,8 @@ export interface BrowsePageProps {
   overrideParams?: OverrideParams;
   overrideSortOptions?: OverrideSortOptions;
   pageTitleOptions?: BrowsePageTitleOptions;
+  apiPath?: string;
+  authReq?: boolean;
   queryToUse?: QueryToUse;
 }
 
@@ -38,12 +40,13 @@ const BrowsePage = ({
   overrideParams,
   overrideSortOptions,
   pageTitleOptions,
+  authReq,
+  apiPath,
   queryToUse = 'browse',
 }: BrowsePageProps) => {
   const basePath = overrideParams?.basePath || clientPaths.browse.base;
   //if we are accessing user data, we check for a valid session with this hook:
-  //in this case, it will only enforce it if we are checking user votes.
-  useAuthProtection({ condition: queryToUse === 'votes' });
+  useAuthProtection({ condition: authReq });
 
   //a hook shared with SearchPage to interpret the active url as states
   //and navigate to new queries and result pages based on active parameters.
@@ -66,7 +69,7 @@ const BrowsePage = ({
     isError,
   } = queryToUse === 'votes'
     ? useMyVotesQuery(currentQuery)
-    : useBrowseQuery(currentQuery);
+    : useBrowseQuery({ query: currentQuery, apiPath });
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
 
   // console.log(browseResults);

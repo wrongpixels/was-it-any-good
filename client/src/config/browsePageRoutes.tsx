@@ -3,6 +3,7 @@ import { JSX } from 'react';
 import {
   SortBy,
   sortByUserValues,
+  sortByUserWatchlistValues,
   SortDir,
 } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
@@ -14,8 +15,9 @@ import IconStar from '../components/Common/Icons/Ratings/IconStar';
 import { QueryToUse } from '../types/search-browse-types';
 import { OverrideSortOptions } from '../components/Search/Results/PageResultsSort';
 
-import { clientPaths } from '../../../shared/util/url-builder';
+import { apiPaths, clientPaths } from '../../../shared/util/url-builder';
 import { BasePageRoutes } from '../constants/search-browse-constants';
+import IconWatchlistRemove from '../components/Common/Icons/Lists/IconWatchlistRemove';
 export interface BrowsePageRouterData {
   path: string;
   browseProps: BrowsePageProps;
@@ -54,6 +56,10 @@ const getIcon = (
 interface PageRouteBuilderProps {
   title: string;
   path: string;
+  //to set a route as auth protected
+  authReq?: boolean;
+  //to set a specific api path to call with the mutation
+  apiPath?: string;
   icon?: JSX.Element;
   subtitle?: string;
   searchType?: SearchType;
@@ -66,6 +72,8 @@ interface PageRouteBuilderProps {
 const buildPageRoute = ({
   title,
   path,
+  authReq,
+  apiPath,
   subtitle,
   icon,
   queryToUse,
@@ -76,6 +84,8 @@ const buildPageRoute = ({
   return {
     path,
     browseProps: {
+      apiPath,
+      authReq,
       pageTitleOptions: {
         title,
         subtitle,
@@ -146,6 +156,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   buildPageRoute({
     title: BasePageRoutes.MyVotes,
     queryToUse: 'votes',
+    authReq: true,
     path: clientPaths.my.votes.base(),
     searchType: SearchType.Multi,
     icon: <IconStar {...defIconProps} />,
@@ -154,15 +165,17 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
       overrideOptions: sortByUserValues,
     },
   }),
-  /*
+
   buildPageRoute({
     title: BasePageRoutes.Watchlist,
     path: clientPaths.my.watchlist.base(),
+    authReq: true,
+    apiPath: apiPaths.watchlist.my(),
     searchType: SearchType.Multi,
     icon: <IconWatchlistRemove {...defIconProps} />,
     sortBy: SortBy.AddedDate,
     overrideSortOptions: {
       overrideOptions: sortByUserWatchlistValues,
     },
-  }),*/
+  }),
 ];

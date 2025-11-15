@@ -51,7 +51,7 @@ const UserLists = ({
 
   const toggleWatchlist = () => {
     setNotification({
-      message: `'${media.name}' was \n${inList ? 'removed from' : 'added to your'} Watchlist!`,
+      message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
       anchorRef,
       offset: { x: 0, y: -5 },
     });

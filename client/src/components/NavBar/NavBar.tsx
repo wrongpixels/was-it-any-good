@@ -11,7 +11,7 @@ import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import { USER_LISTS_ENABLED } from '../UserLists/UserLists';
 import { clientPaths } from '../../../../shared/util/url-builder';
 
-const SHOW_WATCHLIST: boolean = false;
+const SHOW_WATCHLIST: boolean = true;
 
 interface LinkInfo {
   text: string;

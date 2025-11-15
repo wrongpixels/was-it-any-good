@@ -77,11 +77,6 @@ const AppBody = (): JSX.Element => {
           />
         ))}
         <Route
-          path={clientPaths.my.watchlist.base()}
-          element={<UserListPage />}
-        />
-
-        <Route
           path={clientPaths.films.idRoute()}
           element={<MediaPage mediaType={MediaType.Film} />}
         />
