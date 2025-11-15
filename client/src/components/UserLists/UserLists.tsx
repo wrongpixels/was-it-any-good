@@ -50,6 +50,7 @@ const UserLists = ({
   }, [media.userWatchlist]);
 
   const toggleWatchlist = () => {
+    setWatchTrigger();
     setNotification({
       message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
       anchorRef,
@@ -70,7 +71,6 @@ const UserLists = ({
             queryKey: getMediaKey(media.mediaType, media.id),
             type: 'all',
           });
-          setWatchTrigger();
         },
         onError: (error) => {
           console.error('Request failed:', error);
