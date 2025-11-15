@@ -72,4 +72,5 @@ export const getUserWatchlist = async ({
           },
         ]
       : [],
+    order: includeItems ? [['listItems', 'updatedAt', 'DESC']] : [],
   });

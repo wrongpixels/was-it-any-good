@@ -14,7 +14,7 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { getMediaKey } from '../../utils/ratings-helper';
 import { useNotificationContext } from '../../context/NotificationProvider';
 
-export const USER_LISTS_ENABLED: boolean = false;
+export const USER_LISTS_ENABLED: boolean = true;
 
 interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
@@ -51,7 +51,7 @@ const UserLists = ({
 
   const toggleWatchlist = () => {
     setNotification({
-      message: `'${media.name}' was \n${inList ? 'removed from' : 'added to'} Watchlist!`,
+      message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
       anchorRef,
       offset: { x: 0, y: -5 },
     });

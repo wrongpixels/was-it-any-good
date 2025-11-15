@@ -77,10 +77,11 @@ export const apiPaths = {
   },
   watchlist: {
     base: `${BASE_API}/lists/watchlist`,
+    my: () => `${apiPaths.watchlist.base}/my`,
     getFromUserId: (userId: number, query: string) =>
       `${apiPaths.watchlist.base}/${userId}/${query}`,
-    getFromActiveUser: (query: string) =>
-      `${apiPaths.watchlist.base}/my/${query}`,
+    getFromActiveUser: (query?: string) =>
+      `${apiPaths.watchlist.base}/my?${query}`,
 
     toggleIndexMedia: (userId: number, indexId: number) =>
       `${apiPaths.watchlist.base}/${userId}/${indexId}`,

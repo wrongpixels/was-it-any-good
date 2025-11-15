@@ -11,6 +11,8 @@ import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import { USER_LISTS_ENABLED } from '../UserLists/UserLists';
 import { clientPaths } from '../../../../shared/util/url-builder';
 
+const SHOW_WATCHLIST: boolean = true;
+
 interface LinkInfo {
   text: string;
   url: string;
@@ -115,7 +117,7 @@ const NavBar = (): JSX.Element => {
               <span className="text-starblue">{'My Ratings'}</span>
             </NavLink>
           </span>
-          {USER_LISTS_ENABLED && (
+          {USER_LISTS_ENABLED && SHOW_WATCHLIST && (
             <span className={`${styles.animations.opacity70}`}>
               <NavLink
                 to={clientPaths.my.watchlist.base()}

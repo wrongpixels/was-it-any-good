@@ -1,4 +1,4 @@
-import { DropdownOption, getDropdownValue } from './common';
+import { DropdownOption, getDropdownValue } from './common'
 
 //our SortBy options. The string of the enum parallels the field of the
 //table, so it can be applied directly on sequelize options
@@ -19,81 +19,81 @@ export const sortByValues: DropdownOption[] = [
   [SortBy.Rating, 'Rating'],
   [SortBy.Popularity, 'Popularity'],
   [SortBy.Year, 'Year'],
-];
+]
 
 export const sortByUserValues: DropdownOption[] = [
-  [SortBy.VoteDate, 'Date'],
+  [SortBy.VoteDate, 'Date voted'],
   [SortBy.UserScore, 'Vote'],
   ...sortByValues.filter(
-    (d: DropdownOption) => getDropdownValue(d) !== SortBy.Rating
+    (d: DropdownOption) => getDropdownValue(d) !== SortBy.Rating,
   ),
-];
+]
 
 export const sortByUserWatchlistValues: DropdownOption[] = [
-  [SortBy.AddedDate, 'Added'],
+  [SortBy.AddedDate, 'Date added'],
   ...sortByValues,
-];
+]
 
 export const sortByUserListValues: DropdownOption[] = [
   [SortBy.UserScore, 'Vote'],
   ...sortByUserWatchlistValues,
-];
+]
 
 export enum SortDir {
   Default = 'DESC',
   Inverted = 'ASC',
 }
-export const sortDirValues: string[] = Object.values<string>(SortDir);
+export const sortDirValues: string[] = Object.values<string>(SortDir)
 
 export const invertSortDir = (value: string | undefined): SortDir =>
-  value === SortDir.Inverted ? SortDir.Default : SortDir.Inverted;
+  value === SortDir.Inverted ? SortDir.Default : SortDir.Inverted
 
 export enum SortDirDropdown {
   DESC = 'Default',
   ASC = 'Inverted',
 }
-export const sortDirDropdown: string[] = Object.values(SortDirDropdown);
+export const sortDirDropdown: string[] = Object.values(SortDirDropdown)
 
 export const isSortBy = (value: string): value is SortBy =>
-  Object.values<string>(SortBy).includes(value);
+  Object.values<string>(SortBy).includes(value)
 
 export const stringToSortBy = (
-  value: string | undefined | null
+  value: string | undefined | null,
 ): SortBy | null => {
   if (!value || !isSortBy(value)) {
-    return null;
+    return null
   }
-  return value;
-};
+  return value
+}
 
 export const isSortDir = (value: string): value is SortDir =>
-  sortDirValues.includes(value);
+  sortDirValues.includes(value)
 
 export const sortDirDropdownToSortDir = (value: string) => {
   switch (value) {
     case SortDirDropdown.ASC:
-      return SortDir.Inverted;
+      return SortDir.Inverted
     case SortDirDropdown.DESC:
     default:
-      return SortDir.Default;
+      return SortDir.Default
   }
-};
+}
 
 export const sortDirToSortDirDropdown = (value: SortDir | undefined) => {
   switch (value) {
     case SortDir.Inverted:
-      return SortDirDropdown.ASC;
+      return SortDirDropdown.ASC
     case SortDir.Default:
     default:
-      return SortDirDropdown.DESC;
+      return SortDirDropdown.DESC
   }
-};
+}
 
 export const stringToSortDir = (
-  value: string | undefined | null
+  value: string | undefined | null,
 ): SortDir | undefined => {
   if (!value || !isSortDir(value)) {
-    return SortDir.Default;
+    return SortDir.Default
   }
-  return value;
-};
+  return value
+}
