@@ -7,6 +7,7 @@ import {
 } from '../../../shared/constants/user-media-list-constants';
 import { CreateUserMediaList } from '../../../shared/types/models';
 import UserMediaList from '../models/users/userMediaList';
+import { SortBy } from '../../../shared/types/browse';
 
 export const createDefaultUserLists = async (
   userId: number,
@@ -72,4 +73,5 @@ export const getUserWatchlist = async ({
           },
         ]
       : [],
+    order: includeItems ? [['listItems', 'updatedAt', 'DESC']] : [],
   });

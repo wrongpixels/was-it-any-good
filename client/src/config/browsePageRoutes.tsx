@@ -3,7 +3,6 @@ import { JSX } from 'react';
 import {
   SortBy,
   sortByUserValues,
-  sortByUserWatchlistValues,
   SortDir,
 } from '../../../shared/types/browse';
 import { SearchType } from '../../../shared/types/search';
@@ -175,7 +174,10 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     icon: <IconWatchlistRemove {...defIconProps} />,
     sortBy: SortBy.AddedDate,
     overrideSortOptions: {
-      overrideOptions: sortByUserWatchlistValues,
+      //very basic implementation for now, we just allow sorting by date
+      //and we lock the invert button
+      overrideOptions: [[SortBy.AddedDate, 'Date added']],
+      canInvert: false,
     },
   }),
 ];
