@@ -51,6 +51,7 @@ const UserLists = ({
 
   const toggleWatchlist = () => {
     setWatchTrigger();
+    setInList((oldInList) => !oldInList);
     setNotification({
       message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
       anchorRef,
@@ -66,7 +67,6 @@ const UserLists = ({
         onSuccess: (result) => {
           console.log('Response data:', result);
           console.log('Mutation status:', watchlistMutation.status);
-          setInList((oldInList) => !oldInList);
           queryClient.refetchQueries({
             queryKey: getMediaKey(media.mediaType, media.id),
             type: 'all',
