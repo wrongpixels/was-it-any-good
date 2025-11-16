@@ -78,26 +78,43 @@ UserMediaListItem.init(
 
     hooks: {
       async afterCreate(item: UserMediaListItem, options) {
-        await UserMediaList.increment('itemCount', {
+        const count = await UserMediaListItem.count({
+          where: { userListId: item.userListId },
           transaction: options.transaction,
-          where: { id: item.userListId },
         });
+
+        await UserMediaList.update(
+          { itemCount: count },
+          {
+            where: { id: item.userListId },
+            transaction: options.transaction,
+          }
+        );
       },
 
       //we recalculate the itemCount of the list and also fix the indexInList
       //of items affected by the deletion, or else our unique index will break!
       async afterDestroy(item: UserMediaListItem, options) {
+        const count = await UserMediaListItem.count({
+          where: { userListId: item.userListId },
+          transaction: options.transaction,
+        });
+
         await Promise.all([
-          UserMediaList.decrement('itemCount', {
-            transaction: options.transaction,
-            where: { id: item.userListId },
-          }),
-          //this only affects items on the list placed after the deleted indexInList
+          UserMediaList.update(
+            { itemCount: count },
+            {
+              where: { id: item.userListId },
+              transaction: options.transaction,
+            }
+          ),
           UserMediaListItem.decrement('indexInList', {
             transaction: options.transaction,
             where: {
               userListId: item.userListId,
-              indexInList: { [Op.gt]: item.indexInList },
+              indexInList: {
+                [Op.and]: [{ [Op.gt]: item.indexInList }, { [Op.gt]: 0 }],
+              },
             },
           }),
         ]);
@@ -109,10 +126,10 @@ UserMediaListItem.init(
         unique: true,
         fields: ['index_id', 'user_list_id'],
       },
-      {
+      /* {
         unique: true,
         fields: ['user_list_id', 'index_in_list'],
-      },
+      },*/
     ],
   }
 );
