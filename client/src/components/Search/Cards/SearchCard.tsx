@@ -53,9 +53,6 @@ const SearchCard = ({
       ? BadgeType.None
       : badgeType;
   const average: number = getAnyMediaDisplayRating(media);
-  if (media.name === 'Pluribus') {
-    console.log(average);
-  }
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
     () => getIndexMediaGenresAsUrlMap(media),
