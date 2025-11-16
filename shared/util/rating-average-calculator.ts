@@ -1,6 +1,7 @@
 //a shared util to calculate a weighted average for a film or show.
 //shows take into account each season for the overall calculation.
 
+import { isIndexMedia } from '../../client/src/utils/ratings-helper'
 import { SEASONS_WEIGHT, SHOW_WEIGHT } from '../constants/rating-constants'
 import { isShow } from '../helpers/media-helper'
 import {
@@ -15,6 +16,10 @@ export const getAnyMediaRating = (
 ): number => {
   if (isShow(media)) {
     return calculateShowRating(media) || 0
+  }
+  //if it's an indexMedia with a show, we pass the nested show
+  if (isIndexMedia(media) && media.show && isShow(media.show)) {
+    return calculateShowRating(media.show) || 0
   }
   return getRatingInMedia(media) || 0
 }

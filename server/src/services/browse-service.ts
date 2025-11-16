@@ -41,12 +41,12 @@ export const buildIncludeOptions = (
   }
   //and combine them all in the array
   includeOptions.push(genreIncludeOptions);
-  /*
+
   if (mediaType === MediaType.Show) {
     includeOptions.push({
       association: 'seasons',
-      attributes: ['rating'],
+      attributes: ['rating', 'baseRating'],
     });
-  }*/
+  }
   return includeOptions;
 };
