@@ -176,6 +176,7 @@ export const updateShowEntry = async (showEntry: Show) => {
           baseRating: newShowTMDBData.vote_average ?? showEntry.baseRating,
           popularity: newShowTMDBData.popularity ?? showEntry.popularity,
           description: newShowTMDBData.overview ?? showEntry.description,
+          dataUpdatedAt: new Date(),
         },
         { transaction }
       ),
@@ -287,6 +288,7 @@ export const buildShow = (showData: ShowData, indexId: number): CreateShow => {
     baseRating: correctedRating ?? showData.baseRating,
     rating: correctedRating ?? showData.rating,
     voteCount: unreleased ? 0 : showData.voteCount,
+    dataUpdatedAt: new Date(),
   };
 };
 
@@ -312,5 +314,6 @@ const buildSeason = (
     baseRating: correctedRating ?? seasonData.baseRating,
     rating: correctedRating ?? seasonData.rating,
     voteCount: unreleased ? 0 : seasonData.voteCount,
+    dataUpdatedAt: new Date(),
   };
 };

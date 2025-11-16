@@ -2,10 +2,10 @@ import { ShowResponse } from '../../../shared/types/models';
 import { LAST_CHECK_DAYS_SHOW } from '../constants/media-defaults';
 
 export const isShowDataOld = (show: ShowResponse): boolean => {
-  if (!show.updatedAt) {
+  if (!show.dataUpdatedAt) {
     return true;
   }
-  const editDate: Date = new Date(show.updatedAt);
+  const editDate: Date = new Date(show.dataUpdatedAt);
   if (isNaN(editDate.getTime())) {
     return true;
   }
