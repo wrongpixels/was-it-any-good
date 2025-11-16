@@ -50,7 +50,6 @@ class Show extends Media<InferAttributes<Show>, InferCreationAttributes<Show>> {
       media.seasons = reorderSeasons(media);
     }
     await media.syncBaseRatingFromIndex();
-
     return params.plainData ? toPlain<Show>(media) : media;
   }
   static async refreshRating(
