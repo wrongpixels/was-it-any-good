@@ -133,7 +133,7 @@ class Media<
         allowNull: true,
       },
       dataUpdatedAt: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: true,
       },
       country: {

@@ -4,17 +4,17 @@ import { QueryInterfaceContext } from '../src/util/db/migrator-db';
 module.exports = {
   up: async ({ context: queryInterface }: QueryInterfaceContext) => {
     await queryInterface.addColumn('shows', 'data_updated_at', {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
     });
     await queryInterface.addColumn('films', 'data_updated_at', {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
     });
     await queryInterface.addColumn('seasons', 'data_updated_at', {
-      type: DataTypes.STRING,
+      type: DataTypes.DATE,
       allowNull: true,
       defaultValue: null,
     });
