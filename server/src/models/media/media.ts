@@ -85,6 +85,7 @@ class Media<
   //For getting the Genres
   declare getGenres: BelongsToManyGetAssociationsMixin<MediaGenre>;
   declare indexMedia?: IndexMedia;
+  declare dataUpdatedAt: Date | null;
   declare updatedAt?: Date;
   declare createdAt?: Date;
 
@@ -128,6 +129,10 @@ class Media<
         type: DataTypes.STRING,
       },
       releaseDate: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      dataUpdatedAt: {
         type: DataTypes.STRING,
         allowNull: true,
       },
