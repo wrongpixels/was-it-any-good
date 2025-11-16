@@ -196,10 +196,6 @@ export const numToVote = (num: number): UserVote => {
   return Math.max(-1, Math.min(num, 10));
 };
 
-export const isIndexMedia = (
-  media: MediaResponse | SeasonResponse | IndexMediaData
-): media is IndexMediaData => 'addedToMedia' in media;
-
 //for the final display with only one decimal
 export const roundToOneDecimal = (value: number) => Math.round(value * 10) / 10;
 

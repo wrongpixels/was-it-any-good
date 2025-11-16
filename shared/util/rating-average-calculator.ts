@@ -2,20 +2,29 @@
 //shows take into account each season for the overall calculation.
 
 import { SEASONS_WEIGHT, SHOW_WEIGHT } from '../constants/rating-constants'
-import { isShow } from '../helpers/media-helper'
+import { isIndexMedia, isShow } from '../helpers/media-helper'
 import {
   ShowResponse,
   SeasonResponse,
+  FilmResponse,
   MediaResponse,
   IndexMediaData,
 } from '../types/models'
 
 export const getAnyMediaRating = (
-  media: MediaResponse | SeasonResponse | IndexMediaData,
+  media: SeasonResponse | IndexMediaData | FilmResponse | ShowResponse,
 ): number => {
   if (isShow(media)) {
     return calculateShowRating(media) || 0
   }
+  //if it's an indexMedia with a show, we pass the nested show
+
+  if (isIndexMedia(media)) {
+    if (media.show && isShow(media.show)) {
+      return calculateShowRating(media.show) || 0
+    }
+  }
+  //films or regular indexMedia (film/seasons) fall here
   return getRatingInMedia(media) || 0
 }
 

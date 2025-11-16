@@ -28,7 +28,11 @@ import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { MediaType } from '../../../../shared/types/media';
 import { AuthorType } from '../../../../shared/types/roles';
 import { sequelize } from '../../util/db/initialize-db';
-import { RatingData, RatingStats } from '../../../../shared/types/models';
+import {
+  RatingData,
+  RatingStats,
+  ShowResponse,
+} from '../../../../shared/types/models';
 import { DEF_RATING_STATS } from '../../../../shared/constants/rating-constants';
 import {
   MediaQueryValues,
@@ -40,8 +44,12 @@ import {
   RatingUpdateOptions,
   RatingUpdateValues,
 } from '../../types/helper-types';
-import { calculateShowRating } from '../../../../shared/util/rating-average-calculator';
+import {
+  calculateShowRating,
+  getAnyMediaRating,
+} from '../../../../shared/util/rating-average-calculator';
 import { updateVotedMediaCache } from '../../util/redis-helpers';
+import { toPlain } from '../../util/model-helpers';
 
 class Media<
   TAttributes extends InferAttributes<Media<TAttributes, TCreation>>,
@@ -77,6 +85,7 @@ class Media<
   //For getting the Genres
   declare getGenres: BelongsToManyGetAssociationsMixin<MediaGenre>;
   declare indexMedia?: IndexMedia;
+  declare dataUpdatedAt: Date | null;
   declare updatedAt?: Date;
   declare createdAt?: Date;
 
@@ -121,6 +130,10 @@ class Media<
       },
       releaseDate: {
         type: DataTypes.STRING,
+        allowNull: true,
+      },
+      dataUpdatedAt: {
+        type: DataTypes.DATE,
         allowNull: true,
       },
       country: {
@@ -403,6 +416,10 @@ class Media<
     }
   }
 
+  public isShow(): this is Show {
+    return this.mediaType === MediaType.Show;
+  }
+
   //we update the baseRating if it has changed in the indexMedia nested, and we also
   //add the voteCount 1 if it was a media with no rating at all.
   //in the next user vote, the fresh baseRating will be used for the average
@@ -416,14 +433,33 @@ class Media<
       const updateVoteCount = this.voteCount === 0;
       const initialBaseRating: number = this.baseRating;
 
-      const updateValues: Partial<TAttributes> = {
+      const updatedValues: Partial<TAttributes> = {
         baseRating: this.indexMedia.baseRating,
         rating: this.indexMedia.baseRating,
       } as unknown as Partial<TAttributes>;
-      if (updateVoteCount) {
-        updateValues.voteCount = 1;
+
+      //if it's a show, we now recalculate the cached IndexMedia rating, which uses
+      //the ratings of both the show itself and each season's
+      if (this.isShow()) {
+        //we mock how our updated show will look like after the update
+        const newShowEntry: ShowResponse = {
+          ...toPlain(this),
+          ...updatedValues,
+        };
+        //we recalculate the show weighted average now (the entry has populated seasons)
+        const average: number = getAnyMediaRating(newShowEntry);
+        console.log(
+          'New show average is:',
+          average,
+          'Used to be:',
+          this.indexMedia.rating
+        );
       }
-      await this.update(updateValues);
+
+      if (updateVoteCount) {
+        updatedValues.voteCount = 1;
+      }
+      await this.update(updatedValues);
       console.log(
         `Updated baseRating of ${this.name} from`,
         initialBaseRating,

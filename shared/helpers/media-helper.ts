@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
 import { MediaType } from '../types/media'
 import {
+  FilmResponse,
   IndexMediaData,
   MediaResponse,
   MediaRoleResponse,
@@ -33,6 +34,15 @@ export const toBasicMediaResponse = (media: MediaResponse): MediaResponse => {
   }
   return media
 }
+
+export const isIndexMedia = (
+  media:
+    | IndexMediaData
+    | ShowResponse
+    | FilmResponse
+    | MediaResponse
+    | SeasonResponse,
+): media is IndexMediaData => 'addedToMedia' in media
 
 export const reorderSeasons = (
   show: ShowResponse,

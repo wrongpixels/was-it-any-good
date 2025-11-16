@@ -86,5 +86,6 @@ export const buildFilm = (filmData: FilmData, indexId: number): CreateFilm => {
     baseRating: correctedRating ?? filmData.baseRating,
     rating: correctedRating ?? filmData.rating,
     voteCount: unreleased ? 0 : filmData.voteCount,
+    dataUpdatedAt: new Date(),
   };
 };

@@ -166,10 +166,11 @@ export const bulkUpsertIndexMedia = async ({
     `${updatedEntries.length}/${indexMedia.length}`,
     'baseRatings'
   );
-  //we extract the ids and re-fetch
-  const ids: number[] = upsertMedia.map((im: IndexMedia) => im.id);
-  //and, finally, we return the populated entries
+  //we extract the ids
 
+  const ids: number[] = upsertMedia.map((im: IndexMedia) => im.id);
+
+  //and, finally, we return the populated entries
   return await IndexMedia.findAll({
     where: {
       id: {
@@ -195,7 +196,7 @@ export const buildIndexMediaInclude = (
   },
   {
     association: 'show',
-    attributes: ['id', 'rating'],
+    attributes: ['id', 'rating', 'seasonCount'],
     include: buildIncludeOptions(undefined, MediaType.Show, false, activeUser),
   },
 ];
