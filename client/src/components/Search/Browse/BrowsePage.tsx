@@ -40,7 +40,7 @@ const BrowsePage = ({
   overrideParams,
   overrideSortOptions,
   pageTitleOptions,
-  authReq,
+  authReq = false,
   apiPath,
   queryToUse = 'browse',
 }: BrowsePageProps) => {
