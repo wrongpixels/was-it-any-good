@@ -52,7 +52,26 @@ const SeasonBar = ({ season }: { season: SeasonResponse }): JSX.Element => {
         <div
           style={{ height: `${adjustedHeight}px` }}
           title={`Season ${season.index}\nScore: ${rating > 0 ? rating : 'Not enough votes'}`}
-          className={`cursor-pointer transition-all duration-75 hover:scale-105 absolute bottom-0 min-w-5 w-max bg-gradient-to-t ${rating >= 8.5 ? 'from-starblue' : rating >= 7.5 ? 'from-starblue' : rating < 6 ? 'from-red-500' : rating >= 7 ? 'from-starblue' : 'from-stardarker'} ${rating >= 8.5 ? 'to-green-400/50' : rating >= 8 ? 'to-stargreen via-starbrighter' : rating >= 7.5 ? 'to-starbrightest' : rating > 7 ? 'to-starbrightest' : season.rating < 6 ? 'to-starbrighter' : 'to-starbrightest'} rounded-xs border border-starbrighter`}
+          className={`cursor-pointer transition-all duration-75 hover:scale-105 absolute bottom-0 min-w-5 w-max bg-gradient-to-t
+  ${
+    rating >= 7
+      ? 'from-starblue'
+      : rating >= 6
+        ? 'from-stardarker'
+        : 'from-red-500'
+  }
+  ${
+    rating < 5
+      ? 'to-red-300'
+      : rating < 6
+        ? 'to-starbrighter'
+        : rating >= 8.5
+          ? 'to-green-400/50'
+          : rating >= 8
+            ? 'to-stargreen via-starbrighter'
+            : 'to-starbrightest'
+  }
+  rounded-xs border border-starbrighter`}
         />
       )}
     </div>
