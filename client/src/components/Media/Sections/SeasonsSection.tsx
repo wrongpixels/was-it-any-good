@@ -10,6 +10,7 @@ import { isSpecialSeason } from '../../../utils/seasons-setter';
 import Separator from '../../Common/Separator';
 import ScrollableDiv from '../../Common/Custom/ScrollableDiv';
 import { roundRatingForGraph } from '../../../../../shared/util/rating-average-calculator';
+import { isUnreleased } from '../../../../../shared/helpers/media-helper';
 
 const GRAPH_HEIGHT: number = 70 as const;
 
@@ -25,6 +26,8 @@ const SeasonBar = ({ season }: { season: SeasonResponse }) => {
   const adjustedHeight: number = roundRatingForGraph(
     GRAPH_HEIGHT * (season.rating / 10)
   );
+  const unreleased: boolean = isUnreleased(season.releaseDate);
+  const rating: number = season.rating;
 
   return (
     <div
@@ -37,10 +40,21 @@ const SeasonBar = ({ season }: { season: SeasonResponse }) => {
           'absolute bottom-0 min-w-5 w-max bg-gradient-to-t from-gray-200 to-gray-300/30 rounded-xs border border-gray-300'
         }
       />
-      <div
-        style={{ height: `${adjustedHeight}px` }}
-        className={`absolute bottom-0 min-w-5 w-max bg-gradient-to-t ${season.rating >= 8.5 ? 'from-cyan-500' : season.rating >= 7.5 ? 'from-starblue' : 'from-notired'} ${season.rating >= 8.5 ? 'to-stargreen' : season.rating >= 7.5 ? 'to-starbrightest' : 'to-starbrighter'} rounded-xs border border-starbrighter`}
-      />
+      {unreleased || rating === 0 ? (
+        <div
+          title={`Season ${season.index}\n${unreleased ? 'Unreleased' : 'Not enough votes'}`}
+          style={{ height: `${GRAPH_HEIGHT}px` }}
+          className="absolute bottom-0 min-w-5 w-max text-center justify-center align-middle items-center translate-y-5 cursor-pointer hover:scale-105"
+        >
+          <span>?</span>
+        </div>
+      ) : (
+        <div
+          style={{ height: `${adjustedHeight}px` }}
+          title={`Season ${season.index}\nScore: ${rating > 0 ? rating : 'Not enough votes'}`}
+          className={`cursor-pointer transition-all duration-75 hover:scale-105 absolute bottom-0 min-w-5 w-max bg-gradient-to-t ${rating >= 8.5 ? 'from-notigreen' : rating >= 7.5 ? 'from-starblue' : rating < 5 ? 'from-notired' : rating >= 7 ? 'from-gold' : 'from-orange-400'} ${rating >= 8.5 ? 'to-green-400/50' : rating >= 8 ? 'to-stargreen' : rating >= 7.5 ? 'to-starbrightest' : rating > 7 ? 'to-orange-200' : season.rating < 5 ? 'to-gold' : 'to-gold-bright'} rounded-xs border border-starbrighter`}
+        />
+      )}
     </div>
   );
 };
@@ -50,7 +64,7 @@ const SeasonsGraphic = ({ seasons }: SeasonsGraphicProps) => {
     return null;
   }
   return (
-    <div className="ml-1 bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 rounded">
+    <div className="ml-1 bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 rounded shadow-md/10">
       <div
         style={{ height: `${GRAPH_HEIGHT}px` }}
         className={
