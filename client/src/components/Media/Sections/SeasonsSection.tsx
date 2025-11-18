@@ -22,7 +22,7 @@ interface SeasonsGraphicProps {
   seasons: SeasonResponse[];
 }
 
-const SeasonBar = ({ season }: { season: SeasonResponse }) => {
+const SeasonBar = ({ season }: { season: SeasonResponse }): JSX.Element => {
   const adjustedHeight: number = roundRatingForGraph(
     GRAPH_HEIGHT * (season.rating / 10)
   );
