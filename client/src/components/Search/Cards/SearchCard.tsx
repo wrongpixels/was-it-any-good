@@ -1,10 +1,6 @@
 import { JSX, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  IndexMediaData,
-  UserListValues,
-  UserMediaListItemData,
-} from '../../../../../shared/types/models';
+import { IndexMediaData } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
@@ -27,26 +23,13 @@ import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
 import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
 import CloseButton from '../../Common/CloseButton';
-import { UseMutationResult } from '@tanstack/react-query';
-import { WatchlistMutationOptions } from '../../../mutations/watchlist-mutations';
+import { UserListMutationValues } from '../Results/PageResults';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
   badgeType: BadgeType;
   index: number;
   userListValues?: UserListMutationValues;
-}
-
-//extended version with the list mutation incorporated
-interface UserListMutationValues extends UserListValues {
-  listMutation:
-    | UseMutationResult<
-        UserMediaListItemData,
-        Error,
-        WatchlistMutationOptions,
-        unknown
-      >
-    | undefined;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
@@ -83,11 +66,17 @@ const SearchCard = ({
   );
 
   const removeFromList = () => {
-    userListValues?.listMutation?.mutate({
-      inList: true,
-      indexId: media.id,
-      userId: userListValues.userId,
-    });
+    console.log('clicked', userListValues);
+    userListValues?.listMutation?.mutate(
+      {
+        inList: true,
+        indexId: media.id,
+        userId: userListValues.userId,
+      },
+      {
+        onSuccess: () => userListValues.resetListQuery(),
+      }
+    );
   };
 
   return (

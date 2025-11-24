@@ -48,6 +48,7 @@ interface BrowseResults {
   totalFilms?: number;
   totalShows?: number;
   totalSeasons?: number;
+  userListValues?: UserListValues;
 }
 
 export interface UserListValues {
@@ -59,7 +60,6 @@ export interface UserListValues {
 export interface IndexMediaResults extends BrowseResults {
   indexMedia: IndexMediaData[];
   resultsType: 'browse';
-  userListValues?: UserListValues;
 }
 
 export interface RatingResults extends BrowseResults {

@@ -1,4 +1,7 @@
-import { useBrowseQuery } from '../../../queries/browse-queries';
+import {
+  buildBrowseQueryKey,
+  useBrowseQuery,
+} from '../../../queries/browse-queries';
 import PageResults from '../Results/PageResults';
 import ErrorPage from '../../Common/Status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
@@ -64,14 +67,20 @@ const BrowsePage = ({
     overrideParams,
   });
   const { searchPage, genres } = urlParams;
+  //we calculate here the query key of the results so we can pass it
+  //to the SearchCards and then be able to modify/reset the query
+  const queryKey: string[] = buildBrowseQueryKey({
+    apiPath,
+    query: currentQuery,
+  });
   const {
     data: browseResults,
-    isFetching,
     isLoading,
     isError,
   } = queryToUse === 'votes'
     ? useMyVotesQuery(currentQuery)
-    : useBrowseQuery({ query: currentQuery, apiPath });
+    : useBrowseQuery({ query: currentQuery, apiPath, queryKey });
+
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
 
   // console.log(browseResults);
@@ -134,23 +143,16 @@ const BrowsePage = ({
           />
         </span>
       }
-      {((isLoading || isFetching) && (
-        <LoadingCards
-          showNavBar={true}
-          loadTitle={'Browsing WIAG'}
-          placeholderCount={
-            browseResults?.resultsType === 'browse'
-              ? browseResults?.indexMedia.length
-              : browseResults?.ratings.length
-          }
-        />
+      {(isLoading && (
+        <LoadingCards showNavBar={true} loadTitle={'Browsing WIAG'} />
       )) || (
         <>
           <div className="flex flex-col flex-1 mt-1 h-full">
             <PageResults
-              isLoading={isFetching}
+              isLoading={isLoading}
               navigateToQuery={navigateToQuery}
               results={browseResults}
+              queryKey={queryKey}
               urlParams={urlParams}
               navigatePages={navigatePages}
               badgeType={badgeType}
