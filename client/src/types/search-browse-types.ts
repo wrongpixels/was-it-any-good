@@ -17,6 +17,7 @@ export interface QueryOpts {
 }
 
 export enum BadgeType {
+  IndexBadge,
   RankBadge,
   AddedBadge,
   None,

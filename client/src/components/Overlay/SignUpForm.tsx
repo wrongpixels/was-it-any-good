@@ -15,6 +15,7 @@ import { BLACKLISTED_USERNAMES } from '../../constants/user-constants';
 import IconCreate from '../Common/Icons/IconCreate';
 import Separator from '../Common/Separator';
 import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
+import CloseButton from '../Common/CloseButton';
 
 interface SignUpFormProps {
   clean: VoidFunction;
@@ -127,15 +128,8 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
         <span className="text-gray-400">*</span>
       </div>
       <Separator margin={false} className="pb-2 text-gray-500" />
-      <div className="absolute right-2 top-2 text-gray-400">
-        <button
-          type="button"
-          onClick={() => clean()}
-          aria-label="Close"
-          className="flex items-center justify-center w-6 h-6 rounded-full transition-all duration-150 hover:bg-red-600/30 hover:text-white"
-        >
-          ✖
-        </button>
+      <div className="absolute right-2 top-2">
+        <CloseButton onClick={() => clean()} />
       </div>
       <form
         className="flex flex-col gap-2 w-3xs items-center"

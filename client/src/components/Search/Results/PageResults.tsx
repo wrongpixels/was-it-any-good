@@ -19,12 +19,16 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 import RatingCards from '../Cards/RatingCards';
 import { SortBy } from '../../../../../shared/types/browse';
+import useBrowseCacheOps, {
+  BrowseCacheOps,
+} from '../../../hooks/use-results-list-values';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
   navigatePages: (movement: number) => void;
   navigateToQuery: (options: NavigateToQueryOptions) => void;
   urlParams: URLParameters;
+  queryKey?: string[];
   term?: string;
   title?: string;
   badgeType: BadgeType;
@@ -33,9 +37,11 @@ interface PageResultsProps {
   overrideSortOptions?: OverrideSortOptions;
   isLoading?: boolean;
 }
+
 //we render here the results, shared between Search and Browse
 const PageResults = ({
   results,
+  queryKey,
   urlParams,
   term,
   navigateToQuery,
@@ -49,6 +55,11 @@ const PageResults = ({
   if (!results) {
     return null;
   }
+  //we mount the object with the logic to modify the list on each card
+  const browseCacheOps: BrowseCacheOps | undefined = useBrowseCacheOps(
+    results,
+    queryKey
+  );
 
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
@@ -96,6 +107,7 @@ const PageResults = ({
             results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
+                browseCacheOps={browseCacheOps}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />

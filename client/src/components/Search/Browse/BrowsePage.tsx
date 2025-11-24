@@ -1,4 +1,7 @@
-import { useBrowseQuery } from '../../../queries/browse-queries';
+import {
+  buildBrowseQueryKey,
+  useBrowseQuery,
+} from '../../../queries/browse-queries';
 import PageResults from '../Results/PageResults';
 import ErrorPage from '../../Common/Status/ErrorPage';
 import useUrlQueryManager from '../../../hooks/use-url-query-manager';
@@ -20,6 +23,8 @@ import useAuthProtection from '../../../hooks/use-auth-protection';
 import { clientPaths } from '../../../../../shared/util/url-builder';
 
 import { setBrowsePageSeo } from '../../../utils/page-seo-helpers';
+import { SortBy } from '../../../../../shared/types/browse';
+import { DEF_SORT_BY } from '../../../../../shared/constants/url-param-constants';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -62,14 +67,20 @@ const BrowsePage = ({
     overrideParams,
   });
   const { searchPage, genres } = urlParams;
+  //we calculate here the query key of the results so we can pass it
+  //to the SearchCards and then be able to modify/reset the query
+  const queryKey: string[] = buildBrowseQueryKey({
+    apiPath,
+    query: currentQuery,
+  });
   const {
     data: browseResults,
-    isFetching,
     isLoading,
     isError,
   } = queryToUse === 'votes'
     ? useMyVotesQuery(currentQuery)
-    : useBrowseQuery({ query: currentQuery, apiPath });
+    : useBrowseQuery({ query: currentQuery, apiPath, queryKey });
+
   const { data: genreResults, isAnyLoading } = useGenresQuery(genres);
 
   // console.log(browseResults);
@@ -114,7 +125,13 @@ const BrowsePage = ({
       title: operationString,
     });
   }
-
+  const activeSortBy: SortBy | null =
+    urlParams.sortBy || overrideParams?.sortBy || DEF_SORT_BY;
+  const badgeType: BadgeType =
+    activeSortBy &&
+    [SortBy.Popularity, SortBy.Rating, SortBy.UserScore].includes(activeSortBy)
+      ? BadgeType.RankBadge
+      : BadgeType.IndexBadge;
   return (
     <div key={currentQuery} className="flex flex-col h-full">
       {
@@ -126,26 +143,19 @@ const BrowsePage = ({
           />
         </span>
       }
-      {((isLoading || isFetching) && (
-        <LoadingCards
-          showNavBar={true}
-          loadTitle={'Browsing WIAG'}
-          placeholderCount={
-            browseResults?.resultsType === 'browse'
-              ? browseResults?.indexMedia.length
-              : browseResults?.ratings.length
-          }
-        />
+      {(isLoading && (
+        <LoadingCards showNavBar={true} loadTitle={'Browsing WIAG'} />
       )) || (
         <>
           <div className="flex flex-col flex-1 mt-1 h-full">
             <PageResults
-              isLoading={isFetching}
+              isLoading={isLoading}
               navigateToQuery={navigateToQuery}
               results={browseResults}
+              queryKey={queryKey}
               urlParams={urlParams}
               navigatePages={navigatePages}
-              badgeType={BadgeType.RankBadge}
+              badgeType={badgeType}
               overrideSortOptions={overrideSortOptions}
               overrideParams={overrideParams}
             />

@@ -4,11 +4,13 @@ import { IndexMediaData } from '../../../../../shared/types/models';
 import { BadgeType } from '../../../types/search-browse-types';
 import { PLACEHOLDER_COUNT_SEARCH } from '../../../constants/placeholder-results-constants';
 import PlaceholderPoster from '../../Posters/PlaceholderPoster';
+import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
 
 interface SearchCardsProps {
   indexMedia: IndexMediaData[];
   indexOffset: number;
   badgeType: BadgeType;
+  browseCacheOps?: BrowseCacheOps;
 }
 
 const cardsClassName =
@@ -19,6 +21,7 @@ const SearchCards = ({
   indexMedia,
   indexOffset,
   badgeType,
+  browseCacheOps,
 }: SearchCardsProps) => {
   const placeholderCount: number = PLACEHOLDER_COUNT_SEARCH - indexMedia.length;
   return (
@@ -29,6 +32,7 @@ const SearchCards = ({
           media={im}
           index={index + indexOffset}
           badgeType={badgeType}
+          browseCacheOps={browseCacheOps}
         />
       ))}
       <PlaceholderPoster

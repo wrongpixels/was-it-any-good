@@ -7,6 +7,7 @@ import {
 } from '../../../shared/constants/user-media-list-constants';
 import { CreateUserMediaList } from '../../../shared/types/models';
 import UserMediaList from '../models/users/userMediaList';
+import { buildIndexMediaInclude } from './index-media-service';
 
 export const createDefaultUserLists = async (
   userId: number,
@@ -68,7 +69,14 @@ export const getUserWatchlist = async ({
       ? [
           {
             association: 'listItems',
-            include: includeItemsIndexMedia ? ['indexMedia'] : [],
+            include: includeItemsIndexMedia
+              ? [
+                  {
+                    association: 'indexMedia',
+                    include: buildIndexMediaInclude(),
+                  },
+                ]
+              : [],
           },
         ]
       : [],

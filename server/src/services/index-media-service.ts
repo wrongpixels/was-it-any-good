@@ -186,8 +186,8 @@ export const bulkUpsertIndexMedia = async ({
 //it allows to add active user-related data, like the rating or list
 //information without the limitation of a scope.
 export const buildIndexMediaInclude = (
-  activeUser: ActiveUser | undefined
-): Includeable | Includeable[] | undefined => [
+  activeUser?: ActiveUser | undefined
+): Includeable[] | undefined => [
   //we still need the film/show ids, rating and genres for the frontend
   {
     association: 'film',

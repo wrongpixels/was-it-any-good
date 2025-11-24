@@ -1,4 +1,4 @@
-import { JSX, useMemo } from 'react';
+import { JSX, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
@@ -21,18 +21,28 @@ import LazyImage, {
 } from '../../Common/Custom/LazyImage';
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
-import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
+import {
+  buildIndexMediaLinkWithSlug,
+  getMediaIdFromIndexMedia,
+} from '../../../../../shared/util/url-builder';
+import CloseButton from '../../Common/CloseButton';
+import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+
+const DELETE_ANIMATION_DURATION: number = 125 as const;
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
   badgeType: BadgeType;
   index: number;
+  browseCacheOps?: BrowseCacheOps;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
   switch (badgeType) {
-    case BadgeType.RankBadge:
+    case BadgeType.IndexBadge:
       return <IndexBadge index={index} />;
+    case BadgeType.RankBadge:
+      return <IndexBadge index={index} isRank={true} />;
     case BadgeType.AddedBadge:
       return <WIAGBadge />;
     default:
@@ -44,10 +54,13 @@ const SearchCard = ({
   media,
   index,
   badgeType = BadgeType.None,
+  browseCacheOps,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
   }
+  const [animTrigger, setAnimTrigger] = useState(false);
+
   const realBadgeType: BadgeType =
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
@@ -59,10 +72,32 @@ const SearchCard = ({
     [media]
   );
 
+  const removeFromList = () => {
+    setAnimTrigger(true);
+    //we sync with the animation so the card disappears even if the refetch hasn't finished yet.
+    setTimeout(() => {
+      browseCacheOps?.removeFromBrowseCache(media.id);
+    }, DELETE_ANIMATION_DURATION);
+    browseCacheOps?.listMutation?.mutate(
+      {
+        inList: true,
+        indexId: media.id,
+        userId: browseCacheOps.userListValues.userId,
+      },
+      {
+        onSuccess: () =>
+          browseCacheOps.resetBrowseCache(
+            media.mediaType,
+            getMediaIdFromIndexMedia(media)
+          ),
+      }
+    );
+  };
+
   return (
     <Link
       to={buildIndexMediaLinkWithSlug(media)}
-      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
+      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90 ${animTrigger ? 'transition-opacity duration-250 opacity-0' : 'opacity-100'}`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className={'relative rounded'}>
@@ -105,6 +140,14 @@ const SearchCard = ({
           releaseDate={media.releaseDate}
         />
       </div>
+      {browseCacheOps?.userListValues.canEditItems && (
+        <div
+          className="z-10 absolute right-0.75 top-0.75"
+          title={'Remove from list'}
+        >
+          <CloseButton onClick={() => removeFromList()} />
+        </div>
+      )}
     </Link>
   );
 };
