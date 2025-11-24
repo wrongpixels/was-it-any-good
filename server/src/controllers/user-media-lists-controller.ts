@@ -57,6 +57,11 @@ router.get(
           Math.ceil(watchlistResponse.itemCount / PAGE_LENGTH_BROWSE) || 1,
         indexMedia,
         resultsType: 'browse',
+        userListValues: {
+          listId: watchlistResponse.id,
+          canEditItems: true,
+          userId: watchlistResponse.userId,
+        },
       };
       res.json(results);
     } catch (error) {

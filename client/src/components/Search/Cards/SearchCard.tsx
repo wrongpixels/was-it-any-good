@@ -1,6 +1,10 @@
 import { JSX, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { IndexMediaData } from '../../../../../shared/types/models';
+import {
+  IndexMediaData,
+  UserListValues,
+  UserMediaListItemData,
+} from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
@@ -22,11 +26,27 @@ import LazyImage, {
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
 import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
+import CloseButton from '../../Common/CloseButton';
+import { UseMutationResult } from '@tanstack/react-query';
+import { WatchlistMutationOptions } from '../../../mutations/watchlist-mutations';
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
   badgeType: BadgeType;
   index: number;
+  userListValues?: UserListMutationValues;
+}
+
+//extended version with the list mutation incorporated
+interface UserListMutationValues extends UserListValues {
+  listMutation:
+    | UseMutationResult<
+        UserMediaListItemData,
+        Error,
+        WatchlistMutationOptions,
+        unknown
+      >
+    | undefined;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
@@ -46,6 +66,7 @@ const SearchCard = ({
   media,
   index,
   badgeType = BadgeType.None,
+  userListValues,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
@@ -61,10 +82,18 @@ const SearchCard = ({
     [media]
   );
 
+  const removeFromList = () => {
+    userListValues?.listMutation?.mutate({
+      inList: true,
+      indexId: media.id,
+      userId: userListValues.userId,
+    });
+  };
+
   return (
     <Link
       to={buildIndexMediaLinkWithSlug(media)}
-      className={`${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
+      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className={'relative rounded'}>
@@ -107,6 +136,14 @@ const SearchCard = ({
           releaseDate={media.releaseDate}
         />
       </div>
+      {userListValues?.canEditItems && (
+        <div
+          className="z-10 absolute right-0.75 top-0.75"
+          title={'Remove from list'}
+        >
+          <CloseButton onClick={() => removeFromList()} />
+        </div>
+      )}
     </Link>
   );
 };

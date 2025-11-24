@@ -96,6 +96,7 @@ const PageResults = ({
             results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
+                userListValues={results.userListValues}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />

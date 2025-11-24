@@ -26,7 +26,7 @@ export const styles = {
     opacity70: `${transitions.slower} opacity-70 hover:opacity-100`,
     opacity80: `${transitions.slower} opacity-80 hover:opacity-100`,
     zoomOnHover: `${transitions.slow} hover:scale-107`,
-    zoomLessOnHover: `${transitions.slow} hover:scale-103`,
+    zoomLessOnHover: `${transitions.slow} hover:scale-102`,
     posterZoom: `${transitions.slow} hover:scale-101`,
     zoomMoreOnHover: `${transitions.slow} hover:scale-115`,
     upOnHover: `${transitions.fast} hover:-translate-y-1`,

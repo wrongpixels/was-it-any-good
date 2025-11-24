@@ -1,14 +1,19 @@
 import { memo } from 'react';
 import SearchCard from './SearchCard';
-import { IndexMediaData } from '../../../../../shared/types/models';
+import {
+  IndexMediaData,
+  UserListValues,
+} from '../../../../../shared/types/models';
 import { BadgeType } from '../../../types/search-browse-types';
 import { PLACEHOLDER_COUNT_SEARCH } from '../../../constants/placeholder-results-constants';
 import PlaceholderPoster from '../../Posters/PlaceholderPoster';
+import { useWatchlistMutation } from '../../../mutations/watchlist-mutations';
 
 interface SearchCardsProps {
   indexMedia: IndexMediaData[];
   indexOffset: number;
   badgeType: BadgeType;
+  userListValues?: UserListValues;
 }
 
 const cardsClassName =
@@ -19,7 +24,9 @@ const SearchCards = ({
   indexMedia,
   indexOffset,
   badgeType,
+  userListValues,
 }: SearchCardsProps) => {
+  const listMutation = userListValues ? useWatchlistMutation() : undefined;
   const placeholderCount: number = PLACEHOLDER_COUNT_SEARCH - indexMedia.length;
   return (
     <div className={cardsClassName}>
@@ -29,6 +36,9 @@ const SearchCards = ({
           media={im}
           index={index + indexOffset}
           badgeType={badgeType}
+          userListValues={
+            userListValues ? { ...userListValues, listMutation } : undefined
+          }
         />
       ))}
       <PlaceholderPoster
