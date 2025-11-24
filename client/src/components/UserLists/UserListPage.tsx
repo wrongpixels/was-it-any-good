@@ -11,6 +11,7 @@ import EntryTitle from '../EntryTitle';
 import LoadingCards from '../Search/Loading/LoadingSearch';
 import PageResults from '../Search/Results/PageResults';
 import { useAuth } from '../../hooks/use-auth';
+import { SortBy } from '../../../../shared/types/browse';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -86,6 +87,14 @@ const UserListPage = ({
     });
   }
 
+  const badgeType: BadgeType =
+    urlParams.sortBy &&
+    [SortBy.Popularity, SortBy.Rating, SortBy.UserScore].includes(
+      urlParams.sortBy
+    )
+      ? BadgeType.RankBadge
+      : BadgeType.IndexBadge;
+
   return (
     <div key={currentQuery} className="flex flex-col h-full">
       {
@@ -112,7 +121,7 @@ const UserListPage = ({
               results={browseResults}
               urlParams={urlParams}
               navigatePages={navigatePages}
-              badgeType={BadgeType.RankBadge}
+              badgeType={badgeType}
               overrideSortOptions={overrideSortOptions}
               overrideParams={overrideParams}
             />

@@ -31,8 +31,10 @@ interface SearchCardProps {
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
   switch (badgeType) {
-    case BadgeType.RankBadge:
+    case BadgeType.IndexBadge:
       return <IndexBadge index={index} />;
+    case BadgeType.RankBadge:
+      return <IndexBadge index={index} isRank={true} />;
     case BadgeType.AddedBadge:
       return <WIAGBadge />;
     default:

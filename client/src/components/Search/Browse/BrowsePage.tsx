@@ -20,6 +20,8 @@ import useAuthProtection from '../../../hooks/use-auth-protection';
 import { clientPaths } from '../../../../../shared/util/url-builder';
 
 import { setBrowsePageSeo } from '../../../utils/page-seo-helpers';
+import { SortBy } from '../../../../../shared/types/browse';
+import { DEF_SORT_BY } from '../../../../../shared/constants/url-param-constants';
 
 //BrowsePage is a wildcard component that allows us to browse internal media (not TMDB).
 //it can be used combining url queries, which can be overridden with OverrideParams.
@@ -114,7 +116,13 @@ const BrowsePage = ({
       title: operationString,
     });
   }
-
+  const activeSortBy: SortBy | null =
+    urlParams.sortBy || overrideParams?.sortBy || DEF_SORT_BY;
+  const badgeType: BadgeType =
+    activeSortBy &&
+    [SortBy.Popularity, SortBy.Rating, SortBy.UserScore].includes(activeSortBy)
+      ? BadgeType.RankBadge
+      : BadgeType.IndexBadge;
   return (
     <div key={currentQuery} className="flex flex-col h-full">
       {
@@ -145,7 +153,7 @@ const BrowsePage = ({
               results={browseResults}
               urlParams={urlParams}
               navigatePages={navigatePages}
-              badgeType={BadgeType.RankBadge}
+              badgeType={badgeType}
               overrideSortOptions={overrideSortOptions}
               overrideParams={overrideParams}
             />

@@ -68,7 +68,7 @@ export const styles = {
         if (badgeType === BadgeType.AddedBadge) {
           return `${baseClasses} from-green-500/15`;
         }
-        if (badgeType === BadgeType.None || index >= 4) {
+        if (badgeType !== BadgeType.RankBadge || index >= 4) {
           return `${baseClasses} from-gray-100`;
         }
 

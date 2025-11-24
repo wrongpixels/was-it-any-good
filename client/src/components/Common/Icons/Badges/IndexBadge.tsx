@@ -5,11 +5,17 @@ import IconCrown from './IconCrown';
 
 interface IndexBadgeProps extends OptClassNameProps {
   index: number;
+  isRank?: boolean;
 }
 
 const badgeBright: string = 'bg-gradient-to-br from-white/35 to-black/15';
 
-const getColors = (index: number) => {
+const getColors = (index: number, isRank?: boolean) => {
+  const defColors: string =
+    'bg-starbright border-starbrighter ring-gray-500 text-white ';
+  if (!isRank) {
+    return defColors;
+  }
   switch (index) {
     case 1:
       return `bg-gold ${badgeBright} border-gold-bright ring-gray-500 text-white`;
@@ -18,16 +24,16 @@ const getColors = (index: number) => {
     case 3:
       return `bg-bronze ${badgeBright} border-amber-500 ring-gray-500 text-white font-bold`;
     default:
-      return 'bg-starbright border-starbrighter ring-gray-500 text-white ';
+      return defColors;
   }
 };
 
-const IndexBadge = ({ index }: IndexBadgeProps): JSX.Element | null => {
+const IndexBadge = ({ index, isRank }: IndexBadgeProps): JSX.Element | null => {
   return (
     <span
-      className={`absolute -ml-0.25 -mt-0.25 left-0 top-0 w-8 h-8 rounded-br-xl border-1 ring-1 rounded-tl-sm justify-center items-center flex shadow/100  ${getColors(index)} ${styles.shadow.allShadow()}`}
+      className={`absolute -ml-0.25 -mt-0.25 left-0 top-0 w-8 h-8 rounded-br-xl border-1 ring-1 rounded-tl-sm justify-center items-center flex shadow/100  ${getColors(index, isRank)} ${styles.shadow.allShadow()}`}
     >
-      {index === 1 ? <IconCrown /> : index}
+      {isRank && index === 1 ? <IconCrown /> : index}
     </span>
   );
 };
