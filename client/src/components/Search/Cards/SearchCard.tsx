@@ -26,13 +26,15 @@ import {
   getMediaIdFromIndexMedia,
 } from '../../../../../shared/util/url-builder';
 import CloseButton from '../../Common/CloseButton';
-import { UserListMutationValues } from '../Results/PageResults';
+import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+
+const DELETE_ANIMATION_DURATION: number = 125 as const;
 
 interface SearchCardProps {
   media?: IndexMediaData | null;
   badgeType: BadgeType;
   index: number;
-  userListValues?: UserListMutationValues;
+  browseCacheOps?: BrowseCacheOps;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
@@ -52,7 +54,7 @@ const SearchCard = ({
   media,
   index,
   badgeType = BadgeType.None,
-  userListValues,
+  browseCacheOps,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
@@ -72,15 +74,19 @@ const SearchCard = ({
 
   const removeFromList = () => {
     setAnimTrigger(true);
-    userListValues?.listMutation?.mutate(
+    //we sync with the animation so the card disappears even if the refetch hasn't finished yet.
+    setTimeout(() => {
+      browseCacheOps?.removeFromBrowseCache(media.id);
+    }, DELETE_ANIMATION_DURATION);
+    browseCacheOps?.listMutation?.mutate(
       {
         inList: true,
         indexId: media.id,
-        userId: userListValues.userId,
+        userId: browseCacheOps.userListValues.userId,
       },
       {
         onSuccess: () =>
-          userListValues.resetListQuery(
+          browseCacheOps.resetBrowseCache(
             media.mediaType,
             getMediaIdFromIndexMedia(media)
           ),
@@ -134,7 +140,7 @@ const SearchCard = ({
           releaseDate={media.releaseDate}
         />
       </div>
-      {userListValues?.canEditItems && (
+      {browseCacheOps?.userListValues.canEditItems && (
         <div
           className="z-10 absolute right-0.75 top-0.75"
           title={'Remove from list'}

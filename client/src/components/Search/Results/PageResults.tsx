@@ -2,8 +2,6 @@ import { JSX } from 'react';
 import {
   IndexMediaResults,
   RatingResults,
-  UserListValues,
-  UserMediaListItemData,
 } from '../../../../../shared/types/models';
 
 import {
@@ -21,17 +19,9 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 import RatingCards from '../Cards/RatingCards';
 import { SortBy } from '../../../../../shared/types/browse';
-import {
-  QueryClient,
-  UseMutationResult,
-  useQueryClient,
-} from '@tanstack/react-query';
-import {
-  useWatchlistMutation,
-  WatchlistMutationOptions,
-} from '../../../mutations/watchlist-mutations';
-import { getMediaKey } from '../../../utils/ratings-helper';
-import { MediaType } from '../../../../../shared/types/media';
+import useBrowseCacheOps, {
+  BrowseCacheOps,
+} from '../../../hooks/use-results-list-values';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -46,19 +36,6 @@ interface PageResultsProps {
   overrideParams?: OverrideParams;
   overrideSortOptions?: OverrideSortOptions;
   isLoading?: boolean;
-}
-
-//extended version with the list mutation incorporated
-export interface UserListMutationValues extends UserListValues {
-  listMutation:
-    | UseMutationResult<
-        UserMediaListItemData,
-        Error,
-        WatchlistMutationOptions,
-        unknown
-      >
-    | undefined;
-  resetListQuery: (mediaType?: MediaType, id?: number | null) => void;
 }
 
 //we render here the results, shared between Search and Browse
@@ -78,34 +55,11 @@ const PageResults = ({
   if (!results) {
     return null;
   }
-  //we mount the object with the logic to modify the list on each card, but only if results
-  //has a valid userListValues assigned
-  const queryClient: QueryClient = useQueryClient();
-  const resetListQuery = (mediaType?: MediaType, id?: number | null): void => {
-    console.log('Resetting:', queryKey, 'for media:', id);
-
-    //we refetch the current list query to show the changes
-    queryClient.refetchQueries({
-      queryKey,
-    });
-
-    //and if needed, we remove the cache of a specific media entry
-    if (mediaType && id) {
-      queryClient.removeQueries({
-        queryKey: getMediaKey(mediaType, id),
-      });
-    }
-  };
-  const listMutation =
-    queryKey && results.userListValues ? useWatchlistMutation() : undefined;
-  const userListValues: UserListMutationValues | undefined =
-    results.userListValues
-      ? {
-          ...results.userListValues,
-          resetListQuery,
-          listMutation,
-        }
-      : undefined;
+  //we mount the object with the logic to modify the list on each card
+  const browseCacheOps: BrowseCacheOps | undefined = useBrowseCacheOps(
+    results,
+    queryKey
+  );
 
   const submitFilter = (overrideParams: OverrideParams) => {
     navigateToQuery({ replace: true, overrideParams });
@@ -153,7 +107,7 @@ const PageResults = ({
             results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
-                userListValues={userListValues}
+                browseCacheOps={browseCacheOps}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />
