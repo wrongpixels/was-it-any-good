@@ -1,4 +1,4 @@
-import { JSX, useMemo } from 'react';
+import { JSX, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
@@ -21,7 +21,10 @@ import LazyImage, {
 } from '../../Common/Custom/LazyImage';
 import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
-import { buildIndexMediaLinkWithSlug } from '../../../../../shared/util/url-builder';
+import {
+  buildIndexMediaLinkWithSlug,
+  getMediaIdFromIndexMedia,
+} from '../../../../../shared/util/url-builder';
 import CloseButton from '../../Common/CloseButton';
 import { UserListMutationValues } from '../Results/PageResults';
 
@@ -54,6 +57,8 @@ const SearchCard = ({
   if (!media) {
     return null;
   }
+  const [animTrigger, setAnimTrigger] = useState(false);
+
   const realBadgeType: BadgeType =
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
@@ -66,7 +71,7 @@ const SearchCard = ({
   );
 
   const removeFromList = () => {
-    console.log('clicked', userListValues);
+    setAnimTrigger(true);
     userListValues?.listMutation?.mutate(
       {
         inList: true,
@@ -74,7 +79,11 @@ const SearchCard = ({
         userId: userListValues.userId,
       },
       {
-        onSuccess: () => userListValues.resetListQuery(),
+        onSuccess: () =>
+          userListValues.resetListQuery(
+            media.mediaType,
+            getMediaIdFromIndexMedia(media)
+          ),
       }
     );
   };
@@ -82,7 +91,7 @@ const SearchCard = ({
   return (
     <Link
       to={buildIndexMediaLinkWithSlug(media)}
-      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90`}
+      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90 ${animTrigger ? 'transition-opacity duration-250 opacity-0' : 'opacity-100'}`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <span className={'relative rounded'}>

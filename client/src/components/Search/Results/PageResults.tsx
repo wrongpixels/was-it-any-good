@@ -30,6 +30,8 @@ import {
   useWatchlistMutation,
   WatchlistMutationOptions,
 } from '../../../mutations/watchlist-mutations';
+import { getMediaKey } from '../../../utils/ratings-helper';
+import { MediaType } from '../../../../../shared/types/media';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -56,7 +58,7 @@ export interface UserListMutationValues extends UserListValues {
         unknown
       >
     | undefined;
-  resetListQuery: () => void;
+  resetListQuery: (mediaType?: MediaType, id?: number | null) => void;
 }
 
 //we render here the results, shared between Search and Browse
@@ -79,11 +81,20 @@ const PageResults = ({
   //we mount the object with the logic to modify the list on each card, but only if results
   //has a valid userListValues assigned
   const queryClient: QueryClient = useQueryClient();
-  const resetListQuery: () => void = () => {
-    console.log('Resetting:', queryKey);
+  const resetListQuery = (mediaType?: MediaType, id?: number | null): void => {
+    console.log('Resetting:', queryKey, 'for media:', id);
+
+    //we refetch the current list query to show the changes
     queryClient.refetchQueries({
       queryKey,
     });
+
+    //and if needed, we remove the cache of a specific media entry
+    if (mediaType && id) {
+      queryClient.removeQueries({
+        queryKey: getMediaKey(mediaType, id),
+      });
+    }
   };
   const listMutation =
     queryKey && results.userListValues ? useWatchlistMutation() : undefined;
