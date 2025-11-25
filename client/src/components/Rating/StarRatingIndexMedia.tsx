@@ -9,6 +9,7 @@ interface StarRatingIndexMediaProps {
   rating: number | undefined;
   releaseDate: string | null;
   userRating?: RatingData;
+  canEditItems?: boolean;
 }
 
 //a component to draw with un-responsive rating stars the rating of and
@@ -18,17 +19,20 @@ interface StarRatingIndexMediaProps {
 const StarRatingIndexMedia = ({
   rating = 0,
   isVote,
+  canEditItems,
   userRating,
   releaseDate,
 }: StarRatingIndexMediaProps) => {
   const { hasRatingText, unreleased, ...cardRatingData }: CardRatingData =
     getCardRatingData(releaseDate, rating, userRating, isVote);
   return (
-    <span className="flex justify-center items-center flex-col text-2xl font-bold text-gray-500">
+    <span
+      className={`flex justify-center items-center flex-col text-2xl font-bold text-gray-500 ${canEditItems && 'mb-2'} `}
+    >
       {!unreleased && rating ? (
         <div
           title={cardRatingData.ratingTitle}
-          className="flex flex-row items-center gap-1.5  translate-y-0.25"
+          className="flex flex-row items-center gap-1.5 translate-y-0.25"
         >
           <span className="cursor-help">{rating}</span>
           {userRating?.updatedAt && (

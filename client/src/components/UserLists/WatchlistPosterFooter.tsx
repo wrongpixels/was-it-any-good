@@ -36,7 +36,7 @@ const WatchlistPosterFooter = ({
   const queryClient: QueryClient = useQueryClient();
   const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
   const [mouseOverWatchlist, setMouseOverWatchlist] = useState(false);
-
+  const [justVoted, setJustVoted] = useState(false);
   const [watchTrigger, setWatchTrigger] = useAnimationTrigger();
 
   //if the watchlist disappears from the media due to voting, we trigger an setInList
@@ -55,7 +55,7 @@ const WatchlistPosterFooter = ({
   }, [media.userWatchlist]);
 
   const watchlistLabel: string = media.userWatchlist
-    ? mouseOverWatchlist
+    ? mouseOverWatchlist && !justVoted
       ? LABEL_REMOVE
       : LABEL_IN
     : LABEL_ADD;
@@ -67,11 +67,11 @@ const WatchlistPosterFooter = ({
   const toggleWatchlist = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (watchlistMutation.isPending) {
-      console.log("Don't break it!");
+    if (watchlistMutation.isPending || justVoted) {
       return;
     }
     setWatchTrigger();
+    setJustVoted(watchlistLabel === LABEL_ADD);
     setInList((oldInList) => !oldInList);
     setNotification({
       message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
@@ -109,25 +109,33 @@ const WatchlistPosterFooter = ({
 
   return (
     <button
-      disabled={watchlistMutation.isPending}
+      disabled={watchlistMutation.isPending || justVoted}
       onClick={toggleWatchlist}
       onMouseOver={() => {
         setMouseOverWatchlist(true);
+        setJustVoted(false);
       }}
       onMouseOut={() => {
         setMouseOverWatchlist(false);
+        setJustVoted(false);
       }}
       className={mergeClassnames(
-        `flex flex-row gap-2 absolute w-full h-[40px] font-semibold text-xs text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen'}`,
+        `flex flex-row gap-2 absolute w-full h-[40px] font-semibold text-xs text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${!justVoted && (media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen')}`,
         inheritedClassname
       )}
     >
-      {watchlistLabel === LABEL_IN ||
-      (watchlistLabel === LABEL_ADD && mouseOverWatchlist) ? (
-        <IconWatchlistRemove width={17} className="drop-shadow-xs/30" />
-      ) : (
-        <IconWatchlistAdd width={17} className="drop-shadow-xs/30" />
-      )}
+      <div
+        className={`
+       
+        transition-all duration-120 ease-in-out ${watchTrigger && (inList ? 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1] text-amber-300' : 'animate-ping scale-110 [animation-iteration-count:1]')} `}
+      >
+        {watchlistLabel === LABEL_IN ||
+        (watchlistLabel === LABEL_ADD && mouseOverWatchlist) ? (
+          <IconWatchlistRemove width={17} className="drop-shadow-xs/30" />
+        ) : (
+          <IconWatchlistAdd width={17} className="drop-shadow-xs/30" />
+        )}
+      </div>
       <span className={styles.shadow.textShadow}>{watchlistLabel}</span>
     </button>
   );

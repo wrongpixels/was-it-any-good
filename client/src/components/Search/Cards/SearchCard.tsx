@@ -93,6 +93,8 @@ const SearchCard = ({
       }
     );
   };
+  //to apply special designs to the Cards for editable lists (like making space for an 'X' button on top)
+  const canEditItems: boolean = !!browseCacheOps?.userListValues.canEditItems;
 
   return (
     <Link
@@ -110,8 +112,10 @@ const SearchCard = ({
         />
         {getBadge(realBadgeType, index)}
       </span>
-      <div className="flex flex-col w-full pl-3 mt-1 text-gray-600">
-        <span className="text-gray-600 leading-5 line-clamp-3">
+      <div
+        className={`flex flex-col w-full pl-3 ${canEditItems ? 'mt-3.5' : 'mt-1'} text-gray-600`}
+      >
+        <span className="text-gray-600 leading-5 line-clamp-2">
           {media.name}
         </span>
         <span className="flex flex-col">
@@ -137,12 +141,13 @@ const SearchCard = ({
         <StarRatingIndexMedia
           rating={average}
           userRating={getIndexMediaUserRating(media)}
+          canEditItems={canEditItems}
           releaseDate={media.releaseDate}
         />
       </div>
       {browseCacheOps?.userListValues.canEditItems && (
         <div
-          className="z-10 absolute right-0.75 top-0.75"
+          className="z-10 absolute right-0.75 top-0.5"
           title={'Remove from list'}
         >
           <CloseButton onClick={() => removeFromList()} />
