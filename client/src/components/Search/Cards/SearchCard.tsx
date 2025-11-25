@@ -33,10 +33,7 @@ import {
 import CloseButton from '../../Common/CloseButton';
 import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
 import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
-import {
-  NotificationContextValues,
-  useNotificationContext,
-} from '../../../context/NotificationProvider';
+import { NotificationContextValues } from '../../../context/NotificationProvider';
 
 const DELETE_ANIMATION_DURATION: number = 125 as const;
 
@@ -44,6 +41,8 @@ interface SearchCardProps {
   media?: IndexMediaData | null;
   badgeType: BadgeType;
   index: number;
+  userId?: number;
+  notification: NotificationContextValues;
   browseCacheOps?: BrowseCacheOps;
 }
 
@@ -63,6 +62,8 @@ const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
 const SearchCard = ({
   media,
   index,
+  userId,
+  notification,
   badgeType = BadgeType.None,
   browseCacheOps,
 }: SearchCardProps): JSX.Element | null => {
@@ -71,7 +72,6 @@ const SearchCard = ({
   }
   const [animTrigger, setAnimTrigger] = useState(false);
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
-  const notification: NotificationContextValues = useNotificationContext();
   const realBadgeType: BadgeType =
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
@@ -132,12 +132,13 @@ const SearchCard = ({
             alt={media.name}
             className={'w-47 h-43'}
           />
-          {mediaInIndex && (
+          {mediaInIndex?.userWatchlist && (
             <WatchlistPosterFooter
               media={mediaInIndex}
               mouseOverPoster={mouseOverPoster}
               notification={notification}
-              userId={browseCacheOps?.userListValues.userId}
+              //unabled for now
+              userId={undefined}
             />
           )}
         </div>
