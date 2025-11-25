@@ -56,7 +56,6 @@ export interface UserListValues {
   listId: number
   userId: number
   canEditItems: boolean
-  pageItemsIds: number[]
 }
 
 export interface IndexMediaResults extends BrowseResults {
