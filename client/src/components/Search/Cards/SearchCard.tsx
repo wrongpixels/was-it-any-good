@@ -62,7 +62,7 @@ const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
 const SearchCard = ({
   media,
   index,
-  userId,
+  //userId,
   notification,
   badgeType = BadgeType.None,
   browseCacheOps,
