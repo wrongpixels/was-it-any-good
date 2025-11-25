@@ -96,6 +96,7 @@ router.get(
         transaction,
         include: buildIndexMediaInclude(req.activeUser),
       });
+
       await transaction.commit();
 
       //we build our custom results object for the frontend, limited to

@@ -8,7 +8,7 @@ import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 import { getMediaKey } from '../../utils/ratings-helper';
 import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
 import { USER_LISTS_ENABLED } from './UserLists';
-import { MediaResponse } from '../../../../shared/types/models';
+import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import { OptClassNameProps } from '../../types/common-props-types';
 import IconWatchlistAdd from '../Common/Icons/Lists/IconWatchlistAdd';
 
@@ -17,7 +17,7 @@ const LABEL_ADD: string = 'Add to Watchlist' as const;
 const LABEL_REMOVE: string = 'Remove' as const;
 
 interface WatchlistPosterFooterProps extends OptClassNameProps {
-  media: MediaResponse;
+  media: MediaResponse | SeasonResponse;
   mouseOverPoster: boolean;
   notification: NotificationContextValues;
   userId?: number;

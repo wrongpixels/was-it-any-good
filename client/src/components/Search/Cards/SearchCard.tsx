@@ -1,6 +1,10 @@
 import { JSX, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { IndexMediaData } from '../../../../../shared/types/models';
+import {
+  IndexMediaData,
+  MediaResponse,
+  SeasonResponse,
+} from '../../../../../shared/types/models';
 import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
@@ -23,10 +27,16 @@ import IndexBadge from '../../Common/Icons/Badges/IndexBadge';
 import WIAGBadge from '../../Common/Icons/Badges/WIAGBadge';
 import {
   buildIndexMediaLinkWithSlug,
+  getMediaFromIndexMedia,
   getMediaIdFromIndexMedia,
 } from '../../../../../shared/util/url-builder';
 import CloseButton from '../../Common/CloseButton';
 import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
+import {
+  NotificationContextValues,
+  useNotificationContext,
+} from '../../../context/NotificationProvider';
 
 const DELETE_ANIMATION_DURATION: number = 125 as const;
 
@@ -60,7 +70,8 @@ const SearchCard = ({
     return null;
   }
   const [animTrigger, setAnimTrigger] = useState(false);
-
+  const [mouseOverPoster, setMouseOverPoster] = useState(false);
+  const notification: NotificationContextValues = useNotificationContext();
   const realBadgeType: BadgeType =
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
@@ -71,6 +82,8 @@ const SearchCard = ({
     () => getIndexMediaGenresAsUrlMap(media),
     [media]
   );
+  const mediaInIndex: MediaResponse | SeasonResponse | null =
+    getMediaFromIndexMedia(media);
 
   const removeFromList = () => {
     setAnimTrigger(true);
@@ -102,16 +115,34 @@ const SearchCard = ({
       className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90 ${animTrigger ? 'transition-opacity duration-250 opacity-0' : 'opacity-100'}`}
       title={`${media.name} (${mediaDisplay})`}
     >
-      <span className={'relative rounded'}>
-        <LazyImage
-          variant={ImageVariant.inline}
-          aspect={AspectRatio.poster}
-          src={imageLinker.getPosterImage(media.image)}
-          alt={media.name}
-          className={'drop-shadow ring-1 ring-gray-300 rounded w-47 h-43'}
-        />
+      <div className={'relative rounded drop-shadow ring-1 ring-gray-300 '}>
+        <div
+          onMouseOver={() => {
+            setMouseOverPoster(true);
+          }}
+          onMouseOut={() => {
+            setMouseOverPoster(false);
+          }}
+          className="relative overflow-hidden rounded"
+        >
+          <LazyImage
+            variant={ImageVariant.inline}
+            aspect={AspectRatio.poster}
+            src={imageLinker.getPosterImage(media.image)}
+            alt={media.name}
+            className={'w-47 h-43'}
+          />
+          {mediaInIndex && (
+            <WatchlistPosterFooter
+              media={mediaInIndex}
+              mouseOverPoster={mouseOverPoster}
+              notification={notification}
+              userId={browseCacheOps?.userListValues.userId}
+            />
+          )}
+        </div>
         {getBadge(realBadgeType, index)}
-      </span>
+      </div>
       <div
         className={`flex flex-col w-full pl-3 ${canEditItems ? 'mt-3.5' : 'mt-1'} text-gray-600`}
       >
