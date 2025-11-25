@@ -27,7 +27,6 @@ import { isNotFoundError } from '../../utils/error-handler';
 import CreatingMediaPage from '../Common/Status/CreatingMediaPage';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY_TRENDING } from '../../constants/query-key-constants';
-import UserLists from '../UserLists/UserLists';
 import { getNewestAirDate } from '../../utils/media-helper';
 import { slugifyUrl } from '../../../../shared/helpers/format-helper';
 import { setSEO } from '../../utils/set-seo';
@@ -190,8 +189,7 @@ const KeyedMediaPage = ({
           </div>
         </span>
         <div className="flex-col w-50 hidden md:flex gap-3">
-          <MediaPagePoster media={media} />
-          {session && <UserLists media={media} userId={session.userId} />}
+          <MediaPagePoster media={media} userId={session?.userId} />
         </div>
       </div>
       {show && <SeasonsSection show={media} />}

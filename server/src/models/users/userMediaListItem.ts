@@ -4,7 +4,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-  Op,
 } from 'sequelize';
 import { IndexMediaData } from '../../../../shared/types/models';
 import UserMediaList from './userMediaList';
@@ -108,6 +107,7 @@ UserMediaListItem.init(
               transaction: options.transaction,
             }
           ),
+          /*
           UserMediaListItem.decrement('indexInList', {
             transaction: options.transaction,
             where: {
@@ -116,7 +116,7 @@ UserMediaListItem.init(
                 [Op.and]: [{ [Op.gt]: item.indexInList }, { [Op.gt]: 0 }],
               },
             },
-          }),
+          }),*/
         ]);
       },
     },
