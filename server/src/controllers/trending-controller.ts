@@ -4,6 +4,7 @@ import { createIndexForShowBulk } from '../factories/show-factory';
 
 import {
   CreateIndexMedia,
+  IndexMediaData,
   IndexMediaResults,
 } from '../../../shared/types/models';
 import { IndexMedia } from '../models';
@@ -23,6 +24,7 @@ import {
 } from '../services/index-media-service';
 import { sequelize } from '../util/db/initialize-db';
 import CustomError from '../util/customError';
+import { populateIndexMediaWatchlist } from '../services/user-media-lists-service';
 
 const router: Router = express.Router();
 
@@ -96,12 +98,17 @@ router.get(
         transaction,
         include: buildIndexMediaInclude(req.activeUser),
       });
+      const finalIndexMedia: IndexMediaData[] =
+        await populateIndexMediaWatchlist(
+          toPlainArray(populatedEntries),
+          req.activeUser?.id
+        );
       await transaction.commit();
 
       //we build our custom results object for the frontend, limited to
       //2 pages
       const results: IndexMediaResults = {
-        indexMedia: toPlainArray(populatedEntries),
+        indexMedia: finalIndexMedia,
         //we consider no results a blank page 1
         totalPages: combined.length > 21 ? 2 : 1,
         page,

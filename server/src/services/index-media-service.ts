@@ -171,7 +171,7 @@ export const bulkUpsertIndexMedia = async ({
   const ids: number[] = upsertMedia.map((im: IndexMedia) => im.id);
 
   //and, finally, we return the populated entries
-  return await IndexMedia.findAll({
+  const finalEntries = await IndexMedia.findAll({
     where: {
       id: {
         [Op.in]: ids,
@@ -180,6 +180,7 @@ export const bulkUpsertIndexMedia = async ({
     include,
     transaction,
   });
+  return finalEntries;
 };
 
 //a common include builder for our IndexMedia.

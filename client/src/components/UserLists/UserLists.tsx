@@ -12,7 +12,7 @@ import { useWatchlistMutation } from '../../mutations/watchlist-mutations';
 import { useAnimationTrigger } from '../../hooks/use-animation-trigger';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { getMediaKey } from '../../utils/ratings-helper';
-import { useNotificationContext } from '../../context/NotificationProvider';
+import { NotificationContextValues } from '../../context/NotificationProvider';
 
 export const USER_LISTS_ENABLED: boolean = true;
 
@@ -20,19 +20,21 @@ interface UserListsProps extends OptClassNameProps {
   userLists?: UserMediaListData[];
   media: MediaResponse;
   userId: number;
+  notification: NotificationContextValues;
 }
 
 const UserLists = ({
   userId,
   media,
+  notification,
   className: inheritedClassname,
 }: UserListsProps): JSX.Element | null => {
+  const { setNotification, anchorRef } = notification;
   const watchlistMutation = useWatchlistMutation();
   //const inList: boolean = !!media.userWatchlist;
   const queryClient: QueryClient = useQueryClient();
   const [inList, setInList] = useState<boolean>(!!media.userWatchlist);
   const [watchTrigger, setWatchTrigger] = useAnimationTrigger();
-  const { setNotification, anchorRef } = useNotificationContext();
 
   //if the watchlist disappears from the media due to voting, we trigger an setInList
   useEffect(() => {

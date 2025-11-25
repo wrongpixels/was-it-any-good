@@ -67,7 +67,7 @@ const getUserAssociations = (
 export const getActiveUserIncludeOptions = (
   mediaType: MediaType,
   activeUser?: ActiveUser
-): IncludeOptions[] => getUserAssociations(mediaType, activeUser, false);
+): IncludeOptions[] => getUserAssociations(mediaType, activeUser, true);
 
 //for Media
 export const getActiveUserIncludeable = (

@@ -4,7 +4,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-  Op,
 } from 'sequelize';
 import { IndexMediaData } from '../../../../shared/types/models';
 import UserMediaList from './userMediaList';
@@ -95,28 +94,47 @@ UserMediaListItem.init(
       //we recalculate the itemCount of the list and also fix the indexInList
       //of items affected by the deletion, or else our unique index will break!
       async afterDestroy(item: UserMediaListItem, options) {
+        const { transaction } = options;
+
+        //count remaining items in that list
         const count = await UserMediaListItem.count({
           where: { userListId: item.userListId },
-          transaction: options.transaction,
+          transaction,
         });
 
+        //update itemCount in parallel with the reindex
         await Promise.all([
           UserMediaList.update(
             { itemCount: count },
             {
               where: { id: item.userListId },
-              transaction: options.transaction,
+              transaction,
             }
           ),
-          UserMediaListItem.decrement('indexInList', {
-            transaction: options.transaction,
-            where: {
-              userListId: item.userListId,
-              indexInList: {
-                [Op.and]: [{ [Op.gt]: item.indexInList }, { [Op.gt]: 0 }],
-              },
-            },
-          }),
+
+          //we use a query to move up the indices above the deleted entry
+          UserMediaListItem.sequelize!.query(
+            `
+        WITH ordered AS (
+          SELECT
+            id,
+            ROW_NUMBER() OVER (
+              PARTITION BY user_list_id
+              ORDER BY index_in_list
+            ) - 1 AS new_index_in_list
+          FROM user_media_list_items
+          WHERE user_list_id = :userListId
+        )
+        UPDATE user_media_list_items AS u
+        SET index_in_list = o.new_index_in_list
+        FROM ordered AS o
+        WHERE u.id = o.id;
+      `,
+            {
+              replacements: { userListId: item.userListId },
+              transaction,
+            }
+          ),
         ]);
       },
     },

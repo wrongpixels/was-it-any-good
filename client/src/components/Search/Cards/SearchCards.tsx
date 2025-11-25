@@ -5,6 +5,11 @@ import { BadgeType } from '../../../types/search-browse-types';
 import { PLACEHOLDER_COUNT_SEARCH } from '../../../constants/placeholder-results-constants';
 import PlaceholderPoster from '../../Posters/PlaceholderPoster';
 import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+import { useAuth } from '../../../hooks/use-auth';
+import {
+  NotificationContextValues,
+  useNotificationContext,
+} from '../../../context/NotificationProvider';
 
 interface SearchCardsProps {
   indexMedia: IndexMediaData[];
@@ -23,6 +28,8 @@ const SearchCards = ({
   badgeType,
   browseCacheOps,
 }: SearchCardsProps) => {
+  const { session } = useAuth();
+  const notification: NotificationContextValues = useNotificationContext();
   const placeholderCount: number = PLACEHOLDER_COUNT_SEARCH - indexMedia.length;
   return (
     <div className={cardsClassName}>
@@ -33,6 +40,8 @@ const SearchCards = ({
           index={index + indexOffset}
           badgeType={badgeType}
           browseCacheOps={browseCacheOps}
+          userId={session?.userId}
+          notification={notification}
         />
       ))}
       <PlaceholderPoster
