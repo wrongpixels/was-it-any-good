@@ -12,10 +12,16 @@ import { useOverlay } from '../../context/OverlayProvider';
 import LazyImage from '../Common/Custom/LazyImage';
 import Tag from '../Common/Custom/Tag';
 import { useAnimationTrigger } from '../../hooks/use-animation-trigger';
+import IconWatchlistRemove from '../Common/Icons/Lists/IconWatchlistRemove';
+import IconWatchlistAdd from '../Common/Icons/Lists/IconWatchlistAdd';
 
 interface MediaPagePosterProps {
   media: MediaResponse;
 }
+
+const LABEL_IN: string = 'In Watchlist' as const;
+const LABEL_ADD: string = 'Add to Watchlist' as const;
+const LABEL_REMOVE: string = 'Remove' as const;
 
 const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
   const average: number = getAnyMediaDisplayRating(media);
@@ -32,9 +38,9 @@ const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
 
   const watchlistLabel: string = media.userWatchlist
     ? mouseOverWatchlist
-      ? 'Remove'
-      : 'In Watchlist'
-    : 'Add to Watchlist';
+      ? LABEL_REMOVE
+      : LABEL_IN
+    : LABEL_ADD;
 
   return (
     <div className={`${styles.poster.regular()} relative`}>
@@ -55,7 +61,7 @@ const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
             openAsOverlay(imageLinker.getFullSizeImage(media.image))
           }
         />
-        {media.userWatchlist && (
+        {
           <div
             onMouseOver={() => {
               setMouseOverWatchlist(true);
@@ -63,11 +69,17 @@ const MediaPagePoster = ({ media }: MediaPagePosterProps): JSX.Element => {
             onMouseOut={() => {
               setMouseOverWatchlist(false);
             }}
-            className={`flex absolute w-full h-[35px] text-sm text-white items-center justify-center bg-starbrighter/60 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} hover:bg-red-400/60 `}
+            className={`flex flex-row gap-2 absolute w-full h-[40px] text-sm text-white items-center justify-center bg-starbright/80 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${media.userWatchlist ? 'hover:bg-red-400/80' : 'hover:bg-notigreen/70'} border-t border-t-black/5`}
           >
-            {watchlistLabel}
+            {watchlistLabel === LABEL_IN ||
+            (watchlistLabel === LABEL_ADD && mouseOverWatchlist) ? (
+              <IconWatchlistRemove width={17} className="drop-shadow-xs/30" />
+            ) : (
+              <IconWatchlistAdd width={17} className="drop-shadow-xs/30" />
+            )}
+            <span className={styles.shadow.textShadow}>{watchlistLabel}</span>
           </div>
-        )}
+        }
       </div>
       {media.releaseDate && cardRatingData.unreleased && (
         <Tag
