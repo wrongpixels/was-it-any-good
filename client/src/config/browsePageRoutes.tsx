@@ -154,6 +154,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
   }),
   buildPageRoute({
     title: BasePageRoutes.MyVotes,
+    subtitle: 'Objectivity is subjective',
     queryToUse: 'votes',
     authReq: true,
     path: clientPaths.my.votes.base(),
@@ -167,6 +168,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
 
   buildPageRoute({
     title: BasePageRoutes.Watchlist,
+    subtitle: 'What am I watching today?',
     path: clientPaths.my.watchlist.base(),
     authReq: true,
     apiPath: apiPaths.watchlist.my(),

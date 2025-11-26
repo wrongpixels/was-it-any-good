@@ -1,14 +1,29 @@
 import { Link } from 'react-router-dom';
-import { BrowseResultsType } from '../../../../shared/types/models';
+import {
+  BrowseResultsType,
+  UserListValues,
+} from '../../../../shared/types/models';
 import { PropsWithChildren } from 'react';
 import { clientPaths } from '../../../../shared/util/url-builder';
 
 interface InstructionsProps {
   linkToSearch?: boolean;
   resultsType?: BrowseResultsType;
+  userListValues?: UserListValues;
 }
 
-const Instructions = ({ linkToSearch, resultsType }: InstructionsProps) => {
+const Instructions = ({
+  linkToSearch,
+  resultsType,
+  userListValues,
+}: InstructionsProps) => {
+  if (userListValues) {
+    return (
+      <InstructionsBlock>
+        {'Add media to start keeping track of your watch progress'}
+      </InstructionsBlock>
+    );
+  }
   if (resultsType === 'votes') {
     return (
       <InstructionsBlock>

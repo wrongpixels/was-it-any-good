@@ -61,6 +61,8 @@ router.get(
           listId: watchlistResponse.id,
           canEditItems: true,
           userId: watchlistResponse.userId,
+          listName: watchlistResponse.name,
+          listDescription: watchlistResponse.description,
         },
       };
       res.json(results);
