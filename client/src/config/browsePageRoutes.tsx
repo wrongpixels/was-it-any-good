@@ -168,7 +168,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
 
   buildPageRoute({
     title: BasePageRoutes.Watchlist,
-    subtitle: 'So, what am I watching today?',
+    subtitle: 'What am I watching today?',
     path: clientPaths.my.watchlist.base(),
     authReq: true,
     apiPath: apiPaths.watchlist.my(),

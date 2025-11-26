@@ -75,7 +75,7 @@ const PageResults = ({
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
         <>
-          <div className="relative w-full flex flex-row">
+          <div className="relative w-full flex flex-row h-8">
             <PageResultsTitle
               totalResults={results.totalResults}
               userListValues={results.userListValues}
@@ -135,7 +135,7 @@ const PageResults = ({
       )}
 
       {showNavBar && resultsPageLength > 9 && (
-        <span className="relative w-full mt-5 mb-2 h-fit">
+        <span className="relative w-full mt-2 h-9">
           <PageResultsNav results={results} navigatePages={navigatePages} />
         </span>
       )}
