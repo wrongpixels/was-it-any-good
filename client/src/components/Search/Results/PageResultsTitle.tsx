@@ -1,17 +1,22 @@
 import { JSX } from 'react';
 import { SearchType } from '../../../../../shared/types/search';
 import { queryTypeToDisplayName } from '../../../utils/url-helper';
-import { BrowseResultsType } from '../../../../../shared/types/models';
+import {
+  BrowseResultsType,
+  UserListValues,
+} from '../../../../../shared/types/models';
 
 interface PageResultsTitleProps {
   term: string | undefined;
   totalResults: number;
   queryType: SearchType[];
   resultsType: BrowseResultsType;
+  userListValues?: UserListValues;
 }
 
 const PageResultsTitle = ({
   term,
+  userListValues,
   totalResults,
   queryType,
   resultsType,
@@ -23,10 +28,13 @@ const PageResultsTitle = ({
       : typeString;
   const resultString: string =
     resultsType === 'votes' ? 'rating' : finalTypeString;
+  const displayString: string =
+    userListValues && !totalResults
+      ? `Hey, your Watchlist is empty!`
+      : `${totalResults || 'No'} ${totalResults !== 1 ? `${resultString}s` : `${resultString}`}`;
   return (
-    <span className="w-full text-center text-lg sm:block hidden">
-      {totalResults || 'No'}
-      {` ${totalResults !== 1 ? `${resultString}s` : `${resultString}`} `}
+    <span className="w-full text-center text-lg sm:block hidden line whitespace-pre-line">
+      {displayString}
       <SearchTerm term={term} />
     </span>
   );

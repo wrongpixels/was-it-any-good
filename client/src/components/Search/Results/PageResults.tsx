@@ -78,6 +78,7 @@ const PageResults = ({
           <div className="relative w-full flex flex-row">
             <PageResultsTitle
               totalResults={results.totalResults}
+              userListValues={results.userListValues}
               queryType={urlParams.queryType}
               term={term}
               resultsType={results.resultsType}
@@ -121,10 +122,13 @@ const PageResults = ({
                 }
               />
             ) : (
-              <Instructions
-                linkToSearch={true}
-                resultsType={results.resultsType}
-              />
+              <div className="mt-2">
+                <Instructions
+                  userListValues={results.userListValues}
+                  linkToSearch={true}
+                  resultsType={results.resultsType}
+                />
+              </div>
             )}
           </div>
         </div>

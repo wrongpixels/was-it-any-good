@@ -20,9 +20,13 @@ const PageResultsNav = ({
   results,
   navigatePages,
   ...rest
-}: PageResultsNavProps): JSX.Element => {
+}: PageResultsNavProps): JSX.Element | null => {
   const maxPage: number = results.totalPages;
+  if (maxPage <= 1) {
+    return null;
+  }
   const curPage: number = results.page;
+  const singlePage: boolean = maxPage <= 1;
   const currentIsFirstOrLast: boolean = [1, maxPage].includes(curPage);
 
   //our shortcut to build buttons with only a parameter
@@ -30,8 +34,11 @@ const PageResultsNav = ({
     page: number,
     isCurrent?: boolean
   ): JSX.Element | null => {
+    if (!isCurrent && singlePage) {
+      return null;
+    }
     //if we're drawing current page button but it's either page 1 or max, we skip it.
-    if (isCurrent && currentIsFirstOrLast) {
+    if (!singlePage && isCurrent && currentIsFirstOrLast) {
       return null;
     }
 
@@ -85,14 +92,12 @@ const PageResultsNav = ({
     const additionalMove: number = currentIsFirstOrLast ? 1 : 0;
     const availableMoves: number =
       MAX_BUTTONS_PER_SIDE * 2 - usedVisibleMoves + additionalMove;
-    console.log('Available moves:', availableMoves);
 
     if (maxVisiblePrevMoves < maxVisibleNextMoves) {
       maxVisibleNextMoves = Math.min(
         maxVisibleNextMoves + availableMoves,
         maxNextMoves
       );
-      console.log(maxVisibleNextMoves);
     } else {
       maxVisiblePrevMoves = Math.min(
         maxVisiblePrevMoves + availableMoves,
