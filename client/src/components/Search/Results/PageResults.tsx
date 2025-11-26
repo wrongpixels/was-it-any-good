@@ -75,7 +75,7 @@ const PageResults = ({
     <div className="flex flex-col font-medium gap-5 flex-1">
       {showNavBar && (
         <>
-          <div className="relative w-full h-8 flex flex-row">
+          <div className="relative w-full flex flex-row">
             <PageResultsTitle
               totalResults={results.totalResults}
               queryType={urlParams.queryType}
