@@ -80,7 +80,7 @@ router.get(
           page: searchPage,
           totalResults: count,
           //we consider no results a blank page 1
-          totalPages: Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
+          totalPages: 1, //Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
           indexMedia: toPlainArray(rows),
           resultsType: 'browse',
         };

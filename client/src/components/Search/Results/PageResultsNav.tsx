@@ -8,8 +8,8 @@ import { OptClassNameProps } from '../../../types/common-props-types';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 import React from 'react';
 
-//how many page buttons we want to see apart from the current one
-const MAX_ADDITIONAL_BUTTONS: number = 2;
+//how many page buttons we want to see on each side of current page (First and last not included)
+const MAX_BUTTONS_PER_SIDE: number = 1;
 
 interface PageResultsNavProps extends OptClassNameProps {
   results: IndexMediaResults | RatingResults;
@@ -23,6 +23,7 @@ const PageResultsNav = ({
 }: PageResultsNavProps): JSX.Element => {
   const maxPage: number = results.totalPages;
   const curPage: number = results.page;
+  const currentIsFirstOrLast: boolean = [1, maxPage].includes(curPage);
 
   //our shortcut to build buttons with only a parameter
   const buildButton = (
@@ -30,7 +31,7 @@ const PageResultsNav = ({
     isCurrent?: boolean
   ): JSX.Element | null => {
     //if we're drawing current page button but it's either page 1 or max, we skip it.
-    if (isCurrent && [maxPage, 1].includes(page)) {
+    if (isCurrent && currentIsFirstOrLast) {
       return null;
     }
 
@@ -54,37 +55,48 @@ const PageResultsNav = ({
   const lastButton: JSX.Element | null = buildButton(maxPage);
 
   //the last Previous Page we should be able to see, 2 being the min, as page 1 is always present.
-  const firstVisiblePage: number = Math.max(
-    2,
-    curPage - MAX_ADDITIONAL_BUTTONS
-  );
-  //the last Next Page we should be able to see, maxPage being the max
-  const lastVisiblePage: number = Math.min(
-    curPage + MAX_ADDITIONAL_BUTTONS,
-    maxPage
+  const firstVisiblePage: number = Math.max(2, curPage - MAX_BUTTONS_PER_SIDE);
+  //the last Next Page we should be able to see, maxPage-1 being the max
+  const lastVisiblePage: number = Math.max(
+    curPage,
+    Math.min(curPage + MAX_BUTTONS_PER_SIDE, maxPage - 1)
   );
   //the moves we need to reach both page 2 and maxPage
-  const maxPrevMoves: number = curPage - 2;
-  const maxNextMoves: number = maxPage - curPage;
+  const maxPrevMoves: number = Math.max(curPage - 2, 0);
+  const maxNextMoves: number = Math.max(maxPage - 1 - curPage, 0);
 
   //the moves we can do from the current page to first and last visible pages
-  let maxVisiblePrevMoves: number = curPage - firstVisiblePage;
+  let maxVisiblePrevMoves: number = Math.max(curPage - firstVisiblePage, 0);
   let maxVisibleNextMoves: number = lastVisiblePage - curPage;
+
+  console.log(
+    maxPrevMoves,
+    maxVisiblePrevMoves,
+    maxNextMoves,
+    maxVisibleNextMoves
+  );
 
   const usedVisibleMoves: number = maxVisibleNextMoves + maxVisiblePrevMoves;
 
+  console.log(usedVisibleMoves);
+
   //if one side is bigger than the other, we try to give the free space to the other one
-  if (usedVisibleMoves < MAX_ADDITIONAL_BUTTONS) {
-    const availableMoves: number = MAX_ADDITIONAL_BUTTONS - usedVisibleMoves;
+  if (usedVisibleMoves < MAX_BUTTONS_PER_SIDE * 2) {
+    const additionalMove: number = currentIsFirstOrLast ? 1 : 0;
+    const availableMoves: number =
+      MAX_BUTTONS_PER_SIDE * 2 - usedVisibleMoves + additionalMove;
+    console.log('Available moves:', availableMoves);
+
     if (maxVisiblePrevMoves < maxVisibleNextMoves) {
-      maxVisiblePrevMoves = Math.min(
-        maxVisiblePrevMoves + availableMoves,
-        maxPrevMoves
-      );
-    } else {
       maxVisibleNextMoves = Math.min(
         maxVisibleNextMoves + availableMoves,
         maxNextMoves
+      );
+      console.log(maxVisibleNextMoves);
+    } else {
+      maxVisiblePrevMoves = Math.min(
+        maxVisiblePrevMoves + availableMoves,
+        maxPrevMoves
       );
     }
   }
@@ -97,7 +109,7 @@ const PageResultsNav = ({
 
   //and the next Page Buttons
   const nextButtons: (JSX.Element | null)[] = [];
-  for (let i = curPage + 1; i < curPage + maxVisibleNextMoves; i++) {
+  for (let i = curPage + 1; i <= curPage + maxVisibleNextMoves; i++) {
     nextButtons.push(buildButton(i));
   }
 
