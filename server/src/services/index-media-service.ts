@@ -10,6 +10,7 @@ import { Includeable, Op, Transaction } from 'sequelize';
 import { buildIncludeOptions } from './browse-service';
 import { toPlain } from '../util/model-helpers';
 import { isUnreleased } from '../../../shared/helpers/media-helper';
+import { mediaInIndexAttributes } from '../constants/scope-attributes';
 
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData | SeasonData,
@@ -192,12 +193,12 @@ export const buildIndexMediaInclude = (
   //we still need the film/show ids, rating and genres for the frontend
   {
     association: 'film',
-    attributes: ['id', 'rating'],
+    attributes: [...mediaInIndexAttributes, 'rating'],
     include: buildIncludeOptions(undefined, MediaType.Film, false, activeUser),
   },
   {
     association: 'show',
-    attributes: ['id', 'rating', 'seasonCount'],
+    attributes: [...mediaInIndexAttributes, 'rating', 'seasonCount'],
     include: buildIncludeOptions(undefined, MediaType.Show, false, activeUser),
   },
 ];

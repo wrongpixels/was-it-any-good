@@ -58,7 +58,7 @@ const NotificationAlert = ({
       } else {
         const topOffset = offset?.y ? `${offset.y}px` : '0px';
         const leftOffset = offset?.x ? `${offset.x}px` : '0px';
-        notificationEl.style.top = `calc(40px + ${topOffset})`;
+        notificationEl.style.top = `calc(50px + ${topOffset})`;
         notificationEl.style.left = `calc(50% + ${leftOffset})`;
       }
     };

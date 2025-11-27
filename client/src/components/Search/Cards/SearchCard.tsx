@@ -31,7 +31,7 @@ import {
   getMediaIdFromIndexMedia,
 } from '../../../../../shared/util/url-builder';
 import CloseButton from '../../Common/CloseButton';
-import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+import { BrowsePageValues } from '../../../hooks/use-browse-page-values';
 import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
 import { NotificationContextValues } from '../../../context/NotificationProvider';
 
@@ -43,7 +43,7 @@ interface SearchCardProps {
   index: number;
   userId?: number;
   notification: NotificationContextValues;
-  browseCacheOps?: BrowseCacheOps;
+  browsePageValues?: BrowsePageValues;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
@@ -62,10 +62,10 @@ const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
 const SearchCard = ({
   media,
   index,
-  //userId,
+  userId,
   notification,
   badgeType = BadgeType.None,
-  browseCacheOps,
+  browsePageValues,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
@@ -89,17 +89,17 @@ const SearchCard = ({
     setAnimTrigger(true);
     //we sync with the animation so the card disappears even if the refetch hasn't finished yet.
     setTimeout(() => {
-      browseCacheOps?.removeFromBrowseCache(media.id);
+      browsePageValues?.removeFromBrowseCache(media.id);
     }, DELETE_ANIMATION_DURATION);
-    browseCacheOps?.listMutation?.mutate(
+    browsePageValues?.listMutation?.mutate(
       {
         inList: true,
         indexId: media.id,
-        userId: browseCacheOps.userListValues.userId,
+        userId: browsePageValues.userListValues.userId,
       },
       {
         onSuccess: () =>
-          browseCacheOps.resetBrowseCache(
+          browsePageValues.resetBrowseCache(
             media.mediaType,
             getMediaIdFromIndexMedia(media)
           ),
@@ -107,7 +107,7 @@ const SearchCard = ({
     );
   };
   //to apply special designs to the Cards for editable lists (like making space for an 'X' button on top)
-  const canEditItems: boolean = !!browseCacheOps?.userListValues.canEditItems;
+  const canEditItems: boolean = !!browsePageValues?.userListValues.canEditItems;
 
   return (
     <Link
@@ -132,15 +132,19 @@ const SearchCard = ({
             alt={media.name}
             className={'w-47 h-43'}
           />
-          {mediaInIndex?.userWatchlist && (
-            <WatchlistPosterFooter
-              media={mediaInIndex}
-              mouseOverPoster={mouseOverPoster}
-              notification={notification}
-              //unabled for now
-              userId={undefined}
-            />
-          )}
+          {/*We only show the Watchlist Overlay for media already in our db,
+          but only if a user is logged in and we're not already in the Watchlist*/}
+          {browsePageValues?.userListValues.listName !== 'Watchlist' &&
+            userId &&
+            mediaInIndex && (
+              <WatchlistPosterFooter
+                media={mediaInIndex}
+                mouseOverPoster={mouseOverPoster}
+                notification={notification}
+                userId={userId}
+                size="small"
+              />
+            )}
         </div>
         {getBadge(realBadgeType, index)}
       </div>
@@ -177,7 +181,7 @@ const SearchCard = ({
           releaseDate={media.releaseDate}
         />
       </div>
-      {browseCacheOps?.userListValues.canEditItems && (
+      {browsePageValues?.userListValues.canEditItems && (
         <div
           className="z-10 absolute right-0.75 top-0.5"
           title={'Remove from list'}

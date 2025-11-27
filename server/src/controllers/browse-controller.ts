@@ -1,5 +1,8 @@
 import express, { NextFunction, Request, Response, Router } from 'express';
-import { IndexMediaResults } from '../../../shared/types/models';
+import {
+  IndexMediaData,
+  IndexMediaResults,
+} from '../../../shared/types/models';
 import { Film, IndexMedia, Show } from '../models';
 import { FindOptions, Op } from 'sequelize';
 import { MediaType } from '../../../shared/types/media';
@@ -12,6 +15,8 @@ import { extractURLParams } from '../util/url-param-extractor';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
 import { buildIndexMediaInclude } from '../services/index-media-service';
+import { mediaInIndexAttributes } from '../constants/scope-attributes';
+import { populateIndexMediaWatchlist } from '../services/user-media-lists-service';
 
 const router: Router = express.Router();
 
@@ -76,12 +81,21 @@ router.get(
           ...findAndCountOptions,
           include: buildIndexMediaInclude(req.activeUser),
         });
+
+        //we populate the watchlist info of the results this way, as sequelize
+        //breaks when nesting the 3 layers of 'includes' that we need!
+        const finalIndexMedia: IndexMediaData[] =
+          await populateIndexMediaWatchlist(
+            toPlainArray(rows),
+            req.activeUser?.id
+          );
+
         const results: IndexMediaResults = {
           page: searchPage,
           totalResults: count,
           //we consider no results a blank page 1
           totalPages: Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
-          indexMedia: toPlainArray(rows),
+          indexMedia: finalIndexMedia,
           resultsType: 'browse',
         };
         res.json(results);
@@ -95,7 +109,7 @@ router.get(
           include: [
             {
               association: isFilm ? 'film' : 'show',
-              attributes: ['id', 'rating'],
+              attributes: mediaInIndexAttributes,
               required: true,
               where,
               include: buildIncludeOptions(
@@ -108,12 +122,20 @@ router.get(
           ],
         });
 
+        //we populate the watchlist info of the results this way, as sequelize
+        //breaks when nesting the 3 layers of 'includes' that we need!
+        const finalIndexMedia: IndexMediaData[] =
+          await populateIndexMediaWatchlist(
+            toPlainArray(rows),
+            req.activeUser?.id
+          );
+
         const results: IndexMediaResults = {
           page: searchPage,
           totalResults: count,
           //we consider no results a blank page #1
           totalPages: Math.ceil(count / PAGE_LENGTH_BROWSE) || 1,
-          indexMedia: toPlainArray(rows),
+          indexMedia: finalIndexMedia,
           resultsType: 'browse',
         };
         res.json(results);
