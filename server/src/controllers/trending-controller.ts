@@ -98,6 +98,8 @@ router.get(
         transaction,
         include: buildIndexMediaInclude(req.activeUser),
       });
+      //we populate the watchlist info of the results this way, as sequelize
+      //breaks when nesting the 3 layers of 'includes' that we need!
       const finalIndexMedia: IndexMediaData[] =
         await populateIndexMediaWatchlist(
           toPlainArray(populatedEntries),
