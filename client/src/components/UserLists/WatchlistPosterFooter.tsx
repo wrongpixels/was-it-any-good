@@ -21,6 +21,7 @@ interface WatchlistPosterFooterProps extends OptClassNameProps {
   mouseOverPoster: boolean;
   notification: NotificationContextValues;
   userId?: number;
+  size?: 'normal' | 'small';
 }
 
 const WatchlistPosterFooter = ({
@@ -28,6 +29,7 @@ const WatchlistPosterFooter = ({
   mouseOverPoster,
   userId,
   notification,
+  size = 'normal',
   className: inheritedClassname,
 }: WatchlistPosterFooterProps): JSX.Element | null => {
   const { setNotification, anchorRef } = notification;
@@ -53,6 +55,10 @@ const WatchlistPosterFooter = ({
       setWatchTrigger();
     }
   }, [media.userWatchlist]);
+
+  useEffect(() => {
+    console.log(mouseOverPoster);
+  }, [mouseOverPoster]);
 
   const watchlistLabel: string = media.userWatchlist
     ? mouseOverWatchlist && !justVoted
@@ -120,20 +126,25 @@ const WatchlistPosterFooter = ({
         setJustVoted(false);
       }}
       className={mergeClassnames(
-        `flex flex-row gap-2 absolute w-full h-[40px] font-semibold text-xs text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${!justVoted && (media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen')}`,
+        `flex flex-row gap-2 absolute w-full ${size === 'small' ? 'h-[30px] text-[8.5pt] font-normal' : 'h-[35px] text-[9pt] font-semibold'} text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${!justVoted && (media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen')}`,
         inheritedClassname
       )}
     >
       <div
         className={`
-       
         transition-all duration-120 ease-in-out ${watchTrigger && (inList ? 'scale-140 rotate-6 animate-bounce [animation-iteration-count:1] text-amber-300' : 'animate-ping scale-110 [animation-iteration-count:1]')} `}
       >
         {watchlistLabel === LABEL_IN ||
         (watchlistLabel === LABEL_ADD && mouseOverWatchlist) ? (
-          <IconWatchlistRemove width={17} className="drop-shadow-xs/30" />
+          <IconWatchlistRemove
+            width={size === 'small' ? 14 : 16}
+            className="drop-shadow-xs/30"
+          />
         ) : (
-          <IconWatchlistAdd width={17} className="drop-shadow-xs/30" />
+          <IconWatchlistAdd
+            width={size === 'small' ? 14 : 16}
+            className="drop-shadow-xs/30"
+          />
         )}
       </div>
       <span className={styles.shadow.textShadow}>{watchlistLabel}</span>

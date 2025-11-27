@@ -62,7 +62,7 @@ const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
 const SearchCard = ({
   media,
   index,
-  //userId,
+  userId,
   notification,
   badgeType = BadgeType.None,
   browseCacheOps,
@@ -137,8 +137,8 @@ const SearchCard = ({
               media={mediaInIndex}
               mouseOverPoster={mouseOverPoster}
               notification={notification}
-              //unabled for now
-              userId={undefined}
+              userId={userId}
+              size="small"
             />
           )}
         </div>
