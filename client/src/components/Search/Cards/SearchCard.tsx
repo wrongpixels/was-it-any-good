@@ -132,7 +132,7 @@ const SearchCard = ({
             alt={media.name}
             className={'w-47 h-43'}
           />
-          {mediaInIndex?.userWatchlist && (
+          {userId && mediaInIndex && (
             <WatchlistPosterFooter
               media={mediaInIndex}
               mouseOverPoster={mouseOverPoster}

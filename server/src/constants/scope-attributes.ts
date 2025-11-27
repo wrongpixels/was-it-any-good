@@ -74,3 +74,10 @@ export const getActiveUserIncludeable = (
   mediaType: MediaType,
   activeUser?: ActiveUser
 ): Includeable[] => getUserAssociations(mediaType, activeUser, true);
+
+export const mediaInIndexAttributes: string[] = [
+  'id',
+  'indexId',
+  'mediaType',
+  'name',
+];

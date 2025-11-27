@@ -9,6 +9,7 @@ import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db/initialize-db';
 import { Film, Season, Show } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
+import { mediaInIndexAttributes } from '../../constants/scope-attributes';
 
 //stores TMDB media metadata and maps TMDB ids to internal media ids (if they exist).
 //used for search results and checking if TMDB entries are already in our database.
@@ -166,7 +167,7 @@ IndexMedia.init(
         include: [
           {
             association: 'film',
-            attributes: ['id'],
+            attributes: mediaInIndexAttributes,
             include: [
               {
                 association: 'genres',
@@ -179,7 +180,7 @@ IndexMedia.init(
           },
           {
             association: 'show',
-            attributes: ['id'],
+            attributes: mediaInIndexAttributes,
             include: [
               {
                 association: 'genres',

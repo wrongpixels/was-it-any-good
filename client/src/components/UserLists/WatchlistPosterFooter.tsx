@@ -56,10 +56,6 @@ const WatchlistPosterFooter = ({
     }
   }, [media.userWatchlist]);
 
-  useEffect(() => {
-    console.log(mouseOverPoster);
-  }, [mouseOverPoster]);
-
   const watchlistLabel: string = media.userWatchlist
     ? mouseOverWatchlist && !justVoted
       ? LABEL_REMOVE
@@ -80,7 +76,7 @@ const WatchlistPosterFooter = ({
     setJustVoted(watchlistLabel === LABEL_ADD);
     setInList((oldInList) => !oldInList);
     setNotification({
-      message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist!`,
+      message: `'${media.name}' was \n${inList ? 'removed from your' : 'added to your'} Watchlist`,
       anchorRef,
       offset: { x: 0, y: -5 },
     });
@@ -126,7 +122,7 @@ const WatchlistPosterFooter = ({
         setJustVoted(false);
       }}
       className={mergeClassnames(
-        `flex flex-row gap-2 absolute w-full ${size === 'small' ? 'h-[30px] text-[8.5pt] font-normal' : 'h-[35px] text-[9pt] font-semibold'} text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${!justVoted && (media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen')}`,
+        `flex flex-row absolute w-full ${size === 'small' ? 'h-[30px] text-[8.5pt] font-normal gap-1' : 'h-[35px] text-[9pt] font-semibold gap-2'} text-white items-center justify-center bg-gradient-to-t from-starbright via-starbright to-starbright/75 transition-all -bottom-10 ${(media.userWatchlist || mouseOverPoster) && 'bottom-0'} ${!justVoted && (media.userWatchlist ? 'hover:from-red-400 hover:to-red-400/80 hover:via-red-400' : 'hover:from-notigreen hover:to-notigreen/70 hover:via-notigreen')}`,
         inheritedClassname
       )}
     >
