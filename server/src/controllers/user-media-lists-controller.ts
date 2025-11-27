@@ -137,6 +137,11 @@ router.post(
         );
         await transaction.commit();
         const listItemResponse: UserMediaListItemData = toPlain(listItem);
+        console.log(
+          'Added item',
+          listItemResponse.indexId,
+          'to active user watchlist'
+        );
         res.status(201).json(listItemResponse);
       } catch (error) {
         await transaction.rollback();

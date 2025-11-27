@@ -132,15 +132,17 @@ const SearchCard = ({
             alt={media.name}
             className={'w-47 h-43'}
           />
-          {userId && mediaInIndex && (
-            <WatchlistPosterFooter
-              media={mediaInIndex}
-              mouseOverPoster={mouseOverPoster}
-              notification={notification}
-              userId={userId}
-              size="small"
-            />
-          )}
+          {browseCacheOps?.userListValues.listName !== 'Watchlist' &&
+            userId &&
+            mediaInIndex && (
+              <WatchlistPosterFooter
+                media={mediaInIndex}
+                mouseOverPoster={mouseOverPoster}
+                notification={notification}
+                userId={userId}
+                size="small"
+              />
+            )}
         </div>
         {getBadge(realBadgeType, index)}
       </div>

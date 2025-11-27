@@ -12,6 +12,7 @@ import { extractURLParams } from '../util/url-param-extractor';
 import { useCache } from '../middleware/redis-cache';
 import { setActiveCache } from '../util/redis-helpers';
 import { buildIndexMediaInclude } from '../services/index-media-service';
+import { mediaInIndexAttributes } from '../constants/scope-attributes';
 
 const router: Router = express.Router();
 
@@ -95,7 +96,7 @@ router.get(
           include: [
             {
               association: isFilm ? 'film' : 'show',
-              attributes: ['id', 'rating'],
+              attributes: mediaInIndexAttributes,
               required: true,
               where,
               include: buildIncludeOptions(

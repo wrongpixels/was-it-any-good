@@ -115,6 +115,8 @@ UserMediaListItem.init(
           //we use a query to move up the indices above the deleted entry
           UserMediaListItem.sequelize!.query(
             `
+        BEGIN;
+
         WITH ordered AS (
           SELECT
             id,
@@ -123,12 +125,18 @@ UserMediaListItem.init(
               ORDER BY index_in_list
             ) - 1 AS new_index_in_list
           FROM user_media_list_items
-          WHERE user_list_id = :userListId
+          WHERE user_list_id = 2
         )
         UPDATE user_media_list_items AS u
-        SET index_in_list = o.new_index_in_list
+        SET index_in_list = o.new_index_in_list + 100000
         FROM ordered AS o
         WHERE u.id = o.id;
+
+        UPDATE user_media_list_items
+        SET index_in_list = index_in_list - 100000
+        WHERE user_list_id = 2;
+
+        COMMIT;
       `,
             {
               replacements: { userListId: item.userListId },
