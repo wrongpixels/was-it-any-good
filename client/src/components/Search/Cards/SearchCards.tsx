@@ -4,7 +4,7 @@ import { IndexMediaData } from '../../../../../shared/types/models';
 import { BadgeType } from '../../../types/search-browse-types';
 import { PLACEHOLDER_COUNT_SEARCH } from '../../../constants/placeholder-results-constants';
 import PlaceholderPoster from '../../Posters/PlaceholderPoster';
-import { BrowseCacheOps } from '../../../hooks/use-results-list-values';
+import { BrowsePageValues } from '../../../hooks/use-browse-page-values';
 import { useAuth } from '../../../hooks/use-auth';
 import {
   NotificationContextValues,
@@ -15,7 +15,7 @@ interface SearchCardsProps {
   indexMedia: IndexMediaData[];
   indexOffset: number;
   badgeType: BadgeType;
-  browseCacheOps?: BrowseCacheOps;
+  browsePageValues?: BrowsePageValues;
 }
 
 const cardsClassName =
@@ -26,7 +26,7 @@ const SearchCards = ({
   indexMedia,
   indexOffset,
   badgeType,
-  browseCacheOps,
+  browsePageValues,
 }: SearchCardsProps) => {
   const { session } = useAuth();
   const notification: NotificationContextValues = useNotificationContext();
@@ -39,7 +39,7 @@ const SearchCards = ({
           media={im}
           index={index + indexOffset}
           badgeType={badgeType}
-          browseCacheOps={browseCacheOps}
+          browsePageValues={browsePageValues}
           userId={session?.userId}
           notification={notification}
         />

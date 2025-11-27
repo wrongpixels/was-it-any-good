@@ -4,6 +4,7 @@ import { createIndexForShowBulk } from '../factories/show-factory';
 
 import {
   CreateIndexMedia,
+  IndexMediaData,
   IndexMediaResults,
 } from '../../../shared/types/models';
 import { arrayToTMDBSearchTypes, extractQuery } from '../util/search-helpers';
@@ -23,6 +24,7 @@ import {
 import { useCache } from '../middleware/redis-cache';
 import { EMPTY_RESULTS } from '../constants/search-browse-constants';
 import { setActiveCache } from '../util/redis-helpers';
+import { populateIndexMediaWatchlist } from '../services/user-media-lists-service';
 //import { tmdbAPI } from '../util/config';
 
 const router: Router = express.Router();
@@ -190,8 +192,16 @@ router.get(
         include: buildIndexMediaInclude(req.activeUser),
       });
 
+      //we populate the watchlist info of the results this way, as sequelize
+      //breaks when nesting the 3 layers of 'includes' that we need!
+      const finalIndexMedia: IndexMediaData[] =
+        await populateIndexMediaWatchlist(
+          toPlainArray(populatedEntries),
+          req.activeUser?.id
+        );
+
       const results: IndexMediaResults = {
-        indexMedia: toPlainArray(populatedEntries),
+        indexMedia: finalIndexMedia,
         //we consider no results a blank page 1
         totalPages: searchResult.total_pages || 1,
         page: searchResult.page,

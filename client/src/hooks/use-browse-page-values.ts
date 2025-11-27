@@ -21,8 +21,7 @@ import {
   UserMediaListItemData,
 } from '../../../shared/types/models';
 
-//extended version with the Operations incorporated
-export interface BrowseCacheOps {
+export interface BrowsePageValues {
   userListValues: UserListValues;
   listMutation:
     | UseMutationResult<
@@ -35,8 +34,10 @@ export interface BrowseCacheOps {
   resetBrowseCache: (mediaType?: MediaType, id?: number | null) => void;
   removeFromBrowseCache: (indexId?: number | null) => void;
 }
+//builds a series of data and Operations of our current BrowsePage, so we can do things
+//like access its cache or know what kind of page/list we're browsing
 
-const useBrowseCacheOps = (
+const useBrowsePageValues = (
   results: IndexMediaResults | RatingResults,
   queryKey: string[] | undefined
 ) => {
@@ -87,7 +88,7 @@ const useBrowseCacheOps = (
   };
   const listMutation =
     queryKey && results.userListValues ? useWatchlistMutation() : undefined;
-  const browseCacheOps: BrowseCacheOps | undefined = results.userListValues
+  const browsePageValues: BrowsePageValues | undefined = results.userListValues
     ? {
         userListValues: results.userListValues,
         resetBrowseCache,
@@ -96,7 +97,7 @@ const useBrowseCacheOps = (
       }
     : undefined;
 
-  return browseCacheOps;
+  return browsePageValues;
 };
 
-export default useBrowseCacheOps;
+export default useBrowsePageValues;

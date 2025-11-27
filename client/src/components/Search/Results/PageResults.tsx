@@ -19,9 +19,9 @@ import PageResultsTitle from './PageResultsTitle';
 import SearchCards from '../Cards/SearchCards';
 import RatingCards from '../Cards/RatingCards';
 import { SortBy } from '../../../../../shared/types/browse';
-import useBrowseCacheOps, {
-  BrowseCacheOps,
-} from '../../../hooks/use-results-list-values';
+import useBrowsePageValues, {
+  BrowsePageValues,
+} from '../../../hooks/use-browse-page-values';
 
 interface PageResultsProps {
   results: IndexMediaResults | RatingResults | undefined;
@@ -56,7 +56,7 @@ const PageResults = ({
     return null;
   }
   //we mount the object with the logic to modify the list on each card
-  const browseCacheOps: BrowseCacheOps | undefined = useBrowseCacheOps(
+  const browsePageValues: BrowsePageValues | undefined = useBrowsePageValues(
     results,
     queryKey
   );
@@ -108,7 +108,7 @@ const PageResults = ({
             results.indexMedia.length > 0 ? (
               <SearchCards
                 indexMedia={results.indexMedia}
-                browseCacheOps={browseCacheOps}
+                browsePageValues={browsePageValues}
                 indexOffset={indexOffset}
                 badgeType={badgeType}
               />
