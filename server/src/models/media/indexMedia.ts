@@ -7,7 +7,7 @@ import {
 } from 'sequelize';
 import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db/initialize-db';
-import { Film, Season, Show } from '..';
+import { Film, Rating, Season, Show } from '..';
 import { CountryCode, isCountryCode } from '../../../../shared/types/countries';
 import { mediaInIndexAttributes } from '../../constants/scope-attributes';
 
@@ -39,6 +39,10 @@ class IndexMedia extends Model<
   declare season?: Season;
 
   static associate() {
+    this.hasMany(Rating, {
+      as: 'ratings',
+      foreignKey: 'indexId',
+    });
     this.hasOne(Film, {
       foreignKey: 'indexId',
       constraints: false,
