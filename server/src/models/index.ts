@@ -14,6 +14,7 @@ import IndexMedia from './media/indexMedia';
 import { PRODUCTION } from '../util/config';
 import UserMediaList from './users/userMediaList';
 import UserMediaListItem from './users/userMediaListItem';
+import UserReview from './users/userReview';
 
 Person.hasMany(MediaRole, {
   foreignKey: 'personId',
@@ -33,6 +34,7 @@ Season.associate();
 IndexMedia.associate();
 UserMediaList.associate();
 UserMediaListItem.associate();
+UserReview.associate();
 if (!PRODUCTION) {
   //sequelize.sync({ alter: true, force: false });
 }
@@ -52,4 +54,5 @@ export {
   IndexMedia,
   UserMediaList,
   UserMediaListItem,
+  UserReview,
 };
