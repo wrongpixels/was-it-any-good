@@ -40,7 +40,9 @@ export const buildIncludeOptions = (
     };
   }
   //and combine them all in the array
-  includeOptions.push(genreIncludeOptions);
+  if (mediaType !== MediaType.Season) {
+    includeOptions.push(genreIncludeOptions);
+  }
 
   if (mediaType === MediaType.Show) {
     includeOptions.push({
