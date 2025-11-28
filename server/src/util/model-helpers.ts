@@ -1,4 +1,11 @@
-import { Attributes, FindOptions, Model, ModelStatic } from 'sequelize';
+import {
+  Attributes,
+  FindOptions,
+  Includeable,
+  Model,
+  ModelStatic,
+  WhereOptions,
+} from 'sequelize';
 
 export const toPlain = <T extends Model>(entry: T): T['dataValues'] =>
   entry?.get({ plain: true }) ?? null;
@@ -39,4 +46,26 @@ export const findInModel = async <M extends ModelStatic<Model>>(
     return rawEntry;
   }
   return null;
+};
+
+export const mergeIncludeables = (
+  baseIncludeable: Includeable,
+  otherIncludeable?: Includeable | Includeable[]
+) => {
+  const mergedIncludeable: Includeable[] = otherIncludeable
+    ? Array.isArray(otherIncludeable)
+      ? [...otherIncludeable, baseIncludeable]
+      : [otherIncludeable, baseIncludeable]
+    : [baseIncludeable];
+  return mergedIncludeable;
+};
+
+export const mergeWhereOptions = <T>(
+  baseWhere: WhereOptions<T>,
+  otherWhere?: WhereOptions<T>
+) => {
+  const mergedWhere: WhereOptions<T> = otherWhere
+    ? { ...otherWhere, ...baseWhere }
+    : baseWhere;
+  return mergedWhere;
 };

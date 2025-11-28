@@ -1,14 +1,21 @@
 import {
   CreationOptional,
   DataTypes,
+  FindOptions,
   InferAttributes,
   InferCreationAttributes,
   Model,
+  Op,
 } from 'sequelize';
 import Rating from './rating';
 import { sequelize } from '../../util/db/initialize-db';
 import User from './user';
 import IndexMedia from '../media/indexMedia';
+import { RatingData } from '../../../../shared/types/models';
+import {
+  buildReviewIncludeableOptions,
+  buildReviewWhereOptions,
+} from '../../util/user-review-helpers';
 
 enum RecommendType {
   NotSpecified = 0,
@@ -26,6 +33,7 @@ class UserReview extends Model<
   declare indexId: number;
   declare title: string;
   declare seasons: CreationOptional<number[]>;
+  declare rating?: RatingData;
   declare mainContent: string;
   declare spoilerContent: string | null;
   declare recommended: RecommendType;
@@ -42,6 +50,70 @@ class UserReview extends Model<
       as: 'user',
       foreignKey: 'userId',
     });
+  }
+
+  //to find all the user reviews of a specific media and, if rated by the user, attach the rating
+  static async findAllByIndexId(
+    indexId: number,
+    options?: FindOptions<UserReview>
+  ) {
+    const entries: UserReview[] = await UserReview.findAll({
+      ...options,
+      where: buildReviewWhereOptions({ indexId }, options),
+      include: buildReviewIncludeableOptions(options),
+    });
+    //we map the entries to their userIds
+    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
+      entries.map((ur: UserReview) => [ur.userId, ur])
+    );
+    const userIds: number[] = entries.map((ur: UserReview) => ur.userId);
+    const ratings: Rating[] = await Rating.findAll({
+      where: {
+        indexId,
+        userId: {
+          [Op.in]: userIds,
+        },
+      },
+    });
+    ratings.forEach((r: Rating) => {
+      const match: UserReview | undefined = entriesMap.get(r.userId);
+      if (match) {
+        match.rating = r;
+      }
+    });
+    return entries;
+  }
+
+  //to find all the reviews by a specific user and, if rated, attach the rating they gave
+  static async findAllByUserId(
+    userId: number,
+    options?: FindOptions<UserReview>
+  ) {
+    const entries: UserReview[] = await UserReview.findAll({
+      ...options,
+      where: buildReviewWhereOptions({ userId }, options),
+      include: buildReviewIncludeableOptions(options),
+    });
+    //we map the entries to their indexIds this time
+    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
+      entries.map((ur: UserReview) => [ur.indexId, ur])
+    );
+    const indexIds: number[] = entries.map((ur: UserReview) => ur.indexId);
+    const ratings: Rating[] = await Rating.findAll({
+      where: {
+        userId,
+        indexId: {
+          [Op.in]: indexIds,
+        },
+      },
+    });
+    ratings.forEach((r: Rating) => {
+      const match: UserReview | undefined = entriesMap.get(r.indexId);
+      if (match) {
+        match.rating = r;
+      }
+    });
+    return entries;
   }
 }
 
@@ -115,8 +187,7 @@ UserReview.init(
     },
     lastEdited: {
       type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
     },
   },
   {
@@ -130,26 +201,25 @@ UserReview.init(
       },
     ],
     scopes: {
-      withUserRating: (userId: number, indexId: number) => ({
-        include: [
-          {
-            association: 'indexMedia',
-            attributes: ['id', 'mediaType'],
-            include: [
-              {
-                model: Rating,
-                as: 'userRating',
-                required: false,
-                attributes: ['id', 'userScore', 'mediaId'],
-                where: {
-                  userId,
-                  indexId,
+      withUserRating(userId: number) {
+        return {
+          include: [
+            {
+              association: 'indexMedia',
+              attributes: ['id', 'mediaType'],
+              include: [
+                {
+                  model: Rating,
+                  as: 'ratings',
+                  required: false,
+                  attributes: ['id', 'userScore', 'mediaId'],
+                  where: { userId },
                 },
-              },
-            ],
-          },
-        ],
-      }),
+              ],
+            },
+          ],
+        };
+      },
     },
   }
 );

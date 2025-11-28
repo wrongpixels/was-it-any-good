@@ -8,5 +8,6 @@
     ".vscode",
     ".vscode-insiders",
     "server/src/db"
-  ]
+  ],
+  "cSpell.words": ["Includeables"]
 }
