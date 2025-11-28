@@ -6,8 +6,9 @@ import {
   Model,
 } from 'sequelize';
 import Rating from './rating';
-import { MediaType } from '../../../../shared/types/media';
 import { sequelize } from '../../util/db/initialize-db';
+import User from './user';
+import IndexMedia from '../media/indexMedia';
 
 enum RecommendType {
   NotSpecified = 0,
@@ -33,23 +34,16 @@ class UserReview extends Model<
   declare lastEdited: CreationOptional<Date | null>;
 
   static associate() {
-    this.belongsTo(Rating, {
+    this.belongsTo(IndexMedia, {
       as: 'indexMedia',
       foreignKey: 'indexId',
     });
-    this.belongsTo(Rating, {
+    this.belongsTo(User, {
       as: 'user',
       foreignKey: 'userId',
     });
   }
 }
-const mediaId: number = 2;
-
-UserReview.findAll({
-  where: {
-    indexId: mediaId,
-  },
-});
 
 UserReview.init(
   {
@@ -61,7 +55,6 @@ UserReview.init(
     indexId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: true,
       references: {
         model: 'index_media',
         key: 'id',
@@ -84,24 +77,21 @@ UserReview.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        min: 3,
-        max: 75,
+        len: [3, 75],
       },
     },
     mainContent: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        min: 30,
-        max: 6000,
+        len: [30, 6000],
       },
     },
     spoilerContent: {
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        min: 30,
-        max: 4000,
+        len: [30, 4000],
       },
     },
     recommended: {
@@ -124,7 +114,7 @@ UserReview.init(
       defaultValue: 0,
     },
     lastEdited: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DATE,
       allowNull: false,
       defaultValue: 0,
     },
@@ -133,6 +123,34 @@ UserReview.init(
     sequelize,
     underscored: true,
     modelName: 'user_review',
+    indexes: [
+      {
+        unique: true,
+        fields: ['user_id', 'index_id'],
+      },
+    ],
+    scopes: {
+      withUserRating: (userId: number, indexId: number) => ({
+        include: [
+          {
+            association: 'indexMedia',
+            attributes: ['id', 'mediaType'],
+            include: [
+              {
+                model: Rating,
+                as: 'userRating',
+                required: false,
+                attributes: ['id', 'userScore', 'mediaId'],
+                where: {
+                  userId,
+                  indexId,
+                },
+              },
+            ],
+          },
+        ],
+      }),
+    },
   }
 );
 
