@@ -201,6 +201,7 @@ export const buildIndexMediaInclude = (
     attributes: [...mediaInIndexAttributes, 'rating', 'seasonCount'],
     include: buildIncludeOptions(undefined, MediaType.Show, false, activeUser),
   },
+  /*
   {
     association: 'season',
     attributes: [...mediaInIndexAttributes, 'rating', 'showId'],
@@ -210,5 +211,5 @@ export const buildIndexMediaInclude = (
       false,
       activeUser
     ),
-  },
+  },*/
 ];
