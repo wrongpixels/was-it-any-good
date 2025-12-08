@@ -96,7 +96,7 @@ router.get(
       if (!showEntry || !(showEntry instanceof Show)) {
         throw new NotFoundError('Show');
       }
-      if (isShowDataOld(showEntry)) {
+      if (!isShowDataOld(showEntry)) {
         console.log('Show data might be outdated');
         await updateShowEntry(showEntry);
       }

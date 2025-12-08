@@ -15,24 +15,26 @@ import { mediaInIndexAttributes } from '../constants/scope-attributes';
 export const mediaDataToCreateIndexMedia = (
   data: FilmData | ShowData | SeasonData,
   showName: string = ''
-): CreateIndexMedia => ({
-  tmdbId: data.tmdbId,
-  image: data.image,
-  addedToMedia: true,
-  year: getYearNum(data.releaseDate),
-  country: data.countries,
-  //for seasons, we override the name to contain the parent show's for sorting reasons
-  name:
-    data.mediaType === MediaType.Season
-      ? `${showName}: Season ${data.index}`
-      : data.name,
-  rating: data.rating,
-  baseRating: data.baseRating,
-  voteCount: data.voteCount,
-  popularity: data.popularity,
-  mediaType: data.mediaType,
-  releaseDate: data.releaseDate,
-});
+): CreateIndexMedia => {
+  return {
+    tmdbId: data.tmdbId,
+    image: data.image,
+    addedToMedia: true,
+    year: getYearNum(data.releaseDate),
+    country: data.countries,
+    //for seasons, we override the name to contain the parent show's for sorting reasons
+    name:
+      data.mediaType === MediaType.Season
+        ? `${showName}: Season ${data.index}`
+        : data.name,
+    rating: data.rating,
+    baseRating: data.baseRating,
+    voteCount: data.voteCount,
+    popularity: data.popularity,
+    mediaType: data.mediaType,
+    releaseDate: data.releaseDate,
+  };
+};
 
 const PAGES_TO_GATHER: number = 10;
 const DB_PATH: string = path.join(__dirname, '../db');

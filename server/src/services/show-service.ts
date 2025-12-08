@@ -154,10 +154,10 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  const fullUpdate: boolean =
-    showEntry.lastAirDate !== newShowTMDBData.last_air_date ||
+  const fullUpdate: boolean = true;
+  /* showEntry.lastAirDate !== newShowTMDBData.last_air_date ||
     seasonDiff !== 0 ||
-    episodeDiff !== 0;
+    episodeDiff !== 0;*/
 
   //we only need a transaction for full updates.
   const transaction: Transaction | undefined = fullUpdate
@@ -208,7 +208,7 @@ export const updateShowEntry = async (showEntry: Show) => {
         );
       //we only rebuild seasons if new seasons or were found or if we
       //have incomplete seasons.
-      if (seasonDiff > 0 || missingSeasonData) {
+      /* if (seasonDiff > 0 || missingSeasonData)*/ {
         const newSeasonsData: SeasonData[] = newShowData.seasons;
         const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
@@ -235,6 +235,8 @@ export const updateShowEntry = async (showEntry: Show) => {
               'episodeCount',
               'image',
               'description',
+              'rating',
+              'voteCount',
               'name',
             ],
             returning: true,
@@ -304,6 +306,13 @@ const buildSeason = (
   //to avoid setting an early baseRating and rating.
   const releaseDate: string | null = seasonData.releaseDate;
   const unreleased: boolean = isUnreleased(releaseDate);
+
+  //so, in case we are updating existing seasons, keep their cached ratings
+  const existingSeason: SeasonResponse | undefined = !showEntry.seasons
+    ? undefined
+    : showEntry.seasons.find(
+        (s: SeasonResponse) => s.tmdbId === seasonData.tmdbId
+      );
   //to overwrite the possible baseRating.
   const correctedRating: number | undefined = unreleased ? 0 : undefined;
   return {
@@ -311,9 +320,12 @@ const buildSeason = (
     showId: showEntry.id,
     country: showEntry.country,
     indexId: indexMedia.id,
-    baseRating: correctedRating ?? seasonData.baseRating,
-    rating: correctedRating ?? seasonData.rating,
-    voteCount: unreleased ? 0 : seasonData.voteCount,
+    baseRating:
+      correctedRating ?? existingSeason?.baseRating ?? seasonData.baseRating,
+    rating: correctedRating ?? existingSeason?.rating ?? seasonData.rating,
+    voteCount: unreleased
+      ? 0
+      : (existingSeason?.voteCount ?? seasonData.voteCount),
     dataUpdatedAt: new Date(),
   };
 };
