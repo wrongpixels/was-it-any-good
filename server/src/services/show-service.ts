@@ -235,6 +235,8 @@ export const updateShowEntry = async (showEntry: Show) => {
               'episodeCount',
               'image',
               'description',
+              'rating',
+              'voteCount',
               'name',
             ],
             returning: true,
@@ -304,6 +306,13 @@ const buildSeason = (
   //to avoid setting an early baseRating and rating.
   const releaseDate: string | null = seasonData.releaseDate;
   const unreleased: boolean = isUnreleased(releaseDate);
+
+  //so, in case we are updating existing seasons, we keep their cached ratings
+  const existingSeason: SeasonResponse | undefined = !showEntry.seasons
+    ? undefined
+    : showEntry.seasons.find(
+        (s: SeasonResponse) => s.tmdbId === seasonData.tmdbId
+      );
   //to overwrite the possible baseRating.
   const correctedRating: number | undefined = unreleased ? 0 : undefined;
   return {
@@ -311,9 +320,12 @@ const buildSeason = (
     showId: showEntry.id,
     country: showEntry.country,
     indexId: indexMedia.id,
-    baseRating: correctedRating ?? seasonData.baseRating,
-    rating: correctedRating ?? seasonData.rating,
-    voteCount: unreleased ? 0 : seasonData.voteCount,
+    baseRating:
+      correctedRating ?? existingSeason?.baseRating ?? seasonData.baseRating,
+    rating: correctedRating ?? existingSeason?.rating ?? seasonData.rating,
+    voteCount: unreleased
+      ? 0
+      : (existingSeason?.voteCount ?? seasonData.voteCount),
     dataUpdatedAt: new Date(),
   };
 };
