@@ -154,10 +154,10 @@ export const updateShowEntry = async (showEntry: Show) => {
   const episodeDiff: number =
     newShowTMDBData.number_of_episodes - showEntry.episodeCount;
 
-  const fullUpdate: boolean = true;
-  /* showEntry.lastAirDate !== newShowTMDBData.last_air_date ||
+  const fullUpdate: boolean =
+    showEntry.lastAirDate !== newShowTMDBData.last_air_date ||
     seasonDiff !== 0 ||
-    episodeDiff !== 0;*/
+    episodeDiff !== 0;
 
   //we only need a transaction for full updates.
   const transaction: Transaction | undefined = fullUpdate
@@ -208,7 +208,7 @@ export const updateShowEntry = async (showEntry: Show) => {
         );
       //we only rebuild seasons if new seasons or were found or if we
       //have incomplete seasons.
-      /* if (seasonDiff > 0 || missingSeasonData)*/ {
+      if (seasonDiff > 0 || missingSeasonData) {
         const newSeasonsData: SeasonData[] = newShowData.seasons;
         const createSeasonsIndexMedia: CreateIndexMedia[] = newSeasonsData.map(
           (s: SeasonData) => mediaDataToCreateIndexMedia(s, showEntry.name)
@@ -307,7 +307,7 @@ const buildSeason = (
   const releaseDate: string | null = seasonData.releaseDate;
   const unreleased: boolean = isUnreleased(releaseDate);
 
-  //so, in case we are updating existing seasons, keep their cached ratings
+  //so, in case we are updating existing seasons, we keep their cached ratings
   const existingSeason: SeasonResponse | undefined = !showEntry.seasons
     ? undefined
     : showEntry.seasons.find(
