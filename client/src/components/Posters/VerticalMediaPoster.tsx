@@ -8,12 +8,18 @@ import StarRatingIndexMedia from '../Rating/StarRatingIndexMedia';
 import { MediaType } from '../../../../shared/types/media';
 import { RatingData } from '../../../../shared/types/models';
 
+interface VericalMediaPosterTag {
+  text: string;
+  hoverText: string;
+}
+
 interface VerticalMediaPosterProps {
   name: string;
   url: string;
   image: string;
   mediaType: MediaType;
   releaseDate: string | null;
+  tagContent: VericalMediaPosterTag;
   rating?: number;
   userRating?: RatingData;
   isVote?: boolean;
