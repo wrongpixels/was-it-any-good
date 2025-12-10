@@ -2,17 +2,22 @@ import { JSX } from 'react';
 import { MediaType } from '../../../../../../shared/types/media';
 import IconFilm from './IconFilm';
 import IconShow from './IconShow';
-import { MediaTypeProps } from '../../../../types/common-props-types';
+import {
+  MediaTypeProps,
+  OptIconProps,
+} from '../../../../types/common-props-types';
+
+interface IconMediaProps extends MediaTypeProps, OptIconProps {}
 
 const IconForMediaType = ({
   mediaType,
   ...props
-}: MediaTypeProps): JSX.Element | null => {
+}: IconMediaProps): JSX.Element | null => {
   switch (mediaType) {
     case MediaType.Film:
-      return <IconFilm className={props.className} title="Film" />;
+      return <IconFilm title="Film" {...props} />;
     case MediaType.Show:
-      return <IconShow className={props.className} title="TV Show" />;
+      return <IconShow title="TV Show" {...props} />;
     default:
       return null;
   }

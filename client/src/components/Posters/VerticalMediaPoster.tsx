@@ -7,13 +7,7 @@ import LazyImage from '../Common/Custom/LazyImage';
 import StarRatingIndexMedia from '../Rating/StarRatingIndexMedia';
 import { MediaType } from '../../../../shared/types/media';
 import { RatingData } from '../../../../shared/types/models';
-import Tag from '../Common/Custom/Tag';
-
-interface TagContent {
-  text: string;
-  title: string;
-  className?: string;
-}
+import Tag, { TagContent } from '../Common/Custom/Tag';
 
 interface VerticalMediaPosterProps {
   name: string;

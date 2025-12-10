@@ -5,6 +5,12 @@ import { getAnyMediaDisplayRating } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import { buildMediaLinkWithSlug } from '../../../../shared/util/url-builder';
 import { TagContent } from '../Common/Custom/Tag';
+import {
+  formatDate,
+  getYearNum,
+} from '../../../../shared/helpers/format-helper';
+import IconForMediaType from '../Common/Icons/Media/IconForMediaType';
+import { MediaType } from '../../../../shared/types/media';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;
@@ -16,14 +22,23 @@ const PersonRolePoster = ({
   mediaResponse,
   characterNames,
 }: PersonPagePosterProps): JSX.Element => {
-  const mainTag: TagContent = { text: 'Test', title: 'This is a test' };
-  const secondaryTag: TagContent = { text: 'Test', title: 'This is a test' };
+  const mainTag: TagContent | undefined = mediaResponse.releaseDate
+    ? {
+        text: getYearNum(mediaResponse.releaseDate),
+        title: `Released ${formatDate(mediaResponse.releaseDate)}`,
+        icon: (
+          <IconForMediaType
+            mediaType={mediaResponse.mediaType}
+            width={mediaResponse.mediaType === MediaType.Film ? 14 : 15}
+          />
+        ),
+      }
+    : undefined;
 
   return (
     <div title={characterNames} className="flex flex-col items-center">
       <VerticalMediaPoster
         mainTag={mainTag}
-        secondaryTag={secondaryTag}
         url={buildMediaLinkWithSlug(mediaResponse)}
         mediaType={mediaResponse.mediaType}
         name={mediaResponse.name}
