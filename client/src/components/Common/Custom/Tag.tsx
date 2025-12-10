@@ -1,12 +1,13 @@
 import { JSX } from 'react';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
-import { OptStringProps } from '../../../types/common-props-types';
 
-const Tag = ({
-  text,
-  title,
-  className,
-}: OptStringProps): JSX.Element | null => {
+export interface TagContent {
+  text: string;
+  title: string;
+  className?: string;
+}
+
+const Tag = ({ text, title, className }: TagContent): JSX.Element | null => {
   if (!text) {
     return null;
   }

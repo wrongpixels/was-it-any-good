@@ -7,10 +7,12 @@ import LazyImage from '../Common/Custom/LazyImage';
 import StarRatingIndexMedia from '../Rating/StarRatingIndexMedia';
 import { MediaType } from '../../../../shared/types/media';
 import { RatingData } from '../../../../shared/types/models';
+import Tag from '../Common/Custom/Tag';
 
-interface VericalMediaPosterTag {
+interface TagContent {
   text: string;
-  hoverText: string;
+  title: string;
+  className?: string;
 }
 
 interface VerticalMediaPosterProps {
@@ -19,7 +21,10 @@ interface VerticalMediaPosterProps {
   image: string;
   mediaType: MediaType;
   releaseDate: string | null;
-  tagContent: VericalMediaPosterTag;
+  //the optional Tag up right
+  mainTag?: TagContent;
+  //the optional Tag bottom left
+  secondaryTag?: TagContent;
   rating?: number;
   userRating?: RatingData;
   isVote?: boolean;
@@ -35,6 +40,8 @@ const VerticalMediaPoster = ({
   rating,
   isVote,
   userRating,
+  mainTag,
+  secondaryTag,
 }: VerticalMediaPosterProps): JSX.Element => {
   return (
     <Link
@@ -52,6 +59,15 @@ const VerticalMediaPoster = ({
             alt={name}
             className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
           />
+          {mainTag && (
+            <Tag {...mainTag} className="absolute right-1.5 top-1.5" />
+          )}
+          {secondaryTag && (
+            <Tag
+              {...secondaryTag}
+              className="absolute left-1.5 bottom-1.5 text-notigreen"
+            />
+          )}
         </div>
         <StarRatingIndexMedia
           rating={rating}
