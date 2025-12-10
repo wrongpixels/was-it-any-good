@@ -17,10 +17,18 @@ const IconForMediaType = ({
     case MediaType.Film:
       return <IconFilm title="Film" {...props} />;
     case MediaType.Show:
+    case MediaType.Season:
       return <IconShow title="TV Show" {...props} />;
     default:
       return null;
   }
 };
+
+export const SmallIconForMediaType = (props: IconMediaProps) => (
+  <IconForMediaType
+    width={props.mediaType === MediaType.Film ? 14 : 15}
+    {...props}
+  />
+);
 
 export default IconForMediaType;

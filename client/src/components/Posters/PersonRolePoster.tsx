@@ -9,8 +9,7 @@ import {
   formatDate,
   getYearNum,
 } from '../../../../shared/helpers/format-helper';
-import IconForMediaType from '../Common/Icons/Media/IconForMediaType';
-import { MediaType } from '../../../../shared/types/media';
+import { SmallIconForMediaType } from '../Common/Icons/Media/IconForMediaType';
 
 interface PersonPagePosterProps {
   mediaResponse: MediaResponse;
@@ -26,12 +25,7 @@ const PersonRolePoster = ({
     ? {
         text: getYearNum(mediaResponse.releaseDate),
         title: `Released ${formatDate(mediaResponse.releaseDate)}`,
-        icon: (
-          <IconForMediaType
-            mediaType={mediaResponse.mediaType}
-            width={mediaResponse.mediaType === MediaType.Film ? 14 : 15}
-          />
-        ),
+        icon: <SmallIconForMediaType mediaType={mediaResponse.mediaType} />,
       }
     : undefined;
 

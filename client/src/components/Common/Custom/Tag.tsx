@@ -1,9 +1,10 @@
 import { JSX } from 'react';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
+import { styles } from '../../../constants/tailwind-styles';
 
 export interface TagContent {
   text?: string | number | null;
-  title: string;
+  title?: string;
   icon?: JSX.Element;
   className?: string;
 }
@@ -19,13 +20,17 @@ const Tag = ({
   }
   return (
     <div
-      title={title ?? text}
+      title={title ?? text?.toString()}
       className={mergeClassnames(
-        ' font-semibold cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60 flex flex-row gap-1.25 items-center',
+        `font-semibold cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60 flex flex-row gap-1.25 items-center ${styles.animations.zoomLessOnHover}`,
         className
       )}
     >
-      {icon} <div className="w-0 flex h-3 border-r-2 border-white/25" />
+      {icon}
+      {icon && text && (
+        <div className="w-0 flex h-3 border-r-2 border-white/25" />
+      )}
+
       {text}
     </div>
   );
