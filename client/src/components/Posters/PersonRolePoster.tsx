@@ -16,11 +16,14 @@ const PersonRolePoster = ({
   mediaResponse,
   characterNames,
 }: PersonPagePosterProps): JSX.Element => {
-  const tagContent: TagContent = { text: 'Test', title: 'This is a test' };
+  const mainTag: TagContent = { text: 'Test', title: 'This is a test' };
+  const secondaryTag: TagContent = { text: 'Test', title: 'This is a test' };
+
   return (
     <div title={characterNames} className="flex flex-col items-center">
       <VerticalMediaPoster
-        mainTag={tagContent}
+        mainTag={mainTag}
+        secondaryTag={secondaryTag}
         url={buildMediaLinkWithSlug(mediaResponse)}
         mediaType={mediaResponse.mediaType}
         name={mediaResponse.name}

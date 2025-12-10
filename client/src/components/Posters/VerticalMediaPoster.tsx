@@ -65,7 +65,7 @@ const VerticalMediaPoster = ({
           {secondaryTag && (
             <Tag
               {...secondaryTag}
-              className="absolute left-1.5 bottom-1.5 text-notigreen"
+              className="absolute left-1.5 bottom-1.5 bg-notigreen"
             />
           )}
         </div>

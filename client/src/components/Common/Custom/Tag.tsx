@@ -4,10 +4,16 @@ import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
 export interface TagContent {
   text: string;
   title: string;
+  icon?: JSX.Element;
   className?: string;
 }
 
-const Tag = ({ text, title, className }: TagContent): JSX.Element | null => {
+const Tag = ({
+  text,
+  title,
+  className,
+  icon,
+}: TagContent): JSX.Element | null => {
   if (!text) {
     return null;
   }
@@ -19,6 +25,7 @@ const Tag = ({ text, title, className }: TagContent): JSX.Element | null => {
         className
       )}
     >
+      {icon}
       {text}
     </div>
   );
