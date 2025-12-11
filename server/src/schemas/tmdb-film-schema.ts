@@ -7,7 +7,6 @@ export const TMDBFilmInfoSchema = TMDBMediaSchema.extend({
   original_title: z.string(),
   release_date: z.string().nullable(),
   runtime: z.number().int().min(0),
-  credits: TMDBFilmCreditsSchema,
 });
 
 export const TMDBFilmSchema = TMDBFilmInfoSchema.extend({

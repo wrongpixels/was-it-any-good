@@ -6,6 +6,7 @@ import Film, { CreateFilm } from '../models/media/film';
 import {
   TMDBFilmInfoData,
   TMDBFilmInfoSchema,
+  TMDBFilmSchema,
 } from '../schemas/tmdb-film-schema';
 import { TMDBCreditsData } from '../schemas/tmdb-media-schema';
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
@@ -54,13 +55,23 @@ export const buildFilmEntry = async (
   return toPlain(filmEntry);
 };
 
+export const tryFetchTMDBFilm = async (
+  tmdbId: string | number
+): Promise<TMDBFilmInfoData | undefined> => {
+  try {
+    return await fetchTMDBFilm(tmdbId);
+  } catch (_error: unknown) {
+    console.log(tmdbId, 'does not match a valid Film TMDB Id.');
+  }
+  return;
+};
+
 export const fetchTMDBFilm = async (
   tmdbId: string | number
 ): Promise<TMDBFilmInfoData> => {
   const filmRes: AxiosResponse = await tmdbAPI.get(
     tmdbPaths.films.byTMDBId(tmdbId)
   );
-  //we extract credits from the rest of the film data
   const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   return filmInfoData;
 };
@@ -72,7 +83,7 @@ export const fetchAndProcessTMDBFilm = async (
     tmdbPaths.films.withCredits(tmdbId)
   );
   //we extract credits from the rest of the film data
-  const { credits, ...filmInfoData } = TMDBFilmInfoSchema.parse(filmRes.data);
+  const { credits, ...filmInfoData } = TMDBFilmSchema.parse(filmRes.data);
   //we trim and format the credits
   const creditsData: TMDBCreditsData = trimCredits(credits);
   //and build the final FilmData object for our db

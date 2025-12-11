@@ -11,8 +11,8 @@ import {
 } from '../schemas/tmdb-index-media-schemas';
 import { tmdbAPI } from '../util/config';
 import { tmdbPaths } from '../util/url-helper';
-import { fetchTMDBFilm } from './film-service';
-import { fetchTMDBShow } from './show-service';
+import { tryFetchTMDBFilm } from './film-service';
+import { tryFetchTMDBShow } from './show-service';
 
 export interface TMDBFilmSearchData extends TMDBSearchResult {
   films: TMDBIndexFilm[];
@@ -51,10 +51,10 @@ export const fetchSearchFromTMDBAndParse = async (
         : Promise.resolve(null),
       //now, if term could be a tmdbId and this is page 1, we try to add it to the results
       searchFilms && potentialTmdbId
-        ? fetchTMDBFilm(searchTerm)
+        ? tryFetchTMDBFilm(searchTerm)
         : Promise.resolve(null),
       searchShows && potentialTmdbId
-        ? fetchTMDBShow(searchTerm)
+        ? tryFetchTMDBShow(searchTerm)
         : Promise.resolve(null),
     ]);
 
@@ -78,6 +78,7 @@ export const fetchSearchFromTMDBAndParse = async (
         release_date: filmByTmdbId.release_date ?? '',
       };
       filmData.films.unshift(filmAsIndexMedia);
+      filmData.total_results += 1;
     }
   }
 
@@ -97,6 +98,7 @@ export const fetchSearchFromTMDBAndParse = async (
         first_air_date: showByTmdbId.first_air_date ?? '',
       };
       showData.shows.unshift(showAsIndexMedia);
+      showData.total_results += 1;
     }
   }
 

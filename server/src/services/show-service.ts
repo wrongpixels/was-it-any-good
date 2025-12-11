@@ -265,6 +265,17 @@ export const updateShowEntry = async (showEntry: Show) => {
   console.log('Post-reload episodes:', showEntry.episodeCount);
 };
 
+export const tryFetchTMDBShow = async (
+  tmdbId: string | number
+): Promise<TMDBShowInfoData | undefined> => {
+  try {
+    return await fetchTMDBShow(tmdbId);
+  } catch (_error) {
+    console.log(tmdbId, 'does not match a valid Show TMDB Id.');
+  }
+  return;
+};
+
 export const fetchTMDBShow = async (
   tmdbId: number | string
 ): Promise<TMDBShowInfoData> => {
