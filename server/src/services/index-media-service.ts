@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs/promises';
-import { MediaType } from '../../../shared/types/media';
+import { MediaType, TMDBMediaType } from '../../../shared/types/media';
 import { ActiveUser, CreateIndexMedia } from '../../../shared/types/models';
 import IndexMedia from '../models/media/indexMedia';
 import { tmdbAPI } from '../util/config';
@@ -59,7 +59,7 @@ export const gatherMedia = async (mediaType: MediaType): Promise<number> => {
 
   for (let page = 1; page <= PAGES_TO_GATHER; page++) {
     const response = await tmdbAPI.get(
-      `/discover/${mediaType === MediaType.Film ? 'movie' : 'tv'}`,
+      `/discover/${mediaType === MediaType.Film ? TMDBMediaType.Film : TMDBMediaType.Show}`,
       {
         params: {
           include_adult: false,

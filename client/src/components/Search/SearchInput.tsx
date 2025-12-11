@@ -17,7 +17,7 @@ const SearchInputField = memo(
     const searchField = useInputField({
       name: 'main-search',
       initialValue: searchTerm || undefined,
-      placeholder: 'Search on WIAG and TMDB',
+      placeholder: 'Search by Title or TMDB Id',
     });
 
     useEffect(() => {

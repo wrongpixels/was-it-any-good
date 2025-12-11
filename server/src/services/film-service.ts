@@ -3,7 +3,11 @@ import { FilmResponse } from '../../../shared/types/models';
 import { createFilm } from '../factories/film-factory';
 import { IndexMedia } from '../models';
 import Film, { CreateFilm } from '../models/media/film';
-import { TMDBFilmInfoSchema } from '../schemas/tmdb-film-schema';
+import {
+  TMDBFilmInfoData,
+  TMDBFilmInfoSchema,
+  TMDBFilmSchema,
+} from '../schemas/tmdb-film-schema';
 import { TMDBCreditsData } from '../schemas/tmdb-media-schema';
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
@@ -21,7 +25,7 @@ import { isUnreleased } from '../../../shared/helpers/media-helper';
 export const buildFilmEntry = async (
   params: MediaQueryValues
 ): Promise<FilmResponse | null> => {
-  const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
+  const filmData: FilmData = await fetchAndProcessTMDBFilm(params.mediaId);
 
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
@@ -51,14 +55,35 @@ export const buildFilmEntry = async (
   return toPlain(filmEntry);
 };
 
+export const tryFetchTMDBFilm = async (
+  tmdbId: string | number
+): Promise<TMDBFilmInfoData | undefined> => {
+  try {
+    return await fetchTMDBFilm(tmdbId);
+  } catch (_error: unknown) {
+    console.log(tmdbId, 'does not match a valid Film TMDB Id.');
+  }
+  return;
+};
+
 export const fetchTMDBFilm = async (
+  tmdbId: string | number
+): Promise<TMDBFilmInfoData> => {
+  const filmRes: AxiosResponse = await tmdbAPI.get(
+    tmdbPaths.films.byTMDBId(tmdbId)
+  );
+  const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
+  return filmInfoData;
+};
+
+export const fetchAndProcessTMDBFilm = async (
   tmdbId: string | number
 ): Promise<FilmData> => {
   const filmRes: AxiosResponse = await tmdbAPI.get(
     tmdbPaths.films.withCredits(tmdbId)
   );
   //we extract credits from the rest of the film data
-  const { credits, ...filmInfoData } = TMDBFilmInfoSchema.parse(filmRes.data);
+  const { credits, ...filmInfoData } = TMDBFilmSchema.parse(filmRes.data);
   //we trim and format the credits
   const creditsData: TMDBCreditsData = trimCredits(credits);
   //and build the final FilmData object for our db

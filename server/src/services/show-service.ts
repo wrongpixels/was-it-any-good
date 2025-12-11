@@ -43,7 +43,7 @@ import { DEF_IMAGE_MEDIA } from '../../../shared/defaults/media-defaults';
 export const buildShowEntry = async (
   params: MediaQueryValues
 ): Promise<ShowResponse | null> => {
-  const showData: ShowData = await fetchTMDBShowFull(params.mediaId);
+  const showData: ShowData = await fetchAndProcessTMDBShowFull(params.mediaId);
 
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
@@ -113,7 +113,7 @@ export const buildShowEntry = async (
   return showResponse;
 };
 
-export const fetchTMDBShowFull = async (
+export const fetchAndProcessTMDBShowFull = async (
   tmdbId: string | number
 ): Promise<ShowData> => {
   //we fetch the full show with appended extended credits and external ids
@@ -146,7 +146,7 @@ export const fetchTMDBShowFull = async (
 //to update shows in case of new seasons
 export const updateShowEntry = async (showEntry: Show) => {
   //we fetch a fresh light version of the show, with no credits
-  const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShowData(
+  const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShow(
     showEntry.tmdbId
   );
   const seasonDiff: number =
@@ -190,7 +190,9 @@ export const updateShowEntry = async (showEntry: Show) => {
           : `Found ${episodeDiff} new episodes!`
       );
       //first, we fetch a full version of the Show
-      const newShowData: ShowData = await fetchTMDBShowFull(showEntry.tmdbId);
+      const newShowData: ShowData = await fetchAndProcessTMDBShowFull(
+        showEntry.tmdbId
+      );
 
       //and we push to promises an updated cast and crew
       promises.push(buildCreditsAndGenres(showEntry, newShowData, transaction));
@@ -263,7 +265,20 @@ export const updateShowEntry = async (showEntry: Show) => {
   console.log('Post-reload episodes:', showEntry.episodeCount);
 };
 
-export const fetchTMDBShowData = async (tmdbId: number | string) => {
+export const tryFetchTMDBShow = async (
+  tmdbId: string | number
+): Promise<TMDBShowInfoData | undefined> => {
+  try {
+    return await fetchTMDBShow(tmdbId);
+  } catch (_error) {
+    console.log(tmdbId, 'does not match a valid Show TMDB Id.');
+  }
+  return;
+};
+
+export const fetchTMDBShow = async (
+  tmdbId: number | string
+): Promise<TMDBShowInfoData> => {
   const showRes: AxiosResponse = await tmdbAPI.get(
     tmdbPaths.shows.byTMDBId(tmdbId)
   );
