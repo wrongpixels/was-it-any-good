@@ -1,23 +1,36 @@
 import { JSX } from 'react';
 import { mergeClassnames } from '../../../utils/lib/tw-classname-merger';
-import { OptStringProps } from '../../../types/common-props-types';
+import { styles } from '../../../constants/tailwind-styles';
+
+export interface TagContent {
+  text?: string | number | null;
+  title?: string;
+  icon?: JSX.Element;
+  className?: string;
+}
 
 const Tag = ({
   text,
   title,
   className,
-}: OptStringProps): JSX.Element | null => {
-  if (!text) {
+  icon,
+}: TagContent): JSX.Element | null => {
+  if (!text && !icon) {
     return null;
   }
   return (
     <div
-      title={title ?? text}
+      title={title ?? text?.toString()}
       className={mergeClassnames(
-        ' font-semibold cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60',
+        `font-semibold cursor-pointer absolute text-white text-xs bg-starbright rounded-full px-2 py-0.5 shadow/60 flex flex-row gap-1.25 items-center ${styles.animations.zoomLessOnHover}`,
         className
       )}
     >
+      {icon}
+      {icon && text && (
+        <div className="w-0 flex h-3 border-r-2 border-white/25" />
+      )}
+
       {text}
     </div>
   );
