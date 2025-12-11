@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { TMDBFilmSchema } from './tmdb-film-schema';
 import { TMDBShowSchema } from './tmdb-show-schema';
+import { TMDBMediaType } from '../../../shared/types/media';
 
 export const TMDBSearchSchema = z.object({
   page: z.number(),
@@ -52,7 +53,7 @@ export const TMDBIndexShowArraySchema = z.array(TMDBIndexShowSchema);
 
 export const TMDBMultiSearchResultSchema = z.array(
   z.discriminatedUnion('media_type', [
-    TMDBIndexFilmSchema.extend({ media_type: z.literal('movie') }),
-    TMDBIndexShowSchema.extend({ media_type: z.literal('tv') }),
+    TMDBIndexFilmSchema.extend({ media_type: z.literal(TMDBMediaType.Film) }),
+    TMDBIndexShowSchema.extend({ media_type: z.literal(TMDBMediaType.Show) }),
   ])
 );

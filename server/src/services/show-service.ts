@@ -146,7 +146,7 @@ export const fetchAndProcessTMDBShowFull = async (
 //to update shows in case of new seasons
 export const updateShowEntry = async (showEntry: Show) => {
   //we fetch a fresh light version of the show, with no credits
-  const newShowTMDBData: TMDBShowInfoData = await fetchAndProcessTMDBShowData(
+  const newShowTMDBData: TMDBShowInfoData = await fetchTMDBShow(
     showEntry.tmdbId
   );
   const seasonDiff: number =
@@ -265,7 +265,7 @@ export const updateShowEntry = async (showEntry: Show) => {
   console.log('Post-reload episodes:', showEntry.episodeCount);
 };
 
-export const fetchAndProcessTMDBShowData = async (
+export const fetchTMDBShow = async (
   tmdbId: number | string
 ): Promise<TMDBShowInfoData> => {
   const showRes: AxiosResponse = await tmdbAPI.get(

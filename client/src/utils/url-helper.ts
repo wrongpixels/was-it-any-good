@@ -1,4 +1,4 @@
-import { MediaType } from '../../../shared/types/media';
+import { MediaType, TMDBMediaType } from '../../../shared/types/media';
 import { BASE_TMDB_URL } from '../../../shared/constants/url-constants';
 import { IndexMediaData, MediaResponse } from '../../../shared/types/models';
 import { SearchType } from '../../../shared/types/search';
@@ -42,7 +42,8 @@ export const buildTMDBUrl = (
   path: string = ''
 ): string => {
   const url = BASE_TMDB_URL;
-  const prefix: string = mediaType === MediaType.Show ? 'tv' : 'movie';
+  const prefix: string =
+    mediaType === MediaType.Show ? TMDBMediaType.Show : TMDBMediaType.Film;
   return `${url}/${prefix}/${path}`;
 };
 

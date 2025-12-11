@@ -1,4 +1,3 @@
-import { AxiosResponse } from 'axios';
 import { isNumber } from '../../../shared/helpers/format-helper';
 import { TMDBSearchType } from '../../../shared/types/search';
 import {
@@ -11,9 +10,8 @@ import {
 } from '../schemas/tmdb-index-media-schemas';
 import { tmdbAPI } from '../util/config';
 import { tmdbPaths } from '../util/url-helper';
-import { TMDBFilmData } from '../schemas/tmdb-film-schema';
-import { fetchAndProcessTMDBFilm } from './film-service';
-import { fetchAndProcessTMDBShowData } from './show-service';
+import { fetchTMDBFilm } from './film-service';
+import { fetchTMDBShow } from './show-service';
 
 export interface TMDBFilmSearchData extends TMDBSearchResult {
   films: TMDBIndexFilm[];
@@ -51,10 +49,10 @@ export const fetchSearchFromTMDBAndParse = async (
         : Promise.resolve(null),
       //now, if term could be a tmdbId and this is page 1, we try to add it to the results
       searchFilms && potentialTmdbId
-        ? fetchAndProcessTMDBFilm(searchTerm)
+        ? fetchTMDBFilm(searchTerm)
         : Promise.resolve(null),
       searchShows && potentialTmdbId
-        ? fetchAndProcessTMDBShowData(searchTerm)
+        ? fetchTMDBShow(searchTerm)
         : Promise.resolve(null),
     ]);
 
@@ -71,8 +69,12 @@ export const fetchSearchFromTMDBAndParse = async (
     filmData = { ...parsedResult, films: parsedFilms };
 
     //if we found a match by tmdbId, we convert it and inject it as first Film result.
-    if (filmByTmdbId?.data) {
-      const filmData: TMDBFilmData;
+    if (filmByTmdbId) {
+      const filmAsIndexMedia: TMDBIndexFilm = {
+        ...filmByTmdbId,
+        media_type: TMDB,
+      };
+      filmData.films.unshift(filmByTmdbId);
     }
   }
 

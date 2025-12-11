@@ -3,7 +3,10 @@ import { FilmResponse } from '../../../shared/types/models';
 import { createFilm } from '../factories/film-factory';
 import { IndexMedia } from '../models';
 import Film, { CreateFilm } from '../models/media/film';
-import { TMDBFilmInfoSchema } from '../schemas/tmdb-film-schema';
+import {
+  TMDBFilmInfoData,
+  TMDBFilmInfoSchema,
+} from '../schemas/tmdb-film-schema';
 import { TMDBCreditsData } from '../schemas/tmdb-media-schema';
 import { FilmData, MediaQueryValues } from '../types/media/media-types';
 import { tmdbAPI } from '../util/config';
@@ -57,12 +60,12 @@ export const buildFilmEntry = async (
 
 export const fetchTMDBFilm = async (
   tmdbId: string | number
-): Promise<TMDBIndexFilm> => {
+): Promise<TMDBFilmInfoData> => {
   const filmRes: AxiosResponse = await tmdbAPI.get(
     tmdbPaths.films.byTMDBId(tmdbId)
   );
   //we extract credits from the rest of the film data
-  const filmInfoData: TMDBIndexFilm = TMDBIndexFilmSchema.parse(filmRes.data);
+  const filmInfoData: TMDBFilmInfoData = TMDBFilmInfoSchema.parse(filmRes.data);
   return filmInfoData;
 };
 
