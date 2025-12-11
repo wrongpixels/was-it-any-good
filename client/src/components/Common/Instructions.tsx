@@ -38,15 +38,11 @@ const Instructions = ({
       </span>
       <span>
         {linkToSearch ? (
-          <Link to={clientPaths.search.base}>Search </Link>
+          <Link to={clientPaths.search.base}>{'Search '}</Link>
         ) : (
-          <>Click on it, Search </>
+          <>{'Just search'} </>
         )}
-        <span>{'for it or type its TMDB id in the URL!'}</span>
-      </span>
-      <span className="text-gray-350 italic cursor-text">
-        ({'Example:'}{' '}
-        <span className="text-starblue cursor-text">{'/tmdb/show/123'}</span>)
+        <span>{'for it by title or TMDB ID!'}</span>
       </span>
     </InstructionsBlock>
   );
