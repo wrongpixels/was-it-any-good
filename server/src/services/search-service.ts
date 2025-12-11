@@ -1,4 +1,5 @@
-import { isNumber } from '../../../shared/helpers/format-helper';
+import { isStringANumber } from '../../../shared/helpers/format-helper';
+import { TMDBMediaType } from '../../../shared/types/media';
 import { TMDBSearchType } from '../../../shared/types/search';
 import {
   TMDBSearchSchema,
@@ -31,7 +32,7 @@ export const fetchSearchFromTMDBAndParse = async (
 ): Promise<
   [TMDBFilmSearchData | undefined, TMDBShowSearchData | undefined]
 > => {
-  const termIsNumber: boolean = isNumber(searchTerm);
+  const termIsNumber: boolean = isStringANumber(searchTerm);
   const isMulti = searchType === TMDBSearchType.Multi;
   const pageString: string = pageToSearch.toString();
   const isPageOne: boolean = ['1', '0'].includes(pageString);
@@ -39,6 +40,7 @@ export const fetchSearchFromTMDBAndParse = async (
   const searchFilms = searchType === TMDBSearchType.Movie || isMulti;
   const searchShows = searchType === TMDBSearchType.TV || isMulti;
 
+  console.log('Is this probably a tmdbid?', pageString, termIsNumber);
   const [filmResponse, showResponse, filmByTmdbId, showByTmdbId] =
     await Promise.all([
       searchFilms
@@ -72,9 +74,10 @@ export const fetchSearchFromTMDBAndParse = async (
     if (filmByTmdbId) {
       const filmAsIndexMedia: TMDBIndexFilm = {
         ...filmByTmdbId,
-        media_type: TMDB,
+        media_type: TMDBMediaType.Film,
+        release_date: filmByTmdbId.release_date ?? '',
       };
-      filmData.films.unshift(filmByTmdbId);
+      filmData.films.unshift(filmAsIndexMedia);
     }
   }
 
@@ -86,6 +89,15 @@ export const fetchSearchFromTMDBAndParse = async (
       parsedResult.results
     );
     showData = { ...parsedResult, shows: parsedShows };
+    //if we found a match by tmdbId, we convert it and inject it as first Film result.
+    if (showByTmdbId) {
+      const showAsIndexMedia: TMDBIndexShow = {
+        ...showByTmdbId,
+        media_type: TMDBMediaType.Show,
+        first_air_date: showByTmdbId.first_air_date ?? '',
+      };
+      showData.shows.unshift(showAsIndexMedia);
+    }
   }
 
   return [filmData, showData];

@@ -20,10 +20,6 @@ import {
 } from './index-media-service';
 import { buildCreditsAndGenres } from './media-service';
 import { isUnreleased } from '../../../shared/helpers/media-helper';
-import {
-  TMDBIndexFilm,
-  TMDBIndexFilmSchema,
-} from '../schemas/tmdb-index-media-schemas';
 
 export const buildFilmEntry = async (
   params: MediaQueryValues

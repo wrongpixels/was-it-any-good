@@ -190,6 +190,9 @@ export const tryAddParenthesis = (
   return `(${input})`;
 };
 
+export const isStringANumber = (input: string): boolean =>
+  !isNaN(Number(input));
+
 export const isNumber = (value?: unknown): value is number =>
   typeof value === 'number' && !isNaN(value);
 
