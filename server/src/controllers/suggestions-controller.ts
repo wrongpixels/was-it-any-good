@@ -1,9 +1,10 @@
 import express from 'express';
 import CustomError from '../util/customError';
 import { IndexMedia } from '../models';
-import { Op } from 'sequelize';
+import { Op, WhereOptions } from 'sequelize';
 import { IndexMediaData } from '../../../shared/types/models';
 import { MediaType } from '../../../shared/types/media';
+import { isStringANumber } from '../../../shared/helpers/format-helper';
 const router = express.Router();
 
 //a controller for typing suggestions.
@@ -16,15 +17,36 @@ router.get('/', async (req, res, next) => {
       throw new CustomError('Search field cannot be empty', 400);
     }
     const searchTerm: string = suggestion.trim();
-    const matches: IndexMediaData[] = await IndexMedia.findAll({
-      where: {
-        mediaType: {
-          [Op.not]: MediaType.Season,
-        },
+    const isNumber = isStringANumber(searchTerm);
+    const namePattern = `${searchTerm.length > 2 ? '%' : ''}${searchTerm}%`;
+
+    const orConditions: WhereOptions = [
+      {
         name: {
-          [Op.iLike]: `${searchTerm.length > 2 ? '%' : ''}${searchTerm}%`,
+          [Op.iLike]: namePattern,
         },
       },
+    ];
+
+    if (isNumber) {
+      orConditions.push({
+        tmdbId: Number(searchTerm),
+      });
+    }
+
+    const where: WhereOptions = {
+      [Op.and]: [
+        {
+          mediaType: {
+            [Op.not]: MediaType.Season,
+          },
+        },
+        { [Op.or]: orConditions },
+      ],
+    };
+
+    const matches: IndexMediaData[] = await IndexMedia.findAll({
+      where,
       order: [
         ['popularity', 'DESC'],
         ['name', 'ASC'],
