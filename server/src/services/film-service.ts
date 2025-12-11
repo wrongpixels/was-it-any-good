@@ -17,11 +17,15 @@ import {
 } from './index-media-service';
 import { buildCreditsAndGenres } from './media-service';
 import { isUnreleased } from '../../../shared/helpers/media-helper';
+import {
+  TMDBIndexFilm,
+  TMDBIndexFilmSchema,
+} from '../schemas/tmdb-index-media-schemas';
 
 export const buildFilmEntry = async (
   params: MediaQueryValues
 ): Promise<FilmResponse | null> => {
-  const filmData: FilmData = await fetchTMDBFilm(params.mediaId);
+  const filmData: FilmData = await fetchAndProcessTMDBFilm(params.mediaId);
 
   //we first use the data to build or update the matching indexMedia via upsert
   //we could findOrCreate, but setting fresh data is preferred
@@ -52,6 +56,17 @@ export const buildFilmEntry = async (
 };
 
 export const fetchTMDBFilm = async (
+  tmdbId: string | number
+): Promise<TMDBIndexFilm> => {
+  const filmRes: AxiosResponse = await tmdbAPI.get(
+    tmdbPaths.films.byTMDBId(tmdbId)
+  );
+  //we extract credits from the rest of the film data
+  const filmInfoData: TMDBIndexFilm = TMDBIndexFilmSchema.parse(filmRes.data);
+  return filmInfoData;
+};
+
+export const fetchAndProcessTMDBFilm = async (
   tmdbId: string | number
 ): Promise<FilmData> => {
   const filmRes: AxiosResponse = await tmdbAPI.get(

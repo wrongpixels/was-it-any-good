@@ -90,6 +90,8 @@ router.get(
         const calculatedPage = Math.ceil(pageNum / 2);
 
         //we fetch 20 shows and 20 films from the calculatedPage page (eg: page 2)
+        //if the term is a number, it might be a tmdbId, so in page 1 we also try to
+        //match said id with a tmdb entry, if found
         const [indexFilms, indexShows] = await fetchSearchFromTMDBAndParse(
           searchTerm,
           searchType,
