@@ -17,6 +17,7 @@ export interface InputFieldHookConfig extends InputLogicProps {
   label?: string;
   initialValue?: string;
   rules?: InputFieldRules;
+  onChange?: () => void;
 }
 
 export interface InputFieldProps

@@ -7,18 +7,21 @@ import { styles } from '../../../constants/tailwind-styles';
 import useSuggestions from '../../../hooks/use-suggestions';
 import { useNavigate } from 'react-router-dom';
 import { clientPaths } from '../../../../../shared/util/url-builder';
+import useDebounce from '../../../hooks/use-debounce';
 
 interface SearchFieldProps {
   fieldName: string;
 }
 
 const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
+  const [queryDisabled, setDebounce] = useDebounce();
   const searchField = useInputField({
     name: `${fieldName}-search-suggestions`,
     placeholder: 'Films, shows...',
+    onChange: setDebounce,
   });
   const { suggestions, isFetching, isDropdownVisible, setDropdownVisible } =
-    useSuggestions(searchField.value);
+    useSuggestions(searchField.value, queryDisabled);
   const navigate = useNavigate();
   return (
     <div className="flex gap-2">
