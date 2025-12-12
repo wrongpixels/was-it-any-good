@@ -137,7 +137,7 @@ const SearchPage = (): JSX.Element | null => {
         />
       </span>
 
-      {!searchTerm && <Instructions linkToSearch={true} />}
+      {!searchTerm && <Instructions linkToSearch={false} />}
 
       {showLoading ? (
         <LoadingCards showNavBar={true} />

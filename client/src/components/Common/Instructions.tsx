@@ -33,14 +33,20 @@ const Instructions = ({
   }
   return (
     <InstructionsBlock>
-      <span className="font-medium">
+      <span className="font-medium text-[16px]">
         {'Want to add a Show or Film to WIAG?'}
       </span>
       <span>
         {linkToSearch ? (
-          <Link to={clientPaths.search.base}>{'Search '}</Link>
+          <>
+            {'Just '}
+            <Link to={clientPaths.search.base}>{'Search '}</Link>
+          </>
         ) : (
-          <>{'Just search'} </>
+          <>
+            {'Just'}
+            <span className="font-semibold">{' Search '}</span>
+          </>
         )}
         <>
           {' for it by '}

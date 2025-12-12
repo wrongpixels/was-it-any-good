@@ -20,7 +20,7 @@ const SearchInputField = memo(
     const searchField = useInputField({
       name: 'main-search',
       initialValue: searchTerm || undefined,
-      placeholder: 'Search by Title or TMDB Id',
+      placeholder: 'Search by Title or TMDB ID',
       onChange: setDebounce,
     });
 

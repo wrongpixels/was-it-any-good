@@ -150,7 +150,7 @@ const HomePage = (): JSX.Element | null => {
         <SearchInputField text={undefined} handleSearch={handleSearch} />
       </span>
 
-      <Instructions linkToSearch={true} />
+      <Instructions linkToSearch={false} />
       <span className="w-full -mt-4">
         <EntryTitle
           title={'Trending Today'}
