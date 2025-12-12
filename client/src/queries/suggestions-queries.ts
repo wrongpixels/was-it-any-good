@@ -7,12 +7,9 @@ export const useSuggestionsQuery = (
   input: string,
   disabled: boolean = false
 ): UseQueryResult<IndexMediaData[], Error> => {
-  if (disabled) {
-    console.log('Query disabled...');
-  }
   return useQuery({
     queryKey: [QUERY_KEY_SUGGESTIONS, input],
     queryFn: () => getSuggestions(input),
-    enabled: !!input || disabled,
+    enabled: !!input && input !== '' && !disabled,
   });
 };
