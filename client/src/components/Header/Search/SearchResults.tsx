@@ -1,4 +1,4 @@
-import { JSX } from 'react';
+import { JSX, memo } from 'react';
 import { IndexMediaData } from '../../../../../shared/types/models';
 import useListNavigation from '../../../hooks/use-list-navigation';
 import SuggestionPoster from '../../Posters/SuggestionPoster';
@@ -88,13 +88,15 @@ const SearchResults = ({
           </div>
         )}
       </div>
-      <div className="absolute left-full ml-2 min-h-60 h-full items-center hidden sm:flex">
-        <div className="flex-shrink-0">
-          <SuggestionPoster media={mediaToShow} />
+      {mediaToShow && (
+        <div className="absolute left-full ml-2 min-h-60 h-full items-center hidden sm:flex">
+          <div className="flex-shrink-0">
+            <SuggestionPoster media={mediaToShow} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
 
-export default SearchResults;
+export default memo(SearchResults);

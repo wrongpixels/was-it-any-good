@@ -15,6 +15,7 @@ export const useInputField = ({
   autoComplete,
   type = 'text',
   label,
+  onChange: lateOnChange,
 }: InputFieldHookConfig): InputFieldHookValues => {
   //the input field content state
   const [value, setValue] = useState(initialValue);
@@ -32,6 +33,8 @@ export const useInputField = ({
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     //while typing, we update the value
     setValue(e.target.value);
+    //we also trigger any additional onChange passed
+    lateOnChange?.();
   };
 
   //we apply the fresh validated results to the states so are always synched
