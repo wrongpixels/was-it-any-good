@@ -7,6 +7,7 @@ import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import useSuggestions from '../../hooks/use-suggestions';
 import SearchResults from '../Header/Search/SearchResults';
 import SearchIcon from '../Common/Icons/SearchIcon';
+import useDebounce from '../../hooks/use-debounce';
 
 interface SearchInputFieldProps extends OptStringProps {
   handleSearch: (newSearch: string | null) => void;
@@ -14,10 +15,13 @@ interface SearchInputFieldProps extends OptStringProps {
 
 const SearchInputField = memo(
   ({ text: searchTerm, handleSearch }: SearchInputFieldProps) => {
+    const [queryDisabled, setDebounce] = useDebounce();
+
     const searchField = useInputField({
       name: 'main-search',
       initialValue: searchTerm || undefined,
       placeholder: 'Search by Title or TMDB Id',
+      onChange: setDebounce,
     });
 
     useEffect(() => {
@@ -25,7 +29,7 @@ const SearchInputField = memo(
     }, [searchTerm]);
 
     const { suggestions, isFetching, isDropdownVisible, setDropdownVisible } =
-      useSuggestions(searchField.value);
+      useSuggestions(searchField.value, queryDisabled);
 
     const handleOnSearch = (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -46,7 +50,7 @@ const SearchInputField = memo(
                 <SearchResults
                   handleSearch={handleSearch}
                   searchResults={suggestions}
-                  isLoading={isFetching}
+                  isLoading={isFetching || queryDisabled}
                   searchValue={searchField.value}
                   onClose={() => setDropdownVisible(false)}
                   cleanField={searchField.reset}

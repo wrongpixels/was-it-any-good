@@ -42,7 +42,7 @@ const SearchField = ({ fieldName }: SearchFieldProps): JSX.Element => {
               }
             }}
             searchResults={suggestions}
-            isLoading={isFetching}
+            isLoading={isFetching || queryDisabled}
             searchValue={searchField.value}
             onClose={() => setDropdownVisible(false)}
             cleanField={searchField.reset}
