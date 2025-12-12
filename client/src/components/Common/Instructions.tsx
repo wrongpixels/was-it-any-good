@@ -42,7 +42,13 @@ const Instructions = ({
         ) : (
           <>{'Just search'} </>
         )}
-        <span>{'for it by title or TMDB ID!'}</span>
+        <>
+          {' for it by '}
+          <span className="font-semibold">{'Title'}</span>
+          {' or '}
+          <span className="font-semibold">{'TMDB ID'}</span>
+          {'!'}
+        </>
       </span>
     </InstructionsBlock>
   );
