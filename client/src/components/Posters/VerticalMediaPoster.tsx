@@ -8,6 +8,7 @@ import StarRatingIndexMedia from '../Rating/StarRatingIndexMedia';
 import { MediaType } from '../../../../shared/types/media';
 import { RatingData } from '../../../../shared/types/models';
 import Tag, { TagContent } from '../Common/Custom/Tag';
+import { mergeClassnames } from '../../utils/lib/tw-classname-merger';
 
 interface VerticalMediaPosterProps {
   name: string;
@@ -54,12 +55,21 @@ const VerticalMediaPoster = ({
             className="absolute inset-0 rounded shadow ring-1 ring-gray-325"
           />
           {mainTag && (
-            <Tag {...mainTag} className="absolute right-1.5 top-1.5" />
+            <Tag
+              {...mainTag}
+              className={mergeClassnames(
+                'absolute right-1.5 top-1.5',
+                mainTag.className
+              )}
+            />
           )}
           {secondaryTag && (
             <Tag
               {...secondaryTag}
-              className="absolute left-1.5 bottom-1.5 bg-notigreen"
+              className={mergeClassnames(
+                'absolute left-1.5 bottom-1.5 bg-notigreen',
+                secondaryTag.className
+              )}
             />
           )}
         </div>

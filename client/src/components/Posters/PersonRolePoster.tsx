@@ -1,13 +1,17 @@
 import { JSX } from 'react';
 import { MediaResponse } from '../../../../shared/types/models';
 import VerticalMediaPoster from './VerticalMediaPoster';
-import { getAnyMediaDisplayRating } from '../../utils/ratings-helper';
+import {
+  CardRatingData,
+  getAnyMediaDisplayRating,
+  getCardRatingData,
+} from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import { buildMediaLinkWithSlug } from '../../../../shared/util/url-builder';
 import { TagContent } from '../Common/Custom/Tag';
 import {
-  formatDate,
-  getYearNum,
+  formatRatingDate,
+  getYearString,
 } from '../../../../shared/helpers/format-helper';
 import { SmallIconForMediaType } from '../Common/Icons/Media/IconForMediaType';
 
@@ -21,10 +25,21 @@ const PersonRolePoster = ({
   mediaResponse,
   characterNames,
 }: PersonPagePosterProps): JSX.Element => {
+  const average: number = getAnyMediaDisplayRating(mediaResponse);
+  const cardRatingData: CardRatingData = getCardRatingData(
+    mediaResponse.releaseDate,
+    average,
+    mediaResponse.userRating
+  );
   const mainTag: TagContent | undefined = mediaResponse.releaseDate
     ? {
-        text: getYearNum(mediaResponse.releaseDate),
-        title: `Released ${formatDate(mediaResponse.releaseDate)}`,
+        className: `${cardRatingData.unreleased && 'bg-amber-500'}`,
+        text: cardRatingData.unreleased
+          ? 'Unreleased'
+          : getYearString(mediaResponse.releaseDate),
+        title: cardRatingData.unreleased
+          ? cardRatingData.ratingText
+          : `Released ${formatRatingDate(mediaResponse.releaseDate)}`,
         icon: <SmallIconForMediaType mediaType={mediaResponse.mediaType} />,
       }
     : undefined;
