@@ -173,7 +173,7 @@ export const browsePageRoutes: BrowsePageRouterData[] = [
     authReq: true,
     apiPath: apiPaths.watchlist.my(),
     searchType: SearchType.Multi,
-    icon: <IconWatchlistRemove {...defIconProps} />,
+    icon: <IconWatchlistRemove {...defIconProps} height={24} />,
     sortBy: SortBy.AddedDate,
     overrideSortOptions: {
       //very basic implementation for now, we just allow sorting by date
