@@ -26,20 +26,22 @@ const EntryTitle = ({
   return (
     <>
       <div className="sm:pb-2 sm:mb-1 sm:min-h-15 flex flex-col">
-        <h2 className="text-2xl sm:text-3xl">
-          {icon && (
-            <span className="inline-block align-middle mr-2">{icon}</span>
-          )}
-          <span className="font-semibold align-middle">{title}</span>
-          <span className="font-normal text-gray-400 align-middle">
-            {date && ` ${getYearParenthesis(date)}`}
-          </span>
-
-          {country && (
-            <span className="inline-block align-middle ml-2">
-              <CountryFlags countryCodes={country} mediaType={mediaType} />
+        <h2 className="text-2xl sm:text-3xl flex flex-row items-center">
+          <div>
+            {icon && (
+              <span className="inline-block align-middle mr-2">{icon}</span>
+            )}
+            <span className="font-semibold align-middle">{title}</span>
+            <span className="font-normal text-gray-400 align-middle">
+              {date && ` ${getYearParenthesis(date)}`}
             </span>
-          )}
+
+            {country && (
+              <span className="inline-block align-middle ml-2">
+                <CountryFlags countryCodes={country} mediaType={mediaType} />
+              </span>
+            )}
+          </div>
         </h2>
 
         {subtitle && subtitle !== title && (
