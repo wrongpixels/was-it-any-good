@@ -36,7 +36,7 @@ export const useBrowseQuery = ({
   return useQuery({
     //if we didn't already send the query key, we build it now
     queryKey: queryKey ?? buildBrowseQueryKey({ apiPath, query }),
-    retry: false,
+    retry: true,
     queryFn: () => getBrowseResults(query, apiPath),
   });
 };
