@@ -29,7 +29,6 @@ export const useMediaByIdQuery = (
 
   const query = useQuery({
     queryKey: getActiveMediaKey(mediaType, id, false),
-    retry: false,
     gcTime: Infinity,
     enabled: !!id && !isNaN(Number(id)),
     select: (data) => (data ? transformCredits(data) : null),
