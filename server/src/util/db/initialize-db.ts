@@ -3,7 +3,20 @@ import { POSTGRES_URI } from '../config';
 import { MigrationMeta } from 'umzug';
 import { getMigrator, MIGRATIONS_ENABLED } from './migrator-db';
 
-const sequelize = new Sequelize(POSTGRES_URI, { logging: false });
+const sequelize = new Sequelize(POSTGRES_URI, {
+  logging: false,
+  pool: {
+    max: 15,
+    min: 3,
+    acquire: 4000,
+    idle: 10000,
+    evict: 1000,
+  },
+  dialectOptions: {
+    statement_timeout: 2500,
+    idle_in_transaction_session_timeout: 3000,
+  },
+});
 
 const initializeDB = async () => {
   try {

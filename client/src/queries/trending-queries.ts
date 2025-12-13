@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { IndexMediaResults } from '../../../shared/types/models';
 import { getTrending } from '../services/trending-service';
 import { QUERY_KEY_TRENDING } from '../constants/query-key-constants';
-import { DEF_API_TIMEOUT } from '../../../shared/constants/timeout-constants';
+import { DEF_API_WAIT_RETRY } from '../../../shared/constants/timeout-constants';
 
 export const useTrendingQuery = (
   page: number = 1
@@ -10,7 +10,8 @@ export const useTrendingQuery = (
   return useQuery({
     queryKey: [QUERY_KEY_TRENDING, page],
     refetchOnMount: 'always',
-    retryDelay: DEF_API_TIMEOUT,
+    retry: true,
+    retryDelay: DEF_API_WAIT_RETRY,
     staleTime: 0,
     queryFn: () => getTrending(page),
     select: (data: IndexMediaResults) => {
