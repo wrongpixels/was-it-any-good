@@ -13,8 +13,8 @@ const sequelize = new Sequelize(POSTGRES_URI, {
     evict: 1000,
   },
   dialectOptions: {
-    statement_timeout: 10000,
-    idle_in_transaction_session_timeout: 15000,
+    //statement_timeout: 10000,
+    //idle_in_transaction_session_timeout: 15000,
   },
 });
 
