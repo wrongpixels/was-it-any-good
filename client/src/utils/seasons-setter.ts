@@ -16,5 +16,13 @@ export const setSeasonsBaseRating = (
 export const isSpecialSeason = (season: SeasonResponse): boolean =>
   season.index === 0;
 
+export const getVisibleSeasons = (
+  seasons?: SeasonResponse[]
+): SeasonResponse[] =>
+  !seasons ? [] : seasons.filter((s: SeasonResponse) => !isSpecialSeason(s));
+
+export const getVisibleSeasonsCount = (seasons?: SeasonResponse[]): number =>
+  getVisibleSeasons(seasons).length;
+
 export const seasonHasCustomName = (season: SeasonResponse): boolean =>
   season.name !== `Season ${season.index}`;

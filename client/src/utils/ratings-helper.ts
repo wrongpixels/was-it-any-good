@@ -18,7 +18,8 @@ import {
 } from '../constants/query-key-constants';
 import { NO_RATINGS, NOT_RELEASED } from '../constants/ratings-constants';
 import { buildPathUrl } from './url-helper';
-import { isUnreleased } from '../../../shared/helpers/media-helper';
+import { isShow, isUnreleased } from '../../../shared/helpers/media-helper';
+import { getVisibleSeasons } from './seasons-setter';
 
 export const getRatingKey = (mediaType: string, mediaId: string | number) => [
   QUERY_KEY_RATING,
@@ -108,6 +109,18 @@ const updateUserRating = (
     };
   }
   return { ...rating, userScore: newScore };
+};
+
+export const getTargetRatingMedia = (
+  media: MediaResponse | SeasonResponse
+): MediaResponse | SeasonResponse => {
+  if (isShow(media)) {
+    const visibleSeasons: SeasonResponse[] = getVisibleSeasons(media.seasons);
+    if (visibleSeasons.length === 1) {
+      return { ...visibleSeasons[0], baseRating: media.baseRating };
+    }
+  }
+  return media;
 };
 
 export const removeVoteFromSeason = (

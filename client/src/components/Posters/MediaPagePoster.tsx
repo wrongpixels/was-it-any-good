@@ -1,10 +1,11 @@
 import { JSX, memo, useState } from 'react';
-import { MediaResponse } from '../../../../shared/types/models';
+import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import RatingPoster from './PosterRating';
 import {
   CardRatingData,
   getCardRatingData,
   getAnyMediaDisplayRating,
+  getTargetRatingMedia,
 } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
@@ -23,15 +24,22 @@ interface MediaPagePosterProps {
   userId?: number;
 }
 
+//if the media is a Show with a single Season, we make that season be our rating target.
+//that way, if a second season is added, we'll use that data for 'Season 1'
+//and will start allowing to vote the show itself separately from its Seasons.
+
 const MediaPagePoster = ({
   media,
   userId,
 }: MediaPagePosterProps): JSX.Element => {
-  const average: number = getAnyMediaDisplayRating(media);
+  const targetRatingMedia: MediaResponse | SeasonResponse =
+    getTargetRatingMedia(media);
+
+  const average: number = getAnyMediaDisplayRating(targetRatingMedia);
   const cardRatingData: CardRatingData = getCardRatingData(
-    media.releaseDate,
+    targetRatingMedia.releaseDate,
     average,
-    media.userRating
+    targetRatingMedia.userRating
   );
   const { openImageAsOverlay: openAsOverlay } = useOverlay();
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
@@ -75,7 +83,7 @@ const MediaPagePoster = ({
         <div className="text-center">
           <RatingPoster
             rating={average}
-            media={media}
+            media={targetRatingMedia}
             valid={true}
             cardRatingData={cardRatingData}
           />
