@@ -1,9 +1,5 @@
 import { JSX, memo, useState } from 'react';
-import {
-  MediaResponse,
-  SeasonResponse,
-  ShowResponse,
-} from '../../../../shared/types/models';
+import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
 import RatingPoster from './PosterRating';
 import {
   CardRatingData,
@@ -22,10 +18,7 @@ import {
 } from '../../context/NotificationProvider';
 import UserLists from '../UserLists/UserLists';
 import { isShow } from '../../../../shared/helpers/media-helper';
-import {
-  getVisibleSeasons,
-  getVisibleSeasonsCount,
-} from '../../utils/seasons-setter';
+import { getVisibleSeasons } from '../../utils/seasons-setter';
 
 interface MediaPagePosterProps {
   media: MediaResponse;
@@ -54,11 +47,11 @@ const MediaPagePoster = ({
 }: MediaPagePosterProps): JSX.Element => {
   const targetMedia: MediaResponse | SeasonResponse = getTargetMedia(media);
 
-  const average: number = getAnyMediaDisplayRating(media);
+  const average: number = getAnyMediaDisplayRating(targetMedia);
   const cardRatingData: CardRatingData = getCardRatingData(
-    media.releaseDate,
+    targetMedia.releaseDate,
     average,
-    media.userRating
+    targetMedia.userRating
   );
   const { openImageAsOverlay: openAsOverlay } = useOverlay();
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
@@ -102,7 +95,7 @@ const MediaPagePoster = ({
         <div className="text-center">
           <RatingPoster
             rating={average}
-            media={media}
+            media={targetMedia}
             valid={true}
             cardRatingData={cardRatingData}
           />

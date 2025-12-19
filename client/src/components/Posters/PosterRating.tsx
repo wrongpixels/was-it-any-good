@@ -1,6 +1,5 @@
 import { JSX, memo } from 'react';
 import { MediaResponse, SeasonResponse } from '../../../../shared/types/models';
-import { MediaType } from '../../../../shared/types/media';
 import StarRating from '../Rating/StarRating';
 import ExternalLogo from '../Rating/ExternalLogo';
 import {
@@ -16,6 +15,7 @@ interface RatingPosterProps {
   media: MediaResponse | SeasonResponse;
   rating: number;
   cardRatingData: CardRatingData;
+  isSeason?: boolean;
   valid?: boolean;
 }
 
@@ -23,15 +23,13 @@ const RatingPoster = ({
   rating,
   valid = true,
   media,
+  isSeason,
   cardRatingData,
 }: RatingPosterProps): JSX.Element | null => {
   if (isNaN(rating) || !media) {
     return null;
   }
-  //to know if the media is not released yet
 
-  const isSeason: boolean =
-    media.mediaType === MediaType.Season && media.showId !== undefined;
   const starWidth = isSeason ? DEF_MINI_STAR_WIDTH : DEF_STAR_WIDTH;
   return (
     <div className="flex flex-col items-center mt-1 ">

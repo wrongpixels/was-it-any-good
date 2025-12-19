@@ -49,6 +49,7 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
       <div className="text-center">
         <RatingPoster
           rating={average}
+          isSeason={true}
           media={media}
           valid={true}
           cardRatingData={cardRatingData}
