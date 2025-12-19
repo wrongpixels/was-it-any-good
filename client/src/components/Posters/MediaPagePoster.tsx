@@ -1,5 +1,9 @@
 import { JSX, memo, useState } from 'react';
-import { MediaResponse } from '../../../../shared/types/models';
+import {
+  MediaResponse,
+  SeasonResponse,
+  ShowResponse,
+} from '../../../../shared/types/models';
 import RatingPoster from './PosterRating';
 import {
   CardRatingData,
@@ -18,19 +22,38 @@ import {
 } from '../../context/NotificationProvider';
 import UserLists from '../UserLists/UserLists';
 import { isShow } from '../../../../shared/helpers/media-helper';
-import { getVisibleSeasonsCount } from '../../utils/seasons-setter';
+import {
+  getVisibleSeasons,
+  getVisibleSeasonsCount,
+} from '../../utils/seasons-setter';
 
 interface MediaPagePosterProps {
   media: MediaResponse;
   userId?: number;
 }
 
+//if the media is a Show with a single Season, we make that season be our rating target.
+//that way, if a second season is added, we'll use that data for 'Season 1'
+//and will start allowing to vote the show itself separately from its Seasons.
+
+const getTargetMedia = (
+  media: MediaResponse
+): MediaResponse | SeasonResponse => {
+  if (isShow(media)) {
+    const visibleSeasons: SeasonResponse[] = getVisibleSeasons(media.seasons);
+    if (visibleSeasons.length === 1) {
+      return visibleSeasons[0];
+    }
+  }
+  return media;
+};
+
 const MediaPagePoster = ({
   media,
   userId,
 }: MediaPagePosterProps): JSX.Element => {
-  const isSingleSeasonShow: boolean =
-    isShow(media) && getVisibleSeasonsCount(media.seasons) === 1;
+  const targetMedia: MediaResponse | SeasonResponse = getTargetMedia(media);
+
   const average: number = getAnyMediaDisplayRating(media);
   const cardRatingData: CardRatingData = getCardRatingData(
     media.releaseDate,
