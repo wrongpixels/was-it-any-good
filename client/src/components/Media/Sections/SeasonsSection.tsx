@@ -6,7 +6,7 @@ import {
 import EntrySection from '../../EntrySection';
 import SeasonPoster from '../../Posters/SeasonPoster';
 
-import { isSpecialSeason } from '../../../utils/seasons-setter';
+import { getVisibleSeasons } from '../../../utils/seasons-setter';
 import Separator from '../../Common/Separator';
 import ScrollableDiv from '../../Common/Custom/ScrollableDiv';
 import { roundRatingForGraph } from '../../../../../shared/util/rating-average-calculator';
@@ -103,9 +103,7 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
     return null;
   }
   //we hide Specials and other Seasons that are not relevant to us
-  const visibleSeasons: SeasonResponse[] = show.seasons.filter(
-    (s: SeasonResponse) => !isSpecialSeason(s)
-  );
+  const visibleSeasons: SeasonResponse[] = getVisibleSeasons(show.seasons);
   return (
     <div>
       <Separator />

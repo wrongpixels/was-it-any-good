@@ -17,6 +17,8 @@ import {
   useNotificationContext,
 } from '../../context/NotificationProvider';
 import UserLists from '../UserLists/UserLists';
+import { isShow } from '../../../../shared/helpers/media-helper';
+import { getVisibleSeasonsCount } from '../../utils/seasons-setter';
 
 interface MediaPagePosterProps {
   media: MediaResponse;
@@ -27,6 +29,8 @@ const MediaPagePoster = ({
   media,
   userId,
 }: MediaPagePosterProps): JSX.Element => {
+  const isSingleSeasonShow: boolean =
+    isShow(media) && getVisibleSeasonsCount(media.seasons) === 1;
   const average: number = getAnyMediaDisplayRating(media);
   const cardRatingData: CardRatingData = getCardRatingData(
     media.releaseDate,
