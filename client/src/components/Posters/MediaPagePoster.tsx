@@ -5,6 +5,7 @@ import {
   CardRatingData,
   getCardRatingData,
   getAnyMediaDisplayRating,
+  getTargetRatingMedia,
 } from '../../utils/ratings-helper';
 import { styles } from '../../constants/tailwind-styles';
 import imageLinker from '../../../../shared/util/image-linker';
@@ -17,8 +18,6 @@ import {
   useNotificationContext,
 } from '../../context/NotificationProvider';
 import UserLists from '../UserLists/UserLists';
-import { isShow } from '../../../../shared/helpers/media-helper';
-import { getVisibleSeasons } from '../../utils/seasons-setter';
 
 interface MediaPagePosterProps {
   media: MediaResponse;
@@ -29,29 +28,18 @@ interface MediaPagePosterProps {
 //that way, if a second season is added, we'll use that data for 'Season 1'
 //and will start allowing to vote the show itself separately from its Seasons.
 
-const getTargetMedia = (
-  media: MediaResponse
-): MediaResponse | SeasonResponse => {
-  if (isShow(media)) {
-    const visibleSeasons: SeasonResponse[] = getVisibleSeasons(media.seasons);
-    if (visibleSeasons.length === 1) {
-      return visibleSeasons[0];
-    }
-  }
-  return media;
-};
-
 const MediaPagePoster = ({
   media,
   userId,
 }: MediaPagePosterProps): JSX.Element => {
-  const targetMedia: MediaResponse | SeasonResponse = getTargetMedia(media);
+  const targetRatingMedia: MediaResponse | SeasonResponse =
+    getTargetRatingMedia(media);
 
-  const average: number = getAnyMediaDisplayRating(targetMedia);
+  const average: number = getAnyMediaDisplayRating(targetRatingMedia);
   const cardRatingData: CardRatingData = getCardRatingData(
-    targetMedia.releaseDate,
+    targetRatingMedia.releaseDate,
     average,
-    targetMedia.userRating
+    targetRatingMedia.userRating
   );
   const { openImageAsOverlay: openAsOverlay } = useOverlay();
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
@@ -95,7 +83,7 @@ const MediaPagePoster = ({
         <div className="text-center">
           <RatingPoster
             rating={average}
-            media={targetMedia}
+            media={targetRatingMedia}
             valid={true}
             cardRatingData={cardRatingData}
           />

@@ -9,6 +9,7 @@ import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
   getAnyMediaDisplayRating,
+  getTargetRatingMedia,
 } from '../../../utils/ratings-helper';
 import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import CountryFlags from '../../Media/Sections/MediaCountryFlags';
@@ -70,6 +71,14 @@ const SearchCard = ({
   if (!media) {
     return null;
   }
+  const mediaInIndex: MediaResponse | SeasonResponse | null =
+    getMediaFromIndexMedia(media);
+  if (!mediaInIndex) {
+    return null;
+  }
+
+  const targetMedia: MediaResponse | SeasonResponse =
+    getTargetRatingMedia(mediaInIndex);
   const [animTrigger, setAnimTrigger] = useState(false);
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
   const realBadgeType: BadgeType =
@@ -82,8 +91,6 @@ const SearchCard = ({
     () => getIndexMediaGenresAsUrlMap(media),
     [media]
   );
-  const mediaInIndex: MediaResponse | SeasonResponse | null =
-    getMediaFromIndexMedia(media);
 
   const removeFromList = () => {
     setAnimTrigger(true);
