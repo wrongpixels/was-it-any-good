@@ -73,19 +73,16 @@ const SearchCard = ({
   }
   const mediaInIndex: MediaResponse | SeasonResponse | null =
     getMediaFromIndexMedia(media);
-  if (!mediaInIndex) {
-    return null;
-  }
 
-  const targetMedia: MediaResponse | SeasonResponse =
-    getTargetRatingMedia(mediaInIndex);
+  const targetMedia: IndexMediaData | MediaResponse | SeasonResponse | null =
+    mediaInIndex ? getTargetRatingMedia(mediaInIndex) : media;
   const [animTrigger, setAnimTrigger] = useState(false);
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
   const realBadgeType: BadgeType =
     badgeType === BadgeType.AddedBadge && !media.addedToMedia
       ? BadgeType.None
       : badgeType;
-  const average: number = getAnyMediaDisplayRating(media);
+  const average: number = getAnyMediaDisplayRating(targetMedia);
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
     () => getIndexMediaGenresAsUrlMap(media),
