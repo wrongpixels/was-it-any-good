@@ -21,7 +21,7 @@ interface SearchCardsProps {
 const cardsClassName =
   'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 place-items-center w-full';
 
-//we memo the SearchCards of the page for performance
+//we memo the SearchCards of  the page for performance
 const SearchCards = ({
   indexMedia,
   indexOffset,

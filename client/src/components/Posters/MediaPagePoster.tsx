@@ -86,6 +86,8 @@ const MediaPagePoster = ({
             media={targetRatingMedia}
             valid={true}
             cardRatingData={cardRatingData}
+            tmdbId={media.tmdbId}
+            imdbId={media.imdbId}
           />
         </div>
       </div>

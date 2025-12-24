@@ -15,6 +15,8 @@ interface RatingPosterProps {
   media: MediaResponse | SeasonResponse;
   rating: number;
   cardRatingData: CardRatingData;
+  imdbId?: number | string;
+  tmdbId?: number | string;
   isSeason?: boolean;
   valid?: boolean;
 }
@@ -22,6 +24,8 @@ interface RatingPosterProps {
 const RatingPoster = ({
   rating,
   valid = true,
+  tmdbId,
+  imdbId,
   media,
   isSeason,
   cardRatingData,
@@ -56,7 +60,7 @@ const RatingPoster = ({
           {!isSeason && (
             <div className={`w-6 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
-                id={media.tmdbId}
+                id={tmdbId}
                 mediaType={media.mediaType}
                 tmdb={true}
               />
@@ -74,7 +78,7 @@ const RatingPoster = ({
           {!isSeason && (
             <div className={`w-6 opacity-80 ${styles.animations.zoomOnHover}`}>
               <ExternalLogo
-                id={media.imdbId}
+                id={imdbId}
                 mediaType={media.mediaType}
                 tmdb={false}
               />
