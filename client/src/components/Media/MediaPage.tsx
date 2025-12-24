@@ -158,7 +158,7 @@ const KeyedMediaPage = ({
               runtime={media.runtime}
             />
           }
-          {session && <UserReviewForm />}
+          {session && <UserReviewForm media={media} />}
           <div className="border-t border-gray-200 mt-3">
             {!show ? (
               <CrewEntrySection
