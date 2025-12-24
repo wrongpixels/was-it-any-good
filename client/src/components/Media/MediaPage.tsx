@@ -33,6 +33,7 @@ import { setSEO } from '../../utils/set-seo';
 import { buildMediaSeo } from '../../utils/page-seo-helpers';
 import { buildClientMediaLink } from '../../../../shared/util/url-builder';
 import { isShow } from '../../../../shared/helpers/media-helper';
+import UserReviewForm from '../UserReviews/UserReviewForm';
 
 interface MediaPageProps {
   mediaType: MediaType;
@@ -157,6 +158,7 @@ const KeyedMediaPage = ({
               runtime={media.runtime}
             />
           }
+          {session && <UserReviewForm />}
           <div className="border-t border-gray-200 mt-3">
             {!show ? (
               <CrewEntrySection
