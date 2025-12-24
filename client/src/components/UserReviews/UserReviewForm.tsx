@@ -2,7 +2,7 @@ import { JSX, useState } from 'react';
 import { useInputField } from '../../hooks/use-inputfield';
 import { InputField } from '../Common/Custom/InputField';
 
-const SHOW_REVIEW_FORM: boolean = true;
+const SHOW_REVIEW_FORM: boolean = false;
 
 const UserReviewForm = (): JSX.Element | null => {
   if (!SHOW_REVIEW_FORM) {
