@@ -14,7 +14,7 @@ import Dropdown from '../Common/Custom/Dropdown';
 import { isShow } from '../../../../shared/helpers/media-helper';
 import { getVisibleSeasons } from '../../utils/seasons-setter';
 
-const SHOW_REVIEW_FORM: boolean = false;
+const SHOW_REVIEW_FORM: boolean = true;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;
@@ -24,6 +24,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
   if (!SHOW_REVIEW_FORM) {
     return null;
   }
+  console.log('Updated');
   const seasonNames: string[] =
     isShow(media) && media.seasons
       ? getVisibleSeasons(media.seasons).map((s: SeasonResponse) => s.name)
@@ -44,11 +45,6 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
     <form className="pl-2 flex flex-col">
       <Section>
         {'Reviewing '}
-        <div className="font-normal italic">
-          {media.name} {'('}
-          {mediaTypeToDisplayName(media.mediaType)}
-          {')'}
-        </div>
         <Dropdown
           options={[...seasonNames, 'Full show']}
           defaultValue={'Full show'}
@@ -63,7 +59,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         {'Write a review'}
         <span className="font-normal italic">{' (without spoilers)'}</span>
         <div className="text-sm font-normal">
-          {`All users can see this, so don't spoil the plot!`}
+          {`All users can see this, so don't spoil anything!`}
         </div>
       </Section>
       <textarea
