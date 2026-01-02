@@ -5,7 +5,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-  Op,
 } from 'sequelize';
 import Rating from './rating';
 import { sequelize } from '../../util/db/initialize-db';
@@ -77,25 +76,6 @@ class UserReview extends Model<
       where: buildReviewWhereOptions({ indexId }, options),
       include: buildReviewIncludeableOptions(options),
     });
-    //we map the entries to their userIds
-    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
-      entries.map((ur: UserReview) => [ur.userId, ur])
-    );
-    const userIds: number[] = entries.map((ur: UserReview) => ur.userId);
-    const ratings: Rating[] = await Rating.findAll({
-      where: {
-        indexId,
-        userId: {
-          [Op.in]: userIds,
-        },
-      },
-    });
-    ratings.forEach((r: Rating) => {
-      const match: UserReview | undefined = entriesMap.get(r.userId);
-      if (match) {
-        match.rating = r;
-      }
-    });
     return entries;
   }
 
@@ -108,25 +88,6 @@ class UserReview extends Model<
       ...options,
       where: buildReviewWhereOptions({ userId }, options),
       include: buildReviewIncludeableOptions(options),
-    });
-    //we map the entries to their indexIds this time
-    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
-      entries.map((ur: UserReview) => [ur.indexId, ur])
-    );
-    const indexIds: number[] = entries.map((ur: UserReview) => ur.indexId);
-    const ratings: Rating[] = await Rating.findAll({
-      where: {
-        userId,
-        indexId: {
-          [Op.in]: indexIds,
-        },
-      },
-    });
-    ratings.forEach((r: Rating) => {
-      const match: UserReview | undefined = entriesMap.get(r.indexId);
-      if (match) {
-        match.rating = r;
-      }
     });
     return entries;
   }
@@ -157,7 +118,7 @@ UserReview.init(
     },
     ratingId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'ratings',
         key: 'id',

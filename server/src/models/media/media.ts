@@ -612,7 +612,7 @@ class Media<
         },
         {
           association: 'indexMedia',
-          attributes: ['rating', 'updatedAt', 'baseRating', 'voteCount'],
+          // attributes: ['rating', 'updatedAt', 'baseRating', 'voteCount'],
         },
       ],
     };

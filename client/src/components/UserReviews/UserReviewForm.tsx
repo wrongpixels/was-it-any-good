@@ -9,12 +9,13 @@ import {
   SeasonResponse,
   ShowResponse,
 } from '../../../../shared/types/models';
-import { mediaTypeToDisplayName } from '../../utils/url-helper';
 import Dropdown from '../Common/Custom/Dropdown';
 import { isShow } from '../../../../shared/helpers/media-helper';
 import { getVisibleSeasons } from '../../utils/seasons-setter';
+import SearchCard from '../Search/Cards/SearchCard';
+import { BadgeType } from '../../types/search-browse-types';
 
-const SHOW_REVIEW_FORM: boolean = true;
+const SHOW_REVIEW_FORM: boolean = false;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;
@@ -24,7 +25,6 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
   if (!SHOW_REVIEW_FORM) {
     return null;
   }
-  console.log('Updated');
   const seasonNames: string[] =
     isShow(media) && media.seasons
       ? getVisibleSeasons(media.seasons).map((s: SeasonResponse) => s.name)
@@ -45,10 +45,19 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
     <form className="pl-2 flex flex-col">
       <Section>
         {'Reviewing '}
-        <Dropdown
-          options={[...seasonNames, 'Full show']}
-          defaultValue={'Full show'}
-        />
+        <div className="flex flex-col items-start gap-2">
+          <Dropdown
+            options={[...seasonNames, 'Full show']}
+            defaultValue={'Full show'}
+          />
+          {media && (
+            <SearchCard
+              media={media.indexMedia}
+              index={0}
+              badgeType={BadgeType.None}
+            />
+          )}
+        </div>
       </Section>
       <Section>
         {'Title your review'}

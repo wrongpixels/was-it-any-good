@@ -43,7 +43,7 @@ interface SearchCardProps {
   badgeType: BadgeType;
   index: number;
   userId?: number;
-  notification: NotificationContextValues;
+  notification?: NotificationContextValues;
   browsePageValues?: BrowsePageValues;
 }
 
