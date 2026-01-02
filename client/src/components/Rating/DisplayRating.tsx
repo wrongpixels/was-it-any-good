@@ -11,19 +11,27 @@ interface DisplayRatingProps extends OptClassNameProps {
   readonly rating: number;
   readonly starWidth?: number;
   readonly isVote?: boolean;
+  readonly ratingTitle?: string;
 }
 
 const DisplayRating = ({
   rating,
   isVote,
   starWidth = DEF_STAR_WIDTH,
+  ratingTitle,
   ...props
 }: DisplayRatingProps): JSX.Element => {
   const widthPercentage: string = `${rating * 10}%`;
 
   return (
     <div
-      title={rating > 1 ? `Rating: ${rating.toString()}` : 'Not enough ratings'}
+      title={
+        ratingTitle
+          ? ratingTitle
+          : rating > 1
+            ? `Rating: ${rating.toString()}`
+            : 'Not enough ratings'
+      }
       className={`${mergeClassnames('flex', props.className)}`}
     >
       <div className="relative">

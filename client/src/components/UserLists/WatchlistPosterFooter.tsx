@@ -26,7 +26,7 @@ const LABEL_REMOVE: string = 'Remove' as const;
 interface WatchlistPosterFooterProps extends OptClassNameProps {
   media: MediaResponse | SeasonResponse;
   mouseOverPoster: boolean;
-  notification: NotificationContextValues;
+  notification?: NotificationContextValues;
   userId?: number;
   size?: 'normal' | 'small';
 }
@@ -39,7 +39,10 @@ const WatchlistPosterFooter = ({
   size = 'normal',
   className: inheritedClassname,
 }: WatchlistPosterFooterProps): JSX.Element | null => {
-  const { setNotification, anchorRef } = notification;
+  const { setNotification, anchorRef } = notification ?? {
+    setNotification: null,
+    anchorRef: null,
+  };
   const watchlistMutation = useWatchlistMutation();
   //const inList: boolean = !!media.userWatchlist;
   const queryClient: QueryClient = useQueryClient();
@@ -85,7 +88,7 @@ const WatchlistPosterFooter = ({
     setJustVoted(watchlistLabel === LABEL_ADD);
     setInList((oldInList) => !oldInList);
     console.log('Setting inList to', inList);
-    setNotification({
+    setNotification?.({
       message: `${inList ? 'Removed from' : 'Added to'} Watchlist`,
       anchorRef,
       offset: { x: 0, y: -5 },

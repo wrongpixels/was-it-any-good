@@ -9,7 +9,6 @@ import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
   getAnyMediaDisplayRating,
-  getTargetRatingMedia,
 } from '../../../utils/ratings-helper';
 import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import CountryFlags from '../../Media/Sections/MediaCountryFlags';
@@ -43,7 +42,7 @@ interface SearchCardProps {
   badgeType: BadgeType;
   index: number;
   userId?: number;
-  notification: NotificationContextValues;
+  notification?: NotificationContextValues;
   browsePageValues?: BrowsePageValues;
 }
 
@@ -75,7 +74,7 @@ const SearchCard = ({
     getMediaFromIndexMedia(media);
 
   const targetMedia: IndexMediaData | MediaResponse | SeasonResponse | null =
-    mediaInIndex ? getTargetRatingMedia(mediaInIndex) : media;
+    media;
   const [animTrigger, setAnimTrigger] = useState(false);
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
   const realBadgeType: BadgeType =

@@ -18,9 +18,14 @@ import Tag from '../Common/Custom/Tag';
 
 interface SeasonPosterProps {
   media: SeasonResponse;
+  //in case we want to hide the rating for one-season shows
+  singleSeason?: boolean;
 }
 
-const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
+const SeasonPoster = ({
+  media,
+  singleSeason,
+}: SeasonPosterProps): JSX.Element => {
   const average: number = getAnyMediaDisplayRating(media);
   const cardRatingData: CardRatingData = getCardRatingData(
     media.releaseDate,
@@ -30,7 +35,9 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
   const { openImageAsOverlay }: OverlayValues = useOverlay();
 
   return (
-    <div className={`${styles.poster.regular()} w-40 relative`}>
+    <div
+      className={`${styles.poster.regular()} w-40 relative ${singleSeason && 'pb-3'}`}
+    >
       <div className="text-sm font-medium text-center -translate-y-1">
         <div className="truncate" title={media.name}>
           {media.name}
@@ -46,15 +53,17 @@ const SeasonPoster = ({ media }: SeasonPosterProps): JSX.Element => {
           openImageAsOverlay(imageLinker.getFullSizeImage(media.image))
         }
       />
-      <div className="text-center">
-        <RatingPoster
-          rating={average}
-          isSeason={true}
-          media={media}
-          valid={true}
-          cardRatingData={cardRatingData}
-        />
-      </div>
+      {!singleSeason && (
+        <div className="text-center">
+          <RatingPoster
+            rating={average}
+            isSeason={true}
+            media={media}
+            valid={true}
+            cardRatingData={cardRatingData}
+          />
+        </div>
+      )}
       {media.releaseDate && (
         <Tag
           className={`right-3 top-8 ${cardRatingData.unreleased && 'bg-amber-500'}`}

@@ -50,7 +50,6 @@ const MediaPage = ({
   tmdb?: boolean;
 }): JSX.Element => {
   const { id, slug } = useParams<{ id: string; slug?: string }>();
-
   const key = tmdb
     ? `${mediaType.toLowerCase()}-tmdbid-${id}`
     : `${mediaType.toLowerCase()}-id-${id}${slug ? `-${slug}` : ''}`;

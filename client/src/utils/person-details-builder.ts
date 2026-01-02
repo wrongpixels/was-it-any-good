@@ -172,7 +172,6 @@ export const buildPersonDetails = (
     }
   });
 
-  console.log(mergedRoles);
   //and finally, we extract the merged roles, sort them by number of author types and slice to MAX_ROLES_DESCRIPTION
   const orderedMergedRoles: MergedPersonMediaRole[] = Array.from(
     mergedRoles.values()

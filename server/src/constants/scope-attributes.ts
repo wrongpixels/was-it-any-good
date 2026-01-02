@@ -80,4 +80,6 @@ export const mediaInIndexAttributes: string[] = [
   'indexId',
   'mediaType',
   'name',
+  'rating',
+  'baseRating',
 ];

@@ -3,11 +3,18 @@ import { buildIndexMediaInclude } from '../services/index-media-service';
 import UserReview from '../models/users/userReview';
 import { mergeIncludeables, mergeWhereOptions } from './model-helpers';
 
-const baseInclude: Includeable = {
-  association: 'indexMedia',
-  attributes: ['mediaType'],
-  include: buildIndexMediaInclude(),
-};
+const baseInclude: Includeable[] = [
+  {
+    association: 'indexMedia',
+    attributes: ['mediaType'],
+    include: buildIndexMediaInclude(),
+  },
+  {
+    association: 'rating',
+    required: false,
+    attributes: ['id', 'userScore', 'mediaId'],
+  },
+];
 
 export const buildReviewWhereOptions = (
   baseWhere: WhereOptions<UserReview>,

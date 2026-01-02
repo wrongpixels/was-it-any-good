@@ -5,7 +5,6 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
-  Op,
 } from 'sequelize';
 import Rating from './rating';
 import { sequelize } from '../../util/db/initialize-db';
@@ -31,15 +30,26 @@ class UserReview extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare indexId: number;
+  //the rating of the user to link with the review
+  //users are allowed to remove and update ratings freely, so ids might change and we should
+  //allow for null ids too. New Ratings will take care of re-linking themselves to the UserReview
+  declare ratingId: number | null;
   declare title: string;
+  //saves the seasons available if a user votes a full show.
+  //if new seasons get added, the review will inform the reader.
+  //eg:
+  //Stranger Things (TV Show) - Seasons 1 to 4
+  //vs
+  //Stranger Things (TV Show) - Full Show
+  //individual seasons have their own unique reviews
   declare seasons: CreationOptional<number[]>;
-  declare rating?: RatingData;
   declare mainContent: string;
   declare spoilerContent: string | null;
   declare recommended: RecommendType;
   declare edited: CreationOptional<boolean>;
   declare timesEdited: CreationOptional<number>;
   declare lastEdited: CreationOptional<Date | null>;
+  declare rating?: RatingData;
 
   static associate() {
     this.belongsTo(IndexMedia, {
@@ -49,6 +59,10 @@ class UserReview extends Model<
     this.belongsTo(User, {
       as: 'user',
       foreignKey: 'userId',
+    });
+    this.belongsTo(Rating, {
+      as: 'rating',
+      foreignKey: 'ratingId',
     });
   }
 
@@ -62,25 +76,6 @@ class UserReview extends Model<
       where: buildReviewWhereOptions({ indexId }, options),
       include: buildReviewIncludeableOptions(options),
     });
-    //we map the entries to their userIds
-    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
-      entries.map((ur: UserReview) => [ur.userId, ur])
-    );
-    const userIds: number[] = entries.map((ur: UserReview) => ur.userId);
-    const ratings: Rating[] = await Rating.findAll({
-      where: {
-        indexId,
-        userId: {
-          [Op.in]: userIds,
-        },
-      },
-    });
-    ratings.forEach((r: Rating) => {
-      const match: UserReview | undefined = entriesMap.get(r.userId);
-      if (match) {
-        match.rating = r;
-      }
-    });
     return entries;
   }
 
@@ -93,25 +88,6 @@ class UserReview extends Model<
       ...options,
       where: buildReviewWhereOptions({ userId }, options),
       include: buildReviewIncludeableOptions(options),
-    });
-    //we map the entries to their indexIds this time
-    const entriesMap: Map<number, UserReview> = new Map<number, UserReview>(
-      entries.map((ur: UserReview) => [ur.indexId, ur])
-    );
-    const indexIds: number[] = entries.map((ur: UserReview) => ur.indexId);
-    const ratings: Rating[] = await Rating.findAll({
-      where: {
-        userId,
-        indexId: {
-          [Op.in]: indexIds,
-        },
-      },
-    });
-    ratings.forEach((r: Rating) => {
-      const match: UserReview | undefined = entriesMap.get(r.indexId);
-      if (match) {
-        match.rating = r;
-      }
     });
     return entries;
   }
@@ -137,6 +113,14 @@ UserReview.init(
       allowNull: false,
       references: {
         model: 'users',
+        key: 'id',
+      },
+    },
+    ratingId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'ratings',
         key: 'id',
       },
     },

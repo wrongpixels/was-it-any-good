@@ -54,6 +54,7 @@ const StarRatingIndexMedia = ({
         rating={unreleased ? 0 : rating}
         isVote={isVote || !!userRating}
         starWidth={DEF_MINI_STAR_WIDTH}
+        ratingTitle={cardRatingData.ratingText}
       />
     </span>
   );

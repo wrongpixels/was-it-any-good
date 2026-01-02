@@ -9,10 +9,11 @@ import {
   SeasonResponse,
   ShowResponse,
 } from '../../../../shared/types/models';
-import { mediaTypeToDisplayName } from '../../utils/url-helper';
 import Dropdown from '../Common/Custom/Dropdown';
 import { isShow } from '../../../../shared/helpers/media-helper';
 import { getVisibleSeasons } from '../../utils/seasons-setter';
+import SearchCard from '../Search/Cards/SearchCard';
+import { BadgeType } from '../../types/search-browse-types';
 
 const SHOW_REVIEW_FORM: boolean = false;
 
@@ -44,15 +45,19 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
     <form className="pl-2 flex flex-col">
       <Section>
         {'Reviewing '}
-        <div className="font-normal italic">
-          {media.name} {'('}
-          {mediaTypeToDisplayName(media.mediaType)}
-          {')'}
+        <div className="flex flex-col items-start gap-2">
+          <Dropdown
+            options={[...seasonNames, 'Full show']}
+            defaultValue={'Full show'}
+          />
+          {media && (
+            <SearchCard
+              media={media.indexMedia}
+              index={0}
+              badgeType={BadgeType.None}
+            />
+          )}
         </div>
-        <Dropdown
-          options={[...seasonNames, 'Full show']}
-          defaultValue={'Full show'}
-        />
       </Section>
       <Section>
         {'Title your review'}
@@ -63,7 +68,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         {'Write a review'}
         <span className="font-normal italic">{' (without spoilers)'}</span>
         <div className="text-sm font-normal">
-          {`All users can see this, so don't spoil the plot!`}
+          {`All users can see this, so don't spoil anything!`}
         </div>
       </Section>
       <textarea

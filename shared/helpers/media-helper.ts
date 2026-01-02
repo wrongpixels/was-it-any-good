@@ -70,10 +70,11 @@ export const isUnreleased = (releaseDate: string | null | undefined | Date) => {
     ? null
     : new Date(releaseDate)
   const unreleased: boolean = !releaseDateVar
-    ? false
+    ? true
     : dayjs(releaseDateVar).isAfter(dayjs(), 'day')
   return unreleased
 }
 export const isShow = (
   media: MediaResponse | SeasonResponse | IndexMediaData,
-): media is ShowResponse => 'seasonCount' in media
+): media is ShowResponse =>
+  media.mediaType === MediaType.Show && !('addedToMedia' in media)
