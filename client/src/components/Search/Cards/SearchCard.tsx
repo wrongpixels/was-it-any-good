@@ -111,7 +111,6 @@ const SearchCard = ({
   };
   //to apply special designs to the Cards for editable lists (like making space for an 'X' button on top)
   const canEditItems: boolean = !!browsePageValues?.userListValues.canEditItems;
-
   return (
     <Link
       to={buildIndexMediaLinkWithSlug(media)}
@@ -181,7 +180,8 @@ const SearchCard = ({
           rating={average}
           userRating={getIndexMediaUserRating(media)}
           canEditItems={canEditItems}
-          releaseDate={media.releaseDate}
+          //so indexMedia with just a year can pass the "unreleased" checl
+          releaseDate={media.releaseDate || media.year?.toString() || null}
         />
       </div>
       {browsePageValues?.userListValues.canEditItems && (
