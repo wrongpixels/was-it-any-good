@@ -9,7 +9,6 @@ import { styles } from '../../../constants/tailwind-styles';
 import {
   getIndexMediaUserRating,
   getAnyMediaDisplayRating,
-  getTargetRatingMedia,
 } from '../../../utils/ratings-helper';
 import { mediaTypeToDisplayName } from '../../../utils/url-helper';
 import CountryFlags from '../../Media/Sections/MediaCountryFlags';
@@ -35,7 +34,6 @@ import CloseButton from '../../Common/CloseButton';
 import { BrowsePageValues } from '../../../hooks/use-browse-page-values';
 import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
 import { NotificationContextValues } from '../../../context/NotificationProvider';
-import { isShow } from '../../../../../shared/helpers/media-helper';
 
 const DELETE_ANIMATION_DURATION: number = 125 as const;
 
@@ -76,7 +74,7 @@ const SearchCard = ({
     getMediaFromIndexMedia(media);
 
   const targetMedia: IndexMediaData | MediaResponse | SeasonResponse | null =
-    mediaInIndex ? getTargetRatingMedia(mediaInIndex) : media;
+    media;
   const [animTrigger, setAnimTrigger] = useState(false);
   const [mouseOverPoster, setMouseOverPoster] = useState(false);
   const realBadgeType: BadgeType =
@@ -84,7 +82,6 @@ const SearchCard = ({
       ? BadgeType.None
       : badgeType;
   const average: number = getAnyMediaDisplayRating(targetMedia);
-  console.log(average, media, targetMedia, isShow(targetMedia));
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
     () => getIndexMediaGenresAsUrlMap(media),

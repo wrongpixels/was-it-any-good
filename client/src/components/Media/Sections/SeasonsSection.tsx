@@ -104,6 +104,7 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
   }
   //we hide Specials and other Seasons that are not relevant to us
   const visibleSeasons: SeasonResponse[] = getVisibleSeasons(show.seasons);
+  const isSingleSeason: boolean = visibleSeasons.length === 1;
   return (
     <div>
       <Separator />
@@ -115,7 +116,7 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
         <ScrollableDiv>
           {visibleSeasons.map((s: SeasonResponse) => (
             <div key={s.id}>
-              <SeasonPoster media={s} />
+              <SeasonPoster media={s} singleSeason={isSingleSeason} />
             </div>
           ))}
         </ScrollableDiv>
