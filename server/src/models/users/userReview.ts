@@ -31,15 +31,26 @@ class UserReview extends Model<
   declare id: CreationOptional<number>;
   declare userId: number;
   declare indexId: number;
+  //the rating of the user to link with the review
+  //users are allowed to remove and update ratings freely, so ids might change and we should
+  //allow for null ids too. New Ratings will take care of re-linking themselves to the UserReview
+  declare ratingId: number | null;
   declare title: string;
+  //saves the seasons available if a user votes a full show.
+  //if new seasons get added, the review will inform the reader.
+  //eg:
+  //Stranger Things (TV Show) - Seasons 1 to 4
+  //vs
+  //Stranger Things (TV Show) - Full Show
+  //individual seasons have their own unique reviews
   declare seasons: CreationOptional<number[]>;
-  declare rating?: RatingData;
   declare mainContent: string;
   declare spoilerContent: string | null;
   declare recommended: RecommendType;
   declare edited: CreationOptional<boolean>;
   declare timesEdited: CreationOptional<number>;
   declare lastEdited: CreationOptional<Date | null>;
+  declare rating?: RatingData;
 
   static associate() {
     this.belongsTo(IndexMedia, {
@@ -49,6 +60,10 @@ class UserReview extends Model<
     this.belongsTo(User, {
       as: 'user',
       foreignKey: 'userId',
+    });
+    this.belongsTo(Rating, {
+      as: 'rating',
+      foreignKey: 'ratingId',
     });
   }
 
@@ -137,6 +152,14 @@ UserReview.init(
       allowNull: false,
       references: {
         model: 'users',
+        key: 'id',
+      },
+    },
+    ratingId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'ratings',
         key: 'id',
       },
     },

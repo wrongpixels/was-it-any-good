@@ -49,17 +49,23 @@ export const findInModel = async <M extends ModelStatic<Model>>(
 };
 
 export const mergeIncludeables = (
-  baseIncludeable: Includeable,
+  baseIncludeable: Includeable | Includeable[],
   otherIncludeable?: Includeable | Includeable[]
-) => {
-  const mergedIncludeable: Includeable[] = otherIncludeable
-    ? Array.isArray(otherIncludeable)
-      ? [...otherIncludeable, baseIncludeable]
-      : [otherIncludeable, baseIncludeable]
+): Includeable[] => {
+  const baseArr = Array.isArray(baseIncludeable)
+    ? baseIncludeable
     : [baseIncludeable];
-  return mergedIncludeable;
-};
 
+  if (!otherIncludeable) {
+    return baseArr;
+  }
+
+  const otherArr = Array.isArray(otherIncludeable)
+    ? otherIncludeable
+    : [otherIncludeable];
+
+  return [...otherArr, ...baseArr];
+};
 export const mergeWhereOptions = <T>(
   baseWhere: WhereOptions<T>,
   otherWhere?: WhereOptions<T>
