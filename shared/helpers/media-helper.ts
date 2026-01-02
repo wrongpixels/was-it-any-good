@@ -70,7 +70,7 @@ export const isUnreleased = (releaseDate: string | null | undefined | Date) => {
     ? null
     : new Date(releaseDate)
   const unreleased: boolean = !releaseDateVar
-    ? false
+    ? true
     : dayjs(releaseDateVar).isAfter(dayjs(), 'day')
   return unreleased
 }
