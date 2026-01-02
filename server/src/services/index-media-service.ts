@@ -195,12 +195,12 @@ export const buildIndexMediaInclude = (
   //we still need the film/show ids, rating and genres for the frontend
   {
     association: 'film',
-    attributes: [...mediaInIndexAttributes, 'rating'],
+    attributes: [...mediaInIndexAttributes],
     include: buildIncludeOptions(undefined, MediaType.Film, false, activeUser),
   },
   {
     association: 'show',
-    attributes: [...mediaInIndexAttributes, 'rating', 'seasonCount'],
+    attributes: [...mediaInIndexAttributes, 'seasonCount'],
     include: buildIncludeOptions(undefined, MediaType.Show, false, activeUser),
   },
   /*

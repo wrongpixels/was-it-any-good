@@ -35,6 +35,7 @@ import CloseButton from '../../Common/CloseButton';
 import { BrowsePageValues } from '../../../hooks/use-browse-page-values';
 import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
 import { NotificationContextValues } from '../../../context/NotificationProvider';
+import { isShow } from '../../../../../shared/helpers/media-helper';
 
 const DELETE_ANIMATION_DURATION: number = 125 as const;
 
@@ -83,6 +84,7 @@ const SearchCard = ({
       ? BadgeType.None
       : badgeType;
   const average: number = getAnyMediaDisplayRating(targetMedia);
+  console.log(average, media, targetMedia, isShow(targetMedia));
   const mediaDisplay: string = mediaTypeToDisplayName(media.mediaType);
   const genreMap: GenreUrlMap[] | null = useMemo(
     () => getIndexMediaGenresAsUrlMap(media),

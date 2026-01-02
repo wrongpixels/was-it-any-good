@@ -76,4 +76,4 @@ export const isUnreleased = (releaseDate: string | null | undefined | Date) => {
 }
 export const isShow = (
   media: MediaResponse | SeasonResponse | IndexMediaData,
-): media is ShowResponse => 'seasonCount' in media
+): media is ShowResponse => media.mediaType === MediaType.Show
