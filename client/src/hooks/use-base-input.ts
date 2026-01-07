@@ -1,27 +1,15 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  InputHookConfig,
-  InputFieldHookValues,
-  InputFieldProps,
+  BaseInputHookValues,
   InputValidation,
-  TextAreaHookValues,
+  BaseInputHookConfig,
 } from '../types/input-field-types';
 import validateRules from '../utils/input-field-validator';
 
-interface BaseInputHookValues extends InputHookConfig {
-  inputType: 'text-area' | 'input-field';
-}
-
 export const useBaseInput = ({
-  name,
   rules,
   initialValue = '',
-  placeholder,
-  autoComplete,
-  type = 'text',
-  label,
-  onChange: lateOnChange,
-}: BaseInputHookValues): InputFieldHookValues | TextAreaHookValues => {
+}: BaseInputHookConfig): BaseInputHookValues => {
   //the input field content state
   const [value, setValue] = useState(initialValue);
 
@@ -34,13 +22,6 @@ export const useBaseInput = ({
 
   //we run a custom solution to validate the rules.
   let validatedData: InputValidation = validateRules(value, rules);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    //while typing, we update the value
-    setValue(e.target.value);
-    //we also trigger any additional onChange passed
-    lateOnChange?.();
-  };
 
   //we apply the fresh validated results to the states so are always synched
   useEffect(() => {
@@ -65,26 +46,10 @@ export const useBaseInput = ({
     setErrorMessage('');
   };
 
-  const getProps = (): InputFieldProps => ({
-    name,
-    value,
-    onChange,
-    placeholder,
-    autoComplete: autoComplete,
-    type,
-    label,
-    isError,
-    isSuccess,
-    visualValidation: rules?.visualValidation,
-    maxLength: rules?.maxLength,
-    minLength: rules?.minLength,
-  });
-
   return {
     value,
     setValue,
     reset,
-    getProps,
     isError,
     isSuccess,
     errorMessage,

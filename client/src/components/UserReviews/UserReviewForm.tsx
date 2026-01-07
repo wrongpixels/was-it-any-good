@@ -1,4 +1,4 @@
-import { ChangeEvent, JSX, PropsWithChildren, useState } from 'react';
+import { JSX, PropsWithChildren, useState } from 'react';
 import { useInputField } from '../../hooks/use-input-field';
 import { InputField } from '../Common/Custom/InputField';
 import Button from '../Common/Custom/Button';
@@ -15,8 +15,9 @@ import { getVisibleSeasons } from '../../utils/seasons-setter';
 import SearchCard from '../Search/Cards/SearchCard';
 import { BadgeType } from '../../types/search-browse-types';
 import { TextArea } from '../Common/Custom/TextArea';
+import { useTextArea } from '../../hooks/use-text-area';
 
-const SHOW_REVIEW_FORM: boolean = true;
+const SHOW_REVIEW_FORM: boolean = false;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;
@@ -31,8 +32,6 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
     isShow(media) && media.seasons
       ? getVisibleSeasons(media.seasons).map((s: SeasonResponse) => s.name)
       : [];
-  const [mainTextContent, setMainTextContent] = useState<string>('');
-  const [spoilerContent, setSpoilerContent] = useState<string>('');
   const [addSpoilers] = useState<boolean>(true);
   const titleField = useInputField({
     name: 'title',
@@ -40,6 +39,24 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
     rules: {
       minLength: 3,
       maxLength: 75,
+      visualValidation: true,
+    },
+  });
+  const reviewTextArea = useTextArea({
+    name: 'title',
+    placeholder: 'Your spoiler-free review...',
+    rules: {
+      minLength: 30,
+      maxLength: 6000,
+      visualValidation: true,
+    },
+  });
+  const spoilerTextArea = useTextArea({
+    name: 'title',
+    placeholder: 'Your spoiler review...',
+    rules: {
+      minLength: 30,
+      maxLength: 4000,
       visualValidation: true,
     },
   });
@@ -78,15 +95,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
           {`All users can see this, so don't spoil anything!`}
         </div>
       </Section>
-      <TextArea
-        name="review-text-area"
-        className="w-full pl-1 py-0.5 pr-2 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue min-h-30"
-        value={mainTextContent}
-        placeholder={'Your spoiler-free review...'}
-        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-          setMainTextContent(e.target.value)
-        }
-      />
+      <TextArea {...reviewTextArea.getProps()} />
       {/*<Section>{'Add spoiler section?'}</Section>
       <div className="flex flex-row gap-3">
         <span className="flex flex-row gap-2">
@@ -118,12 +127,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
               {'You can write freely here, users will be warned!'}
             </div>
           </Section>
-          <textarea
-            className="w-full pl-1 py-0.5 pr-2 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue min-h-30"
-            value={spoilerContent}
-            placeholder={'Your spoiler review...'}
-            onChange={(e) => setSpoilerContent(e.target.value)}
-          />
+          <TextArea {...spoilerTextArea.getProps()} />
         </>
       )}
       <AnimatedDiv
@@ -131,7 +135,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         className="flex justify-center"
       >
         <Button
-          disabled={!titleField.value || !mainTextContent}
+          disabled={!titleField.value || !reviewTextArea.isSuccess}
           type="submit"
           className="relative mt-2 w-32 justify-center pl-5"
         >
