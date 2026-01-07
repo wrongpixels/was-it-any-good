@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import {
-  InputFieldHookConfig,
+  InputHookConfig,
   InputFieldHookValues,
   InputFieldProps,
-  InputFieldValidation,
+  InputValidation,
 } from '../types/input-field-types';
 import validateRules from '../utils/input-field-validator';
 
@@ -16,7 +16,7 @@ export const useInputField = ({
   type = 'text',
   label,
   onChange: lateOnChange,
-}: InputFieldHookConfig): InputFieldHookValues => {
+}: InputHookConfig): InputFieldHookValues => {
   //the input field content state
   const [value, setValue] = useState(initialValue);
 
@@ -28,7 +28,7 @@ export const useInputField = ({
   const [errorMessage, setErrorMessage] = useState('');
 
   //we run a custom solution to validate the rules.
-  let validatedData: InputFieldValidation = validateRules(value, rules);
+  let validatedData: InputValidation = validateRules(value, rules);
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     //while typing, we update the value

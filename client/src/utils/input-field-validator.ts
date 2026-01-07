@@ -4,15 +4,12 @@ import {
   INPUT_VALIDATION_ERROR,
   INPUT_VALIDATION_SUCCESS,
 } from '../constants/input-validation-constants';
-import {
-  InputFieldRules,
-  InputFieldValidation,
-} from '../types/input-field-types';
+import { InputRules, InputValidation } from '../types/input-field-types';
 
 const validateRules = (
   input: string | null,
-  rules?: InputFieldRules
-): InputFieldValidation => {
+  rules?: InputRules
+): InputValidation => {
   if (!rules || !input || input.length < 1) {
     return INPUT_VALIDATION_SKIP;
   }

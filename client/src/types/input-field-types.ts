@@ -13,10 +13,10 @@ export interface InputLogicProps {
   autoComplete?: string;
 }
 
-export interface InputFieldHookConfig extends InputLogicProps {
+export interface InputHookConfig extends InputLogicProps {
   label?: string;
   initialValue?: string;
-  rules?: InputFieldRules;
+  rules?: InputRules;
   onChange?: () => void;
 }
 
@@ -42,7 +42,7 @@ export interface InputFieldProps
     CommonInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
-export interface InputFieldRules {
+export interface InputRules {
   minLength?: number;
   maxLength?: number;
   blackList?: string[];
@@ -51,12 +51,13 @@ export interface InputFieldRules {
   visualValidation?: boolean;
 }
 
-export interface InputFieldValidation {
+export interface InputValidation {
   isError: boolean;
   isSuccess: boolean;
   errorMessage: string;
 }
-export interface InputFieldHookValues {
+
+export interface InputHookValues {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   reset: VoidFunction;
@@ -65,5 +66,13 @@ export interface InputFieldHookValues {
   errorMessage: string;
   setError: (message: string) => void;
   setSuccess: VoidFunction;
+  getProps: () => InputFieldProps | TextAreaProps;
+}
+
+export interface InputFieldHookValues extends InputHookValues {
   getProps: () => InputFieldProps;
+}
+
+export interface TextAreaHookValues extends InputHookConfig {
+  getProps: () => TextAreaProps;
 }
