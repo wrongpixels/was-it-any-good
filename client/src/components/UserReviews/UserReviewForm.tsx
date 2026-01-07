@@ -15,7 +15,7 @@ import { getVisibleSeasons } from '../../utils/seasons-setter';
 import SearchCard from '../Search/Cards/SearchCard';
 import { BadgeType } from '../../types/search-browse-types';
 
-const SHOW_REVIEW_FORM: boolean = false;
+const SHOW_REVIEW_FORM: boolean = true;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;
@@ -55,6 +55,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
               media={media.indexMedia}
               index={0}
               badgeType={BadgeType.None}
+              canBeClicked={false}
             />
           )}
         </div>
@@ -65,7 +66,7 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
       </Section>
       <InputField {...titleField.getProps()} className={'h-8 w-3xs'} />
       <Section>
-        {'Write a review'}
+        {'Review'}
         <span className="font-normal italic">{' (without spoilers)'}</span>
         <div className="text-sm font-normal">
           {`All users can see this, so don't spoil anything!`}
