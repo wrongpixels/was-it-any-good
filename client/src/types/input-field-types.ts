@@ -13,25 +13,38 @@ export interface InputLogicProps {
   autoComplete?: string;
 }
 
-export interface InputFieldHookConfig extends InputLogicProps {
-  label?: string;
+export interface BaseInputHookConfig {
   initialValue?: string;
-  rules?: InputFieldRules;
+  rules?: InputRules;
+}
+export interface BaseInputHook extends InputLogicProps, BaseInputHookConfig {
+  label?: string;
   onChange?: () => void;
 }
 
-export interface InputFieldProps
-  extends InputLogicProps,
-    InputPresentationProps {
+interface CommonInputProps {
   value: string;
   visualValidation?: boolean;
   maxLength?: number;
   minLength?: number;
   isSuccess?: boolean;
   isError?: boolean;
+}
+
+export interface TextAreaProps
+  extends InputLogicProps,
+    InputPresentationProps,
+    CommonInputProps {
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+export interface InputFieldProps
+  extends InputLogicProps,
+    InputPresentationProps,
+    CommonInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
-export interface InputFieldRules {
+export interface InputRules {
   minLength?: number;
   maxLength?: number;
   blackList?: string[];
@@ -40,12 +53,13 @@ export interface InputFieldRules {
   visualValidation?: boolean;
 }
 
-export interface InputFieldValidation {
+export interface InputValidation {
   isError: boolean;
   isSuccess: boolean;
   errorMessage: string;
 }
-export interface InputFieldHookValues {
+
+export interface BaseInputHookValues {
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   reset: VoidFunction;
@@ -54,5 +68,12 @@ export interface InputFieldHookValues {
   errorMessage: string;
   setError: (message: string) => void;
   setSuccess: VoidFunction;
+}
+
+export interface InputFieldHookValues extends BaseInputHookValues {
   getProps: () => InputFieldProps;
+}
+
+export interface TextAreaHookValues extends BaseInputHookValues {
+  getProps: () => TextAreaProps;
 }

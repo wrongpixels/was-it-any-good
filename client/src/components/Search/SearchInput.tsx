@@ -1,6 +1,6 @@
 import { FormEvent, memo, useEffect } from 'react';
 import { InputField } from '../Common/Custom/InputField';
-import { useInputField } from '../../hooks/use-inputfield';
+import { useInputField } from '../../hooks/use-input-field';
 import { OptStringProps } from '../../types/common-props-types';
 import Button from '../Common/Custom/Button';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';

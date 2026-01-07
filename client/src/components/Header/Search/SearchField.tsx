@@ -1,5 +1,5 @@
 import { JSX } from 'react';
-import { useInputField } from '../../../hooks/use-inputfield';
+import { useInputField } from '../../../hooks/use-input-field';
 import SearchResults from './SearchResults';
 import SearchIcon from '../../Common/Icons/SearchIcon';
 import { InputField } from '../../Common/Custom/InputField';

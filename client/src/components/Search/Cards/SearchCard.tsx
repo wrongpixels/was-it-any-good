@@ -1,5 +1,4 @@
 import { JSX, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   IndexMediaData,
   MediaResponse,
@@ -34,6 +33,7 @@ import CloseButton from '../../Common/CloseButton';
 import { BrowsePageValues } from '../../../hooks/use-browse-page-values';
 import WatchlistPosterFooter from '../../UserLists/WatchlistPosterFooter';
 import { NotificationContextValues } from '../../../context/NotificationProvider';
+import ToggleLink from '../../Common/Custom/ToggleLink';
 
 const DELETE_ANIMATION_DURATION: number = 125 as const;
 
@@ -44,6 +44,7 @@ interface SearchCardProps {
   userId?: number;
   notification?: NotificationContextValues;
   browsePageValues?: BrowsePageValues;
+  canBeClicked?: boolean;
 }
 
 const getBadge = (badgeType: BadgeType, index: number): JSX.Element | null => {
@@ -66,6 +67,7 @@ const SearchCard = ({
   notification,
   badgeType = BadgeType.None,
   browsePageValues,
+  canBeClicked = true,
 }: SearchCardProps): JSX.Element | null => {
   if (!media) {
     return null;
@@ -112,18 +114,19 @@ const SearchCard = ({
   //to apply special designs to the Cards for editable lists (like making space for an 'X' button on top)
   const canEditItems: boolean = !!browsePageValues?.userListValues.canEditItems;
   return (
-    <Link
+    <ToggleLink
       to={buildIndexMediaLinkWithSlug(media)}
-      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${styles.animations.upOnHoverShort} ${styles.animations.zoomLessOnHover} max-w-90 ${animTrigger ? 'transition-opacity duration-250 opacity-0' : 'opacity-100'}`}
+      enabled={canBeClicked}
+      className={`relative ${styles.poster.search.byBadgeType(realBadgeType, index)} flex flex-row ${canBeClicked ? styles.animations.posterZoom : 'cursor-default'} ${canBeClicked && styles.animations.upOnHoverShort} max-w-90 ${animTrigger ? 'transition-opacity duration-250 opacity-0' : 'opacity-100'}`}
       title={`${media.name} (${mediaDisplay})`}
     >
       <div className={'relative rounded drop-shadow ring-1 ring-gray-300 '}>
         <div
           onMouseOver={() => {
-            setMouseOverPoster(true);
+            canBeClicked && setMouseOverPoster(true);
           }}
           onMouseOut={() => {
-            setMouseOverPoster(false);
+            canBeClicked && setMouseOverPoster(false);
           }}
           className="relative overflow-hidden rounded"
         >
@@ -192,7 +195,7 @@ const SearchCard = ({
           <CloseButton onClick={() => removeFromList()} />
         </div>
       )}
-    </Link>
+    </ToggleLink>
   );
 };
 export default React.memo(SearchCard);

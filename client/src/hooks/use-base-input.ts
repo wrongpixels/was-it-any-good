@@ -1,22 +1,15 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  InputFieldHookConfig,
-  InputFieldHookValues,
-  InputFieldProps,
-  InputFieldValidation,
+  BaseInputHookValues,
+  InputValidation,
+  BaseInputHookConfig,
 } from '../types/input-field-types';
 import validateRules from '../utils/input-field-validator';
 
-export const useInputField = ({
-  name,
+export const useBaseInput = ({
   rules,
   initialValue = '',
-  placeholder,
-  autoComplete,
-  type = 'text',
-  label,
-  onChange: lateOnChange,
-}: InputFieldHookConfig): InputFieldHookValues => {
+}: BaseInputHookConfig): BaseInputHookValues => {
   //the input field content state
   const [value, setValue] = useState(initialValue);
 
@@ -28,14 +21,7 @@ export const useInputField = ({
   const [errorMessage, setErrorMessage] = useState('');
 
   //we run a custom solution to validate the rules.
-  let validatedData: InputFieldValidation = validateRules(value, rules);
-
-  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-    //while typing, we update the value
-    setValue(e.target.value);
-    //we also trigger any additional onChange passed
-    lateOnChange?.();
-  };
+  let validatedData: InputValidation = validateRules(value, rules);
 
   //we apply the fresh validated results to the states so are always synched
   useEffect(() => {
@@ -60,26 +46,10 @@ export const useInputField = ({
     setErrorMessage('');
   };
 
-  const getProps = (): InputFieldProps => ({
-    name,
-    value,
-    onChange,
-    placeholder,
-    autoComplete: autoComplete,
-    type,
-    label,
-    isError,
-    isSuccess,
-    visualValidation: rules?.visualValidation,
-    maxLength: rules?.maxLength,
-    minLength: rules?.minLength,
-  });
-
   return {
     value,
     setValue,
     reset,
-    getProps,
     isError,
     isSuccess,
     errorMessage,

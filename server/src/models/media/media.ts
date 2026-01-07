@@ -436,6 +436,8 @@ class Media<
       const updatedValues: Partial<TAttributes> = {
         baseRating: this.indexMedia.baseRating,
         rating: this.indexMedia.baseRating,
+        //we also update the image at this point
+        image: this.indexMedia.image,
       } as unknown as Partial<TAttributes>;
 
       //if it's a show, we now recalculate the cached IndexMedia rating, which uses

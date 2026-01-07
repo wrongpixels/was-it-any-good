@@ -7,7 +7,7 @@ import { APIError } from '../../../../shared/types/errors';
 import { LoginData, UserSessionData } from '../../../../shared/types/models';
 import { styles } from '../../constants/tailwind-styles';
 import { NotificationContextValues } from '../../context/NotificationProvider';
-import { useInputField } from '../../hooks/use-inputfield';
+import { useInputField } from '../../hooks/use-input-field';
 import { InputFieldHookValues } from '../../types/input-field-types';
 import { formatToAPIError } from '../../utils/error-handler';
 import Button from '../Common/Custom/Button';
