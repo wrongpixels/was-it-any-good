@@ -20,15 +20,26 @@ export interface InputFieldHookConfig extends InputLogicProps {
   onChange?: () => void;
 }
 
-export interface InputFieldProps
-  extends InputLogicProps,
-    InputPresentationProps {
+interface CommonInputProps {
   value: string;
   visualValidation?: boolean;
   maxLength?: number;
   minLength?: number;
   isSuccess?: boolean;
   isError?: boolean;
+}
+
+export interface TextAreaProps
+  extends InputLogicProps,
+    InputPresentationProps,
+    CommonInputProps {
+  onChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+}
+
+export interface InputFieldProps
+  extends InputLogicProps,
+    InputPresentationProps,
+    CommonInputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 export interface InputFieldRules {

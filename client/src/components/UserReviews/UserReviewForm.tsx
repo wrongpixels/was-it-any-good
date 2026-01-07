@@ -1,4 +1,4 @@
-import { JSX, PropsWithChildren, useState } from 'react';
+import { ChangeEvent, JSX, PropsWithChildren, useState } from 'react';
 import { useInputField } from '../../hooks/use-inputfield';
 import { InputField } from '../Common/Custom/InputField';
 import Button from '../Common/Custom/Button';
@@ -14,6 +14,7 @@ import { isShow } from '../../../../shared/helpers/media-helper';
 import { getVisibleSeasons } from '../../utils/seasons-setter';
 import SearchCard from '../Search/Cards/SearchCard';
 import { BadgeType } from '../../types/search-browse-types';
+import { TextArea } from '../Common/Custom/TextArea';
 
 const SHOW_REVIEW_FORM: boolean = true;
 
@@ -25,13 +26,14 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
   if (!SHOW_REVIEW_FORM) {
     return null;
   }
+  const isAShow: boolean = isShow(media);
   const seasonNames: string[] =
     isShow(media) && media.seasons
       ? getVisibleSeasons(media.seasons).map((s: SeasonResponse) => s.name)
       : [];
   const [mainTextContent, setMainTextContent] = useState<string>('');
   const [spoilerContent, setSpoilerContent] = useState<string>('');
-  const [addSpoilers, setAddSpoilers] = useState<boolean>(false);
+  const [addSpoilers] = useState<boolean>(true);
   const titleField = useInputField({
     name: 'title',
     placeholder: 'Your title...',
@@ -44,12 +46,16 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
   return (
     <form className="pl-2 flex flex-col">
       <Section>
-        {'Reviewing '}
-        <div className="flex flex-col items-start gap-2">
-          <Dropdown
-            options={[...seasonNames, 'Full show']}
-            defaultValue={'Full show'}
-          />
+        {'Reviewing'}
+        <div
+          className={`flex flex-col items-start gap-2 ${isAShow ? 'pt-1' : 'pt-1.5'}`}
+        >
+          {isAShow && (
+            <Dropdown
+              options={[...seasonNames, 'Full show']}
+              defaultValue={'Full show'}
+            />
+          )}
           {media && (
             <SearchCard
               media={media.indexMedia}
@@ -72,13 +78,16 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
           {`All users can see this, so don't spoil anything!`}
         </div>
       </Section>
-      <textarea
+      <TextArea
+        name="review-text-area"
         className="w-full pl-1 py-0.5 pr-2 ring-cyan-400 border-none rounded ring-1 bg-white text-gray-800 text-sm hover:ring-amber-300 focus:outline-none focus:ring-2 focus:ring-starblue min-h-30"
         value={mainTextContent}
         placeholder={'Your spoiler-free review...'}
-        onChange={(e) => setMainTextContent(e.target.value)}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+          setMainTextContent(e.target.value)
+        }
       />
-      <Section>{'Add spoiler section?'}</Section>
+      {/*<Section>{'Add spoiler section?'}</Section>
       <div className="flex flex-row gap-3">
         <span className="flex flex-row gap-2">
           {'Yes'}
@@ -99,8 +108,8 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
             checked={!addSpoilers}
             onChange={() => setAddSpoilers(false)}
           />
-        </span>
-      </div>
+        </span> 
+      </div>*/}
       {addSpoilers && (
         <>
           <Section>
