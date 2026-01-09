@@ -8,7 +8,7 @@ import {
   MIN_REVIEW_TITLE_LENGTH,
 } from '../../../shared/constants/user-review-constants';
 
-const CreateUserReviewSchema = z.object({
+export const CreateUserReviewSchema = z.object({
   title: z
     .string()
     .trim()
@@ -25,6 +25,6 @@ const CreateUserReviewSchema = z.object({
     .trim()
     .min(MIN_REVIEW_CONTENT_LENGTH)
     .max(MAX_REVIEW_SPOILER_LENGTH)
-    .optional(),
+    .nullable(),
   recommended: z.number().min(0).max(RecommendType.Mixed),
 });
