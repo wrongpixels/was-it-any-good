@@ -17,7 +17,7 @@ import { BadgeType } from '../../types/search-browse-types';
 import { TextArea } from '../Common/Custom/TextArea';
 import { useTextArea } from '../../hooks/use-text-area';
 
-const SHOW_REVIEW_FORM: boolean = false;
+const SHOW_REVIEW_FORM: boolean = true;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;

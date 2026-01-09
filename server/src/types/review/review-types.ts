@@ -18,16 +18,6 @@ export interface UserVote {
   value: -1 | 1;
 }
 
-export interface UserReviewData {
-  id: number;
-  userId: number;
-  ratingId: number;
-  title: string;
-  content: string;
-  votes: number;
-  createdAt: Date;
-}
-
 // Critic
 export interface CriticReviewData {
   id: number;

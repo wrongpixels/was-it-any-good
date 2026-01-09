@@ -15,13 +15,7 @@ import {
   buildReviewIncludeableOptions,
   buildReviewWhereOptions,
 } from '../../util/user-review-helpers';
-
-enum RecommendType {
-  NotSpecified = 0,
-  Yes = 1,
-  No = 2,
-  Mixed = 3,
-}
+import { RecommendType } from '../../../../shared/types/user-reviews';
 
 class UserReview extends Model<
   InferAttributes<UserReview>,
@@ -68,7 +62,7 @@ class UserReview extends Model<
 
   //to find all the user reviews of a specific media and, if rated by the user, attach the rating
   static async findAllByIndexId(
-    indexId: number,
+    indexId: number | string,
     options?: FindOptions<UserReview>
   ) {
     const entries: UserReview[] = await UserReview.findAll({
@@ -92,6 +86,8 @@ class UserReview extends Model<
     return entries;
   }
 }
+
+//to find a specific user's review for a specific media
 
 UserReview.init(
   {
