@@ -2,6 +2,7 @@ import { CountryCode } from './countries';
 import { MediaType } from './media';
 import { PersonGender } from './people';
 import { AuthorType, SortedRoles } from './roles';
+import { RecommendType } from './user-reviews';
 
 export interface MediaRoleResponse {
   id: number;
@@ -203,7 +204,6 @@ export interface BaseResponse {
 export interface SeasonResponse extends BaseResponse {
   index: number;
   indexId: number;
-
   episodeCount: number;
   showId: number;
   mediaType: MediaType.Season;
@@ -218,6 +218,37 @@ export interface BrowseResponse {
   totalPages: number;
   showResults?: IndexMediaData[];
   filmResults?: IndexMediaData[];
+}
+
+export interface CreateUserReviewData {
+  title: string;
+  seasons?: number[];
+  mainContent: string;
+  spoilerContent: string | null;
+  recommended: RecommendType;
+}
+
+export interface CreateUserReview extends CreateUserReviewData {
+  userId: number;
+  indexId: number;
+  ratingId: number | null;
+}
+
+export interface UserReviewData extends CreateUserReview {
+  id: number;
+  edited: boolean;
+  timesEdited: number;
+  lastEdited: Date | null;
+  rating?: RatingData;
+  createdAt?: Date;
+}
+
+export interface UserReviewResults {
+  page: number;
+  totalPages: number;
+  totalResults: number;
+  reviews: UserReviewData[];
+  activeUserReview: UserReviewData | null;
 }
 
 export interface BaseMediaResponse extends BaseResponse {

@@ -15,13 +15,14 @@ import {
   buildReviewIncludeableOptions,
   buildReviewWhereOptions,
 } from '../../util/user-review-helpers';
-
-enum RecommendType {
-  NotSpecified = 0,
-  Yes = 1,
-  No = 2,
-  Mixed = 3,
-}
+import { RecommendType } from '../../../../shared/types/user-reviews';
+import {
+  MAX_REVIEW_CONTENT_LENGTH,
+  MAX_REVIEW_SPOILER_LENGTH,
+  MAX_REVIEW_TITLE_LENGTH,
+  MIN_REVIEW_CONTENT_LENGTH,
+  MIN_REVIEW_TITLE_LENGTH,
+} from '../../../../shared/constants/user-review-constants';
 
 class UserReview extends Model<
   InferAttributes<UserReview>,
@@ -68,7 +69,7 @@ class UserReview extends Model<
 
   //to find all the user reviews of a specific media and, if rated by the user, attach the rating
   static async findAllByIndexId(
-    indexId: number,
+    indexId: number | string,
     options?: FindOptions<UserReview>
   ) {
     const entries: UserReview[] = await UserReview.findAll({
@@ -92,6 +93,8 @@ class UserReview extends Model<
     return entries;
   }
 }
+
+//to find a specific user's review for a specific media
 
 UserReview.init(
   {
@@ -133,21 +136,21 @@ UserReview.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [3, 75],
+        len: [MIN_REVIEW_TITLE_LENGTH, MAX_REVIEW_TITLE_LENGTH],
       },
     },
     mainContent: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        len: [30, 6000],
+        len: [MIN_REVIEW_CONTENT_LENGTH, MAX_REVIEW_CONTENT_LENGTH],
       },
     },
     spoilerContent: {
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        len: [30, 4000],
+        len: [MIN_REVIEW_CONTENT_LENGTH, MAX_REVIEW_SPOILER_LENGTH],
       },
     },
     recommended: {

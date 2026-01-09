@@ -12,6 +12,7 @@ import suggestionsRouter from './suggestions-controller';
 import searchRouter from './search-controller';
 import trendingRouter from './trending-controller';
 import browseRouter from './browse-controller';
+import userReviewsRouter from './user-reviews-controller';
 import myRouter from './my-controller';
 import userMediaListsRouter from './user-media-lists-controller';
 import rootFilesRouter from './root-files-controller';
@@ -34,6 +35,7 @@ export {
   trendingRouter,
   myRouter,
   userMediaListsRouter,
+  userReviewsRouter,
   rootFilesRouter,
   sitemapsRouter,
 };
