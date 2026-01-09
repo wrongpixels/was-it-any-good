@@ -220,15 +220,18 @@ export interface BrowseResponse {
   filmResults?: IndexMediaData[];
 }
 
-export interface CreateUserReview {
-  userId: number;
-  indexId: number;
-  ratingId: number | null;
+export interface CreateUserReviewData {
   title: string;
   seasons?: number[];
   mainContent: string;
   spoilerContent: string | null;
   recommended: RecommendType;
+}
+
+export interface CreateUserReview extends CreateUserReviewData {
+  userId: number;
+  indexId: number;
+  ratingId: number | null;
 }
 
 export interface UserReviewData extends CreateUserReview {

@@ -3,6 +3,7 @@ import idFormatChecker from '../middleware/id-format-checker';
 import { UserReview } from '../models';
 import { toPlain, toPlainArray } from '../util/model-helpers';
 import { UserReviewResults } from '../../../shared/types/models';
+import { authRequired } from '../middleware/auth-requirements';
 
 const router: Router = express.Router();
 
@@ -30,6 +31,20 @@ router.get(
       activeUserReview: activeUserReview ? toPlain(activeUserReview) : null,
     };
     res.json(userReviewResults);
+  }
+);
+
+router.post(
+  '/:id',
+  idFormatChecker,
+  authRequired,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: number | undefined = req.activeUser?.id;
+      const indexId: string = req.params.id;
+    } catch (error) {
+      next(error);
+    }
   }
 );
 

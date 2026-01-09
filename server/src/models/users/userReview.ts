@@ -16,6 +16,13 @@ import {
   buildReviewWhereOptions,
 } from '../../util/user-review-helpers';
 import { RecommendType } from '../../../../shared/types/user-reviews';
+import {
+  MAX_REVIEW_CONTENT_LENGTH,
+  MAX_REVIEW_SPOILER_LENGTH,
+  MAX_REVIEW_TITLE_LENGTH,
+  MIN_REVIEW_CONTENT_LENGTH,
+  MIN_REVIEW_TITLE_LENGTH,
+} from '../../../../shared/constants/user-review-constants';
 
 class UserReview extends Model<
   InferAttributes<UserReview>,
@@ -129,21 +136,21 @@ UserReview.init(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [3, 75],
+        len: [MIN_REVIEW_TITLE_LENGTH, MAX_REVIEW_TITLE_LENGTH],
       },
     },
     mainContent: {
       type: DataTypes.TEXT,
       allowNull: false,
       validate: {
-        len: [30, 6000],
+        len: [MIN_REVIEW_CONTENT_LENGTH, MAX_REVIEW_CONTENT_LENGTH],
       },
     },
     spoilerContent: {
       type: DataTypes.TEXT,
       allowNull: true,
       validate: {
-        len: [30, 4000],
+        len: [MIN_REVIEW_CONTENT_LENGTH, MAX_REVIEW_SPOILER_LENGTH],
       },
     },
     recommended: {
