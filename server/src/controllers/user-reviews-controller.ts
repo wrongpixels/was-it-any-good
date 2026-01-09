@@ -70,4 +70,32 @@ router.post(
   }
 );
 
+router.post(
+  '/test/:id/:userId',
+  idFormatChecker,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: number | undefined = Number(req.params.userId);
+      if (!userId) {
+        throw new AuthError();
+      }
+      const indexId: number = Number(req.params.id);
+      if (isNaN(indexId)) {
+        throw new WrongFormatError('Media id must be numeric');
+      }
+
+      //zod will throw an error if something fails, se we assume it passed the check.
+      const reviewData: CreateUserReviewData = CreateUserReviewSchema.parse(
+        req.body
+      );
+      const newReviewResponse: UserReviewData = toPlain(
+        await createUserReview(reviewData, indexId, userId)
+      );
+      res.status(201).json(newReviewResponse);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default router;

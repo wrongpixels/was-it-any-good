@@ -3,7 +3,7 @@ import { PRODUCTION, PRODUCTION_MODE, ProductionMode } from '../config';
 import { sequelize } from './initialize-db';
 import { QueryInterface } from 'sequelize';
 let migrator: Umzug<QueryInterface> | null = null;
-export const MIGRATIONS_ENABLED: boolean = false;
+export const MIGRATIONS_ENABLED: boolean = true;
 
 export type QueryInterfaceContext = { context: QueryInterface };
 
