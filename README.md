@@ -9,7 +9,7 @@ Currently deployed at:
 WIAG is a full-stack media rating platform that uses a dynamic scoring approach to combine overall user impressions with their ratings of individual components _(like seasons or DLC)_. The result is a more nuanced average score that better reflects user engagement and how a piece of media's quality evolves over time.
 
 <p align="center">
-  <img height="600" alt="image" src="https://github.com/user-attachments/assets/f9a87c37-c211-4c1d-b005-48cb74d0bea1" />
+  <img height="600" alt="image" src="https://github.com/user-attachments/assets/bc7625c0-72a8-4777-a725-5c92776f16b8" />
 </p>
 
 **For example:**
