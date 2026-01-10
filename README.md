@@ -9,11 +9,11 @@ Currently deployed at:
 WIAG is a full-stack media rating platform that uses a dynamic scoring approach to combine overall user impressions with their ratings of individual components _(like seasons or DLC)_. The result is a more nuanced average score that better reflects user engagement and how a piece of media's quality evolves over time.
 
 <p align="center">
-  <img height="600" alt="image" src="https://github.com/user-attachments/assets/5deebee8-2b5e-48da-8428-1e8f91e95cb1" />
+  <img height="600" alt="image" src="https://github.com/user-attachments/assets/f9a87c37-c211-4c1d-b005-48cb74d0bea1" />
 </p>
 
 **For example:**
-In WIAG, you can rate _Futurama_ an '_8_' overall, but then give _Season 1_ a '_9_', _Season 2_ a '_10_', _Season 3_ a '_6_'... and leave the rest unvoted. WIAG's algorithm will consider all these votes for the final score, ignoring the unvoted Seasons.
+In WIAG, you can rate _The Office_ an '_8_' overall, but also give _Season 1_ a '_7_', _Season 2_ a '_10_', _Season 3_ a '_9_'... and leave the rest unvoted. WIAG's algorithm will consider all these votes for the final score, ignoring the unvoted Seasons.
 
 ### Why I'm Building This
 
@@ -41,10 +41,9 @@ The project is currently [live](https://wiag.io) with its core feature set, whil
 
 
 ### ⏳ In Development / Planned
-
+- 📝 ***Community Engagement:*** Written reviews and comment sections. (Active WIP)
 - 🎮 **Game Integration:** Adding IGDB API support to expand the library to video games and DLCs.
 - 👥 **Social Features:** Friend-following system and personalized activity feeds.
-- 📝 **Community Engagement:** Written reviews and comment sections.
 
 ---
 
