@@ -29,7 +29,7 @@ const Footer = () => {
       </span>
       <span className="flex flex-row gap-2 items-center">
         <span className="font-medium text-gray-500 text-xs">
-          {'Images and data:'}
+          {'Images & source metadata:'}
         </span>
         <IconTMDBLogoVert height={14} url={BASE_TMDB_URL} />
       </span>
