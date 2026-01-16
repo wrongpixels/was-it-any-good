@@ -14,7 +14,7 @@ const SeasonsGraphic = ({ seasons }: SeasonsGraphicProps) => {
     return null;
   }
   return (
-    <div className="ml-1 bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 rounded shadow-md/10">
+    <div className="bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 rounded shadow-md/10">
       <div
         style={{ height: `${GRAPH_HEIGHT}px` }}
         className={

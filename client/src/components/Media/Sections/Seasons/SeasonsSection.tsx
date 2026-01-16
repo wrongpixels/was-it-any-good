@@ -26,7 +26,9 @@ const SeasonsSection = ({ show }: SeasonsSectionProps): JSX.Element | null => {
     <div>
       <Separator />
       <EntrySection title={`Seasons (${visibleSeasons.length})`} content=" " />
-      <SeasonsGraphic seasons={visibleSeasons} />
+      <ScrollableDiv>
+        <SeasonsGraphic seasons={visibleSeasons} />
+      </ScrollableDiv>
       {visibleSeasons.length < 1 ? (
         <div>Show has no seasons.</div>
       ) : (
