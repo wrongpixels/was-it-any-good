@@ -1,14 +1,14 @@
 import { useEffect, useState, useRef, useCallback, JSX } from 'react';
-import { useOverlay } from '../../context/OverlayProvider';
 import useEventBlocker from '../../hooks/use-event-blocker';
-import { OverlayType } from '../../types/overlay-types';
+import { OverlayProps, OverlayType } from '../../types/overlay-types';
 import SignUpForm from './SignUpForm';
 
 const ANIM_DURATION: number = 300;
 
-const SignUpOverlay = (): JSX.Element | null => {
-  const { overlay, clean } = useOverlay();
-
+const SignUpOverlay = ({
+  overlay,
+  clean,
+}: OverlayProps): JSX.Element | null => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
@@ -74,7 +74,7 @@ const SignUpOverlay = (): JSX.Element | null => {
           ? 'opacity-100 bg-gray-400/80'
           : 'opacity-0 pointer-events-none'
       }`}
-      onClick={clean}
+      onPointerDown={clean}
     >
       <div
         className={`flex h-full w-full items-center justify-center p-4 transition-transform duration-250 ease-in-out ${
@@ -88,7 +88,7 @@ const SignUpOverlay = (): JSX.Element | null => {
               grid-rows-[1fr_auto]
               overflow-hidden
               ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
-          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <SignUpForm clean={clean} />
         </div>

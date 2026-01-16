@@ -1,4 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { OverlayType } from '../types/overlay-types';
 
 export interface OverlayContextValues {
@@ -6,6 +12,7 @@ export interface OverlayContextValues {
   active: boolean;
   overlayType: OverlayType;
   className?: string;
+  confirmClose?: boolean;
 }
 
 export interface OverlayValues {
@@ -21,6 +28,7 @@ const DEF_OVERLAY: OverlayContextValues = {
   active: false,
   overlayType: OverlayType.None,
   className: '',
+  confirmClose: false,
 };
 
 const OverlayContext = createContext<OverlayValues>({
@@ -33,7 +41,7 @@ const OverlayContext = createContext<OverlayValues>({
 
 const OverlayProvider = ({ children }: PropsWithChildren) => {
   const [overlay, setOverlay] = useState(DEF_OVERLAY);
-
+  useEffect(() => {}, []);
   return (
     <OverlayContext.Provider
       value={{
@@ -53,7 +61,9 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
             className,
             overlayType: OverlayType.Image,
           }),
-        clean: () => setOverlay(DEF_OVERLAY),
+        clean: () => {
+          setOverlay(DEF_OVERLAY);
+        },
       }}
     >
       {children}

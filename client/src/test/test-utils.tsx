@@ -7,9 +7,8 @@ import OverlayProvider from '../context/OverlayProvider';
 import { UserSessionData } from '../../../shared/types/models';
 import { vi } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
-import ImageOverlay from '../components/Overlay/ImageOverlay';
-import SignUpOverlay from '../components/Overlay/SignUpOverlay';
 import { AnimationProvider } from '../context/AnimationProvider';
+import Overlays from '../components/Overlays/Overlays';
 
 export const MOCK_LOGGED_USER_ID: number = 1;
 export const MOCK_LOGGED_SESSION_ID: number = 1;
@@ -78,8 +77,7 @@ export const TestProviderWrapper = ({
               <AuthContext.Provider
                 value={loggedIn ? MOCK_AUTH_VALID : MOCK_AUTH_EMPTY}
               >
-                <ImageOverlay />
-                <SignUpOverlay />
+                <Overlays />
                 {children}
               </AuthContext.Provider>
             </OverlayProvider>
