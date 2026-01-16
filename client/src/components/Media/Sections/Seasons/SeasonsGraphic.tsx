@@ -14,15 +14,19 @@ const SeasonsGraphic = ({ seasons }: SeasonsGraphicProps) => {
     return null;
   }
   return (
-    <div className="bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 rounded shadow-md/10">
+    <div className="bg-gradient-to-t from-gray-200/50 to-gray-50 w-fit border border-gray-300 mb-3 p-2 pb-1 rounded shadow-md/10">
       <div
-        style={{ height: `${GRAPH_HEIGHT}px` }}
         className={
           'flex flex-row gap-1 items-baseline-last w-fit justify-baseline bg-gradient-to-t from-gray-100 via-gray-100 to-gray-200/50 rounded'
         }
       >
         {seasons.map((s: SeasonResponse) => (
-          <SeasonBar season={s} key={s.id} />
+          <div className="flex flex-col items-center">
+            <SeasonBar season={s} key={s.id} />
+            <span className="text-xs text-gray-400 pt-0.75 font-semibold">
+              {s.index}
+            </span>
+          </div>
         ))}
       </div>
     </div>
