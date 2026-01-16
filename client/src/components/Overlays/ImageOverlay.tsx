@@ -1,15 +1,13 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { useOverlay } from '../../context/OverlayProvider';
+import { useEffect, useState, useRef, useCallback, JSX } from 'react';
 import LazyImage, { ImageVariant } from '../Common/Custom/LazyImage';
 import { BASE_TMDB_URL } from '../../../../shared/constants/url-constants';
 import useEventBlocker from '../../hooks/use-event-blocker';
-import { OverlayType } from '../../types/overlay-types';
+import { OverlayProps, OverlayType } from '../../types/overlay-types';
 import IconTMDBLogoHor from '../Common/Icons/Logos/IconTMDBLogoHor';
 
 const ANIM_DURATION: number = 300;
 
-const ImageOverlay = () => {
-  const { overlay, clean } = useOverlay();
+const ImageOverlay = ({ overlay, clean }: OverlayProps): JSX.Element | null => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const hideTimerRef = useRef<number | null>(null);
@@ -53,7 +51,9 @@ const ImageOverlay = () => {
       };
     }
     return () => {
-      if (hideTimerRef.current) clearTimeout(hideTimerRef.current);
+      if (hideTimerRef.current) {
+        clearTimeout(hideTimerRef.current);
+      }
     };
   }, [overlay.active, overlay.overlayType]);
 
@@ -68,7 +68,7 @@ const ImageOverlay = () => {
           ? 'opacity-100 bg-cyan-950/80'
           : 'opacity-0 pointer-events-none'
       }`}
-      onClick={clean}
+      onPointerDown={clean}
     >
       <div
         className={`flex h-full w-full items-center justify-center p-4 transition-transform duration-250 ease-in-out ${
@@ -82,7 +82,7 @@ const ImageOverlay = () => {
               grid-rows-[1fr_auto]
               overflow-hidden
               ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
-          onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
           <div className="relative flex-1 min-h-0 p-2 pb-0 flex items-center justify-center">
             <LazyImage

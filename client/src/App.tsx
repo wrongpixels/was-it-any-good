@@ -15,25 +15,22 @@ import SigningInPage from './components/Common/Status/SigningInPage';
 import SearchPage from './components/Search/SearchPage';
 import BrowsePage from './components/Search/Browse/BrowsePage';
 import NavBar from './components/NavBar/NavBar';
-import ImageOverlay from './components/Overlay/ImageOverlay';
 import {
   BrowsePageRouterData,
   browsePageRoutes,
 } from './config/browsePageRoutes';
 import Footer from './components/Footer/Footer';
-import SignUpOverlay from './components/Overlay/SignUpOverlay';
 import useScrollToTop from './hooks/use-scroll-to-top';
 import HomePage from './components/Search/HomePage';
 import { clientPaths } from '../../shared/util/url-builder';
+import Overlays from './components/Overlays/Overlays';
 
 const App = (): JSX.Element => {
   return (
     <div className="w-full min-h-screen flex flex-col bg-gray-200">
       <Router>
-        <SignUpOverlay />
-        <ImageOverlay />
+        <Overlays />
         <Header />
-
         <div className="flex flex-1 flex-col min-h-0 box-border mx-2">
           <NavBar />
           <div className="flex flex-col flex-1 min-h-0 bg-gray-50 rounded shadow ring ring-[#d6d6d6] w-full max-w-5xl mx-auto h-full">

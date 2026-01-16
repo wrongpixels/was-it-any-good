@@ -3,7 +3,7 @@ import { AuthorType } from '../../../../shared/types/roles';
 import { MediaType } from '../../../../shared/types/media';
 import MediaPagePoster from '../Posters/MediaPagePoster';
 import MediaHeader from './MediaHeader';
-import SeasonsSection from './Sections/SeasonsSection';
+import SeasonsSection from './Sections/Seasons/SeasonsSection';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   useMediaByIdQuery,
