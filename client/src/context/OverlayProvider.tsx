@@ -13,6 +13,7 @@ export interface OverlayContextValues {
   overlayType: OverlayType;
   className?: string;
   confirmClose?: boolean;
+  closeMessage?: string;
 }
 
 export interface OverlayValues {
@@ -29,6 +30,7 @@ const DEF_OVERLAY: OverlayContextValues = {
   overlayType: OverlayType.None,
   className: '',
   confirmClose: false,
+  closeMessage: undefined,
 };
 
 const OverlayContext = createContext<OverlayValues>({
@@ -41,6 +43,7 @@ const OverlayContext = createContext<OverlayValues>({
 
 const OverlayProvider = ({ children }: PropsWithChildren) => {
   const [overlay, setOverlay] = useState(DEF_OVERLAY);
+
   useEffect(() => {}, []);
   return (
     <OverlayContext.Provider
@@ -52,6 +55,9 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
             ...DEF_OVERLAY,
             active: true,
             overlayType: OverlayType.SignUp,
+            confirmClose: true,
+            closeMessage:
+              "Closing will discard the user details you've entered.\n\nClose anyway?",
           }),
         openImageAsOverlay: (image: string, className?: string) =>
           setOverlay({
@@ -62,6 +68,16 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
             overlayType: OverlayType.Image,
           }),
         clean: () => {
+          if (!!overlay.confirmClose) {
+            const ok: boolean =
+              window.confirm(
+                overlay.closeMessage ??
+                  'If you close now, your changes will be lost.\n\nProceed?'
+              ) === true;
+            if (!ok) {
+              return;
+            }
+          }
           setOverlay(DEF_OVERLAY);
         },
       }}

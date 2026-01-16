@@ -19,9 +19,10 @@ import CloseButton from '../Common/CloseButton';
 
 interface SignUpFormProps {
   clean: VoidFunction;
+  setIsEditing?: (value: boolean) => void;
 }
 
-const SignUpForm = ({ clean }: SignUpFormProps) => {
+const SignUpForm = ({ clean, setIsEditing }: SignUpFormProps) => {
   const { playAnim } = useAnimEngine();
   const { login } = useAuth();
   const { setNotification, setError } = useNotificationContext();
@@ -65,6 +66,16 @@ const SignUpForm = ({ clean }: SignUpFormProps) => {
       visualValidation: true,
     },
   });
+  console.log(
+    userField.value !== undefined ||
+      passwordField.value !== undefined ||
+      emailField.value !== undefined
+  );
+  setIsEditing?.(
+    userField.value !== undefined ||
+      passwordField.value !== undefined ||
+      emailField.value !== undefined
+  );
 
   const canSubmit: boolean =
     userField.isSuccess && passwordField.isSuccess && emailField.isSuccess;

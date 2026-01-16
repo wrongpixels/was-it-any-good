@@ -28,7 +28,7 @@ const ImageOverlay = ({ overlay, clean }: OverlayProps): JSX.Element | null => {
     [clean]
   );
   useEffect(() => {
-    if (overlay.active) {
+    if (overlay.active && overlay.overlayType === OverlayType.Image) {
       window.addEventListener('keydown', closeWithKey);
     }
     return () => {
@@ -36,7 +36,7 @@ const ImageOverlay = ({ overlay, clean }: OverlayProps): JSX.Element | null => {
     };
   }, [overlay.active, closeWithKey, overlay.overlayType]);
   useEffect(() => {
-    if (overlay.active) {
+    if (overlay.active && overlay.overlayType === OverlayType.Image) {
       setIsMounted(true);
       const animFrame = requestAnimationFrame(() =>
         requestAnimationFrame(() => setIsVisible(true))
