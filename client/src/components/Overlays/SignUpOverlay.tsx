@@ -8,6 +8,7 @@ const ANIM_DURATION: number = 300;
 const SignUpOverlay = ({
   overlay,
   clean,
+  setCloseWarn,
 }: OverlayProps): JSX.Element | null => {
   const [isVisible, setIsVisible] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -91,7 +92,7 @@ const SignUpOverlay = ({
               ${isVisible ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-75 translate-y-20'}`}
           onPointerDown={(e) => e.stopPropagation()}
         >
-          <SignUpForm clean={clean} />
+          <SignUpForm clean={clean} setCloseWarn={setCloseWarn} />
         </div>
       </div>
     </div>

@@ -4,7 +4,7 @@ import ImageOverlay from './ImageOverlay';
 import SignUpOverlay from './SignUpOverlay';
 
 const Overlays = (): JSX.Element | null => {
-  const { overlay, clean } = useOverlay();
+  const { overlay, clean, setCloseWarn, closeWarn } = useOverlay();
   if (!overlay) {
     return null;
   }
@@ -12,7 +12,12 @@ const Overlays = (): JSX.Element | null => {
   return (
     <>
       <ImageOverlay overlay={overlay} clean={clean} />
-      <SignUpOverlay overlay={overlay} clean={clean} />
+      <SignUpOverlay
+        overlay={overlay}
+        clean={clean}
+        closeWarn={closeWarn}
+        setCloseWarn={setCloseWarn}
+      />
     </>
   );
 };

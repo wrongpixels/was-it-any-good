@@ -1,13 +1,15 @@
-import { JSX, PropsWithChildren, useState } from 'react';
+import { JSX, PropsWithChildren, useEffect, useState } from 'react';
 import { useInputField } from '../../hooks/use-input-field';
 import { InputField } from '../Common/Custom/InputField';
 import Button from '../Common/Custom/Button';
 import IconCreate from '../Common/Icons/IconCreate';
 import { AnimatedDiv } from '../Common/Custom/AnimatedDiv';
 import {
+  CreateUserReviewData,
   MediaResponse,
   SeasonResponse,
   ShowResponse,
+  UserReviewData,
 } from '../../../../shared/types/models';
 import Dropdown from '../Common/Custom/Dropdown';
 import { isShow } from '../../../../shared/helpers/media-helper';
@@ -16,6 +18,10 @@ import SearchCard from '../Search/Cards/SearchCard';
 import { BadgeType } from '../../types/search-browse-types';
 import { TextArea } from '../Common/Custom/TextArea';
 import { useTextArea } from '../../hooks/use-text-area';
+import { useCreateUserReviewMutation } from '../../mutations/user-review-mutations';
+import { RecommendType } from '../../../../shared/types/user-reviews';
+import { useNotificationContext } from '../../context/NotificationProvider';
+import { InputValidation } from '../../types/input-field-types';
 
 const SHOW_REVIEW_FORM: boolean = false;
 
@@ -27,6 +33,14 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
   if (!SHOW_REVIEW_FORM) {
     return null;
   }
+  const createReviewMutation = useCreateUserReviewMutation();
+  const { setNotification, setError } = useNotificationContext();
+  const [validationStatus, setValidationStatus] = useState<InputValidation>({
+    isError: false,
+    isSuccess: false,
+    errorMessage: '',
+  });
+
   const isAShow: boolean = isShow(media);
   const seasonNames: string[] =
     isShow(media) && media.seasons
@@ -58,10 +72,67 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
       minLength: 30,
       maxLength: 4000,
       visualValidation: true,
+      allowEmpty: true,
     },
   });
+
+  useEffect(() => {
+    const anyError: boolean =
+      titleField.isError || reviewTextArea.isError || spoilerTextArea.isError;
+    const newValidationStatus: InputValidation = {
+      isError: anyError,
+      isSuccess:
+        titleField.isSuccess &&
+        reviewTextArea.isSuccess &&
+        spoilerTextArea.isSuccess,
+      errorMessage: !anyError
+        ? ''
+        : titleField.errorMessage ||
+          reviewTextArea.errorMessage ||
+          spoilerTextArea.errorMessage ||
+          'There was an error',
+    };
+    setValidationStatus(newValidationStatus);
+  }, [titleField.value, reviewTextArea.value, spoilerTextArea.value]);
+
+  const cleanForm = () => {
+    titleField.reset();
+    reviewTextArea.reset();
+    spoilerTextArea.reset();
+  };
+
+  const onSubmitReview = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const indexId: number = media.indexId;
+    if (validationStatus.isError) {
+      setError({ message: validationStatus.errorMessage });
+    }
+    const createUserReviewData: CreateUserReviewData = {
+      title: titleField.value,
+      mainContent: reviewTextArea.value,
+      spoilerContent:
+        spoilerTextArea.value.length < 1 ? null : spoilerTextArea.value,
+      recommended: RecommendType.NotSpecified,
+    };
+    createReviewMutation.mutate(
+      {
+        indexId,
+        createUserReviewData,
+      },
+      {
+        onSuccess: (data: UserReviewData) => {
+          setNotification({ message: 'Your review was sent!' });
+          console.log(data);
+          cleanForm();
+        },
+        onError: (error: Error) =>
+          setError({ message: `Error: ${error.name}` }),
+      }
+    );
+  };
+
   return (
-    <form className="pl-2 flex flex-col">
+    <form className="pl-2 flex flex-col" onSubmit={onSubmitReview}>
       <Section>
         {'Reviewing'}
         <div
@@ -96,29 +167,6 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         </div>
       </Section>
       <TextArea {...reviewTextArea.getProps()} />
-      {/*<Section>{'Add spoiler section?'}</Section>
-      <div className="flex flex-row gap-3">
-        <span className="flex flex-row gap-2">
-          {'Yes'}
-          <input
-            type="radio"
-            name="spoiler"
-            value="Yes"
-            checked={addSpoilers}
-            onChange={() => setAddSpoilers(true)}
-          />
-        </span>
-        <span className="flex flex-row gap-2">
-          {'No'}
-          <input
-            type="radio"
-            name="spoiler"
-            value="No"
-            checked={!addSpoilers}
-            onChange={() => setAddSpoilers(false)}
-          />
-        </span> 
-      </div>*/}
       {addSpoilers && (
         <>
           <Section>
@@ -135,7 +183,9 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         className="flex justify-center"
       >
         <Button
-          disabled={!titleField.value || !reviewTextArea.isSuccess}
+          disabled={
+            !validationStatus.isSuccess || createReviewMutation.isPending
+          }
           type="submit"
           className="relative mt-2 w-32 justify-center pl-5"
         >

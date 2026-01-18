@@ -10,9 +10,16 @@ const validateRules = (
   input: string | null,
   rules?: InputRules
 ): InputValidation => {
-  if (!rules || !input || input.length < 1) {
+  if (!rules || input === null) {
     return INPUT_VALIDATION_SKIP;
   }
+  if (input.length < 1) {
+    if (!!rules.allowEmpty) {
+      return INPUT_VALIDATION_SUCCESS;
+    }
+    return INPUT_VALIDATION_SKIP;
+  }
+
   if (!!rules.minLength) {
     //we don't allow negative numbers or 0.
     if (rules.minLength < 1) {
@@ -39,6 +46,7 @@ const validateRules = (
         errorMessage: `Use less than ${rules.maxLength} characters`,
       };
   }
+
   if (!!rules.includeNumber) {
     if (!hasNumber(input))
       return {

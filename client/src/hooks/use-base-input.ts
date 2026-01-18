@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   BaseInputHookValues,
   InputValidation,
@@ -21,14 +21,10 @@ export const useBaseInput = ({
   const [errorMessage, setErrorMessage] = useState('');
 
   //we run a custom solution to validate the rules.
-  let validatedData: InputValidation = validateRules(value, rules);
-
-  //we apply the fresh validated results to the states so are always synched
-  useEffect(() => {
-    setIsError(validatedData.isError);
-    setIsSuccess(validatedData.isSuccess);
-    setErrorMessage(validatedData.errorMessage);
-  }, [value]);
+  const validatedData: InputValidation = useMemo(
+    () => validateRules(value, rules),
+    [value]
+  );
 
   const reset = () => setValue(initialValue);
 
@@ -50,9 +46,9 @@ export const useBaseInput = ({
     value,
     setValue,
     reset,
-    isError,
-    isSuccess,
-    errorMessage,
+    isError: isError || validatedData.isError,
+    isSuccess: isSuccess || validatedData.isSuccess,
+    errorMessage: errorMessage || validatedData.errorMessage,
     setError,
     setSuccess,
   };
