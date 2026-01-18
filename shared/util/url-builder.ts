@@ -43,8 +43,7 @@ export const apiPaths = {
   },
   userReviews: {
     base: `${BASE_API}/user-reviews`,
-    createByIndexId: (id: number | string) =>
-      `${apiPaths.userReviews.base}/${id}`,
+    byIndexId: (id: number | string) => `${apiPaths.userReviews.base}/${id}`,
   },
   auth: {
     base: `${BASE_API}/auth`,
@@ -78,6 +77,10 @@ export const apiPaths = {
     votes: {
       base: () => `${apiPaths.my.base}/votes`,
       byQuery: (query: string) => `${apiPaths.my.votes.base()}?${query}`,
+    },
+    userReviews: {
+      byIndexId: (id: string | number) =>
+        `${apiPaths.my.base}/user-reviews/${id}`,
     },
   },
   watchlist: {
