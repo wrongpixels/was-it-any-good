@@ -17,7 +17,7 @@ import { BadgeType } from '../../types/search-browse-types';
 import { TextArea } from '../Common/Custom/TextArea';
 import { useTextArea } from '../../hooks/use-text-area';
 
-const SHOW_REVIEW_FORM: boolean = false;
+const SHOW_REVIEW_FORM: boolean = true;
 
 interface UserReviewFormProps {
   media: MediaResponse | ShowResponse;
@@ -96,29 +96,6 @@ const UserReviewForm = ({ media }: UserReviewFormProps): JSX.Element | null => {
         </div>
       </Section>
       <TextArea {...reviewTextArea.getProps()} />
-      {/*<Section>{'Add spoiler section?'}</Section>
-      <div className="flex flex-row gap-3">
-        <span className="flex flex-row gap-2">
-          {'Yes'}
-          <input
-            type="radio"
-            name="spoiler"
-            value="Yes"
-            checked={addSpoilers}
-            onChange={() => setAddSpoilers(true)}
-          />
-        </span>
-        <span className="flex flex-row gap-2">
-          {'No'}
-          <input
-            type="radio"
-            name="spoiler"
-            value="No"
-            checked={!addSpoilers}
-            onChange={() => setAddSpoilers(false)}
-          />
-        </span> 
-      </div>*/}
       {addSpoilers && (
         <>
           <Section>

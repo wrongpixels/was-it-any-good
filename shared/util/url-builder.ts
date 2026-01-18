@@ -41,6 +41,11 @@ export const apiPaths = {
     base: `${BASE_API}/users`,
     byId: (id: number | string) => `${apiPaths.users.base}/${id}`,
   },
+  userReviews: {
+    base: `${BASE_API}/user-reviews`,
+    createByIndexId: (id: number | string) =>
+      `${apiPaths.userReviews.base}/${id}`,
+  },
   auth: {
     base: `${BASE_API}/auth`,
     login: () => `${apiPaths.auth.base}/login`,
