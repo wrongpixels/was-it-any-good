@@ -1,10 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { OverlayType } from '../types/overlay-types';
 
 export interface OverlayContextValues {
@@ -13,7 +7,6 @@ export interface OverlayContextValues {
   overlayType: OverlayType;
   className?: string;
   confirmClose?: boolean;
-  closeBlocked?: boolean;
   closeMessage?: string;
 }
 
@@ -21,7 +14,7 @@ export interface OverlayValues {
   overlay: OverlayContextValues;
   setOverlay: (overlay: OverlayContextValues) => void;
   openSignUpOverlay: () => void;
-  setCloseWarn: (value: boolean) => void;
+  setCloseWarn?: (value: boolean) => void;
   closeWarn: boolean;
   openImageAsOverlay: (image: string, className?: string) => void;
   clean: () => void;
@@ -33,7 +26,6 @@ const DEF_OVERLAY: OverlayContextValues = {
   overlayType: OverlayType.None,
   className: '',
   confirmClose: false,
-  closeBlocked: false,
   closeMessage: undefined,
 };
 
@@ -51,13 +43,12 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
   const [overlay, setOverlay] = useState(DEF_OVERLAY);
   const [closeWarn, setCloseWarn] = useState(false);
 
-  useEffect(() => {}, []);
   return (
     <OverlayContext.Provider
       value={{
         overlay,
         setOverlay,
-        setCloseWarn,
+        setCloseWarn: overlay.confirmClose ? setCloseWarn : undefined,
         closeWarn,
         openSignUpOverlay: () =>
           setOverlay({
@@ -77,7 +68,7 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
             overlayType: OverlayType.Image,
           }),
         clean: () => {
-          if (closeWarn) {
+          if (overlay.confirmClose && closeWarn) {
             const ok: boolean =
               window.confirm(
                 overlay.closeMessage ??

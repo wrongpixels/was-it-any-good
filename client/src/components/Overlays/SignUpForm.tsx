@@ -19,11 +19,10 @@ import CloseButton from '../Common/CloseButton';
 
 interface SignUpFormProps {
   clean: VoidFunction;
-  setIsEditing?: (value: boolean) => void;
   setCloseWarn?: (value: boolean) => void;
 }
 
-const SignUpForm = ({ clean, setIsEditing, setCloseWarn }: SignUpFormProps) => {
+const SignUpForm = ({ clean, setCloseWarn }: SignUpFormProps) => {
   const { playAnim } = useAnimEngine();
   const { login } = useAuth();
   const { setNotification, setError } = useNotificationContext();
@@ -70,10 +69,9 @@ const SignUpForm = ({ clean, setIsEditing, setCloseWarn }: SignUpFormProps) => {
 
   useEffect(() => {
     const closeWarn: boolean =
-      userField.value !== undefined ||
-      passwordField.value !== undefined ||
-      emailField.value !== undefined;
-    console.log('Is close locked?', closeWarn);
+      userField.value !== '' ||
+      passwordField.value !== '' ||
+      emailField.value !== '';
     setCloseWarn?.(closeWarn);
   }, [userField.value, passwordField.value, emailField.value]);
 

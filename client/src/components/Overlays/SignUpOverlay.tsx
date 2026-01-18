@@ -8,7 +8,6 @@ const ANIM_DURATION: number = 300;
 const SignUpOverlay = ({
   overlay,
   clean,
-  closeWarn,
   setCloseWarn,
 }: OverlayProps): JSX.Element | null => {
   const [isVisible, setIsVisible] = useState(false);
