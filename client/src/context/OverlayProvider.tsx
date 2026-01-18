@@ -17,7 +17,7 @@ export interface OverlayValues {
   setCloseWarn?: (value: boolean) => void;
   closeWarn: boolean;
   openImageAsOverlay: (image: string, className?: string) => void;
-  clean: () => void;
+  clean: (skipCheck?: boolean) => void;
 }
 
 const DEF_OVERLAY: OverlayContextValues = {
@@ -67,8 +67,8 @@ const OverlayProvider = ({ children }: PropsWithChildren) => {
             className,
             overlayType: OverlayType.Image,
           }),
-        clean: () => {
-          if (overlay.confirmClose && closeWarn) {
+        clean: (skipCheck?: boolean) => {
+          if (!skipCheck && overlay.confirmClose && closeWarn) {
             const ok: boolean =
               window.confirm(
                 overlay.closeMessage ??

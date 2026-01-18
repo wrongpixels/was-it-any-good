@@ -18,7 +18,7 @@ import IconLoadingSpinner from '../Common/Icons/IconLoadingSpinner';
 import CloseButton from '../Common/CloseButton';
 
 interface SignUpFormProps {
-  clean: VoidFunction;
+  clean: (skipCheck?: boolean) => void;
   setCloseWarn?: (value: boolean) => void;
 }
 
@@ -105,7 +105,7 @@ const SignUpForm = ({ clean, setCloseWarn }: SignUpFormProps) => {
               }),
           }
         );
-        clean();
+        clean(true);
       },
       //on error, we print a notification and set the error status on affected fields
       onError: (error: Error) => {
