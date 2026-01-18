@@ -1,4 +1,4 @@
-import { PropsWithChildren, useRef } from 'react';
+import { PropsWithChildren, useEffect, useRef } from 'react';
 import { useInputField } from '../../hooks/use-input-field';
 import Button from '../Common/Custom/Button';
 import { InputField } from '../Common/Custom/InputField';
@@ -20,9 +20,10 @@ import CloseButton from '../Common/CloseButton';
 interface SignUpFormProps {
   clean: VoidFunction;
   setIsEditing?: (value: boolean) => void;
+  setCloseWarn?: (value: boolean) => void;
 }
 
-const SignUpForm = ({ clean, setIsEditing }: SignUpFormProps) => {
+const SignUpForm = ({ clean, setIsEditing, setCloseWarn }: SignUpFormProps) => {
   const { playAnim } = useAnimEngine();
   const { login } = useAuth();
   const { setNotification, setError } = useNotificationContext();
@@ -66,16 +67,15 @@ const SignUpForm = ({ clean, setIsEditing }: SignUpFormProps) => {
       visualValidation: true,
     },
   });
-  console.log(
-    userField.value !== undefined ||
+
+  useEffect(() => {
+    const closeWarn: boolean =
+      userField.value !== undefined ||
       passwordField.value !== undefined ||
-      emailField.value !== undefined
-  );
-  setIsEditing?.(
-    userField.value !== undefined ||
-      passwordField.value !== undefined ||
-      emailField.value !== undefined
-  );
+      emailField.value !== undefined;
+    console.log('Is close locked?', closeWarn);
+    setCloseWarn?.(closeWarn);
+  }, [userField.value, passwordField.value, emailField.value]);
 
   const canSubmit: boolean =
     userField.isSuccess && passwordField.isSuccess && emailField.isSuccess;

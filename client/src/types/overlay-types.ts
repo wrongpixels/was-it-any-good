@@ -9,4 +9,6 @@ export enum OverlayType {
 export interface OverlayProps {
   overlay: OverlayContextValues;
   clean: () => void;
+  closeWarn?: boolean;
+  setCloseWarn?: (value: boolean) => void;
 }
