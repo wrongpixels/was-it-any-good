@@ -51,6 +51,7 @@ export interface InputRules {
   isEmail?: boolean;
   includeNumber?: boolean;
   visualValidation?: boolean;
+  allowEmpty?: boolean;
 }
 
 export interface InputValidation {
