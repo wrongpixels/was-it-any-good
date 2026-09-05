@@ -93,7 +93,7 @@ if (PRODUCTION) {
   const indexPath = path.join(distPath, 'index.html');
 
   console.log(`[SERVER] Serving client static files from: ${distPath}`);
-  app.use(express.static(distPath));
+  app.use(express.static(distPath, { dotfiles: 'allow' }));
   app.get('/*rest', (_req, res) => {
     res.sendFile(indexPath);
   });
