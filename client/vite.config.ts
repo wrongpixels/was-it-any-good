@@ -29,6 +29,7 @@ export default defineConfig(({ mode }) => {
         '/api': 'http://localhost:6060',
         '/sitemap.xml': 'http://localhost:6060',
         '/robots.txt': 'http://localhost:6060',
+        '/.well-known': 'http://localhost:6060',
       },
     },
   };

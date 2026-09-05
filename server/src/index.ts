@@ -57,7 +57,10 @@ app.use(authHandler);
 //for root-level endpoints and files we want to control in the backend,
 //like our sitemap.xml
 app.use('/', rootFilesRouter);
-
+app.use(
+  '/.well-known',
+  express.static(path.join(__dirname, '..', '.well-known'))
+);
 //API Routes
 app.use('/api/films', filmsRouter);
 app.use('/api/shows', showsRouter);
