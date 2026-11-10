@@ -19,6 +19,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 #we make the content of 'app/server/dist/server' be just 'app/server' to avoid ugly nested structures
+#the postgres CA is copied into this tree by the server build, so it comes along
 COPY --from=builder --chown=node:node /app/server/dist/server/src/. /app/server/src/
 #migrations are also copied
 COPY --from=builder --chown=node:node /app/server/dist/server/migrations /app/server/migrations
