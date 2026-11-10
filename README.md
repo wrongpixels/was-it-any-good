@@ -106,6 +106,8 @@ Open it, and edit it providing your own:
   - The Port the WIAG server will be running on. It defaults to 6060 if not set.
 - **REDIS_URI** _(Optional!)_
   - The connection URI for your Redis server, in case you want to use it (WIAG can work without it.)
+- **PG_TLS_SERVERNAME** _(Optional!)_
+  - Hostname to check on the production Postgres certificate. Defaults to `kevapaereo.ddns.net`. Only used when `NODE_ENV=production`; local Postgres stays without TLS.
 
 Example of a valid .env file:
 
